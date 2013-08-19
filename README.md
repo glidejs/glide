@@ -47,7 +47,7 @@ Init our slider on default options ...
 Here is all list of averaible
 
 | Option | Default | Type | Description
-|:-------|:--------|:-----
+|-------|--------|-----|-----
 | `autoplay` | 4000 | int/bool | False for turning off autoplay 
 | `animationTime` | 500 | int | !!! That option will be use only, when css3 are not suported. If css3 are supported animation time is set in css transitions declaration inside .css file !!!
 | `arrows` | true | bool | Show/hide arrows       
@@ -84,4 +84,4 @@ Now, you can use **.play()**, **.pause()**, **.next()**, **.prev()**, **.jump()*
 
 ##Changelog
 
-`1.0.0` / `15.08.2013` - Plugin release
+`1.0.0` / `19.08.2013` - Plugin release

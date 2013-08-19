@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="x-ua-compatible" content="ie=edge, chrome=1" />
+	<title>Glide.js | Simple, Lightweight & Fast jQuery Slider</title>
+	<link href='http://fonts.googleapis.com/css?family=Maven+Pro:400,700' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="css/normalize.css" />
+		<link rel="stylesheet" href="css/glide.css" />
+	<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+	<header class="header">
+		<div class="slider">
+			<ul class="slides">
+				<li class="slide glide"></li>
+				<li class="slide simple"></li>
+				<li class="slide lightweight"></li>
+				<li class="slide fast"></li>
+			</ul>
+		</div>
+		<div class="bar">
+			<a href="http://codecanyon.net/user/thats_shn?ref=thats_shn" class="button button--white push-left"><span class="entypo-download"></span>&nbsp;Minified</a>
+			<a href="docs.html" class="button push-left">Source</a>
+			<a href="docs.html" class="button push-right"><span class="entypo-github"></span>&nbsp;Documentation</a>
+		</div>
+	</header>
+
+	<div class="container">
+		<section class="section about">
+			<article class="article">
+				<h1>Why did I create glide?</h1>
+				<p>I needed simple and fast slider with fully customizable OOCSS markup. There was actually any that would meet my needs. <br />So it came about, Glide. It’s designed to slide. No less, no more.</p>
+			</article>
+		</section>
+		<section class="section responsive">
+			<article class="article">
+				<h1>Responsive & touch-friendly</h1>
+				<p>Yup! It works on smartphones,<br /> tablets and desktops.</p>
+			</article>
+		</section>
+		<section class="section css">
+			<article class="article">
+				<h1>CSS3</h1>
+				<p>CSS3 Transitions, but don’t worry, there is fallback to older browsers.</p>
+			</article>
+		</section>
+		<section class="section love cf">
+			<article class="article">
+				<h1>Why you will <span class="entypo-heart"></span> him?</h1>
+				<p>
+					<ul class="list-left">
+						<li>Lightweight ~4kB minifed</li>
+						<li>Ultra fast CSS3 Transitions</li>
+						<li>Responsive</li>
+						<li>Touch & mobile friendly</li>
+						<li>Public API with callbacks</li>
+						<li>OOCSS & BEM</li>
+					</ul>
+					<ul class="list-right">
+						<li>Swipe event</li>
+						<li>Arrows and bullets navigation</li>
+						<li>Keyboard navigation</li>
+						<li>Autoplay</li>
+						<li>Pause on hover</li>
+						<li>and more ...</li>
+					</ul>
+				</p>
+			</article>
+		</section>
+		<footer>
+		<span class="push-left"><a href="http://jedrzejchalubek.com">Jędrzej Chałubek</a> ©2013 Copyright</span>
+		<span class="push-right">My <a href="http://www.behance.net/jedrzejchalubek">Behance</a> | <a href="http://dribbble.com/jedrzejchalubek">Dribbble</a> | <a href="https://github.com/jedrzejchalubek">Github</a></span>
+		</footer>
+	</div>
+	 
+	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script src="js/jquery.glide.min.js"></script>
+	<script>
+		$('.slider').glide();
+	</script>
+</body>
+</html>

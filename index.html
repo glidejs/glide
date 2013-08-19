@@ -1,0 +1,49 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+		
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+		<!-- Slider Plugin -->
+		<script type="text/javascript" src="jquery.glide.js"></script>
+		
+		<style>
+			/**
+			 * Demo styles
+			 * Only for example purposes
+			 * Remove in production
+			 */
+			
+			/* Bad and ugly reset */
+			*{ margin: 0; padding: 0; border: 0; }
+
+			.box {
+				width: 100%; 
+				height: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		
+		<div class="slider">
+			<ul class="slides">
+				<li class="slide"><div class="box" style="background-color: #1abc9c;"></div></li>
+				<li class="slide"><div class="box" style="background-color: #16a085;"></div></li>
+				<li class="slide"><div class="box" style="background-color: #f1c40f;"></div></li>
+				<li class="slide"><div class="box" style="background-color: #f39c12;"></div></li>
+				<li class="slide"><div class="box" style="background-color: #d35400;"></div></li>
+				<li class="slide"><div class="box" style="background-color: #c0392b;"></div></li>	
+			</ul>
+		</div>
+
+		<script type="text/javascript">
+			var slider = $('.slider').glide(),
+				glide = slider.data('api_glide');
+
+				$(window).on('keyup', function (key) {
+					if (key.keyCode === 13) {
+						glide.jump(3, console.log('Wooo!'));
+					};
+				})
+		</script>
+	</body>
+</html>

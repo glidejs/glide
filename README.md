@@ -1,5 +1,7 @@
 #Glide.js
 
+[Homepage](http://jedrzejchalubek.com/glide/)
+
 Glide is responsive and touch-friendly jQuery slider. Based on CSS3 transitions with fallback to older broswers. It's simple, lightweight and fast. Designed to slide, no less, no more.
 
 ##Setup

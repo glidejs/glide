@@ -41,7 +41,8 @@ Init our slider on default options ...
 	<script>
 		$('.slider').glide({
 			autoplay: 5000,
-			arrows: false
+			arrows: 'body',
+			nav: 'body'
 		});
 	</script>
 
@@ -50,30 +51,30 @@ Here is all list of averaible
 
 | Option | Default | Type | Description
 |-------|--------|-----|-----
-| `autoplay` | 4000 | int/bool | False for turning off autoplay 
-| `animationTime` | 500 | int | !!! That option will be use only, when css3 are not suported. If css3 are supported animation time is set in css transitions declaration inside .css file !!!
-| `arrows` | true | bool | Show/hide arrows       
-| `arrowsWrapperClass` | slider-arrows | string | Arrows wrapper class         
-| `arrowMainClass` | slider-arrow | string | Main class for both arrows      
-| `arrowRightClass` | slider-arrow--right | string | Right arrow class
-| `arrowLeftClass` | slider-arrow--left | string | Left arrow class
-| `arrowRightText` | next | string | Right arrow text
-| `arrowLeftText` | prev | string | Left arrow text
-| `nav` | true | bool | Show/hide bullets navigation
-| `navCenter` | true | bool | Center bullet navigation
-| `navClass` | slider-nav | string | Navigation wrapper class
-| `navItemClass` | slider-nav__item | string | Navigation item class
-| `navCurrentItemClass` | slider-nav__item--current | string | Current navigation item class
-| `touchDistance` | 60 | int/bool | Minimal touch-swipe distance to call event. False for turning off touch.
+| `autoplay` | `4000` | int/bool | False for turning off autoplay 
+| `animationTime` | `500` | int | !!! That option will be use only, when css3 are not suported. If css3 are supported animation time is set in css transitions declaration inside .css file !!!
+| `arrows` | `true` | bool/string | Show/hide/appendTo arrows. True for append arrows to slider wrapper. False for not appending arrows. Id or class name (e.g. '.class-name') for appending to specific HTML markup
+| `arrowsWrapperClass` | `slider-arrows` | string | Arrows wrapper class
+| `arrowMainClass` | `slider-arrow` | string | Main class for both arrows
+| `arrowRightClass` | `slider-arrow--right` | string | Right arrow class
+| `arrowLeftClass` | `slider-arrow--left` | string | Left arrow class
+| `arrowRightText` | `next` | string | Right arrow text
+| `arrowLeftText` | `prev` | string | Left arrow text
+| `nav` | `true` | bool/string | {Bool or String} Show/hide/appendTo bullets navigation. True for append arrows to slider wrapper. False for not appending arrows. Id or class name (e.g. '.class-name') for appending to specific HTML markup.
+| `navCenter` | `true` | bool | Center bullet navigation
+| `navClass` | `slider-nav` | string | Navigation wrapper class
+| `navItemClass` | `slider-nav__item` | string | Navigation item class
+| `navCurrentItemClass` | `slider-nav__item--current` | string | Current navigation item class
+| `touchDistance` | `60` | int/bool | Minimal touch-swipe distance to call event. False for turning off touch.
 
 ##API
 
 Make glide api instance.
 
-	var slider = $('.slider').glide();
-	var glide = slider.data('api_glide');
+	var glide = $('.slider').glide().data('api_glide');
 
-Now, you can use **.play()**, **.pause()**, **.next()**, **.prev()**, **.jump()**. as bellow.
+
+Now, you can use **.play()**, **.pause()**, **.next()**, **.prev()**, **.jump()**, **.nav()**, **.arrows()**. as bellow.
 
 	glide.jump(3, console.log('Wooo!'));
 
@@ -82,8 +83,18 @@ Now, you can use **.play()**, **.pause()**, **.next()**, **.prev()**, **.jump()*
 - `.next(callback)` - Slide one forward
 - `.prev(callback)` - Slide one backward
 - `.jump(distance, callback)` - Jump to current slide
+- `.nav(target)` - Append navigation to specifed target (eq. 'body')
+- `.arrows(target)` - Append arrows to specifed target (eq. 'body')
 
 
 ##Changelog
 
-`1.0.0` / `19.08.2013` - Plugin release
+`1.0.1` / `22.08.2013`
+
+- Modularize code
+- Some options changes
+- Extend API, manually appending with specifed target navigation and arrows
+
+`1.0.0` / `19.08.2013`
+
+- Plugin release

@@ -36,14 +36,13 @@
 		</div>
 
 		<script type="text/javascript">
-			var slider = $('.slider').glide(),
-				glide = slider.data('api_glide');
+			var glide = $('.slider').glide().data('api_glide');
 
 				$(window).on('keyup', function (key) {
 					if (key.keyCode === 13) {
 						glide.jump(3, console.log('Wooo!'));
 					};
-				})
+				});
 		</script>
 	</body>
 </html>

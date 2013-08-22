@@ -83,8 +83,8 @@ Now, you can use **.play()**, **.pause()**, **.next()**, **.prev()**, **.jump()*
 - `.next(callback)` - Slide one forward
 - `.prev(callback)` - Slide one backward
 - `.jump(distance, callback)` - Jump to current slide
-- `.nav(target)` - Append navigation to specifed target (eq. 'body')
-- `.arrows(target)` - Append arrows to specifed target (eq. 'body')
+- `.nav(target)` - Append navigation to specifed target (eq. 'body', '.class', '#id')
+- `.arrows(target)` - Append arrows to specifed target (eq. 'body', '.class', '#id')
 
 
 ##Changelog
@@ -93,7 +93,7 @@ Now, you can use **.play()**, **.pause()**, **.next()**, **.prev()**, **.jump()*
 
 - Modularize code
 - Some options changes
-- Extend API, manually appending with specifed target navigation and arrows
+- Extend API, manually appending navigation and arrows with specifed target
 
 `1.0.0` / `19.08.2013`
 

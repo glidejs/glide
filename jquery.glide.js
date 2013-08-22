@@ -92,14 +92,12 @@
 		 * Keyboard left and right arrow keys
 		 */
 		$(document).on('keyup', function(k) {
-			// Pause autoplay counting
-			_.pause();
-			// Next
-			if (k.keyCode === 39) _.slide(1);
-			// Prev
-			if (k.keyCode === 37) _.slide(-1);
-			// Start autoplay counting
-			_.play();
+			_.clearAutoplay(function() {
+				// Next
+				if (k.keyCode === 39) _.slide(1);
+				// Prev
+				if (k.keyCode === 37) _.slide(-1);
+			});
 		});
 
 		/**
@@ -121,7 +119,7 @@
 		 */
 		if (_.options.touchDistance) {
 			// Init swipe
-			_.swipe();
+			_.clearAutoplay( _.swipe() );
 		}
 
 		/**
@@ -133,14 +131,12 @@
 		 * Start autoplay from beginning
 		 */
 		$(window).on('resize', function() {
-			// Pasue autoplay
-			_.pause();
-			// Reinit plugin (set new slider dimensions)
-			_.init();
-			// Crop to current slide
-			_.slide(0);
-			// Start autoplay anew
-			_.play();
+			_.clearAutoplay(function() {
+				// Reinit plugin (set new slider dimensions)
+				_.init();
+				// Crop to current slide
+				_.slide(0);
+			});
 		});
 
 		/**
@@ -154,13 +150,13 @@
 				_.pause();
 			},
 			next: function(callback) {
-				_.slide(1, false, callback);
+				_.clearAutoplay( _.slide(1, false, callback) );
 			},
 			prev: function(callback) {
-				_.slide(-1, false, callback);
+				_.clearAutoplay( _.slide(-1, false, callback) );
 			},
 			jump: function(distance, callback) {
-				_.slide(distance-1, true, callback);
+				_.clearAutoplay( _.slide(distance-1, true, callback) );
 			},
 			nav: function(target) {
 				/**
@@ -200,7 +196,7 @@
 		 * If option is true and there is more than one slide
 		 * Append left and right arrow
 		 */
-		if (_.options.arrows && _.slides.length > 1) {
+		if (_.options.arrows) {
 			_.arrows();
 		}
 
@@ -209,7 +205,7 @@
 		 * If option is true and there is more than one slide
 		 * Append navigation item for each slide
 		 */
-		if (_.options.nav && _.slides.length > 1) {
+		if (_.options.nav) {
 			_.navigation();
 		}
 	};
@@ -218,123 +214,121 @@
 	 * Building navigation DOM
 	 */
 	Glide.prototype.navigation = function() {
-		// Cache
-		var _ = this,
-			o = _.options,
+		var _ = this;
+
+		if (_.slides.length > 1) {
+			// Cache
+			var o = _.options,
+				/**
+				 * Setting append target
+				 * If option is true set default target, that is slider wrapper
+				 * Else get target set in options
+				 * @type {Bool or String}
+				 */
+				target = (_.options.nav === true) ? _.parent : _.options.nav;
+
+			// Navigation wrapper
+			_.navWrapper = $('<div />', {
+				'class': o.navClass
+			}).appendTo(target);
+
+			// Cache
+			var nav = _.navWrapper,
+				item;
+
+			// Generate navigation items
+			for (var i = 0; i < _.slides.length; i++) {
+				item = $('<a />', {
+					'href': '#',
+					'class': o.navItemClass,
+					// Direction and distance -> Item index forward
+					'data-distance': i
+				}).appendTo(nav);
+
+				nav[i+1] = item;
+			}
+
+			// Cache
+			var navChildren = nav.children();
+
+			// If centered option is true
+			if (o.navCenter) {
+				// Center bullet navigation
+				nav.css({
+					'left': '50%',
+					'width': navChildren.outerWidth(true) * navChildren.length,
+					'margin-left': -nav.outerWidth(true)/2
+				}).children().eq(0).addClass(o.navCurrentItemClass);
+			}
+
 			/**
-			 * Setting append target
-			 * If option is true set default target, that is slider wrapper
-			 * Else get target set in options
-			 * @type {Bool or String}
+			 * Controller
+			 * On click in arrows or navigation, get direction and distance
+			 * Then slide specified distance
 			 */
-			target = (_.options.nav === true) ? _.parent : _.options.nav;
-
-		// Navigation wrapper
-		_.navWrapper = $('<div />', {
-			'class': o.navClass
-		}).appendTo(target);
-
-		// Cache
-		var nav = _.navWrapper;
-
-		// Generate navigation items
-		for (var i = 0; i < _.slides.length; i++) {
-			var item = $('<a />', {
-				'href': '#',
-				'class': o.navItemClass,
-				// Direction and distance -> Item index forward
-				'data-distance': i
-			}).appendTo(nav);
-
-			nav[i+1] = item;
+			navChildren.on('click touchstart', function(e) {
+				// prevent normal behaviour
+				e.preventDefault();
+				// Slide distance specified in data attribute
+				_.clearAutoplay( _.slide( $(this).data('distance'), true ) );
+			});
 		}
-
-		// Cache
-		var navChildren = nav.children();
-
-		// If centered option is true
-		if (o.navCenter) {
-			// Center bullet navigation
-			nav.css({
-				'left': '50%',
-				'width': navChildren.outerWidth(true) * navChildren.length,
-				'margin-left': -nav.outerWidth(true)/2
-			}).children().eq(0).addClass(o.navCurrentItemClass);
-		}
-
-		/**
-		 * Controller
-		 * On click in arrows or navigation, get direction and distance
-		 * Then slide specified distance
-		 */
-		navChildren.on('click touchstart', function(e) {
-			// prevent normal behaviour
-			e.preventDefault();
-			// Pause autoplay
-			_.pause();
-			// Slide distance specified in data attribute
-			_.slide( $(this).data('distance'), true );
-			// Start autoplay
-			_.play();
-		});
 	};
 
 	/**
 	 * Building arrows DOM
 	 */
 	Glide.prototype.arrows = function() {
-		// Cache
-		var _ = this,
-			o = _.options,
+		var _ = this;
+		
+		if (_.slides.length > 1) {
+			var o = _.options,
+				/**
+				 * Setting append target
+				 * If option is true set default target, that is slider wrapper
+				 * Else get target set in options
+				 * @type {Bool or String}
+				 */
+				target = (_.options.arrows === true) ? _.parent : _.options.arrows;
+
+			// Arrows wrapper
+			_.arrowsWrapper = $('<div />', {
+				'class': o.arrowsWrapperClass
+			}).appendTo(target);
+
+			// Cache
+			var arrows = _.arrowsWrapper;
+
+			// Right arrow
+			arrows.right = $('<a />', {
+				'href': '#',
+				'class': o.arrowMainClass + ' ' + o.arrowRightClass,
+				// Direction and distance -> One forward
+				'data-distance': '1',
+				'html': o.arrowRightText
+			}).appendTo(arrows);
+
+			// Left arrow
+			arrows.left = $('<a />', {
+				'href': '#',
+				'class': o.arrowMainClass + ' ' + o.arrowLeftClass,
+				// Direction and distance -> One backward
+				'data-distance': '-1',
+				'html': o.arrowLeftText
+			}).appendTo(arrows);
+
 			/**
-			 * Setting append target
-			 * If option is true set default target, that is slider wrapper
-			 * Else get target set in options
-			 * @type {Bool or String}
+			 * Controller
+			 * On click in arrows or navigation, get direction and distance
+			 * Then slide specified distance
 			 */
-			target = (_.options.arrows === true) ? _.parent : _.options.arrows;
-
-		// Arrows wrapper
-		_.arrowsWrapper = $('<div />', {
-			'class': o.arrowsWrapperClass
-		}).appendTo(target);
-
-		// Cache
-		var arrows = _.arrowsWrapper;
-
-		// Right arrow
-		arrows.right = $('<a />', {
-			'href': '#',
-			'class': o.arrowMainClass + ' ' + o.arrowRightClass,
-			// Direction and distance -> One forward
-			'data-distance': '1',
-			'html': o.arrowRightText
-		}).appendTo(arrows);
-
-		// Left arrow
-		arrows.left = $('<a />', {
-			'href': '#',
-			'class': o.arrowMainClass + ' ' + o.arrowLeftClass,
-			// Direction and distance -> One backward
-			'data-distance': '-1',
-			'html': o.arrowLeftText
-		}).appendTo(arrows);
-
-		/**
-		 * Controller
-		 * On click in arrows or navigation, get direction and distance
-		 * Then slide specified distance
-		 */
-		arrows.children().on('click touchstart', function(e) {
-			// prevent normal behaviour
-			e.preventDefault();
-			// Pause autoplay
-			_.pause();
-			// Slide distance specified in data attribute
-			_.slide( $(this).data('distance'), false );
-			// Start autoplay
-			_.play();
-		});
+			arrows.children().on('click touchstart', function(e) {
+				// prevent normal behaviour
+				e.preventDefault();
+				// Slide distance specified in data attribute
+				_.clearAutoplay( _.slide( $(this).data('distance'), false ) );
+			});
+		}
 	};
 
 
@@ -413,6 +407,16 @@
 	};
 
 	/**
+	 * Reset autoplay timer
+	 * @param  {Function} callback
+	 */
+	Glide.prototype.clearAutoplay = function(callback) {
+		this.pause();
+		(typeof callback === 'function') ? callback() : callback;
+		this.play();
+	};
+
+	/**
 	 * Change sildes on swipe event
 	 */
 	Glide.prototype.swipe = function() {
@@ -442,8 +446,6 @@
 			// Cache event
 			var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
 			
-			// Stop autoplay
-			_.pause();
 			// Calculate touch distance
 			touchDistance = touch.pageX - touchStartX;
 
@@ -456,8 +458,6 @@
 				// Slide one forward
 				_.slide(1);
 			}
-			// Start autoplay
-			_.play();
 		});
 	};
 

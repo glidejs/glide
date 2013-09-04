@@ -67,7 +67,7 @@
 	 */
 	function Glide(parent, options) {
 		var _ = this;
-		_.options = $.extend( {}, defaults, options);
+		_.options = $.extend({}, defaults, options);
 
 		// Sidebar
 		_.parent = parent;
@@ -106,7 +106,7 @@
 		 * When mouse is over slider, pause autoplay
 		 * On out, start autoplay again
 		 */
-		_.parent.on('mouseover mouseout', function (e) {
+		_.parent.add(_.arrows).add(_.nav).on('mouseover mouseout', function (e) {
 			// Pasue autoplay
 			_.pause();
 			// When mouse left slider or touch end, start autoplay anew
@@ -119,7 +119,7 @@
 		 */
 		if (_.options.touchDistance) {
 			// Init swipe
-			_.clearAutoplay( _.swipe() );
+			_.swipe();
 		}
 
 		/**
@@ -143,6 +143,9 @@
 		 * Returning API
 		 */
 		return {
+			current: function() {
+				return -(_.currentSlide) + 1;
+			},
 			play: function() {
 				_.play();
 			},
@@ -166,7 +169,7 @@
 				if (_.navWrapper) {
 					_.navWrapper.remove();
 				}
-				_.options.nav = target;
+				_.options.nav = (target) ? target : _.options.nav;
 				// Build
 				_.navigation();
 			},
@@ -178,7 +181,7 @@
 				if (_.arrowsWrapper) {
 					_.arrowsWrapper.remove();
 				}
-				_.options.arrows = target;
+				_.options.arrows = (target) ? target : _.options.arrows;
 				// Build
 				_.arrows();
 			}
@@ -196,18 +199,14 @@
 		 * If option is true and there is more than one slide
 		 * Append left and right arrow
 		 */
-		if (_.options.arrows) {
-			_.arrows();
-		}
+		if (_.options.arrows) _.arrows();
 
 		/**
 		 * Navigation
 		 * If option is true and there is more than one slide
 		 * Append navigation item for each slide
 		 */
-		if (_.options.nav) {
-			_.navigation();
-		}
+		if (_.options.nav) _.navigation();
 	};
 
 	/**
@@ -361,10 +360,25 @@
 
 		/**
 		 * Crop to current slide.
-		 * Croping by increasing/decreasing slider wrapper margin.
 		 * Mul slide width by current slide number.
 		 */
-		_.wrapper.stop()[_.animationType]({ 'margin-left': slidesSpread * currentSlide }, _.options.animationTime);
+		var translate = slidesSpread * currentSlide + 'px';
+
+		// While CSS translate is supported
+		if (_.animationType === 'css') {
+			// Croping by increasing/decreasing slider wrapper translate
+			_.wrapper.css({
+				'-webkit-transform': 'translate3d('+ translate +', 0px, 0px)', 
+				'-moz-transform': 'translate3d('+ translate +', 0px, 0px)', 
+				'-ms-transform': 'translate3d('+ translate +', 0px, 0px)', 
+				'-o-transform': 'translate3d('+ translate +', 0px, 0px)', 
+				'transform': 'translate3d('+ translate +', 0px, 0px)' 
+			});
+		// Else use $.animate()
+		} else {
+			// Croping by increasing/decreasing slider wrapper margin
+			_.wrapper.stop()[_.animationType]({ 'margin-left': translate }, _.options.animationTime);
+		}
 
 		// Set to navigation item current class
 		if (_.options.nav) {
@@ -431,7 +445,7 @@
 		_.parent.on('touchstart', function(e) {
 			// Cache event
 			var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
-			
+
 			// Prevent default reaction
 			e.preventDefault();
 			// Cache touch point
@@ -449,15 +463,17 @@
 			// Calculate touch distance
 			touchDistance = touch.pageX - touchStartX;
 
-			// While touch is positive and greater than distance set in options
-			if ( touchDistance > _.options.touchDistance ) {
-				// Slide one backward
-				_.slide(-1);
-			// While touch is negative and lower than negative distance set in options
-			} else if ( touchDistance < -_.options.touchDistance) {
-				// Slide one forward
-				_.slide(1);
-			}
+			_.clearAutoplay(function() {
+				// While touch is positive and greater than distance set in options
+				if ( touchDistance > _.options.touchDistance ) {
+					// Slide one backward
+					_.slide(-1);
+				// While touch is negative and lower than negative distance set in options
+				} else if ( touchDistance < -_.options.touchDistance) {
+					// Slide one forward
+					_.slide(1);
+				}
+			});
 		});
 	};
 
@@ -478,7 +494,7 @@
 		this.slides.width(this.slides.spread);
 
 		// If CSS3 Transition isn't supported set animation to $.animate()
-		if ( !isCssSupported("transition") ) this.animationType = 'animate';
+		if ( !isCssSupported("transition") || !isCssSupported("transform") ) this.animationType = 'animate';
 	};
 
 	/**

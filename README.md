@@ -1,6 +1,4 @@
-#Glide.js
-
-[Homepage](http://jedrzejchalubek.com/glide/)
+#[Glide.js](http://jedrzejchalubek.com/glide/)
 
 Glide is responsive and touch-friendly jQuery slider. Based on CSS3 transitions with fallback to older broswers. It's simple, lightweight and fast. Designed to slide, no less, no more.
 
@@ -36,7 +34,7 @@ Init our slider on default options ...
 		$('.slider').glide();
 	</script>
 	
-… or init with custom options.
+… or with custom options
 
 	<script>
 		$('.slider').glide({
@@ -60,7 +58,7 @@ Here is all list of averaible
 | `arrowLeftClass` | `slider-arrow--left` | string | Left arrow class
 | `arrowRightText` | `next` | string | Right arrow text
 | `arrowLeftText` | `prev` | string | Left arrow text
-| `nav` | `true` | bool/string | {Bool or String} Show/hide/appendTo bullets navigation. True for append arrows to slider wrapper. False for not appending arrows. Id or class name (e.g. '.class-name') for appending to specific HTML markup.
+| `nav` | `true` | bool/string | Show/hide/appendTo bullets navigation. True for append arrows to slider wrapper. False for not appending arrows. Id or class name (e.g. '.class-name') for appending to specific HTML markup.
 | `navCenter` | `true` | bool | Center bullet navigation
 | `navClass` | `slider-nav` | string | Navigation wrapper class
 | `navItemClass` | `slider-nav__item` | string | Navigation item class
@@ -74,7 +72,7 @@ Make glide api instance.
 	var glide = $('.slider').glide().data('api_glide');
 
 
-Now, you can use **.play()**, **.pause()**, **.next()**, **.prev()**, **.jump()**, **.nav()**, **.arrows()**. as bellow.
+Now, you can use **API** as bellow.
 
 	glide.jump(3, console.log('Wooo!'));
 
@@ -83,11 +81,17 @@ Now, you can use **.play()**, **.pause()**, **.next()**, **.prev()**, **.jump()*
 - `.next(callback)` - Slide one forward
 - `.prev(callback)` - Slide one backward
 - `.jump(distance, callback)` - Jump to current slide
+- `.current()` - Returning current slide number
 - `.nav(target)` - Append navigation to specifed target (eq. 'body', '.class', '#id')
 - `.arrows(target)` - Append arrows to specifed target (eq. 'body', '.class', '#id')
 
 
 ##Changelog
+`1.0.2` / `22.08.2013`
+
+- Translate3d slides change (thanks to [OwlFonk](https://github.com/OwlFonk) for suggestion)
+- Extend API, getter for current slide number
+
 
 `1.0.1` / `22.08.2013`
 

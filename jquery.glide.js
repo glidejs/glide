@@ -249,7 +249,8 @@
 
 			// Cache
 			var navChildren = nav.children();
-
+      // Add navCurrentItemClass to the first navigation item
+      navChildren.eq(0).addClass(o.navCurrentItemClass);
 			// If centered option is true
 			if (o.navCenter) {
 				// Center bullet navigation
@@ -257,7 +258,7 @@
 					'left': '50%',
 					'width': navChildren.outerWidth(true) * navChildren.length,
 					'margin-left': -nav.outerWidth(true)/2
-				}).children().eq(0).addClass(o.navCurrentItemClass);
+				});
 			}
 
 			/**

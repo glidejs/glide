@@ -92,12 +92,12 @@
 		 * Keyboard left and right arrow keys
 		 */
 		$(document).on('keyup', function(k) {
-			_.clearAutoplay(function() {
+
 				// Next
 				if (k.keyCode === 39) _.slide(1);
 				// Prev
 				if (k.keyCode === 37) _.slide(-1);
-			});
+
 		});
 
 		/**
@@ -131,12 +131,10 @@
 		 * Start autoplay from beginning
 		 */
 		$(window).on('resize', function() {
-			_.clearAutoplay(function() {
-				// Reinit plugin (set new slider dimensions)
-				_.init();
-				// Crop to current slide
-				_.slide(0);
-			});
+			// Reinit plugin (set new slider dimensions)
+			_.init();
+			// Crop to current slide
+			_.slide(0);
 		});
 
 		/**
@@ -153,13 +151,13 @@
 				_.pause();
 			},
 			next: function(callback) {
-				_.clearAutoplay( _.slide(1, false, callback) );
+				_.slide(1, false, callback);
 			},
 			prev: function(callback) {
-				_.clearAutoplay( _.slide(-1, false, callback) );
+				_.slide(-1, false, callback);
 			},
 			jump: function(distance, callback) {
-				_.clearAutoplay( _.slide(distance-1, true, callback) );
+				_.slide(distance-1, true, callback);
 			},
 			nav: function(target) {
 				/**
@@ -272,7 +270,7 @@
 				// prevent normal behaviour
 				e.preventDefault();
 				// Slide distance specified in data attribute
-				_.clearAutoplay( _.slide( $(this).data('distance'), true ) );
+				_.slide( $(this).data('distance'), true );
 			});
 		}
 	};
@@ -328,7 +326,7 @@
 				// prevent normal behaviour
 				e.preventDefault();
 				// Slide distance specified in data attribute
-				_.clearAutoplay( _.slide( $(this).data('distance'), false ) );
+				_.slide( $(this).data('distance'), false );
 			});
 		}
 	};
@@ -348,55 +346,58 @@
 			navCurrentClass = _.options.navCurrentItemClass,
 			slidesSpread = _.slides.spread;
 
-		/**
-		 * Check if current slide is first and direction is previous, then go to last slide
-		 * or current slide is last and direction is next, then go to the first slide
-		 * else change current slide normally
-		 */
-		if ( currentSlide === 0 && distance === -1 ) {
-			currentSlide = slidesLength;
-		} else if ( currentSlide === slidesLength && distance === 1 ) {
-			currentSlide = 0;
-		} else {
-			currentSlide = currentSlide + (-distance);
-		}
+		// Before animating clear autoplay
+		_.clearAutoplay(function(){		
+			/**
+			 * Check if current slide is first and direction is previous, then go to last slide
+			 * or current slide is last and direction is next, then go to the first slide
+			 * else change current slide normally
+			 */
+			if ( currentSlide === 0 && distance === -1 ) {
+				currentSlide = slidesLength;
+			} else if ( currentSlide === slidesLength && distance === 1 ) {
+				currentSlide = 0;
+			} else {
+				currentSlide = currentSlide + (-distance);
+			}
 
-		/**
-		 * Crop to current slide.
-		 * Mul slide width by current slide number.
-		 */
-		var translate = slidesSpread * currentSlide + 'px';
+			/**
+			 * Crop to current slide.
+			 * Mul slide width by current slide number.
+			 */
+			var translate = slidesSpread * currentSlide + 'px';
 
-		// While CSS translate is supported
-		if (_.animationType === 'css') {
-			// Croping by increasing/decreasing slider wrapper translate
-			_.wrapper.css({
-				'-webkit-transform': 'translate3d('+ translate +', 0px, 0px)', 
-				'-moz-transform': 'translate3d('+ translate +', 0px, 0px)', 
-				'-ms-transform': 'translate3d('+ translate +', 0px, 0px)', 
-				'-o-transform': 'translate3d('+ translate +', 0px, 0px)', 
-				'transform': 'translate3d('+ translate +', 0px, 0px)' 
-			});
-		// Else use $.animate()
-		} else {
-			// Croping by increasing/decreasing slider wrapper margin
-			_.wrapper.stop()[_.animationType]({ 'margin-left': translate }, _.options.animationTime);
-		}
+			// While CSS translate is supported
+			if (_.animationType === 'css') {
+				// Croping by increasing/decreasing slider wrapper translate
+				_.wrapper.css({
+					'-webkit-transform': 'translate3d('+ translate +', 0px, 0px)', 
+					'-moz-transform': 'translate3d('+ translate +', 0px, 0px)', 
+					'-ms-transform': 'translate3d('+ translate +', 0px, 0px)', 
+					'-o-transform': 'translate3d('+ translate +', 0px, 0px)', 
+					'transform': 'translate3d('+ translate +', 0px, 0px)' 
+				});
+			// Else use $.animate()
+			} else {
+				// Croping by increasing/decreasing slider wrapper margin
+				_.wrapper.stop()[_.animationType]({ 'margin-left': translate }, _.options.animationTime);
+			}
 
-		// Set to navigation item current class
-		if (_.options.nav) {
-			_.navWrapper.children()
-				.eq(-currentSlide)
-					.addClass(navCurrentClass)
-						.siblings()
-							.removeClass(navCurrentClass);
-		}
+			// Set to navigation item current class
+			if (_.options.nav) {
+				_.navWrapper.children()
+					.eq(-currentSlide)
+						.addClass(navCurrentClass)
+							.siblings()
+								.removeClass(navCurrentClass);
+			}
 
-		// Update current slide globaly
-		_.currentSlide = currentSlide;
+			// Update current slide globaly
+			_.currentSlide = currentSlide;
 
-		// Callback
-		if ( (callback !== 'undefined') && (typeof callback === 'function') ) callback();
+			// Callback
+			if ( (callback !== 'undefined') && (typeof callback === 'function') ) callback();
+		});
 	};
 
 	/**
@@ -466,7 +467,7 @@
 			// Calculate touch distance
 			touchDistance = touch.pageX - touchStartX;
 
-			_.clearAutoplay(function() {
+
 				// While touch is positive and greater than distance set in options
 				if ( touchDistance > _.options.touchDistance ) {
 					// Slide one backward
@@ -476,7 +477,7 @@
 					// Slide one forward
 					_.slide(1);
 				}
-			});
+
 		});
 	};
 

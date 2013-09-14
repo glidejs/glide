@@ -87,7 +87,7 @@ Now, you can use **API** as bellow.
 
 
 ##Changelog
-`1.0.2` / `22.08.2013`
+`1.0.2` / `04.09.2013`
 
 - Translate3d slides change (thanks to [OwlFonk](https://github.com/OwlFonk) for suggestion)
 - Extend API, getter for current slide number

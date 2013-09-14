@@ -249,8 +249,10 @@
 
 			// Cache
 			var navChildren = nav.children();
-      // Add navCurrentItemClass to the first navigation item
-      navChildren.eq(0).addClass(o.navCurrentItemClass);
+			
+			// Add navCurrentItemClass to the first navigation item
+			navChildren.eq(0).addClass(o.navCurrentItemClass);
+			
 			// If centered option is true
 			if (o.navCenter) {
 				// Center bullet navigation
@@ -437,6 +439,8 @@
 	Glide.prototype.swipe = function() {
 		// Cache
 		var _ = this,
+			touch,
+			touchDistance,
 			touchStartX;
 
 		/**
@@ -445,11 +449,9 @@
 		 */
 		_.parent.on('touchstart', function(e) {
 			// Cache event
-			var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
-
-			// Prevent default reaction
-			e.preventDefault();
-			// Cache touch point
+			touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+			
+			// Get touch points
 			touchStartX = touch.pageX;
 		});
 
@@ -459,7 +461,7 @@
 		 */
 		_.parent.on('touchend', function(e) {
 			// Cache event
-			var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+			touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
 			
 			// Calculate touch distance
 			touchDistance = touch.pageX - touchStartX;
@@ -484,18 +486,19 @@
 	 * Set animation type
 	 */
 	Glide.prototype.init = function() {
+		var _ = this,	
 		// Get sidebar width
-		var sliderWidth = this.parent.width();
+		sliderWidth = _.parent.width();
 		// Get slide width
-		this.slides.spread = sliderWidth;
+		_.slides.spread = sliderWidth;
 
 		// Set wrapper width
-		this.wrapper.width(sliderWidth * this.slides.length);
+		_.wrapper.width(sliderWidth * _.slides.length);
 		// Set slide width
-		this.slides.width(this.slides.spread);
+		_.slides.width(_.slides.spread);
 
 		// If CSS3 Transition isn't supported set animation to $.animate()
-		if ( !isCssSupported("transition") || !isCssSupported("transform") ) this.animationType = 'animate';
+		if ( !isCssSupported("transition") || !isCssSupported("transform") ) _.animationType = 'animate';
 	};
 
 	/**

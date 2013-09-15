@@ -72,7 +72,7 @@ Make glide api instance.
 	var glide = $('.slider').glide().data('api_glide');
 
 
-Now, you can use **API** as bellow.
+Now, you can use API as bellow.
 
 	glide.jump(3, console.log('Wooo!'));
 
@@ -87,6 +87,11 @@ Now, you can use **API** as bellow.
 
 
 ##Changelog
+`1.0.3` / `15.09.2013`
+
+- Code refactoring
+
+
 `1.0.2` / `04.09.2013`
 
 - Translate3d slides change (thanks to [OwlFonk](https://github.com/OwlFonk) for suggestion)

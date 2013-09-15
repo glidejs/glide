@@ -77,8 +77,8 @@
 		_.slides = _.wrapper.children();
 		// Current slide id
 		_.currentSlide = 0;
-		// Animation type
-		_.animationType = 'css';
+		// CSS3 Animation support
+		_.CSS3support = true;
 
 		// Initialize
 		_.init();
@@ -89,15 +89,22 @@
 
 		/**
 		 * Controller
+		 * Touch events
+		 */
+		if (_.options.touchDistance) {
+			// Init swipe
+			_.swipe();
+		}
+
+		/**
+		 * Controller
 		 * Keyboard left and right arrow keys
 		 */
 		$(document).on('keyup', function(k) {
-
-				// Next
-				if (k.keyCode === 39) _.slide(1);
-				// Prev
-				if (k.keyCode === 37) _.slide(-1);
-
+			// Next
+			if (k.keyCode === 39) _.slide(1);
+			// Prev
+			if (k.keyCode === 37) _.slide(-1);
 		});
 
 		/**
@@ -112,15 +119,6 @@
 			// When mouse left slider or touch end, start autoplay anew
 			if (e.type === 'mouseout') _.play();
 		});
-
-		/**
-		 * Controller
-		 * Touch events
-		 */
-		if (_.options.touchDistance) {
-			// Init swipe
-			_.swipe();
-		}
 
 		/**
 		 * Controller
@@ -346,58 +344,67 @@
 			navCurrentClass = _.options.navCurrentItemClass,
 			slidesSpread = _.slides.spread;
 
-		// Before animating clear autoplay
-		_.clearAutoplay(function(){		
-			/**
-			 * Check if current slide is first and direction is previous, then go to last slide
-			 * or current slide is last and direction is next, then go to the first slide
-			 * else change current slide normally
-			 */
-			if ( currentSlide === 0 && distance === -1 ) {
-				currentSlide = slidesLength;
-			} else if ( currentSlide === slidesLength && distance === 1 ) {
-				currentSlide = 0;
-			} else {
-				currentSlide = currentSlide + (-distance);
-			}
+		/**
+		 * Stop autoplay
+		 * Clearing timer
+		 */
+		_.pause();
 
-			/**
-			 * Crop to current slide.
-			 * Mul slide width by current slide number.
-			 */
-			var translate = slidesSpread * currentSlide + 'px';
+		/**
+		 * Check if current slide is first and direction is previous, then go to last slide
+		 * or current slide is last and direction is next, then go to the first slide
+		 * else change current slide normally
+		 */
+		if ( currentSlide === 0 && distance === -1 ) {
+			currentSlide = slidesLength;
+		} else if ( currentSlide === slidesLength && distance === 1 ) {
+			currentSlide = 0;
+		} else {
+			currentSlide = currentSlide + (-distance);
+		}
 
-			// While CSS translate is supported
-			if (_.animationType === 'css') {
-				// Croping by increasing/decreasing slider wrapper translate
-				_.wrapper.css({
-					'-webkit-transform': 'translate3d('+ translate +', 0px, 0px)', 
-					'-moz-transform': 'translate3d('+ translate +', 0px, 0px)', 
-					'-ms-transform': 'translate3d('+ translate +', 0px, 0px)', 
-					'-o-transform': 'translate3d('+ translate +', 0px, 0px)', 
-					'transform': 'translate3d('+ translate +', 0px, 0px)' 
-				});
-			// Else use $.animate()
-			} else {
-				// Croping by increasing/decreasing slider wrapper margin
-				_.wrapper.stop()[_.animationType]({ 'margin-left': translate }, _.options.animationTime);
-			}
+		/**
+		 * Crop to current slide.
+		 * Mul slide width by current slide number.
+		 */
+		var translate = slidesSpread * currentSlide + 'px';
 
-			// Set to navigation item current class
-			if (_.options.nav) {
-				_.navWrapper.children()
-					.eq(-currentSlide)
-						.addClass(navCurrentClass)
-							.siblings()
-								.removeClass(navCurrentClass);
-			}
+		// While CSS3 is supported
+		if (_.CSS3support) {
+			// Croping by increasing/decreasing slider wrapper translate
+			_.wrapper.css({
+				'-webkit-transform': 'translate3d('+ translate +', 0px, 0px)', 
+				'-moz-transform': 'translate3d('+ translate +', 0px, 0px)', 
+				'-ms-transform': 'translate3d('+ translate +', 0px, 0px)', 
+				'-o-transform': 'translate3d('+ translate +', 0px, 0px)', 
+				'transform': 'translate3d('+ translate +', 0px, 0px)' 
+			});
+		// Else use $.animate()
+		} else {
+			// Croping by increasing/decreasing slider wrapper margin
+			_.wrapper.stop().animate({ 'margin-left': translate }, _.options.animationTime);
+		}
 
-			// Update current slide globaly
-			_.currentSlide = currentSlide;
+		// Set to navigation item current class
+		if (_.options.nav) {
+			_.navWrapper.children()
+				.eq(-currentSlide)
+					.addClass(navCurrentClass)
+						.siblings()
+							.removeClass(navCurrentClass);
+		}
 
-			// Callback
-			if ( (callback !== 'undefined') && (typeof callback === 'function') ) callback();
-		});
+		// Update current slide globaly
+		_.currentSlide = currentSlide;
+
+		// Callback
+		if ( (callback !== 'undefined') && (typeof callback === 'function') ) callback();
+		
+		/**
+		 * Start autoplay
+		 * After slide
+		 */
+		_.play();
 	};
 
 	/**
@@ -422,16 +429,6 @@
 		if (this.options.autoplay) {
 			this.auto = clearInterval(this.auto);
 		}
-	};
-
-	/**
-	 * Reset autoplay timer
-	 * @param  {Function} callback
-	 */
-	Glide.prototype.clearAutoplay = function(callback) {
-		this.pause();
-		(typeof callback === 'function') ? callback() : callback;
-		this.play();
 	};
 
 	/**
@@ -467,17 +464,15 @@
 			// Calculate touch distance
 			touchDistance = touch.pageX - touchStartX;
 
-
-				// While touch is positive and greater than distance set in options
-				if ( touchDistance > _.options.touchDistance ) {
-					// Slide one backward
-					_.slide(-1);
-				// While touch is negative and lower than negative distance set in options
-				} else if ( touchDistance < -_.options.touchDistance) {
-					// Slide one forward
-					_.slide(1);
-				}
-
+			// While touch is positive and greater than distance set in options
+			if ( touchDistance > _.options.touchDistance ) {
+				// Slide one backward
+				_.slide(-1);
+			// While touch is negative and lower than negative distance set in options
+			} else if ( touchDistance < -_.options.touchDistance) {
+				// Slide one forward
+				_.slide(1);
+			}
 		});
 	};
 
@@ -498,8 +493,8 @@
 		// Set slide width
 		_.slides.width(_.slides.spread);
 
-		// If CSS3 Transition isn't supported set animation to $.animate()
-		if ( !isCssSupported("transition") || !isCssSupported("transform") ) _.animationType = 'animate';
+		// If CSS3 Transition isn't supported switch CSS3support variable to false and use $.animate()
+		if ( !isCssSupported("transition") || !isCssSupported("transform") ) _.CSS3support = false;
 	};
 
 	/**

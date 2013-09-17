@@ -87,6 +87,10 @@ Now, you can use API as bellow.
 
 
 ##Changelog
+`1.0.4` / `17.09.2013`
+
+- Refined swipe event
+
 `1.0.3` / `15.09.2013`
 
 - Code refactoring

@@ -439,7 +439,18 @@
 		var _ = this,
 			touch,
 			touchDistance,
-			touchStartX;
+			touchStartX,
+			touchStartY,
+			touchEndX,
+			touchEndY,
+			touchHypotenuse,
+			touchCathetus,
+			touchSin,
+			MathPI = 180 / Math.PI,
+			subExSx,
+			subEySy,
+			powEX,
+			powEY;
 
 		/**
 		 * Touch start
@@ -449,8 +460,41 @@
 			// Cache event
 			touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
 			
-			// Get touch points
+			// Get touch start points
 			touchStartX = touch.pageX;
+			touchStartY = touch.pageY;
+		});
+
+		/**
+		 * Touch move
+		 * From swipe length segments calculate swipe angle
+		 * @param  {Obejct} e event
+		 */
+		_.parent.on('touchmove', function(e) {
+			// Cache event
+			touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+
+			// Get touch end points
+			touchEndX = touch.pageX;
+			touchEndY = touch.pageY;
+
+			// Calculate start, end points
+			subExSx = touchEndX - touchStartX;
+			subEySy = touchEndY - touchStartY;
+			// Bitwise subExSx pow
+			powEX = Math.abs( subExSx << 2 );
+			// Bitwise subEySy pow
+			powEY = Math.abs( subEySy << 2 );
+			
+			// Calculate the length of the hypotenuse segment
+			touchHypotenuse = Math.sqrt( powEX + powEY );
+			// Calculate the length of the cathetus segment
+			touchCathetus = Math.sqrt( powEY );
+			// Calculate the sine of the angle
+			touchSin = Math.asin( touchCathetus/touchHypotenuse );
+
+			// While touch angle is lower than 32 degrees, block vertical scroll
+			if( (touchSin * MathPI) < 32 ) e.preventDefault();
 		});
 
 		/**

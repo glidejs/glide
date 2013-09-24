@@ -5,7 +5,8 @@
  | Here are slider styles
  | 
 */
-
+// This is to prevent the images and text to blink in chrome and safari.
+body{-webkit-transform: translateZ(0);}
 .slider {
 	position: relative;
 	width: 100%;

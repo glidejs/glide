@@ -1,6 +1,6 @@
 /*
  * Glide.js
- * Ver: 1.0.1
+ * Ver: 1.0.4
  * Simple & efficient jQuery slider
  * Autor: @JedrzejChalubek
  * url: http://jedrzejchalubek.com
@@ -565,8 +565,12 @@
 			}
 		}
 
+		if (window.opera) {
+			if (window.opera.version() < 13) supported = false;
+		}
+
 		return supported;
-	}
+	}  
 
 	$.fn[name] = function (options) {
 		return this.each(function () {

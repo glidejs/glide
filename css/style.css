@@ -74,21 +74,3 @@
 
 				.slider-nav__item:hover { background: #ccc; }
 				.slider-nav__item--current { background: #ccc; }
-
-	.slider-loader {
-		position: absolute;
-		bottom: 0; left: 0;
-		width: 0;
-		height: 10px;
-		background: #000;
-
-		/**
-		 * Here is CSS transitions 
-		 * responsible for slider animation in modern broswers
-		 */
-		-webkit-transition: all 500ms cubic-bezier(0.165, 0.840, 0.440, 1.000); 
-		   -moz-transition: all 500ms cubic-bezier(0.165, 0.840, 0.440, 1.000); 
-		    -ms-transition: all 500ms cubic-bezier(0.165, 0.840, 0.440, 1.000); 
-		     -o-transition: all 500ms cubic-bezier(0.165, 0.840, 0.440, 1.000); 
-		        transition: all 500ms cubic-bezier(0.165, 0.840, 0.440, 1.000);
-	}

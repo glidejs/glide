@@ -7,42 +7,55 @@ Glide is responsive and touch-friendly jQuery slider. Based on CSS3 transitions 
 ###1. Include jQuery
 jQuery is the only dependency. Make sure to include it.
 
-	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+``` html
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+```
 
 ###2. Include Glide.js
-	<script src="jquery.glide.js"></script>
+
+``` html
+<script src="jquery.glide.js"></script>
+```
 
 ###3. Make necessary markup
 Link to slider stylesheet inside document head.
-	
-	<link rel="stylesheet" type="text/css" href="css/style.css">
+
+``` html	
+<link rel="stylesheet" type="text/css" href="css/style.css">
+```
 	
 Make necessary markup for slider.
 
-    <div class="slider">
-    	<ul class="slides">
-    		<li class="slide"></li>
-    		<li class="slide"></li>
-    		<li class="slide"></li>
-    	</ul>
-    </div>
+``` html
+<div class="slider">
+  <ul class="slides">
+    <li class="slide"></li>
+    <li class="slide"></li>
+    <li class="slide"></li>
+  </ul>
+</div>
+```
 
 ###4. Init
 Init our slider on default options ...
 
-	<script>
-		$('.slider').glide();
-	</script>
+``` html
+<script>
+	$('.slider').glide();
+</script>
+```
 	
 … or with custom options
 
-	<script>
-		$('.slider').glide({
-			autoplay: 5000,
-			arrows: 'body',
-			nav: 'body'
-		});
-	</script>
+``` html
+<script>
+	$('.slider').glide({
+		autoplay: 5000,
+		arrows: 'body',
+		nav: 'body'
+	});
+</script>
+```
 
 ##Options
 Here is all list of averaible
@@ -69,12 +82,16 @@ Here is all list of averaible
 
 Make glide api instance.
 
-	var glide = $('.slider').glide().data('api_glide');
+``` js
+var glide = $('.slider').glide().data('api_glide');
+```
 
 
 Now, you can use API as bellow.
 
-	glide.jump(3, console.log('Wooo!'));
+``` js
+glide.jump(3, console.log('Wooo!'));
+```
 
 - `.play()` - Starting autoplay
 - `.pause()` - Stopping autoplay

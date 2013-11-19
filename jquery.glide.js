@@ -548,13 +548,12 @@
 	 */
 	function isCssSupported(declaration) {
 		var supported = false,
-			prefixes = 'Khtml Ms O Moz Webkit'.split(' '),
+			prefixes = 'Khtml ms O Moz Webkit'.split(' '),
 			clone = document.createElement('div'),
 			declarationCapital = null;
 
 		declaration = declaration.toLowerCase();
-
-		if (clone.style[declaration]) supported = true;
+		if (clone.style[declaration] !== undefined) supported = true;
 		if (supported === false) {
 			declarationCapital = declaration.charAt(0).toUpperCase() + declaration.substr(1);
 			for( var i = 0; i < prefixes.length; i++ ) {

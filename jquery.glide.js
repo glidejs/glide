@@ -232,17 +232,18 @@
 				item;
 
 			// Generate navigation items
-			for (var i = 0; i < _.slides.length; i++) {
+			_.slides.each(function(i){
 				item = $('<a />', {
 					'href': '#',
 					'class': o.navItemClass,
 					// Direction and distance -> Item index forward
-					'data-distance': i
+					'data-distance': i,
+					'title' : $(this).data("nav-title") || ''
 				}).appendTo(nav);
 
 				nav[i+1] = item;
-			}
-
+			});
+			
 			// Cache
 			var navChildren = nav.children();
 			

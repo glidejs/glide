@@ -57,7 +57,8 @@
 			navCurrentItemClass: 'slider-nav__item--current',
 
 			// {Int or Bool} Touch settings
-			touchDistance: 60
+			touchDistance: 60,
+			beforeTransition: false
 		};
 
 	/**
@@ -343,6 +344,9 @@
 			slidesLength = -(_.slides.length-1),
 			navCurrentClass = _.options.navCurrentItemClass,
 			slidesSpread = _.slides.spread;
+
+		if (_.options.beforeTransition)
+			_.options.beforeTransition.call(_)
 
 		/**
 		 * Stop autoplay

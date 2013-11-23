@@ -58,7 +58,8 @@
 
 			// {Int or Bool} Touch settings
 			touchDistance: 60,
-			beforeTransition: false
+			beforeTransition: false,
+			afterTransition: false
 		};
 
 	/**
@@ -404,6 +405,10 @@
 		// Callback
 		if ( (callback !== 'undefined') && (typeof callback === 'function') ) callback();
 		
+		if (_.options.afterTransition)
+			_.options.afterTransition.call(_)
+
+
 		/**
 		 * Start autoplay
 		 * After slide

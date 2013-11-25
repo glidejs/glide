@@ -58,8 +58,11 @@
 
 			// {Int or Bool} Touch settings
 			touchDistance: 60,
-			beforeTransition: false,
-			afterTransition: false
+
+			// {Function} Callback before slide change
+			beforeTransition: function() {},
+			// {Function} Callback after slide change
+			afterTransition: function() {}
 		};
 
 	/**
@@ -346,14 +349,14 @@
 			navCurrentClass = _.options.navCurrentItemClass,
 			slidesSpread = _.slides.spread;
 
-		if (_.options.beforeTransition)
-			_.options.beforeTransition.call(_)
-
 		/**
 		 * Stop autoplay
 		 * Clearing timer
 		 */
 		_.pause();
+
+		// Callbacks before slide change
+		if ( isFunction(_.options.beforeTransition) ) _.options.beforeTransition.call(_);
 
 		/**
 		 * Check if current slide is first and direction is previous, then go to last slide
@@ -401,13 +404,10 @@
 
 		// Update current slide globaly
 		_.currentSlide = currentSlide;
-
-		// Callback
-		if ( (callback !== 'undefined') && (typeof callback === 'function') ) callback();
 		
-		if (_.options.afterTransition)
-			_.options.afterTransition.call(_)
-
+		// Callbacks after slide change
+		if ( isFunction(_.options.afterTransition) ) _.options.afterTransition.call(_);
+		if ( isFunction(callback) ) callback();
 
 		/**
 		 * Start autoplay
@@ -578,7 +578,12 @@
 		}
 
 		return supported;
-	}  
+	}
+
+	function isFunction(element) {
+		if ( (element !== 'undefined') && (typeof element === 'function') ) return true;
+		return false;
+	}
 
 	$.fn[name] = function (options) {
 		return this.each(function () {

@@ -57,7 +57,9 @@
 			navCurrentItemClass: 'slider-nav__item--current',
 
 			// {Int or Bool} Touch settings
-			touchDistance: 60
+			touchDistance: 60,
+			beforeTransition: false,
+			afterTransition: false
 		};
 
 	/**
@@ -344,6 +346,9 @@
 			navCurrentClass = _.options.navCurrentItemClass,
 			slidesSpread = _.slides.spread;
 
+		if (_.options.beforeTransition)
+			_.options.beforeTransition.call(_)
+
 		/**
 		 * Stop autoplay
 		 * Clearing timer
@@ -400,6 +405,10 @@
 		// Callback
 		if ( (callback !== 'undefined') && (typeof callback === 'function') ) callback();
 		
+		if (_.options.afterTransition)
+			_.options.afterTransition.call(_)
+
+
 		/**
 		 * Start autoplay
 		 * After slide

@@ -77,6 +77,8 @@ Here is all list of averaible
 | `navItemClass` | `slider-nav__item` | string | Navigation item class
 | `navCurrentItemClass` | `slider-nav__item--current` | string | Current navigation item class
 | `touchDistance` | `60` | int/bool | Minimal touch-swipe distance to call event. False for turning off touch.
+| `beforeTransition` | `function(){}` | function | Callback before slide change
+| `afterTransition` | `function(){}` | function | Callback after slide change
 
 ##API
 

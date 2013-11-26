@@ -1,6 +1,6 @@
 /*
  * Glide.js
- * Ver: 1.0.4
+ * Ver: 1.0.5
  * Simple & efficient jQuery slider
  * Autor: @JedrzejChalubek
  * url: http://jedrzejchalubek.com
@@ -580,6 +580,11 @@
 		return supported;
 	}
 
+	/**
+	 * Function to check function typof
+	 * @param  {Mixed}  element
+	 * @return {Boolean}
+	 */
 	function isFunction(element) {
 		if ( (element !== 'undefined') && (typeof element === 'function') ) return true;
 		return false;

@@ -58,7 +58,7 @@ Init our slider on default options ...
 ```
 
 ##Options
-Here is all list of averaible
+Here is list of all available
 
 | Option | Default | Type | Description
 |-------|--------|-----|-----
@@ -106,6 +106,10 @@ glide.jump(3, console.log('Wooo!'));
 
 
 ##Changelog
+`1.0.5` / `25.11.2013`
+
+- Added after and before transition callbacks
+
 `1.0.4` / `17.09.2013`
 
 - Refined swipe event

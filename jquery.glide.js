@@ -342,12 +342,8 @@
 	 * @param  {function} callback
 	 */
 	Glide.prototype.slide = function(distance, jump, callback) {
-		// Cache elements 
-		var _ = this,
-			currentSlide = (jump) ? 0 : _.currentSlide,
-			slidesLength = -(_.slides.length-1),
-			navCurrentClass = _.options.navCurrentItemClass,
-			slidesSpread = _.slides.spread;
+
+		var _ = this;
 
 		/**
 		 * Stop autoplay
@@ -357,6 +353,12 @@
 
 		// Callbacks before slide change
 		if ( isFunction(_.options.beforeTransition) ) _.options.beforeTransition.call(_);
+
+		// Cache elements 
+		var	currentSlide = (jump) ? 0 : _.currentSlide,
+			slidesLength = -(_.slides.length-1),
+			navCurrentClass = _.options.navCurrentItemClass,
+			slidesSpread = _.slides.spread;
 
 		/**
 		 * Check if current slide is first and direction is previous, then go to last slide

@@ -77,6 +77,8 @@ Here is list of all available
 | `navItemClass` | `slider-nav__item` | string | Navigation item class
 | `navCurrentItemClass` | `slider-nav__item--current` | string | Current navigation item class
 | `touchDistance` | `60` | int/bool | Minimal touch-swipe distance to call event. False for turning off touch.
+| `beforeInit` | `function(){}` | function | Callback before plugin init
+| `afterInit` | `function(){}` | function | Callback after plugin init
 | `beforeTransition` | `function(){}` | function | Callback before slide change
 | `afterTransition` | `function(){}` | function | Callback after slide change
 
@@ -95,12 +97,12 @@ Now, you can use API as bellow.
 glide.jump(3, console.log('Wooo!'));
 ```
 
+- `.current()` - Returning current slide number
 - `.play()` - Starting autoplay
 - `.pause()` - Stopping autoplay
 - `.next(callback)` - Slide one forward
 - `.prev(callback)` - Slide one backward
 - `.jump(distance, callback)` - Jump to current slide
-- `.current()` - Returning current slide number
 - `.nav(target)` - Append navigation to specifed target (eq. 'body', '.class', '#id')
 - `.arrows(target)` - Append arrows to specifed target (eq. 'body', '.class', '#id')
 
@@ -109,6 +111,7 @@ glide.jump(3, console.log('Wooo!'));
 `1.0.5` / `25.11.2013`
 
 - Added after and before transition callbacks
+- Added after and before init callbacks
 
 `1.0.4` / `17.09.2013`
 

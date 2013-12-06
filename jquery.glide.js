@@ -1,14 +1,17 @@
 /*
  * Glide.js
  * Ver: 1.0.5
- * Simple & efficient jQuery slider
+ * Simple, lightweight and fast jQuery slider
+ * url: http://jedrzejchalubek.com/glide
  * Autor: @JedrzejChalubek
- * url: http://jedrzejchalubek.com
+ * site: http://jedrzejchalubek.com
  * Licensed under the MIT license
  */
 ;(function ($, window, document, undefined) {
+	
 	var name = 'glide',
 		defaults = {
+			
 			// {Int or Bool} False for turning off autoplay
 			autoplay: 4000,
 			/**
@@ -59,10 +62,16 @@
 			// {Int or Bool} Touch settings
 			touchDistance: 60,
 
+			// {Function} Callback before plugin init
+			beforeInit: function() {},
+			// {Function} Callback after plugin init
+			afterInit: function() {},
+
 			// {Function} Callback before slide change
 			beforeTransition: function() {},
 			// {Function} Callback after slide change
 			afterTransition: function() {}
+		
 		};
 
 	/**
@@ -71,9 +80,11 @@
 	 * @param {Object} options
 	 */
 	function Glide(parent, options) {
+		
+		// Cache this
 		var _ = this;
+		// Extend options
 		_.options = $.extend({}, defaults, options);
-
 		// Sidebar
 		_.parent = parent;
 		// Slides Wrapper
@@ -84,6 +95,9 @@
 		_.currentSlide = 0;
 		// CSS3 Animation support
 		_.CSS3support = true;
+
+		// Callbacks before plugin init
+		_.options.beforeInit.call(_);
 
 		// Initialize
 		_.init();
@@ -118,7 +132,7 @@
 		 * When mouse is over slider, pause autoplay
 		 * On out, start autoplay again
 		 */
-		_.parent.add(_.arrows).add(_.nav).on('mouseover mouseout', function (e) {
+		_.parent.add(_.arrows).add(_.nav).on('mouseover mouseout', function(e) {
 			// Pasue autoplay
 			_.pause();
 			// When mouse left slider or touch end, start autoplay anew
@@ -140,28 +154,63 @@
 			_.slide(0);
 		});
 
-		/**
-		 * Returning API
-		 */
+		// Callback after plugin init
+		_.options.afterInit.call(_);
+
+		// Returning API
 		return {
+			
+			/**
+			 * Get current slide number
+			 * @return {Int}
+			 */
 			current: function() {
 				return -(_.currentSlide) + 1;
 			},
+
+			/**
+			 * Start autoplay
+			 */
 			play: function() {
 				_.play();
 			},
+
+			/**
+			 * Stop autoplay
+			 */
 			pause: function() {
 				_.pause();
 			},
+
+			/**
+			 * Slide one forward
+			 * @param  {Function} callback
+			 */
 			next: function(callback) {
 				_.slide(1, false, callback);
 			},
+
+			/**
+			 * Slide one backward
+			 * @param  {Function} callback
+			 */
 			prev: function(callback) {
 				_.slide(-1, false, callback);
 			},
+
+			/**
+			 * Jump to specifed slide
+			 * @param  {Int}   	  distance 
+			 * @param  {Function} callback
+			 */
 			jump: function(distance, callback) {
 				_.slide(distance-1, true, callback);
 			},
+
+			/**
+			 * Append navigation to specifet target
+			 * @param  {Mixed} target 
+			 */
 			nav: function(target) {
 				/**
 				 * If navigation wrapper already exist
@@ -174,6 +223,11 @@
 				// Build
 				_.navigation();
 			},
+
+			/**
+			 * Append arrows to specifet target
+			 * @param  {Mixed} target
+			 */
 			arrows: function(target) {
 				/**
 				 * If arrows wrapper already exist
@@ -186,13 +240,17 @@
 				// Build
 				_.arrows();
 			}
+
 		};
+	
 	}
 
 	/**
 	 * Building slider DOM
 	 */
 	Glide.prototype.build = function() {
+		
+		// Cache this
 		var _ = this;
 		
 		/**
@@ -208,16 +266,19 @@
 		 * Append navigation item for each slide
 		 */
 		if (_.options.nav) _.navigation();
+	
 	};
 
 	/**
 	 * Building navigation DOM
 	 */
 	Glide.prototype.navigation = function() {
+
+		// Cache this
 		var _ = this;
 
 		if (_.slides.length > 1) {
-			// Cache
+			// Setup variables
 			var o = _.options,
 				/**
 				 * Setting append target
@@ -232,7 +293,7 @@
 				'class': o.navClass
 			}).appendTo(target);
 
-			// Cache
+			// Setup variables
 			var nav = _.navWrapper,
 				item;
 
@@ -248,7 +309,7 @@
 				nav[i+1] = item;
 			}
 
-			// Cache
+			// Setup variables
 			var navChildren = nav.children();
 			
 			// Add navCurrentItemClass to the first navigation item
@@ -276,15 +337,19 @@
 				_.slide( $(this).data('distance'), true );
 			});
 		}
+	
 	};
 
 	/**
 	 * Building arrows DOM
 	 */
 	Glide.prototype.arrows = function() {
+
+		// Cache this
 		var _ = this;
 		
 		if (_.slides.length > 1) {
+			// Setup variables
 			var o = _.options,
 				/**
 				 * Setting append target
@@ -299,7 +364,7 @@
 				'class': o.arrowsWrapperClass
 			}).appendTo(target);
 
-			// Cache
+			// Setup variables
 			var arrows = _.arrowsWrapper;
 
 			// Right arrow
@@ -332,6 +397,7 @@
 				_.slide( $(this).data('distance'), false );
 			});
 		}
+	
 	};
 
 
@@ -343,6 +409,7 @@
 	 */
 	Glide.prototype.slide = function(distance, jump, callback) {
 
+		// Cache this
 		var _ = this;
 
 		/**
@@ -352,9 +419,9 @@
 		_.pause();
 
 		// Callbacks before slide change
-		if ( isFunction(_.options.beforeTransition) ) _.options.beforeTransition.call(_);
+		_.options.beforeTransition.call(_);
 
-		// Cache elements 
+		// Setup variables 
 		var	currentSlide = (jump) ? 0 : _.currentSlide,
 			slidesLength = -(_.slides.length-1),
 			navCurrentClass = _.options.navCurrentItemClass,
@@ -383,16 +450,17 @@
 		if (_.CSS3support) {
 			// Croping by increasing/decreasing slider wrapper translate
 			_.wrapper.css({
-				'-webkit-transform': 'translate3d('+ translate +', 0px, 0px)', 
-				'-moz-transform': 'translate3d('+ translate +', 0px, 0px)', 
-				'-ms-transform': 'translate3d('+ translate +', 0px, 0px)', 
-				'-o-transform': 'translate3d('+ translate +', 0px, 0px)', 
-				'transform': 'translate3d('+ translate +', 0px, 0px)' 
+				'-webkit-transform': 'translate3d(' + translate + ', 0px, 0px)', 
+				   '-moz-transform': 'translate3d(' + translate + ', 0px, 0px)', 
+				    '-ms-transform': 'translate3d(' + translate + ', 0px, 0px)', 
+				     '-o-transform': 'translate3d(' + translate + ', 0px, 0px)', 
+				        'transform': 'translate3d(' + translate + ', 0px, 0px)' 
 			});
 		// Else use $.animate()
 		} else {
 			// Croping by increasing/decreasing slider wrapper margin
-			_.wrapper.stop().animate({ 'margin-left': translate }, _.options.animationTime);
+			_.wrapper.stop()
+				.animate({ 'margin-left': translate }, _.options.animationTime);
 		}
 
 		// Set to navigation item current class
@@ -408,14 +476,15 @@
 		_.currentSlide = currentSlide;
 		
 		// Callbacks after slide change
-		if ( isFunction(_.options.afterTransition) ) _.options.afterTransition.call(_);
-		if ( isFunction(callback) ) callback();
+		_.options.afterTransition.call(_);
+		if ( (callback !== 'undefined') && (typeof callback === 'function') ) callback();
 
 		/**
 		 * Start autoplay
 		 * After slide
 		 */
 		_.play();
+	
 	};
 
 	/**
@@ -423,13 +492,20 @@
 	 * Setup counting
 	 */
 	Glide.prototype.play = function() {
+
+		// Cache this
 		var _ = this;
 
+		/**
+		 * If autoplay turn on
+		 * Slide one forward after a set time
+		 */
 		if (_.options.autoplay) {
 			_.auto = setInterval(function() {
 				_.slide(1, false);
 			}, _.options.autoplay);
 		}
+
 	};
 
 	/**
@@ -437,16 +513,26 @@
 	 * Clear counting
 	 */
 	Glide.prototype.pause = function() {
-		if (this.options.autoplay) {
-			this.auto = clearInterval(this.auto);
+
+		// Cache this
+		var _ = this;
+
+		/**
+		 * If autoplay turn on
+		 * Clear interial
+		 */
+		if (_.options.autoplay) {
+			_.auto = clearInterval(_.auto);
 		}
+
 	};
 
 	/**
 	 * Change sildes on swipe event
 	 */
 	Glide.prototype.swipe = function() {
-		// Cache
+		
+		// Setup variables
 		var _ = this,
 			touch,
 			touchDistance,
@@ -529,6 +615,7 @@
 				_.slide(1);
 			}
 		});
+	
 	};
 
 	/**
@@ -537,19 +624,22 @@
 	 * Set animation type
 	 */
 	Glide.prototype.init = function() {
+		
+		// Cache this
 		var _ = this,	
-		// Get sidebar width
-		sliderWidth = _.parent.width();
-		// Get slide width
-		_.slides.spread = sliderWidth;
+			// Get sidebar width
+			sliderWidth = _.parent.width();
+			// Get slide width
+			_.slides.spread = sliderWidth;
 
-		// Set wrapper width
-		_.wrapper.width(sliderWidth * _.slides.length);
-		// Set slide width
-		_.slides.width(_.slides.spread);
+			// Set wrapper width
+			_.wrapper.width(sliderWidth * _.slides.length);
+			// Set slide width
+			_.slides.width(_.slides.spread);
 
 		// If CSS3 Transition isn't supported switch CSS3support variable to false and use $.animate()
 		if ( !isCssSupported("transition") || !isCssSupported("transform") ) _.CSS3support = false;
+	
 	};
 
 	/**
@@ -558,41 +648,35 @@
 	 * @return {Boolean}
 	 */
 	function isCssSupported(declaration) {
-		var supported = false,
+		
+		var isSupported = false,
 			prefixes = 'Khtml ms O Moz Webkit'.split(' '),
 			clone = document.createElement('div'),
 			declarationCapital = null;
 
 		declaration = declaration.toLowerCase();
-		if (clone.style[declaration] !== undefined) supported = true;
-		if (supported === false) {
+		if (clone.style[declaration] !== undefined) isSupported = true;
+		if (isSupported === false) {
 			declarationCapital = declaration.charAt(0).toUpperCase() + declaration.substr(1);
 			for( var i = 0; i < prefixes.length; i++ ) {
 				if( clone.style[prefixes[i] + declarationCapital ] !== undefined ) {
-					supported = true;
+					isSupported = true;
 					break;
 				}
 			}
 		}
 
 		if (window.opera) {
-			if (window.opera.version() < 13) supported = false;
+			if (window.opera.version() < 13) isSupported = false;
 		}
 
-		return supported;
+		
+		return isSupported;
+
 	}
 
-	/**
-	 * Function to check function typof
-	 * @param  {Mixed}  element
-	 * @return {Boolean}
-	 */
-	function isFunction(element) {
-		if ( (element !== 'undefined') && (typeof element === 'function') ) return true;
-		return false;
-	}
+	$.fn[name] = function(options) {
 
-	$.fn[name] = function (options) {
 		return this.each(function () {
 			if ( !$.data(this, 'api_' + name) ) {
 				$.data(this, 'api_' + name,
@@ -600,6 +684,7 @@
 				);
 			}
 		});
+		
 	};
 
 })(jQuery, window, document);

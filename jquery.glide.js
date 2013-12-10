@@ -464,7 +464,7 @@
 		}
 
 		// Set to navigation item current class
-		if (_.options.nav) {
+		if (_.options.nav && _.navWrapper) {
 			_.navWrapper.children()
 				.eq(-currentSlide)
 					.addClass(navCurrentClass)

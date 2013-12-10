@@ -62,7 +62,8 @@ Here is list of all available
 
 | Option | Default | Type | Description
 |-------|--------|-----|-----
-| `autoplay` | `4000` | int/bool | False for turning off autoplay 
+| `autoplay` | `4000` | int/bool | False for turning off autoplay
+| `hoverpause` | `true` | bool | Pause autoplay on mouseover slider 
 | `animationTime` | `500` | int | !!! That option will be use only, when css3 are not suported. If css3 are supported animation time is set in css transitions declaration inside .css file !!!
 | `arrows` | `true` | bool/string | Show/hide/appendTo arrows. True for append arrows to slider wrapper. False for not appending arrows. Id or class name (e.g. '.class-name') for appending to specific HTML markup
 | `arrowsWrapperClass` | `slider-arrows` | string | Arrows wrapper class
@@ -76,6 +77,7 @@ Here is list of all available
 | `navClass` | `slider-nav` | string | Navigation wrapper class
 | `navItemClass` | `slider-nav__item` | string | Navigation item class
 | `navCurrentItemClass` | `slider-nav__item--current` | string | Current navigation item class
+| `keyboard` | `true` | bool | Slide on left/right keyboard arrows press
 | `touchDistance` | `60` | int/bool | Minimal touch-swipe distance to call event. False for turning off touch.
 | `beforeInit` | `function(){}` | function | Callback before plugin init
 | `afterInit` | `function(){}` | function | Callback after plugin init
@@ -112,6 +114,7 @@ glide.jump(3, console.log('Wooo!'));
 
 - Added after and before transition callbacks
 - Added after and before init callbacks
+- Added `hoverpause` and `keyboard` options
 
 `1.0.4` / `17.09.2013`
 
@@ -137,3 +140,6 @@ glide.jump(3, console.log('Wooo!'));
 `1.0.0` / `19.08.2013`
 
 - Plugin release
+
+##License
+Glide is Copyright © 2013 [Jędrzej Chałubek](http://jedrzejchalubek.com) and is licensed under the terms of the [MIT License](http://opensource.org/licenses/MIT).

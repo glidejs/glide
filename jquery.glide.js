@@ -14,6 +14,9 @@
 			
 			// {Int or Bool} False for turning off autoplay
 			autoplay: 4000,
+			// {Bool} Pause autoplay on mouseover slider
+			hoverpause: true,
+			
 			/**
 			 * Animation time 
 			 * !!! IMPORTANT !!!
@@ -58,6 +61,9 @@
 			navItemClass: 'slider-nav__item',
 			// {String} Current navigation item class
 			navCurrentItemClass: 'slider-nav__item--current',
+
+			// {Bool} Slide on left/right keyboard arrows press
+			keyboard: true,
 
 			// {Int or Bool} Touch settings
 			touchDistance: 60,
@@ -119,12 +125,14 @@
 		 * Controller
 		 * Keyboard left and right arrow keys
 		 */
-		$(document).on('keyup', function(k) {
-			// Next
-			if (k.keyCode === 39) _.slide(1);
-			// Prev
-			if (k.keyCode === 37) _.slide(-1);
-		});
+		if (_.options.keyboard) {
+			$(document).on('keyup', function(k) {
+				// Next
+				if (k.keyCode === 39) _.slide(1);
+				// Prev
+				if (k.keyCode === 37) _.slide(-1);
+			});
+		}
 
 		/**
 		 * Controller
@@ -132,12 +140,14 @@
 		 * When mouse is over slider, pause autoplay
 		 * On out, start autoplay again
 		 */
-		_.parent.add(_.arrows).add(_.nav).on('mouseover mouseout', function(e) {
-			// Pasue autoplay
-			_.pause();
-			// When mouse left slider or touch end, start autoplay anew
-			if (e.type === 'mouseout') _.play();
-		});
+		if (_.options.hoverpause) {
+			_.parent.add(_.arrows).add(_.nav).on('mouseover mouseout', function(e) {
+				// Pasue autoplay
+				_.pause();
+				// When mouse left slider or touch end, start autoplay anew
+				if (e.type === 'mouseout') _.play();
+			});
+		}
 
 		/**
 		 * Controller
@@ -219,6 +229,7 @@
 				if (_.navWrapper) {
 					_.navWrapper.remove();
 				}
+				// While target isn't specifed, use slider wrapper
 				_.options.nav = (target) ? target : _.options.nav;
 				// Build
 				_.navigation();
@@ -236,6 +247,7 @@
 				if (_.arrowsWrapper) {
 					_.arrowsWrapper.remove();
 				}
+				// While target isn't specifed, use slider wrapper
 				_.options.arrows = (target) ? target : _.options.arrows;
 				// Build
 				_.arrows();
@@ -464,7 +476,7 @@
 		}
 
 		// Set to navigation item current class
-		if (_.options.nav) {
+		if (_.options.nav && _.navWrapper) {
 			_.navWrapper.children()
 				.eq(-currentSlide)
 					.addClass(navCurrentClass)

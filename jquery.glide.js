@@ -183,6 +183,8 @@
 			 */
 			play: function() {
 				_.play();
+				// Return object
+				return _;				
 			},
 
 			/**
@@ -190,6 +192,8 @@
 			 */
 			pause: function() {
 				_.pause();
+				// Return object
+				return _;				
 			},
 
 			/**
@@ -198,6 +202,8 @@
 			 */
 			next: function(callback) {
 				_.slide(1, false, callback);
+				// Return object
+				return _;				
 			},
 
 			/**
@@ -206,6 +212,8 @@
 			 */
 			prev: function(callback) {
 				_.slide(-1, false, callback);
+				// Return object
+				return _;				
 			},
 
 			/**
@@ -215,6 +223,8 @@
 			 */
 			jump: function(distance, callback) {
 				_.slide(distance-1, true, callback);
+				// Return object
+				return _;
 			},
 
 			/**
@@ -233,6 +243,8 @@
 				_.options.nav = (target) ? target : _.options.nav;
 				// Build
 				_.navigation();
+				// Return object
+				return _;
 			},
 
 			/**
@@ -251,6 +263,8 @@
 				_.options.arrows = (target) ? target : _.options.arrows;
 				// Build
 				_.arrows();
+				// Return object
+				return _;
 			}
 
 		};

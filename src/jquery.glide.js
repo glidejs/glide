@@ -1,21 +1,20 @@
 ;(function ($, window, document, undefined) {
-	
+
 	var name = 'glide',
 		defaults = {
-			
+
 			// {Int or Bool} False for turning off autoplay
 			autoplay: 4000,
 			// {Bool} Pause autoplay on mouseover slider
 			hoverpause: true,
-			
-			/**
-			 * Animation time 
-			 * !!! IMPORTANT !!!
-			 * That option will be use only, when css3 are not suported
-			 * If css3 are supported animation time is set in css declaration inside .css file
-			 * @type {Int}
-			 */
-			animationTime: 500,
+
+			// {Bool} Circual play
+			circular: true,
+
+			// {Int} Animation time
+			animationDuration: 500,
+			// {String} Animation easing function
+			animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
 
 			/**
 			 * {Bool or String} Show/hide/appendTo arrows
@@ -43,15 +42,15 @@
 			 * False for not appending arrows
 			 * Id or class name (e.g. '.class-name') for appending to specific HTML markup
 			 */
-			nav: true,
+			navigation: true,
 			// {Bool} Center bullet navigation
-			navCenter: true,
+			navigationCenter: true,
 			// {String} Navigation class
-			navClass: 'slider-nav',
+			navigationClass: 'slider-nav',
 			// {String} Navigation item class
-			navItemClass: 'slider-nav__item',
+			navigationItemClass: 'slider-nav__item',
 			// {String} Current navigation item class
-			navCurrentItemClass: 'slider-nav__item--current',
+			navigationCurrentItemClass: 'slider-nav__item--current',
 
 			// {Bool} Slide on left/right keyboard arrows press
 			keyboard: true,
@@ -68,7 +67,7 @@
 			beforeTransition: function() {},
 			// {Function} Callback after slide change
 			afterTransition: function() {}
-		
+
 		};
 
 	/**
@@ -77,110 +76,66 @@
 	 * @param {Object} options
 	 */
 	function Glide(parent, options) {
-		
+
 		// Cache this
-		var _ = this;
+		var self = this;
+
 		// Extend options
-		_.options = $.extend({}, defaults, options);
-		// Sidebar
-		_.parent = parent;
-		// Slides Wrapper
-		_.wrapper = _.parent.children();
-		// Slides
-		_.slides = _.wrapper.children();
+		this.options = $.extend({}, defaults, options);
 		// Current slide id
-		_.currentSlide = 0;
-		// CSS3 Animation support
-		_.CSS3support = true;
+		this.currentSlide = 0;
+		// If CSS3 Transition isn't supported switch cssSupport variable to false and use $.animate()
+		this.cssSupport = ( !this.css.isSupported("transition") || !this.css.isSupported("transform") ) ? false : true;
+		// If circular set offset, two cloned slides
+		this.offset = (this.options.circular) ? 2 : 0;
 
 		// Callbacks before plugin init
-		_.options.beforeInit.call(_);
+		this.options.beforeInit.call(this);
 
+		// Sidebar
+		this.parent = parent;
 		// Initialize
-		_.init();
-		// Build DOM
-		_.build();
+		this.init();
 		// Start autoplay
-		_.play();
-
-		/**
-		 * Controller
-		 * Touch events
-		 */
-		if (_.options.touchDistance) {
-			// Init swipe
-			_.swipe();
-		}
-
-		/**
-		 * Controller
-		 * Keyboard left and right arrow keys
-		 */
-		if (_.options.keyboard) {
-			$(document).on('keyup', function(k) {
-				// Next
-				if (k.keyCode === 39) _.slide(1);
-				// Prev
-				if (k.keyCode === 37) _.slide(-1);
-			});
-		}
-
-		/**
-		 * Controller
-		 * Mouse over slider
-		 * When mouse is over slider, pause autoplay
-		 * On out, start autoplay again
-		 */
-		if (_.options.hoverpause) {
-			_.parent.add(_.arrows).add(_.nav).on('mouseover mouseout', function(e) {
-				// Pasue autoplay
-				_.pause();
-				// When mouse left slider or touch end, start autoplay anew
-				if (e.type === 'mouseout') _.play();
-			});
-		}
-
-		/**
-		 * Controller
-		 * When resize browser window
-		 * Pause autoplay in fear of escalation
-		 * Reinit plugin for new slider dimensions
-		 * Correct crop to current slide
-		 * Start autoplay from beginning
-		 */
-		$(window).on('resize', function() {
-			// Reinit plugin (set new slider dimensions)
-			_.init();
-			// Crop to current slide
-			_.slide(0);
-		});
+		this.play();
 
 		// Callback after plugin init
-		_.options.afterInit.call(_);
+		this.options.afterInit.call(this);
 
-		// Returning API
+		/**
+		 * API
+		 * Returning slider methods
+		 */
 		return {
-			
+
 			/**
 			 * Get current slide number
 			 * @return {Int}
 			 */
 			current: function() {
-				return -(_.currentSlide) + 1;
+				return -(self.currentSlide) + 1;
+			},
+
+			/**
+			 * Reinit
+			 * Rebuild and recalculate dimensions of slider elements
+			 */
+			reinit: function() {
+				self.init();
 			},
 
 			/**
 			 * Start autoplay
 			 */
 			play: function() {
-				_.play();
+				self.play();
 			},
 
 			/**
 			 * Stop autoplay
 			 */
 			pause: function() {
-				_.pause();
+				self.pause();
 			},
 
 			/**
@@ -188,7 +143,7 @@
 			 * @param  {Function} callback
 			 */
 			next: function(callback) {
-				_.slide(1, false, callback);
+				self.slide(1, false, callback);
 			},
 
 			/**
@@ -196,34 +151,35 @@
 			 * @param  {Function} callback
 			 */
 			prev: function(callback) {
-				_.slide(-1, false, callback);
+				self.slide(-1, false, callback);
 			},
 
 			/**
 			 * Jump to specifed slide
-			 * @param  {Int}   	  distance 
+			 * @param  {Int}   	  distance
 			 * @param  {Function} callback
 			 */
 			jump: function(distance, callback) {
-				_.slide(distance-1, true, callback);
+				self.slide(distance-1, true, callback);
 			},
 
 			/**
 			 * Append navigation to specifet target
-			 * @param  {Mixed} target 
+			 * @param  {Mixed} target
 			 */
 			nav: function(target) {
+
 				/**
 				 * If navigation wrapper already exist
 				 * Remove it, protection before doubled navigation
 				 */
-				if (_.navWrapper) {
-					_.navWrapper.remove();
-				}
+				if (self.navigationWrapper) self.navigationWrapper.remove();
+
 				// While target isn't specifed, use slider wrapper
-				_.options.nav = (target) ? target : _.options.nav;
+				self.options.navigation = (target) ? target : self.options.navigation;
 				// Build
-				_.navigation();
+				self.navigation();
+
 			},
 
 			/**
@@ -231,45 +187,91 @@
 			 * @param  {Mixed} target
 			 */
 			arrows: function(target) {
+
 				/**
 				 * If arrows wrapper already exist
 				 * Remove it, protection before doubled arrows
 				 */
-				if (_.arrowsWrapper) {
-					_.arrowsWrapper.remove();
-				}
+				if (self.arrows.wrapper) self.arrows.wrapper.remove();
+
 				// While target isn't specifed, use slider wrapper
-				_.options.arrows = (target) ? target : _.options.arrows;
+				self.options.arrows = (target) ? target : self.options.arrows;
 				// Build
-				_.arrows();
+				self.arrows();
+
 			}
 
 		};
-	
+
 	}
 
 	/**
-	 * Building slider DOM
+	 * Building slider
 	 */
 	Glide.prototype.build = function() {
-		
-		// Cache this
-		var _ = this;
-		
-		/**
-		 * Arrows
-		 * If option is true and there is more than one slide
-		 * Append left and right arrow
-		 */
-		if (_.options.arrows) _.arrows();
 
 		/**
-		 * Navigation
-		 * If option is true and there is more than one slide
-		 * Append navigation item for each slide
+		 * Attatch bindings
 		 */
-		if (_.options.nav) _.navigation();
-	
+		this.bindings();
+
+		/**
+		 * There is more than one slide
+		 */
+		if (this.slides.length > 1) {
+			/**
+			 * Circular
+			 * If circular option is true
+			 * Append left and right arrow
+			 */
+			if (this.options.circular) this.circular();
+
+			/**
+			 * Arrows
+			 * If arrows option is true
+			 * Append left and right arrow
+			 */
+			if (this.options.arrows) this.arrows();
+
+			/**
+			 * Navigation
+			 * If navigation option is true
+			 * Append navigation item for each slide
+			 */
+			if (this.options.navigation) this.navigation();
+		}
+
+		/**
+		 * Attatch events
+		 */
+		this.events();
+
+	};
+
+	/**
+	 * Build circular DOM elements
+	 * Clone first and last slide
+	 * Set wrapper width with addional slides
+	 * Move slider wrapper to first slide
+	 */
+	Glide.prototype.circular = function() {
+
+		/**
+		 * Clone first and last slide
+		 * and set with for each
+		 */
+		this.firstClone = this.slides.filter(':first-child').clone().width(this.slides.spread);
+		this.lastClone = this.slides.filter(':last-child').clone().width(this.slides.spread);
+
+		/**
+		 * Append clodes slides to slider wrapper at the beginning and end
+		 * Increase wrapper with with values of addional slides
+		 * Clear translate and skip cloned last slide at the beginning
+		 */
+		this.wrapper.append(this.firstClone).prepend(this.lastClone).width( this.parent.width() * (this.slides.length+2) )
+			.trigger('clearTransition')
+				.trigger('setTranslate', [-this.slides.spread]);
+
 	};
 
 	/**
@@ -277,134 +279,376 @@
 	 */
 	Glide.prototype.navigation = function() {
 
-		// Cache this
-		var _ = this;
+		this.navigation.items = {};
 
-		if (_.slides.length > 1) {
-			// Setup variables
-			var o = _.options,
-				/**
-				 * Setting append target
-				 * If option is true set default target, that is slider wrapper
-				 * Else get target set in options
-				 * @type {Bool or String}
-				 */
-				target = (_.options.nav === true) ? _.parent : _.options.nav;
-
-			// Navigation wrapper
-			_.navWrapper = $('<div />', {
-				'class': o.navClass
-			}).appendTo(target);
-
-			// Setup variables
-			var nav = _.navWrapper,
-				item;
-
-			// Generate navigation items
-			for (var i = 0; i < _.slides.length; i++) {
-				item = $('<a />', {
-					'href': '#',
-					'class': o.navItemClass,
-					// Direction and distance -> Item index forward
-					'data-distance': i
-				}).appendTo(nav);
-
-				nav[i+1] = item;
-			}
-
-			// Setup variables
-			var navChildren = nav.children();
-			
-			// Add navCurrentItemClass to the first navigation item
-			navChildren.eq(0).addClass(o.navCurrentItemClass);
-			
-			// If centered option is true
-			if (o.navCenter) {
-				// Center bullet navigation
-				nav.css({
-					'left': '50%',
-					'width': navChildren.outerWidth(true) * navChildren.length,
-					'margin-left': -nav.outerWidth(true)/2
-				});
-			}
-
+		// Navigation wrapper
+		this.navigation.wrapper = $('<div />', {
+			'class': this.options.navigationClass
+		}).appendTo(
 			/**
-			 * Controller
-			 * On click in arrows or navigation, get direction and distance
-			 * Then slide specified distance
+			 * Setting append target
+			 * If option is true set default target, that is slider wrapper
+			 * Else get target set in options
+			 * @type {Bool or String}
 			 */
-			navChildren.on('click touchstart', function(e) {
-				// prevent normal behaviour
-				e.preventDefault();
-				// Slide distance specified in data attribute
-				_.slide( $(this).data('distance'), true );
+			(this.options.navigation === true) ? this.parent : this.options.navigation
+		);
+
+		for (var i = 0; i < this.slides.length; i++) {
+			this.navigation.items[i] = $('<a />', {
+				'href': '#',
+				'class': this.options.navigationItemClass,
+				// Direction and distance -> Item index forward
+				'data-distance': i
+			}).appendTo(this.navigation.wrapper);
+		}
+
+		// Add navCurrentItemClass to the first navigation item
+		this.navigation.items[0].addClass(this.options.navigationCurrentItemClass);
+
+		// If centered option is true
+		if (this.options.navigationCenter) {
+			// Center bullet navigation
+			this.navigation.wrapper.css({
+				'left': '50%',
+				'width': this.navigation.wrapper.children().outerWidth(true) * this.navigation.wrapper.children().length,
+				'margin-left': -(this.navigation.wrapper.outerWidth(true)/2)
 			});
 		}
-	
+
 	};
 
-	/**
+		/**
 	 * Building arrows DOM
 	 */
 	Glide.prototype.arrows = function() {
 
-		// Cache this
-		var _ = this;
-		
-		if (_.slides.length > 1) {
-			// Setup variables
-			var o = _.options,
-				/**
-				 * Setting append target
-				 * If option is true set default target, that is slider wrapper
-				 * Else get target set in options
-				 * @type {Bool or String}
-				 */
-				target = (_.options.arrows === true) ? _.parent : _.options.arrows;
-
-			// Arrows wrapper
-			_.arrowsWrapper = $('<div />', {
-				'class': o.arrowsWrapperClass
-			}).appendTo(target);
-
-			// Setup variables
-			var arrows = _.arrowsWrapper;
-
-			// Right arrow
-			arrows.right = $('<a />', {
-				'href': '#',
-				'class': o.arrowMainClass + ' ' + o.arrowRightClass,
-				// Direction and distance -> One forward
-				'data-distance': '1',
-				'html': o.arrowRightText
-			}).appendTo(arrows);
-
-			// Left arrow
-			arrows.left = $('<a />', {
-				'href': '#',
-				'class': o.arrowMainClass + ' ' + o.arrowLeftClass,
-				// Direction and distance -> One backward
-				'data-distance': '-1',
-				'html': o.arrowLeftText
-			}).appendTo(arrows);
-
+		/**
+		 * Arrows wrapper
+		 * @type {Obejct}
+		 */
+		this.arrows.wrapper = $('<div />', {
+			'class': this.options.arrowsWrapperClass
+		}).appendTo(
 			/**
-			 * Controller
-			 * On click in arrows or navigation, get direction and distance
-			 * Then slide specified distance
+			 * Setting append target
+			 * If option is true set default target, that is slider wrapper
+			 * Else get target set in options
+			 * @type {Bool or String}
 			 */
-			arrows.children().on('click touchstart', function(e) {
-				// prevent normal behaviour
-				e.preventDefault();
-				// Slide distance specified in data attribute
-				_.slide( $(this).data('distance'), false );
-			});
-		}
-	
+			(this.options.arrows === true) ? this.parent : this.options.arrows
+		);
+
+		/**
+		 * Right arrow
+		 * @type {Obejct}
+		 */
+		this.arrows.right = $('<a />', {
+			'href': '#',
+			'class': this.options.arrowMainClass + ' ' + this.options.arrowRightClass,
+			// Direction and distance -> One forward
+			'data-distance': '1',
+			'html': this.options.arrowRightText
+		}).appendTo(this.arrows.wrapper);
+
+		/**
+		 * Left arrow
+		 * @type {Object}
+		 */
+		this.arrows.left = $('<a />', {
+			'href': '#',
+			'class': this.options.arrowMainClass + ' ' + this.options.arrowLeftClass,
+			// Direction and distance -> One backward
+			'data-distance': '-1',
+			'html': this.options.arrowLeftText
+		}).appendTo(this.arrows.wrapper);
+
 	};
 
+	/**
+	 * Function bindings
+	 */
+	Glide.prototype.bindings = function() {
+
+		var self = this,
+			o = this.options,
+			prefix = this.css.getPrefix();
+
+		/**
+		 * Setup slider wrapper bindings
+		 * for translate and transition control
+		 */
+		this.wrapper.bind({
+
+			/**
+			 * Set transition
+			 */
+			'setTransition': function() {
+				$(this).css( prefix + 'transition', prefix + 'transform ' + o.animationDuration + 'ms ' + o.animationTimingFunc);
+			},
+
+			/**
+			 * Clear transition
+			 * for immediate jump effect
+			 */
+			'clearTransition': function() {
+				$(this).css( prefix + 'transition', 'none');
+			},
+
+			/**
+			 * Set translate value
+			 * @param  {Object} event
+			 * @param  {Ind} translate
+			 */
+			'setTranslate': function(event, translate) {
+				// if css3 suported set translate3d
+				if (self.css.isSupported) $(this).css( prefix + 'transform', 'translate3d(' + translate + 'px, 0px, 0px)');
+				// if not set left margin
+				else $(this).css('margin-left', translate);
+			}
+
+		});
+
+	};
 
 	/**
+	 * Events controllers
+	 */
+	Glide.prototype.events = function() {
+
+		/**
+		 * Swipe
+		 * If swipe option is true
+		 * Attach touch events
+		 */
+		if (this.options.touchDistance) {
+			this.parent.on({
+				'touchstart': $.proxy(this.events.touchstart, this),
+				'touchmove': $.proxy(this.events.touchmove, this),
+				'touchend': $.proxy(this.events.touchend, this),
+			});
+		}
+
+		/**
+		 * Arrows
+		 * If arrows exists
+		 * Attach click event
+		 */
+		if (this.arrows.wrapper) {
+			$(this.arrows.wrapper).children().on('click touchstart',
+				$.proxy(this.events.arrows, this)
+			);
+		}
+
+		/**
+		 * Navigation
+		 * If navigation exists
+		 * Attach click event
+		 */
+		if (this.navigation.wrapper) {
+			$(this.navigation.wrapper).children().on('click touchstart',
+				$.proxy(this.events.navigation, this)
+			);
+		}
+
+		/**
+		 * Keyboard
+		 * If keyboard option is true
+		 * Attach press event
+		 */
+		if (this.options.keyboard) {
+			$(document).on('keyup.glideKeyup',
+				$.proxy(this.events.keyboard, this)
+			);
+		}
+
+		/**
+		 * Slider hover
+		 * If hover option is true
+		 * Attach hover event
+		 */
+		if (this.options.hoverpause) {
+			this.parent.add(this.arrows).add(this.navigation).on('mouseover mouseout',
+				$.proxy(this.events.hover, this)
+			);
+		}
+
+		/**
+		 * Slider resize
+		 * On window resize
+		 * Attach resize event
+		 */
+		$(window).on('resize',
+			$.proxy(this.events.resize, this)
+		);
+
+	};
+
+	/**
+	 * Navigation event controller
+	 * On click in navigation item get distance
+	 * Then slide specified distance with jump
+	 */
+	Glide.prototype.events.navigation = function(event) {
+
+		// Prevent default behaviour
+		event.preventDefault();
+		// Slide distance specified in data attribute
+		this.slide( $(event.currentTarget).data('distance'), true );
+
+	};
+
+	/**
+	 * Arrows event controller
+	 * On click in arrows get direction and distance
+	 * Then slide specified distance without jump
+	 * @param  {Obejct} event
+	 */
+	Glide.prototype.events.arrows = function(event) {
+
+		// Prevent default behaviour
+		event.preventDefault();
+		// Slide distance specified in data attribute
+		this.slide( $(event.currentTarget).data('distance'), false );
+
+	};
+
+	/**
+	 * Keyboard arrows event controller
+	 * Keyboard left and right arrow keys press
+	 */
+	Glide.prototype.events.keyboard = function(event) {
+
+		// Next
+		if (event.keyCode === 39) this.slide(1);
+		// Prev
+		if (event.keyCode === 37) this.slide(-1);
+
+	};
+
+	/**
+	 * When mouse is over slider, pause autoplay
+	 * On out, start autoplay again
+	 */
+	Glide.prototype.events.hover = function(event) {
+
+		// Pasue autoplay
+		this.pause();
+		// When mouse left slider or touch end, start autoplay anew
+		if (event.type === 'mouseout') this.play();
+
+	};
+
+	/**
+	 * !!! TO DO !!!
+	 * When resize browser window
+	 * Reinit plugin for new slider dimensions
+	 * Correct crop to current slide
+	 */
+	Glide.prototype.events.resize = function(event) {
+
+		// Reinit plugin (set new slider dimensions)
+		this.dimensions();
+		// Crop to current slide
+		this.slide(0);
+
+	};
+
+	/**
+	 * Unbind events thats controls slide changes
+	 */
+	Glide.prototype.eventsUnbind = function() {
+
+		this.parent.unbind('touchstart touchmove touchend');
+		this.arrows.wrapper.children().unbind('click touchstart');
+		$(document).unbind('keyup.glideKeyup');
+
+	};
+
+	/**
+	 * Bind events thats controls slide changes
+	 */
+	Glide.prototype.eventsBind = function() {
+
+		this.arrows.wrapper.children().bind('click touchstart', $.proxy(this.events.arrows, this));
+		$(document).bind('keyup.glideKeyup', $.proxy(this.events.keyboard, this));
+		this.parent.bind({
+			'touchstart': $.proxy(this.events.touchstart, this),
+			'touchmove': $.proxy(this.events.touchmove, this),
+			'touchend': $.proxy(this.events.touchend, this),
+		});
+
+	};
+
+	/**
+	* Touch start
+	* @param  {Object} e event
+	*/
+	Glide.prototype.events.touchstart = function(event) {
+
+		// Cache event
+		var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+
+		// Get touch start points
+		this.events.touchStartX = touch.pageX;
+		this.events.touchStartY = touch.pageY;
+		this.events.touchSin = null;
+
+	};
+
+	/**
+	* Touch move
+	* From swipe length segments calculate swipe angle
+	* @param  {Obejct} e event
+	*/
+	Glide.prototype.events.touchmove = function(event) {
+
+		// Cache event
+		var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+
+		// Calculate start, end points
+		var subExSx = touch.pageX - this.events.touchStartX;
+		var subEySy = touch.pageY - this.events.touchStartY;
+		// Bitwise subExSx pow
+		var powEX = Math.abs( subExSx << 2 );
+		// Bitwise subEySy pow
+		var powEY = Math.abs( subEySy << 2 );
+		// Calculate the length of the hypotenuse segment
+		var touchHypotenuse = Math.sqrt( powEX + powEY );
+		// Calculate the length of the cathetus segment
+		var touchCathetus = Math.sqrt( powEY );
+
+		// Calculate the sine of the angle
+		this.events.touchSin = Math.asin( touchCathetus/touchHypotenuse );
+
+	};
+
+	/**
+	* Touch end
+	* @param  {Object} e event
+	*/
+	Glide.prototype.events.touchend = function(event) {
+
+		// Cache event
+		var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+
+		// Calculate touch distance
+		var touchDistance = touch.pageX - this.events.touchStartX;
+
+		// While touch is positive and greater than distance set in options
+		if ( (touchDistance > this.options.touchDistance) && ( (this.events.touchSin * (180 / Math.PI)) < 32) ) {
+			// Slide one backward
+			this.slide(-1);
+		// While touch is negative and lower than negative distance set in options
+		} else if (
+			(touchDistance < -this.options.touchDistance) && ( (this.events.touchSin * (180 / Math.PI)) < 32) ) {
+			// Slide one forward
+			this.slide(1);
+		}
+
+	};
+
+		/**
 	 * Slides change & animate logic
 	 * @param  {int} distance
 	 * @param  {bool} jump
@@ -412,23 +656,21 @@
 	 */
 	Glide.prototype.slide = function(distance, jump, callback) {
 
-		// Cache this
-		var _ = this;
-
 		/**
 		 * Stop autoplay
 		 * Clearing timer
 		 */
-		_.pause();
+		this.pause();
 
 		// Callbacks before slide change
-		_.options.beforeTransition.call(_);
+		this.options.beforeTransition.call(this);
 
-		// Setup variables 
-		var	currentSlide = (jump) ? 0 : _.currentSlide,
-			slidesLength = -(_.slides.length-1),
-			navCurrentClass = _.options.navCurrentItemClass,
-			slidesSpread = _.slides.spread;
+		// Setup variables
+		var	self = this,
+			currentSlide = (jump) ? 0 : this.currentSlide,
+			slidesLength = -(this.slides.length-1),
+			fromFirst = false,
+			fromLast = false;
 
 		/**
 		 * Check if current slide is first and direction is previous, then go to last slide
@@ -436,8 +678,10 @@
 		 * else change current slide normally
 		 */
 		if ( currentSlide === 0 && distance === -1 ) {
+			fromFirst = true;
 			currentSlide = slidesLength;
 		} else if ( currentSlide === slidesLength && distance === 1 ) {
+			fromLast = true;
 			currentSlide = 0;
 		} else {
 			currentSlide = currentSlide + (-distance);
@@ -447,47 +691,91 @@
 		 * Crop to current slide.
 		 * Mul slide width by current slide number.
 		 */
-		var translate = slidesSpread * currentSlide + 'px';
+		var offset = this.slides.spread * currentSlide;
 
-		// While CSS3 is supported
-		if (_.CSS3support) {
-			// Croping by increasing/decreasing slider wrapper translate
-			_.wrapper.css({
-				'-webkit-transform': 'translate3d(' + translate + ', 0px, 0px)', 
-				   '-moz-transform': 'translate3d(' + translate + ', 0px, 0px)', 
-				    '-ms-transform': 'translate3d(' + translate + ', 0px, 0px)', 
-				     '-o-transform': 'translate3d(' + translate + ', 0px, 0px)', 
-				        'transform': 'translate3d(' + translate + ', 0px, 0px)' 
-			});
-		// Else use $.animate()
-		} else {
-			// Croping by increasing/decreasing slider wrapper margin
-			_.wrapper.stop()
-				.animate({ 'margin-left': translate }, _.options.animationTime);
+		/**
+		 * While circular decrease offset with the width of single slide
+		 * When fromFirst and fromLast flags are set, unbind events thats controls changing
+		 * When fromLast flags is set, set offset to slide width mulled by slides count without cloned slides
+		 * When fromFirst flags is set, set offset to zero
+		 */
+		if (this.options.circular) {
+			offset = offset - this.slides.spread;
+			if (fromLast || fromFirst) this.eventsUnbind();
+			if (fromLast) offset = this.slides.spread * (slidesLength - 2);
+			if (fromFirst) offset = 0;
+		}
+
+		/**
+		 * Slide change animation
+		 * While CSS3 is supported use offset
+		 * if not, use $.animate();
+		 */
+		if (this.css.isSupported) this.wrapper.trigger('setTransition').trigger('setTranslate', [offset]);
+		else this.wrapper.stop().animate({ 'margin-left': offset }, this.options.animationDuration);
+
+		/**
+		 * While circular
+		 */
+		if (this.options.circular) {
+
+			/**
+			 * 	When fromFirst and fromLast flags are set
+			 * 	after animation clear transition and bind events that control slides changing
+			 */
+			if (fromFirst || fromLast) {
+				this.afterAnimation(function(){
+					self.wrapper.trigger('clearTransition');
+					self.eventsBind();
+				});
+			}
+
+			/**
+			 * When fromLast flag is set
+			 * after animation make immediate jump from cloned slide to proper one
+			 */
+			if (fromLast) {
+				this.afterAnimation(function(){
+					fromLast = false;
+					self.wrapper.trigger('setTranslate', [-self.slides.spread]);
+				});
+			}
+
+			/**
+			 * When fromFirst flag is set
+			 * after animation make immediate jump from cloned slide to proper one
+			 */
+			if (fromFirst) {
+				this.afterAnimation(function(){
+					fromFirst = false;
+					self.wrapper.trigger('setTranslate', [self.slides.spread * (slidesLength-1)]);
+				});
+			}
+
 		}
 
 		// Set to navigation item current class
-		if (_.options.nav && _.navWrapper) {
-			_.navWrapper.children()
+		if (this.options.navigation && this.navigation.wrapper) {
+			$(this.navigation.wrapper).children()
 				.eq(-currentSlide)
-					.addClass(navCurrentClass)
+					.addClass(this.options.navigationCurrentItemClass)
 						.siblings()
-							.removeClass(navCurrentClass);
+							.removeClass(this.options.navigationCurrentItemClass);
 		}
 
 		// Update current slide globaly
-		_.currentSlide = currentSlide;
-		
+		this.currentSlide = currentSlide;
+
 		// Callbacks after slide change
-		_.options.afterTransition.call(_);
+		this.options.afterTransition.call(this);
 		if ( (callback !== 'undefined') && (typeof callback === 'function') ) callback();
 
 		/**
 		 * Start autoplay
-		 * After slide
+		 * Setting up timer
 		 */
-		_.play();
-	
+		this.play();
+
 	};
 
 	/**
@@ -497,16 +785,16 @@
 	Glide.prototype.play = function() {
 
 		// Cache this
-		var _ = this;
+		var self = this;
 
 		/**
 		 * If autoplay turn on
 		 * Slide one forward after a set time
 		 */
-		if (_.options.autoplay) {
-			_.auto = setInterval(function() {
-				_.slide(1, false);
-			}, _.options.autoplay);
+		if (this.options.autoplay) {
+			this.auto = setInterval(function() {
+				self.slide(1, false);
+			}, this.options.autoplay);
 		}
 
 	};
@@ -517,166 +805,115 @@
 	 */
 	Glide.prototype.pause = function() {
 
-		// Cache this
-		var _ = this;
-
 		/**
 		 * If autoplay turn on
 		 * Clear interial
 		 */
-		if (_.options.autoplay) {
-			_.auto = clearInterval(_.auto);
-		}
+		if (this.options.autoplay) this.auto = clearInterval(this.auto);
 
 	};
 
 	/**
-	 * Change sildes on swipe event
+	 * Call callback after animation duration
+	 * Added 10 ms to duration to be sure is fired after animation
+	 * @param  {Function} callback
 	 */
-	Glide.prototype.swipe = function() {
-		
-		// Setup variables
-		var _ = this,
-			touch,
-			touchDistance,
-			touchStartX,
-			touchStartY,
-			touchEndX,
-			touchEndY,
-			touchHypotenuse,
-			touchCathetus,
-			touchSin,
-			MathPI = 180 / Math.PI,
-			subExSx,
-			subEySy,
-			powEX,
-			powEY;
+	Glide.prototype.afterAnimation = function(callback) {
 
-		/**
-		 * Touch start
-		 * @param  {Object} e event
-		 */
-		_.parent.on('touchstart', function(e) {
-			// Cache event
-			touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
-			
-			// Get touch start points
-			touchStartX = touch.pageX;
-			touchStartY = touch.pageY;
-		});
+		setTimeout(function(){
+			callback();
+		}, this.options.animationDuration + 10);
 
-		/**
-		 * Touch move
-		 * From swipe length segments calculate swipe angle
-		 * @param  {Obejct} e event
-		 */
-		_.parent.on('touchmove', function(e) {
-			// Cache event
-			touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+	};
 
-			// Get touch end points
-			touchEndX = touch.pageX;
-			touchEndY = touch.pageY;
-
-			// Calculate start, end points
-			subExSx = touchEndX - touchStartX;
-			subEySy = touchEndY - touchStartY;
-			// Bitwise subExSx pow
-			powEX = Math.abs( subExSx << 2 );
-			// Bitwise subEySy pow
-			powEY = Math.abs( subEySy << 2 );
-			
-			// Calculate the length of the hypotenuse segment
-			touchHypotenuse = Math.sqrt( powEX + powEY );
-			// Calculate the length of the cathetus segment
-			touchCathetus = Math.sqrt( powEY );
-			// Calculate the sine of the angle
-			touchSin = Math.asin( touchCathetus/touchHypotenuse );
-
-			// While touch angle is lower than 32 degrees, block vertical scroll
-			if( (touchSin * MathPI) < 32 ) e.preventDefault();
-		});
-
-		/**
-		 * Touch end
-		 * @param  {Object} e event
-		 */
-		_.parent.on('touchend', function(e) {
-			// Cache event
-			touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
-			
-			// Calculate touch distance
-			touchDistance = touch.pageX - touchStartX;
-
-			// While touch is positive and greater than distance set in options
-			if ( touchDistance > _.options.touchDistance ) {
-				// Slide one backward
-				_.slide(-1);
-			// While touch is negative and lower than negative distance set in options
-			} else if ( touchDistance < -_.options.touchDistance) {
-				// Slide one forward
-				_.slide(1);
-			}
-		});
-	
+	/**
+	 * Dimensions
+	 * Get & set dimensions of slider elements
+	 */
+	Glide.prototype.dimensions = function() {
+		// Get slide width
+		this.slides.spread = this.parent.width();
+		// Set wrapper width
+		this.wrapper.width(this.slides.spread * (this.slides.length + this.offset));
+		// Set slide width
+		this.slides.add(this.firstClone).add(this.lastClone).width(this.slides.spread);
 	};
 
 	/**
 	 * Initialize
-	 * Get & set dimensions
+	 * Set wrapper
+	 * Set slides
 	 * Set animation type
 	 */
 	Glide.prototype.init = function() {
-		
-		// Cache this
-		var _ = this,	
-			// Get sidebar width
-			sliderWidth = _.parent.width();
-			// Get slide width
-			_.slides.spread = sliderWidth;
 
-			// Set wrapper width
-			_.wrapper.width(sliderWidth * _.slides.length);
-			// Set slide width
-			_.slides.width(_.slides.spread);
+		// Slides Wrapper
+		this.wrapper = this.parent.children();
+		// Slides
+		this.slides = this.wrapper.children();
 
-		// If CSS3 Transition isn't supported switch CSS3support variable to false and use $.animate()
-		if ( !isCssSupported("transition") || !isCssSupported("transform") ) _.CSS3support = false;
-	
+		// Set slider dimentions
+		this.dimensions();
+
+		// Build DOM
+		this.build();
+
 	};
 
-	/**
-	 * Function to check css3 support
-	 * @param  {String}  declaration name
-	 * @return {Boolean}
-	 */
-	function isCssSupported(declaration) {
-		
-		var isSupported = false,
-			prefixes = 'Khtml ms O Moz Webkit'.split(' '),
-			clone = document.createElement('div'),
-			declarationCapital = null;
 
-		declaration = declaration.toLowerCase();
-		if (clone.style[declaration] !== undefined) isSupported = true;
-		if (isSupported === false) {
-			declarationCapital = declaration.charAt(0).toUpperCase() + declaration.substr(1);
-			for( var i = 0; i < prefixes.length; i++ ) {
-				if( clone.style[prefixes[i] + declarationCapital ] !== undefined ) {
-					isSupported = true;
-					break;
+	/**
+	 * Methods for css3 management
+	 */
+	Glide.prototype.css = {
+
+		/**
+		 * Check css3 support
+		 * @param  {String}  Declaration name to check
+		 * @return {Boolean}
+		 */
+		isSupported: function(declaration) {
+
+			var isSupported = false,
+				prefixes = 'Khtml ms O Moz Webkit'.split(' '),
+				clone = document.createElement('div'),
+				declarationCapital = null;
+
+			declaration = declaration.toLowerCase();
+			if (clone.style[declaration] !== undefined) isSupported = true;
+			if (isSupported === false) {
+				declarationCapital = declaration.charAt(0).toUpperCase() + declaration.substr(1);
+				for( var i = 0; i < prefixes.length; i++ ) {
+					if( clone.style[prefixes[i] + declarationCapital ] !== undefined ) {
+						isSupported = true;
+						break;
+					}
 				}
 			}
+
+			if (window.opera) {
+				if (window.opera.version() < 13) isSupported = false;
+			}
+
+			return isSupported;
+
+		},
+
+		/**
+		 * Get browser css prefix
+		 * @return {String} 	Returns prefix in "-{prefix}-" format
+		 */
+		getPrefix: function () {
+
+			var styles = window.getComputedStyle(document.documentElement, '');
+			return '-' + (Array.prototype.slice
+				.call(styles)
+				.join('')
+				.match(/-(moz|webkit|ms)-/) || (styles.OLink === '' && ['', 'o'])
+			)[1] + '-';
+
 		}
 
-		if (window.opera) {
-			if (window.opera.version() < 13) isSupported = false;
-		}
-
-		
-		return isSupported;
-
-	}
+	};
 
 	$.fn[name] = function(options) {
 
@@ -687,7 +924,7 @@
 				);
 			}
 		});
-		
+
 	};
 
 })(jQuery, window, document);

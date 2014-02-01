@@ -1,8 +1,8 @@
 module.exports = function(grunt) {
 	grunt.initConfig({
-		
+
 		pkg: grunt.file.readJSON('package.json'),
-		
+
 		jshint: {
 			glide: {
 				options: {
@@ -19,7 +19,7 @@ module.exports = function(grunt) {
 				    		' * <%= pkg.name %>\n' +
 				    		' * Version: <%= pkg.version %>\n' +
 							' * <%= pkg.description %>\n' +
-							' * Author: <%= pkg.author %>/\n' +
+							' * Author: <%= pkg.author %>\n' +
 							' * Site: http://<%= pkg.homepage %>/\n' +
 							' * Licensed under the MIT license\n' +
 							' */\n' +
@@ -37,7 +37,7 @@ module.exports = function(grunt) {
 				    		' * <%= pkg.name %>\n' +
 				    		' * Version: <%= pkg.version %>\n' +
 							' * <%= pkg.description %>\n' +
-							' * Author: <%= pkg.author %>/\n' +
+							' * Author: <%= pkg.author %>\n' +
 							' * Site: http://<%= pkg.homepage %>/\n' +
 							' * Licensed under the MIT license\n' +
 							' */\n' +
@@ -78,9 +78,9 @@ module.exports = function(grunt) {
 			}
 		},
 	});
-	
+
 	require('load-grunt-tasks')(grunt);
-	
+
 	grunt.registerTask('default', [
 		'jshint',
 		'concat',

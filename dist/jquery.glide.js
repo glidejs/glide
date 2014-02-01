@@ -38,11 +38,11 @@
 			// {String} Right arrow
 			arrowRightClass: 'slider-arrow--right',
 			// {String} Right arrow text
-			arrowRightText: '→',
+			arrowRightText: 'next',
 			// {String} Left arrow
 			arrowLeftClass: 'slider-arrow--left',
 			// {String} Left arrow text
-			arrowLeftText: '←',
+			arrowLeftText: 'prev',
 
 			/**
 			 * {Bool or String} Show/hide/appendTo bullets navigation
@@ -125,7 +125,8 @@
 			},
 
 			/**
-			 * Reinit slider for new dimensions
+			 * Reinit
+			 * Rebuild and recalculate dimensions of slider elements
 			 */
 			reinit: function() {
 				self.init();
@@ -265,7 +266,7 @@
 
 		/**
 		 * Clone first and last slide
-		 * and set with for each
+		 * and set width for each
 		 */
 		this.firstClone = this.slides.filter(':first-child').clone().width(this.slides.spread);
 		this.lastClone = this.slides.filter(':last-child').clone().width(this.slides.spread);
@@ -355,7 +356,7 @@
 			'class': this.options.arrowMainClass + ' ' + this.options.arrowRightClass,
 			// Direction and distance -> One forward
 			'data-distance': '1',
-			'html': this.options.arrowRightText.toString()
+			'html': this.options.arrowRightText
 		}).appendTo(this.arrows.wrapper);
 
 		/**
@@ -367,7 +368,7 @@
 			'class': this.options.arrowMainClass + ' ' + this.options.arrowLeftClass,
 			// Direction and distance -> One backward
 			'data-distance': '-1',
-			'html': this.options.arrowLeftText.toString()
+			'html': this.options.arrowLeftText
 		}).appendTo(this.arrows.wrapper);
 
 	};
@@ -628,6 +629,8 @@
 		// Calculate the sine of the angle
 		this.events.touchSin = Math.asin( touchCathetus/touchHypotenuse );
 
+		if ( (this.events.touchSin * (180 / Math.PI)) < 45 ) event.preventDefault();
+
 	};
 
 	/**
@@ -643,12 +646,12 @@
 		var touchDistance = touch.pageX - this.events.touchStartX;
 
 		// While touch is positive and greater than distance set in options
-		if ( (touchDistance > this.options.touchDistance) && ( (this.events.touchSin * (180 / Math.PI)) < 32) ) {
+		if ( (touchDistance > this.options.touchDistance) && ( (this.events.touchSin * (180 / Math.PI)) < 45) ) {
 			// Slide one backward
 			this.slide(-1);
 		// While touch is negative and lower than negative distance set in options
 		} else if (
-			(touchDistance < -this.options.touchDistance) && ( (this.events.touchSin * (180 / Math.PI)) < 32) ) {
+			(touchDistance < -this.options.touchDistance) && ( (this.events.touchSin * (180 / Math.PI)) < 45) ) {
 			// Slide one forward
 			this.slide(1);
 		}
@@ -838,12 +841,14 @@
 	 * Get & set dimensions of slider elements
 	 */
 	Glide.prototype.dimensions = function() {
+
 		// Get slide width
 		this.slides.spread = this.parent.width();
 		// Set wrapper width
 		this.wrapper.width(this.slides.spread * (this.slides.length + this.offset));
 		// Set slide width
 		this.slides.add(this.firstClone).add(this.lastClone).width(this.slides.spread);
+
 	};
 
 	/**
@@ -854,11 +859,10 @@
 	 */
 	Glide.prototype.init = function() {
 
-		// Slides Wrapper
+		// Set slides wrapper
 		this.wrapper = this.parent.children();
-		// Slides
+		// Set slides
 		this.slides = this.wrapper.children();
-
 		// Set slider dimentions
 		this.dimensions();
 

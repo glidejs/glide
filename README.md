@@ -21,7 +21,7 @@ jQuery is the only dependency. Make sure to include it.
 Link to slider stylesheet inside document head.
 
 ``` html
-<link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel="stylesheet" href="css/style.css">
 ```
 
 Make necessary markup for slider.
@@ -66,7 +66,7 @@ Here is list of all available
 | `hoverpause` | `true` | bool | Pause autoplay on mouseover slider
 | `circular` | `true` | bool | Circual play
 | `animationDuration` | `500` | int | Animation time in ms
-| `animationTimingFunc` | `cubic-bezier(0.165, 0.840, 0.440, 1.000)` | string | Animation easing function
+| `animationTimingFunc` | cubic-bezier(0.165, 0.840, 0.440, 1.000) | string | Animation easing function
 | `arrows` | `true` | bool/string | Show/hide/appendTo arrows. True for append arrows to slider wrapper. False for not appending arrows. Id or class name (e.g. '.class-name') for appending to specific HTML markup
 | `arrowsWrapperClass` | `slider-arrows` | string | Arrows wrapper class
 | `arrowMainClass` | `slider-arrow` | string | Main class for both arrows

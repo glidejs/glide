@@ -64,7 +64,7 @@ Here is list of all available
 |--------|---------|------|------------
 | `autoplay` | `4000` | int/bool | False for turning off autoplay
 | `hoverpause` | `true` | bool | Pause autoplay on mouseover slider
-| `circular` | `true` | bool | Circual play
+| `circular` | `true` | bool | Circular play (Animation loops over once it reaches the end)
 | `animationDuration` | `500` | int | Animation time in ms
 | `animationTimingFunc` | cubic-bezier(0.165, 0.840, 0.440, 1.000) | string | Animation easing function
 | `arrows` | `true` | bool/string | Show/hide/appendTo arrows. True for append arrows to slider wrapper. False for not appending arrows. Id or class name (e.g. '.class-name') for appending to specific HTML markup

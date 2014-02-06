@@ -3,7 +3,7 @@
 		<link rel="stylesheet" href="../dist/css/style.css">
 
 		<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-		<script src="../dist/jquery.glide.min.js"></script>
+		<script src="../dist/jquery.glide.js"></script>
 
 		<style>
 			/**
@@ -35,7 +35,9 @@
 		</div>
 
 		<script>
-			var glide = $('.slider').glide().data('api_glide');
+			var glide = $('.slider').glide({
+				'arrows': false
+			}).data('api_glide');
 
 				$(window).on('keyup', function (key) {
 					if (key.keyCode === 13) {

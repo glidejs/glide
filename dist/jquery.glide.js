@@ -567,8 +567,8 @@
 	 */
 	Glide.prototype.eventsUnbind = function() {
 
-		this.parent.unbind('touchstart touchmove touchend');
-		this.arrows.wrapper.children().unbind('click touchstart');
+		$(this.parent).unbind('touchstart touchmove touchend');
+		$(this.arrows.wrapper).children().unbind('click touchstart');
 		$(document).unbind('keyup.glideKeyup');
 
 	};
@@ -578,9 +578,9 @@
 	 */
 	Glide.prototype.eventsBind = function() {
 
-		this.arrows.wrapper.children().bind('click touchstart', $.proxy(this.events.arrows, this));
+		$(this.arrows.wrapper).children().bind('click touchstart', $.proxy(this.events.arrows, this));
 		$(document).bind('keyup.glideKeyup', $.proxy(this.events.keyboard, this));
-		this.parent.bind({
+		$(this.parent).bind({
 			'touchstart': $.proxy(this.events.touchstart, this),
 			'touchmove': $.proxy(this.events.touchmove, this),
 			'touchend': $.proxy(this.events.touchend, this),

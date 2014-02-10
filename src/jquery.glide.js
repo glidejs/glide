@@ -650,7 +650,7 @@
 
 	};
 
-		/**
+	/**
 	 * Slides change & animate logic
 	 * @param  {int} distance
 	 * @param  {bool} jump
@@ -769,8 +769,10 @@
 		this.currentSlide = currentSlide;
 
 		// Callbacks after slide change
-		this.options.afterTransition.call(this);
-		if ( (callback !== 'undefined') && (typeof callback === 'function') ) callback();
+		this.afterAnimation(function(){
+			self.options.afterTransition.call(self);
+			if ( (callback !== 'undefined') && (typeof callback === 'function') ) callback();
+		});
 
 		/**
 		 * Start autoplay

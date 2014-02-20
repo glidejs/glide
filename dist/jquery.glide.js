@@ -476,7 +476,7 @@
 		 * Attach hover event
 		 */
 		if (this.options.hoverpause) {
-			this.parent.add(this.arrows).add(this.navigation).on('mouseover mouseout',
+			this.parent.on('mouseover mouseout',
 				$.proxy(this.events.hover, this)
 			);
 		}
@@ -542,6 +542,7 @@
 
 		// Pasue autoplay
 		this.pause();
+
 		// When mouse left slider or touch end, start autoplay anew
 		if (event.type === 'mouseout') this.play();
 

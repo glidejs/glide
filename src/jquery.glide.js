@@ -423,9 +423,9 @@
 		 */
 		if (this.options.touchDistance) {
 			this.parent.on({
-				'touchstart': $.proxy(this.events.touchstart, this),
-				'touchmove': $.proxy(this.events.touchmove, this),
-				'touchend': $.proxy(this.events.touchend, this),
+				'touchstart MSPointerDown': $.proxy(this.events.touchstart, this),
+				'touchmove MSPointerMove': $.proxy(this.events.touchmove, this),
+				'touchend MSPointerUp': $.proxy(this.events.touchend, this),
 			});
 		}
 
@@ -491,10 +491,12 @@
 	 */
 	Glide.prototype.events.navigation = function(event) {
 
-		// Prevent default behaviour
-		event.preventDefault();
-		// Slide distance specified in data attribute
-		this.slide( $(event.currentTarget).data('distance'), true );
+		if ( !this.wrapper.attr('disabled') ) {
+			// Prevent default behaviour
+			event.preventDefault();
+			// Slide distance specified in data attribute
+			this.slide( $(event.currentTarget).data('distance'), true );
+		}
 
 	};
 
@@ -506,10 +508,12 @@
 	 */
 	Glide.prototype.events.arrows = function(event) {
 
-		// Prevent default behaviour
-		event.preventDefault();
-		// Slide distance specified in data attribute
-		this.slide( $(event.currentTarget).data('distance'), false );
+		if ( !this.wrapper.attr('disabled') ) {
+			// Prevent default behaviour
+			event.preventDefault();
+			// Slide distance specified in data attribute
+			this.slide( $(event.currentTarget).data('distance'), false );
+		}
 
 	};
 
@@ -519,10 +523,12 @@
 	 */
 	Glide.prototype.events.keyboard = function(event) {
 
-		// Next
-		if (event.keyCode === 39) this.slide(1);
-		// Prev
-		if (event.keyCode === 37) this.slide(-1);
+		if ( !this.wrapper.attr('disabled') ) {
+			// Next
+			if (event.keyCode === 39) this.slide(1);
+			// Prev
+			if (event.keyCode === 37) this.slide(-1);
+		}
 
 	};
 
@@ -555,29 +561,17 @@
 	};
 
 	/**
-	 * Unbind events thats controls slide changes
+	 * Disable events thats controls slide changes
 	 */
-	Glide.prototype.eventsUnbind = function() {
-
-		$(this.parent).unbind('touchstart touchmove touchend');
-		$(this.arrows.wrapper).children().unbind('click touchstart');
-		$(document).unbind('keyup.glideKeyup');
-
+	Glide.prototype.disableEvents = function() {
+		this.wrapper.attr( "disabled", true );
 	};
 
 	/**
-	 * Bind events thats controls slide changes
+	 * Enable events thats controls slide changes
 	 */
-	Glide.prototype.eventsBind = function() {
-
-		$(this.arrows.wrapper).children().bind('click touchstart', $.proxy(this.events.arrows, this));
-		$(document).bind('keyup.glideKeyup', $.proxy(this.events.keyboard, this));
-		$(this.parent).bind({
-			'touchstart': $.proxy(this.events.touchstart, this),
-			'touchmove': $.proxy(this.events.touchmove, this),
-			'touchend': $.proxy(this.events.touchend, this),
-		});
-
+	Glide.prototype.enableEvents = function() {
+		this.wrapper.attr( "disabled", false );
 	};
 
 	/**
@@ -703,7 +697,7 @@
 		 */
 		if (this.options.circular) {
 			offset = offset - this.slides.spread;
-			if (fromLast || fromFirst) this.eventsUnbind();
+			if (fromLast || fromFirst) this.disableEvents();
 			if (fromLast) offset = this.slides.spread * (slidesLength - 2);
 			if (fromFirst) offset = 0;
 		}
@@ -728,7 +722,7 @@
 			if (fromFirst || fromLast) {
 				this.afterAnimation(function(){
 					self.wrapper.trigger('clearTransition');
-					self.eventsBind();
+					self.enableEvents();
 				});
 			}
 
@@ -758,7 +752,7 @@
 
 		// Set to navigation item current class
 		if (this.options.navigation && this.navigation.wrapper) {
-			$(this.navigation.wrapper).children()
+			$(this.parent).children('.' + this.options.navigationClass).children()
 				.eq(-currentSlide)
 					.addClass(this.options.navigationCurrentItemClass)
 						.siblings()

@@ -35,7 +35,12 @@
 		</div>
 
 		<script>
-			var glide = $('.slider').glide().data('api_glide');
+			var glide = $('.slider').glide({
+					afterTransition: function() {
+						var currentSlide = this.currentSlide;
+						console.log(currentSlide);
+					}
+				}).data('api_glide');
 
 				$(window).on('keyup', function (key) {
 					if (key.keyCode === 13) {

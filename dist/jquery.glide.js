@@ -181,7 +181,7 @@
 				 * If navigation wrapper already exist
 				 * Remove it, protection before doubled navigation
 				 */
-				if (self.navigationWrapper) self.navigationWrapper.remove();
+				if (self.navigation.wrapper) self.navigation.wrapper.remove();
 
 				// While target isn't specifed, use slider wrapper
 				self.options.navigation = (target) ? target : self.options.navigation;
@@ -410,7 +410,7 @@
 			 */
 			'setTranslate': function(event, translate) {
 				// if css3 suported set translate3d
-				if (self.css.isSupported) $(this).css( prefix + 'transform', 'translate3d(' + translate + 'px, 0px, 0px)');
+				if (self.cssSupport) $(this).css( prefix + 'transform', 'translate3d(' + translate + 'px, 0px, 0px)');
 				// if not set left margin
 				else $(this).css('margin-left', translate);
 			}
@@ -715,7 +715,7 @@
 		 * While CSS3 is supported use offset
 		 * if not, use $.animate();
 		 */
-		if (this.css.isSupported) this.wrapper.trigger('setTransition').trigger('setTranslate', [offset]);
+		if (this.cssSupport) this.wrapper.trigger('setTransition').trigger('setTranslate', [offset]);
 		else this.wrapper.stop().animate({ 'margin-left': offset }, this.options.animationDuration);
 
 		/**
@@ -901,6 +901,8 @@
 				if (window.opera.version() < 13) isSupported = false;
 			}
 
+			if (isSupported === 'undefined' || isSupported === undefined) isSupported = false;
+
 			return isSupported;
 
 		},
@@ -910,6 +912,8 @@
 		 * @return {String} 	Returns prefix in "-{prefix}-" format
 		 */
 		getPrefix: function () {
+
+			if (!window.getComputedStyle) return '';
 
 			var styles = window.getComputedStyle(document.documentElement, '');
 			return '-' + (Array.prototype.slice

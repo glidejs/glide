@@ -74,7 +74,7 @@ Here is list of all available
 | `arrowLeftClass` | `slider-arrow--left` | string | Left arrow class
 | `arrowRightText` | `next` | string | Right arrow text
 | `arrowLeftText` | `prev` | string | Left arrow text
-| `navigation` | `true` | bool/string | Show/hide/appendTo bullets navigation. True for append arrows to slider wrapper. False for not appending arrows. Id or class name (e.g. '.class-name') for appending to specific HTML markup.
+| `navigation` | `true` | bool/string | Show/hide/appendTo bullets navigation. True for append bullets to slider wrapper. False for not appending bullets. Id or class name (e.g. '.class-name') for appending to specific HTML markup.
 | `navigationCenter` | `true` | bool | Center bullet navigation
 | `navigationClass` | `slider-nav` | string | Navigation wrapper class
 | `navigationItemClass` | `slider-nav__item` | string | Navigation item class

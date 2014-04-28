@@ -752,7 +752,7 @@
 
 		// Set to navigation item current class
 		if (this.options.navigation && this.navigation.wrapper) {
-			$(this.parent).children('.' + this.options.navigationClass).children()
+			$('.' + this.options.navigationClass, (this.options.navigation === true) ? this.parent : this.options.navigation).children()
 				.eq(-currentSlide)
 					.addClass(this.options.navigationCurrentItemClass)
 						.siblings()

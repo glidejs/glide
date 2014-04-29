@@ -425,7 +425,7 @@
 			this.parent.on({
 				'touchstart MSPointerDown': $.proxy(this.events.touchstart, this),
 				'touchmove MSPointerMove': $.proxy(this.events.touchmove, this),
-				'touchend MSPointerUp': $.proxy(this.events.touchend, this),
+				'touchend MSPointerUp': $.proxy(this.events.touchend, this)
 			});
 		}
 

@@ -199,6 +199,14 @@
 				// Build
 				self.arrows();
 
+			},
+
+			/**
+			 * Destroy
+			 * Revert init modifications and freeze slides
+			 */
+			destroy: function(){
+				self.destroy();
 			}
 
 		};
@@ -859,6 +867,17 @@
 
 	};
 
+	/**
+	 * Destroy
+	 * Revert init modifications and freeze slides
+	 */
+	Glide.prototype.destroy = function() {
+		this.pause();
+		this.disableEvents();
+		this.firstClone.remove();
+		this.lastClone.remove();
+		this.wrapper.removeAttr("style");
+	};
 
 	/**
 	 * Methods for css3 management

@@ -13,7 +13,7 @@
 			 */
 
 			/* Bad and ugly reset */
-			*{ margin: 0; padding: 0; border: 0; }
+			* { margin: 0; padding: 0; border: 0; }
 
 			.box {
 				width: 100%;
@@ -24,33 +24,28 @@
 	<body>
 
 		<div class="slider">
-			<ul class="slides">
-				<li class="slide"><div class="box" style="background-color: #1abc9c;"></div></li>
-				<li class="slide"><div class="box" style="background-color: #16a085;"></div></li>
-				<li class="slide"><div class="box" style="background-color: #f1c40f;"></div></li>
-				<li class="slide"><div class="box" style="background-color: #f39c12;"></div></li>
-				<li class="slide"><div class="box" style="background-color: #d35400;"></div></li>
-				<li class="slide"><div class="box" style="background-color: #c0392b;"></div></li>
+			<ul class="slider__wrapper">
+				<li class="slider__item"><div class="box" style="background-color: #1abc9c;"></div></li>
+				<li class="slider__item"><div class="box" style="background-color: #16a085;"></div></li>
+				<li class="slider__item"><div class="box" style="background-color: #f1c40f;"></div></li>
+				<li class="slider__item"><div class="box" style="background-color: #f39c12;"></div></li>
+				<li class="slider__item"><div class="box" style="background-color: #d35400;"></div></li>
+				<li class="slider__item"><div class="box" style="background-color: #c0392b;"></div></li>
 			</ul>
 		</div>
 
 		<script>
-			var glide = $('.slider').glide({
-					afterTransition: function() {
-						var currentSlide = this.currentSlide;
-						console.log(currentSlide);
-					}
-				}).data('api_glide');
+			var glide = $('.slider').glide().data('api_glide');
 
-				$(window).on('keyup', function (key) {
-					if (key.keyCode === 13) {
-						glide.jump(3, console.log('Wooo!'));
-					};
-				});
+			$(window).on('keyup', function (key) {
+				if (key.keyCode === 13) {
+					glide.jump(3, console.log('Wooo!'));
+				};
+			});
 
-				$('.slider-arrow').on('click', function() {
-					console.log(glide.current());
-				});
+			$('.slider__arrows-item').on('click', function() {
+				console.log(glide.current());
+			});
 		</script>
 	</body>
 </html>

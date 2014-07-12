@@ -1,6 +1,6 @@
 {
   "name": "Glide.js",
-  "version": "1.0.6",
+  "version": "1.0.65",
   "description": "Simple, lightweight and fast jQuery slider",
   "main": "dist/jquery.glide.js",
   "author": "@JedrzejChalubek",
@@ -15,7 +15,7 @@
     "grunt-contrib-watch": "~0.5.3",
     "grunt-contrib-uglify": "~0.3.2",
     "grunt-contrib-jshint": "~0.8.0",
-    "grunt-contrib-compass": "~0.7.0",
+    "grunt-contrib-compass": "*",
     "grunt-contrib-concat": "~0.3.0"
   }
 }

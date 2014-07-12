@@ -68,17 +68,17 @@ Here is list of all available
 | `animationDuration` | `500` | int | Animation time in ms
 | `animationTimingFunc` | cubic-bezier(0.165, 0.840, 0.440, 1.000) | string | Animation easing function
 | `arrows` | `true` | bool/string | Show/hide/appendTo arrows. True for append arrows to slider wrapper. False for not appending arrows. Id or class name (e.g. '.class-name') for appending to specific HTML markup
-| `arrowsWrapperClass` | `slider-arrows` | string | Arrows wrapper class
-| `arrowMainClass` | `slider-arrow` | string | Main class for both arrows
-| `arrowRightClass` | `slider-arrow--right` | string | Right arrow class
-| `arrowLeftClass` | `slider-arrow--left` | string | Left arrow class
+| `arrowsWrapperClass` | `slider__arrows` | string | Arrows wrapper class
+| `arrowMainClass` | `slider__arrows-item` | string | Main class for both arrows
+| `arrowRightClass` | `slider__arrows-item--right` | string | Right arrow class
+| `arrowLeftClass` | `slider__arrows-item--left` | string | Left arrow class
 | `arrowRightText` | `next` | string | Right arrow text
 | `arrowLeftText` | `prev` | string | Left arrow text
 | `navigation` | `true` | bool/string | Show/hide/appendTo bullets navigation. True for append arrows to slider wrapper. False for not appending arrows. Id or class name (e.g. '.class-name') for appending to specific HTML markup.
 | `navigationCenter` | `true` | bool | Center bullet navigation
-| `navigationClass` | `slider-nav` | string | Navigation wrapper class
-| `navigationItemClass` | `slider-nav__item` | string | Navigation item class
-| `navigationCurrentItemClass` | `slider-nav__item--current` | string | Current navigation item class
+| `navigationClass` | `slider__nav` | string | Navigation wrapper class
+| `navigationItemClass` | `slider__nav-item` | string | Navigation item class
+| `navigationCurrentItemClass` | `slider__nav-item--current` | string | Current navigation item class
 | `keyboard` | `true` | bool | Slide on left/right keyboard arrows press
 | `touchDistance` | `60` | int/bool | Minimal touch-swipe distance to call event. False for turning off touch.
 | `beforeInit` | `function(){}` | function | Callback before plugin init
@@ -103,6 +103,7 @@ glide.jump(3, console.log('Wooo!'));
 
 - `.current()` - Returning current slide number
 - `.reinit()` - Rebuild and recalculate dimensions of slider elements
+- `.destroy()` - Destroy and cleanup slider
 - `.play()` - Starting autoplay
 - `.pause()` - Stopping autoplay
 - `.next(callback)` - Slide one forward
@@ -113,6 +114,10 @@ glide.jump(3, console.log('Wooo!'));
 
 
 ##Changelog
+`1.0.65` / `01.02.2014`
+- Sass styles redefined. New naming convection.
+- Added destroy() method.
+
 `1.0.6` / `01.02.2014`
 
 - Code refactoring. More readable, modular, scalar.

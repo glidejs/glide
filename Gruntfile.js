@@ -85,6 +85,7 @@ module.exports = function(grunt) {
 		'jshint',
 		'concat',
 		'uglify',
-		'compass'
+		'compass',
+		'watch'
 	]);
 }

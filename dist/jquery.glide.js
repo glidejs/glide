@@ -1,6 +1,6 @@
 /*!
  * Glide.js
- * Version: 1.0.6
+ * Version: 1.0.65
  * Simple, lightweight and fast jQuery slider
  * Author: @JedrzejChalubek
  * Site: http://jedrzejchalubek.com/
@@ -32,15 +32,15 @@
 			 */
 			arrows: true,
 			// {String} Arrows wrapper class
-			arrowsWrapperClass: 'slider-arrows',
+			arrowsWrapperClass: 'slider__arrows',
 			// {String} Main class for both arrows
-			arrowMainClass: 'slider-arrow',
+			arrowMainClass: 'slider__arrows-item',
 			// {String} Right arrow
-			arrowRightClass: 'slider-arrow--right',
+			arrowRightClass: 'slider__arrows-item--right',
 			// {String} Right arrow text
 			arrowRightText: 'next',
 			// {String} Left arrow
-			arrowLeftClass: 'slider-arrow--left',
+			arrowLeftClass: 'slider__arrows-item--left',
 			// {String} Left arrow text
 			arrowLeftText: 'prev',
 
@@ -54,11 +54,11 @@
 			// {Bool} Center bullet navigation
 			navigationCenter: true,
 			// {String} Navigation class
-			navigationClass: 'slider-nav',
+			navigationClass: 'slider__nav',
 			// {String} Navigation item class
-			navigationItemClass: 'slider-nav__item',
+			navigationItemClass: 'slider__nav-item',
 			// {String} Current navigation item class
-			navigationCurrentItemClass: 'slider-nav__item--current',
+			navigationCurrentItemClass: 'slider__nav-item--current',
 
 			// {Bool} Slide on left/right keyboard arrows press
 			keyboard: true,
@@ -588,13 +588,15 @@
 	*/
 	Glide.prototype.events.touchstart = function(event) {
 
-		// Cache event
-		var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+		if ( !this.wrapper.attr('disabled') ) {
+			// Cache event
+			var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
 
-		// Get touch start points
-		this.events.touchStartX = touch.pageX;
-		this.events.touchStartY = touch.pageY;
-		this.events.touchSin = null;
+			// Get touch start points
+			this.events.touchStartX = touch.pageX;
+			this.events.touchStartY = touch.pageY;
+			this.events.touchSin = null;
+		}
 
 	};
 
@@ -605,25 +607,27 @@
 	*/
 	Glide.prototype.events.touchmove = function(event) {
 
-		// Cache event
-		var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+		if ( !this.wrapper.attr('disabled') ) {
+			// Cache event
+			var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
 
-		// Calculate start, end points
-		var subExSx = touch.pageX - this.events.touchStartX;
-		var subEySy = touch.pageY - this.events.touchStartY;
-		// Bitwise subExSx pow
-		var powEX = Math.abs( subExSx << 2 );
-		// Bitwise subEySy pow
-		var powEY = Math.abs( subEySy << 2 );
-		// Calculate the length of the hypotenuse segment
-		var touchHypotenuse = Math.sqrt( powEX + powEY );
-		// Calculate the length of the cathetus segment
-		var touchCathetus = Math.sqrt( powEY );
+			// Calculate start, end points
+			var subExSx = touch.pageX - this.events.touchStartX;
+			var subEySy = touch.pageY - this.events.touchStartY;
+			// Bitwise subExSx pow
+			var powEX = Math.abs( subExSx << 2 );
+			// Bitwise subEySy pow
+			var powEY = Math.abs( subEySy << 2 );
+			// Calculate the length of the hypotenuse segment
+			var touchHypotenuse = Math.sqrt( powEX + powEY );
+			// Calculate the length of the cathetus segment
+			var touchCathetus = Math.sqrt( powEY );
 
-		// Calculate the sine of the angle
-		this.events.touchSin = Math.asin( touchCathetus/touchHypotenuse );
+			// Calculate the sine of the angle
+			this.events.touchSin = Math.asin( touchCathetus/touchHypotenuse );
 
-		if ( (this.events.touchSin * (180 / Math.PI)) < 45 ) event.preventDefault();
+			if ( (this.events.touchSin * (180 / Math.PI)) < 45 ) event.preventDefault();
+		}
 
 	};
 
@@ -633,21 +637,23 @@
 	*/
 	Glide.prototype.events.touchend = function(event) {
 
-		// Cache event
-		var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+		if ( !this.wrapper.attr('disabled') ) {
+			// Cache event
+			var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
 
-		// Calculate touch distance
-		var touchDistance = touch.pageX - this.events.touchStartX;
+			// Calculate touch distance
+			var touchDistance = touch.pageX - this.events.touchStartX;
 
-		// While touch is positive and greater than distance set in options
-		if ( (touchDistance > this.options.touchDistance) && ( (this.events.touchSin * (180 / Math.PI)) < 45) ) {
-			// Slide one backward
-			this.slide(-1);
-		// While touch is negative and lower than negative distance set in options
-		} else if (
-			(touchDistance < -this.options.touchDistance) && ( (this.events.touchSin * (180 / Math.PI)) < 45) ) {
-			// Slide one forward
-			this.slide(1);
+			// While touch is positive and greater than distance set in options
+			if ( (touchDistance > this.options.touchDistance) && ( (this.events.touchSin * (180 / Math.PI)) < 45) ) {
+				// Slide one backward
+				this.slide(-1);
+			// While touch is negative and lower than negative distance set in options
+			} else if (
+				(touchDistance < -this.options.touchDistance) && ( (this.events.touchSin * (180 / Math.PI)) < 45) ) {
+				// Slide one forward
+				this.slide(1);
+			}
 		}
 
 	};

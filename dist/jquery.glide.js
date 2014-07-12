@@ -1,6 +1,10 @@
 /*!
  * Glide.js
+<<<<<<< HEAD
  * Version: 1.0.65
+=======
+ * Version: 1.0.6
+>>>>>>> 9e45c3ef08dbffb9fd2cd4433c613ffd6ff5a51c
  * Simple, lightweight and fast jQuery slider
  * Author: @JedrzejChalubek
  * Site: http://jedrzejchalubek.com/
@@ -766,7 +770,7 @@
 
 		// Set to navigation item current class
 		if (this.options.navigation && this.navigation.wrapper) {
-			$(this.parent).children('.' + this.options.navigationClass).children()
+			$('.' + this.options.navigationClass, (this.options.navigation === true) ? this.parent : this.options.navigation).children()
 				.eq(-currentSlide)
 					.addClass(this.options.navigationCurrentItemClass)
 						.siblings()

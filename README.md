@@ -1,6 +1,6 @@
 #[![glide.js](http://jedrzejchalubek.com/glide/images/slide-glide-github.png)](http://jedrzejchalubek.com/glide/)
 
-[Glide.js](http://jedrzejchalubek.com/glide/) is responsive and touch-friendly jQuery slider. Based on CSS3 transitions with fallback to older broswers. It's simple, lightweight and fast. Designed to slide, no less, no more.
+[Glide.js](http://jedrzejchalubek.com/glide/) is responsive and touch-friendly jQuery slider. Based on CSS3 transitions with fallback to older browsers. It's simple, lightweight and fast. Designed to slide, no less, no more.
 
 ##Setup
 
@@ -52,7 +52,7 @@ Init our slider on default options ...
 	$('.slider').glide({
 		autoplay: 5000,
 		arrows: 'body',
-		nav: 'body'
+		navigation: 'body'
 	});
 </script>
 ```
@@ -74,7 +74,7 @@ Here is list of all available
 | `arrowLeftClass` | `slider__arrows-item--left` | string | Left arrow class
 | `arrowRightText` | `next` | string | Right arrow text
 | `arrowLeftText` | `prev` | string | Left arrow text
-| `navigation` | `true` | bool/string | Show/hide/appendTo bullets navigation. True for append arrows to slider wrapper. False for not appending arrows. Id or class name (e.g. '.class-name') for appending to specific HTML markup.
+| `navigation` | `true` | bool/string | Show/hide/appendTo bullets navigation. True for append bullets to slider wrapper. False for not appending bullets. Id or class name (e.g. '.class-name') for appending to specific HTML markup.
 | `navigationCenter` | `true` | bool | Center bullet navigation
 | `navigationClass` | `slider__nav` | string | Navigation wrapper class
 | `navigationItemClass` | `slider__nav-item` | string | Navigation item class

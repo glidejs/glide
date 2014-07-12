@@ -199,6 +199,14 @@
 				// Build
 				self.arrows();
 
+			},
+
+			/**
+			 * Destroy
+			 * Revert init modifications and freeze slides
+			 */
+			destroy: function(){
+				self.destroy();
 			}
 
 		};
@@ -425,7 +433,7 @@
 			this.parent.on({
 				'touchstart MSPointerDown': $.proxy(this.events.touchstart, this),
 				'touchmove MSPointerMove': $.proxy(this.events.touchmove, this),
-				'touchend MSPointerUp': $.proxy(this.events.touchend, this),
+				'touchend MSPointerUp': $.proxy(this.events.touchend, this)
 			});
 		}
 
@@ -758,7 +766,7 @@
 
 		// Set to navigation item current class
 		if (this.options.navigation && this.navigation.wrapper) {
-			$(this.parent).children('.' + this.options.navigationClass).children()
+			$('.' + this.options.navigationClass, (this.options.navigation === true) ? this.parent : this.options.navigation).children()
 				.eq(-currentSlide)
 					.addClass(this.options.navigationCurrentItemClass)
 						.siblings()
@@ -865,6 +873,20 @@
 
 	};
 
+	/**
+	 * Destroy
+	 * Revert init modifications and freeze slides
+	 */
+	Glide.prototype.destroy = function() {
+		this.wrapper.unbind('setTransition');
+		this.wrapper.unbind('clearTransition');
+		this.slide(0, true);
+		this.pause();
+		this.disableEvents();
+		this.firstClone.remove();
+		this.lastClone.remove();
+		this.wrapper.removeAttr("style");
+	};
 
 	/**
 	 * Methods for css3 management

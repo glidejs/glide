@@ -114,7 +114,7 @@ glide.jump(3, console.log('Wooo!'));
 
 
 ##Changelog
-`1.0.65` / `01.02.2014`
+`1.0.65` / `12.07.2014`
 - Sass styles redefined. New naming convection.
 - Added destroy() method.
 

@@ -1,10 +1,6 @@
 /*!
  * Glide.js
-<<<<<<< HEAD
  * Version: 1.0.65
-=======
- * Version: 1.0.6
->>>>>>> 9e45c3ef08dbffb9fd2cd4433c613ffd6ff5a51c
  * Simple, lightweight and fast jQuery slider
  * Author: @JedrzejChalubek
  * Site: http://jedrzejchalubek.com/
@@ -134,6 +130,14 @@
 			 */
 			reinit: function() {
 				self.init();
+			},
+
+			/**
+			 * Destroy
+			 * Revert init modifications and freeze slides
+			 */
+			destroy: function(){
+				self.destroy();
 			},
 
 			/**
@@ -437,7 +441,7 @@
 			this.parent.on({
 				'touchstart MSPointerDown': $.proxy(this.events.touchstart, this),
 				'touchmove MSPointerMove': $.proxy(this.events.touchmove, this),
-				'touchend MSPointerUp': $.proxy(this.events.touchend, this),
+				'touchend MSPointerUp': $.proxy(this.events.touchend, this)
 			});
 		}
 
@@ -858,6 +862,27 @@
 	};
 
 	/**
+	 * Destroy
+	 * Revert init modifications and freeze slides
+	 */
+	Glide.prototype.destroy = function() {
+
+		this.parent.unbind();
+		this.wrapper.unbind();
+		this.wrapper.removeAttr("style");
+		$(this.navigation.wrapper).children().unbind();
+		$(this.arrows.wrapper).children().unbind();
+		this.slide(0, true);
+		this.pause();
+
+		if(this.options.circular) {
+			this.firstClone.remove();
+			this.lastClone.remove();
+		}
+
+	};
+
+	/**
 	 * Initialize
 	 * Set wrapper
 	 * Set slides
@@ -876,7 +901,6 @@
 		this.build();
 
 	};
-
 
 	/**
 	 * Methods for css3 management

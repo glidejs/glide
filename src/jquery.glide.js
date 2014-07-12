@@ -125,6 +125,14 @@
 			},
 
 			/**
+			 * Destroy
+			 * Revert init modifications and freeze slides
+			 */
+			destroy: function(){
+				self.destroy();
+			},
+
+			/**
 			 * Start autoplay
 			 */
 			play: function() {
@@ -199,14 +207,6 @@
 				// Build
 				self.arrows();
 
-			},
-
-			/**
-			 * Destroy
-			 * Revert init modifications and freeze slides
-			 */
-			destroy: function(){
-				self.destroy();
 			}
 
 		};
@@ -854,6 +854,27 @@
 	};
 
 	/**
+	 * Destroy
+	 * Revert init modifications and freeze slides
+	 */
+	Glide.prototype.destroy = function() {
+
+		this.parent.unbind();
+		this.wrapper.unbind();
+		this.wrapper.removeAttr("style");
+		$(this.navigation.wrapper).children().unbind();
+		$(this.arrows.wrapper).children().unbind();
+		this.slide(0, true);
+		this.pause();
+
+		if(this.options.circular) {
+			this.firstClone.remove();
+			this.lastClone.remove();
+		}
+
+	};
+
+	/**
 	 * Initialize
 	 * Set wrapper
 	 * Set slides
@@ -871,21 +892,6 @@
 		// Build DOM
 		this.build();
 
-	};
-
-	/**
-	 * Destroy
-	 * Revert init modifications and freeze slides
-	 */
-	Glide.prototype.destroy = function() {
-		this.wrapper.unbind('setTransition');
-		this.wrapper.unbind('clearTransition');
-		this.slide(0, true);
-		this.pause();
-		this.disableEvents();
-		this.firstClone.remove();
-		this.lastClone.remove();
-		this.wrapper.removeAttr("style");
 	};
 
 	/**

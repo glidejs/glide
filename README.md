@@ -114,7 +114,11 @@ glide.jump(3, console.log('Wooo!'));
 
 
 ##Changelog
-`1.0.65` / `12.07.2014`
+`1.0.6` / `25.11.2014`
+- Bower support
+
+
+`1.0.6` / `12.07.2014`
 - Sass styles redefined. New naming convection.
 - Added destroy() method.
 

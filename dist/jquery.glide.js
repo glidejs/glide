@@ -674,6 +674,11 @@
 	 */
 	Glide.prototype.slide = function(distance, jump, callback) {
 
+		// If there is one slide, escape
+		if (this.slides.length <= 1) {
+			return false;
+		}
+
 		/**
 		 * Stop autoplay
 		 * Clearing timer

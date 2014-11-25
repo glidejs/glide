@@ -268,8 +268,8 @@
 		 * Clone first and last slide
 		 * and set width for each
 		 */
-		this.firstClone = this.slides.filter(':first-child').clone().width(this.slides.spread);
-		this.lastClone = this.slides.filter(':last-child').clone().width(this.slides.spread);
+		this.firstClone = this.slides.first().clone().width(this.slides.spread);
+		this.lastClone = this.slides.last().clone().width(this.slides.spread);
 
 		/**
 		 * Append clodes slides to slider wrapper at the beginning and end
@@ -319,7 +319,7 @@
 			// Center bullet navigation
 			this.navigation.wrapper.css({
 				'left': '50%',
-				'width': this.navigation.wrapper.children().outerWidth(true) * this.navigation.wrapper.children().length,
+				'width': this.navigation.wrapper.children('li').outerWidth(true) * this.navigation.wrapper.children('li').length,
 				'margin-left': -(this.navigation.wrapper.outerWidth(true)/2)
 			});
 		}
@@ -890,7 +890,7 @@
 		// Set slides wrapper
 		this.wrapper = this.parent.children();
 		// Set slides
-		this.slides = this.wrapper.children();
+		this.slides = this.wrapper.children('li');
 		// Set slider dimentions
 		this.dimensions();
 

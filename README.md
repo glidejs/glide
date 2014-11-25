@@ -114,6 +114,9 @@ glide.jump(3, console.log('Wooo!'));
 
 
 ##Changelog
+`1.0.7` / `25.11.2014`
+- Ember firendly
+
 `1.0.6` / `25.11.2014`
 - Bower support
 

@@ -1,6 +1,6 @@
 /*!
  * Glide.js
- * Version: 1.0.65
+ * Version: 1.0.6
  * Simple, lightweight and fast jQuery slider
  * Author: @JedrzejChalubek
  * Site: http://jedrzejchalubek.com/
@@ -359,8 +359,7 @@
 		 * Right arrow
 		 * @type {Obejct}
 		 */
-		this.arrows.right = $('<a />', {
-			'href': '#',
+		this.arrows.right = $('<div />', {
 			'class': this.options.arrowMainClass + ' ' + this.options.arrowRightClass,
 			// Direction and distance -> One forward
 			'data-distance': '1',
@@ -371,8 +370,7 @@
 		 * Left arrow
 		 * @type {Object}
 		 */
-		this.arrows.left = $('<a />', {
-			'href': '#',
+		this.arrows.left = $('<div />', {
 			'class': this.options.arrowMainClass + ' ' + this.options.arrowLeftClass,
 			// Direction and distance -> One backward
 			'data-distance': '-1',

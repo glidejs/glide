@@ -22,6 +22,7 @@
   display: block;
   margin-bottom: -20px;
   padding: 20px;
+  cursor: pointer;
 }
 .slider__arrows-item--right {
   bottom: 50%;

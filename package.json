@@ -1,6 +1,6 @@
 {
   "name": "Glide.js",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Simple, lightweight and fast jQuery slider",
   "main": "dist/jquery.glide.js",
   "author": "@JedrzejChalubek",

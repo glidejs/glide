@@ -11,6 +11,9 @@
 			// {Bool} Circual play
 			circular: true,
 
+			// {String} Transition type( "slide" or "fade")
+			transitionType: "slide",
+
 			// {Int} Animation time
 			animationDuration: 500,
 			// {String} Animation easing function
@@ -52,11 +55,17 @@
 			// {String} Current navigation item class
 			navigationCurrentItemClass: 'slider__nav-item--current',
 
+			// {String} Current slider item class
+			sliderCurrentItemClass: 'slider__item--current',
+
 			// {Bool} Slide on left/right keyboard arrows press
 			keyboard: true,
 
 			// {Int or Bool} Touch settings
 			touchDistance: 60,
+
+			// {Bool} Use JS animation ( $.animate() ) instead of CSS transition and transform
+			forceJSAnimation: false,
 
 			// {Function} Callback before plugin init
 			beforeInit: function() {},
@@ -84,8 +93,18 @@
 		this.options = $.extend({}, defaults, options);
 		// Current slide id
 		this.currentSlide = 0;
-		// If CSS3 Transition isn't supported switch cssSupport variable to false and use $.animate()
-		this.cssSupport = ( !this.css.isSupported("transition") || !this.css.isSupported("transform") ) ? false : true;
+		// Check options variable for forceJSAnimation
+		if (this.options.forceJSAnimation) {
+			// Set cssSupport to false if forceJSAnimation is set to true
+			this.cssSupport = false;
+		} else {
+			// If CSS3 Transition isn't supported switch cssSupport variable to false and use $.animate()
+			this.cssSupport = ( !this.css.isSupported("transition") || !this.css.isSupported("transform") ) ? false : true;
+		}
+		// Disable circular when fade is set for transition
+		if (this.options.transitionType == "fade") {
+			this.options.circular = false;
+		}
 		// If circular set offset, two cloned slides
 		this.offset = (this.options.circular) ? 2 : 0;
 
@@ -218,10 +237,32 @@
 	 */
 	Glide.prototype.build = function() {
 
+		/*
+		 * Build slides for fade
+		 */
+		if (this.options.transitionType == "fade") {
+			// Reset opacity to all slides
+			this.slides.css({opacity: 0, "position": "absolute" });
+
+			if (this.cssSupport) {
+				this.slides.css({ 'transition': 'opacity ' + this.options.animationDuration + 'ms linear' });
+			}
+
+			// Add some css properties to first slider
+			this.slides.filter(':first-child')
+				.css({ opacity: 1, 'z-index': '2'}).animate({ opacity: 1 }, this.options.animationDuration);
+		}
+
 		/**
 		 * Attatch bindings
 		 */
 		this.bindings();
+
+		/*
+		 * Add sliderCurrentItemClass to the first slider
+		 */
+		this.slides.filter(':first-child')
+			.addClass(this.options.sliderCurrentItemClass);
 
 		/**
 		 * There is more than one slide
@@ -267,8 +308,9 @@
 		/**
 		 * Clone first and last slide
 		 * and set width for each
+		 * Remove sliderCurrentItemClass on first cloned element
 		 */
-		this.firstClone = this.slides.filter(':first-child').clone().width(this.slides.spread);
+		this.firstClone = this.slides.filter(':first-child').clone().width(this.slides.spread).removeClass(this.options.sliderCurrentItemClass);
 		this.lastClone = this.slides.filter(':last-child').clone().width(this.slides.spread);
 
 		/**
@@ -326,7 +368,7 @@
 
 	};
 
-		/**
+	/**
 	 * Building arrows DOM
 	 */
 	Glide.prototype.arrows = function() {
@@ -706,6 +748,23 @@
 		 */
 		var offset = this.slides.spread * currentSlide;
 
+		/*
+		 * Add sliderCurrentItemClass to active slider.
+		 * Get right element when circular is active
+		 */
+		if (this.options.circular) {
+			$('.slider__wrapper').children()
+				.eq(-currentSlide + 1).addClass(this.options.sliderCurrentItemClass)
+					.siblings()
+						.removeClass(this.options.sliderCurrentItemClass);
+
+		} else {
+			$('.slider__wrapper').children()
+				.eq(-currentSlide).addClass(this.options.sliderCurrentItemClass)
+					.siblings()
+						.removeClass(this.options.sliderCurrentItemClass);
+		}
+
 		/**
 		 * While circular decrease offset with the width of single slide
 		 * When fromFirst and fromLast flags are set, unbind events thats controls changing
@@ -724,8 +783,29 @@
 		 * While CSS3 is supported use offset
 		 * if not, use $.animate();
 		 */
-		if (this.cssSupport) this.wrapper.trigger('setTransition').trigger('setTranslate', [offset]);
-		else this.wrapper.stop().animate({ 'margin-left': offset }, this.options.animationDuration);
+		if (this.options.transitionType == "slide") {
+			if (this.cssSupport) this.wrapper.trigger('setTransition').trigger('setTranslate', [offset]);
+			else this.wrapper.stop().animate({ 'margin-left': offset }, this.options.animationDuration);
+		} else {
+			/*
+			 * Change duration value when css transition is supported
+			 */
+			if (this.cssSupport) {
+				tempAnimationDuration = 0; // transition is done by CSS
+			} else {
+				tempAnimationDuration = this.options.animationDuration;
+			}
+
+			// Set item current class to slider
+			$('.slider__wrapper').children()
+				.eq(-currentSlide)
+					.css('z-index', '2')
+					.stop(true, false).animate({ opacity: 1 },tempAnimationDuration)
+						.siblings()
+							.css('z-index', '1')
+							.stop(true, true).delay(this.options.animationDuration).animate({ opacity: 0 },0);
+
+		}
 
 		/**
 		 * While circular
@@ -850,7 +930,11 @@
 		// Get slide width
 		this.slides.spread = this.parent.width();
 		// Set wrapper width
-		this.wrapper.width(this.slides.spread * (this.slides.length + this.offset));
+		if (this.options.transitionType == "slide") {
+			this.wrapper.width(this.slides.spread * (this.slides.length + this.offset));
+		} else {
+			this.wrapper.width(this.slides.spread);
+		}
 		// Set slide width
 		this.slides.add(this.firstClone).add(this.lastClone).width(this.slides.spread);
 

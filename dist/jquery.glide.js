@@ -19,8 +19,8 @@
 			// {Bool} Circual play
 			circular: true,
 
-			// {String} Transition type( "slide" or "fade")
-			transitionType: "slide",
+			// {String} Transition type ('slide' or 'fade')
+			transitionType: 'slide',
 
 			// {Int} Animation time
 			animationDuration: 500,
@@ -73,7 +73,7 @@
 			touchDistance: 60,
 
 			// {Bool} Use JS animation ( $.animate() ) instead of CSS transition and transform
-			forceJSAnimation: false,
+			forceJS: false,
 
 			// {Function} Callback before plugin init
 			beforeInit: function() {},
@@ -101,9 +101,9 @@
 		this.options = $.extend({}, defaults, options);
 		// Current slide id
 		this.currentSlide = 0;
-		// Check options variable for forceJSAnimation
-		if (this.options.forceJSAnimation) {
-			// Set cssSupport to false if forceJSAnimation is set to true
+		// Check options variable for forceJS (Fallback)
+		if (this.options.forceJS) {
+			// Set cssSupport to false if forceJS is set to true
 			this.cssSupport = false;
 		} else {
 			// If CSS3 Transition isn't supported switch cssSupport variable to false and use $.animate()
@@ -248,9 +248,9 @@
 		/*
 		 * Build slides for fade
 		 */
-		if (this.options.transitionType == "fade") {
+		if (this.options.transitionType == 'fade') {
 			// Reset opacity to all slides
-			this.slides.css({opacity: 0, "position": "absolute" });
+			this.slides.css({opacity: 0, 'position': 'absolute' });
 
 			if (this.cssSupport) {
 				this.slides.css({ 'transition': 'opacity ' + this.options.animationDuration + 'ms linear' });
@@ -620,14 +620,14 @@
 	 * Disable events thats controls slide changes
 	 */
 	Glide.prototype.disableEvents = function() {
-		this.wrapper.attr( "disabled", true );
+		this.wrapper.attr( 'disabled', true );
 	};
 
 	/**
 	 * Enable events thats controls slide changes
 	 */
 	Glide.prototype.enableEvents = function() {
-		this.wrapper.attr( "disabled", false );
+		this.wrapper.attr( 'disabled', false );
 	};
 
 	/**
@@ -791,7 +791,7 @@
 		 * While CSS3 is supported use offset
 		 * if not, use $.animate();
 		 */
-		if (this.options.transitionType == "slide") {
+		if (this.options.transitionType == 'slide') {
 			if (this.cssSupport) this.wrapper.trigger('setTransition').trigger('setTranslate', [offset]);
 			else this.wrapper.stop().animate({ 'margin-left': offset }, this.options.animationDuration);
 		} else {
@@ -811,7 +811,7 @@
 					.stop(true, false).animate({ opacity: 1 },tempAnimationDuration)
 						.siblings()
 							.css('z-index', '1')
-							.stop(true, true).delay(this.options.animationDuration).animate({ opacity: 0 },0);
+							.stop(true, true).delay(tempAnimationDuration).animate({ opacity: 0 },0);
 
 		}
 
@@ -938,7 +938,7 @@
 		// Get slide width
 		this.slides.spread = this.parent.width();
 		// Set wrapper width
-		if (this.options.transitionType == "slide") {
+		if (this.options.transitionType == 'slide') {
 			this.wrapper.width(this.slides.spread * (this.slides.length + this.offset));
 		} else {
 			this.wrapper.width(this.slides.spread);

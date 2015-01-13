@@ -83,7 +83,7 @@ Here is list of all available
 | `sliderCurrentItemClass` | `slider__item--current` | string | Current slider item class
 | `keyboard` | `true` | bool | Slide on left/right keyboard arrows press
 | `touchDistance` | `60` | int/bool | Minimal touch-swipe distance to call event. False for turning off touch.
-| `forceJSAnimation` | `false` | bool | Use JS animation ( $.animate() ) instead of CSS transition and transform.
+| `forceJS` | `false` | bool | Use JS animation ( $.animate() ) instead of CSS transition and transform.
 | `beforeInit` | `function(){}` | function | Callback before plugin init
 | `afterInit` | `function(){}` | function | Callback after plugin init
 | `beforeTransition` | `function(){}` | function | Callback before slide change

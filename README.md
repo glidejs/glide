@@ -28,10 +28,10 @@ Make necessary markup for slider.
 
 ``` html
 <div class="slider">
-  <ul class="slides">
-    <li class="slide"></li>
-    <li class="slide"></li>
-    <li class="slide"></li>
+  <ul class="slider__wrapper">
+    <li class="slider__item"></li>
+    <li class="slider__item"></li>
+    <li class="slider__item"></li>
   </ul>
 </div>
 ```

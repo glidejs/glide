@@ -65,6 +65,7 @@ Here is list of all available
 | `autoplay` | `4000` | int/bool | False for turning off autoplay
 | `hoverpause` | `true` | bool | Pause autoplay on mouseover slider
 | `circular` | `true` | bool | Circular play (Animation continues without starting over once it reaches the last slide)
+| `transitionType` | `slide` | string | Set the transition type. You can choose between "slide" and "fade"
 | `animationDuration` | `500` | int | Animation time in ms
 | `animationTimingFunc` | cubic-bezier(0.165, 0.840, 0.440, 1.000) | string | Animation easing function
 | `arrows` | `true` | bool/string | Show/hide/appendTo arrows. True for append arrows to slider wrapper. False for not appending arrows. Id or class name (e.g. '.class-name') for appending to specific HTML markup
@@ -79,8 +80,10 @@ Here is list of all available
 | `navigationClass` | `slider__nav` | string | Navigation wrapper class
 | `navigationItemClass` | `slider__nav-item` | string | Navigation item class
 | `navigationCurrentItemClass` | `slider__nav-item--current` | string | Current navigation item class
+| `sliderCurrentItemClass` | `slider__item--current` | string | Current slider item class
 | `keyboard` | `true` | bool | Slide on left/right keyboard arrows press
 | `touchDistance` | `60` | int/bool | Minimal touch-swipe distance to call event. False for turning off touch.
+| `forceJS` | `false` | bool | Use JS animation ( $.animate() ) instead of CSS transition and transform.
 | `beforeInit` | `function(){}` | function | Callback before plugin init
 | `afterInit` | `function(){}` | function | Callback after plugin init
 | `beforeTransition` | `function(){}` | function | Callback before slide change
@@ -114,6 +117,11 @@ glide.jump(3, console.log('Wooo!'));
 
 
 ##Changelog
+`1.0.7` / `04.01.2015`
+- Add new transition type - fade
+- Add class to current slider item
+- Add option to force animation in JavaScript
+
 `1.0.6` / `25.11.2014`
 - Bower support
 

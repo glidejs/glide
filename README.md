@@ -28,11 +28,7 @@ Make necessary markup for slider.
 
 ``` html
 <div class="slider">
-<<<<<<< HEAD
   <ul class="slider__wrapper">
-=======
-  <ul class="slides">
->>>>>>> 8d66ce292ff2be054b030f624db984c15516e761
     <li class="slider__item"></li>
     <li class="slider__item"></li>
     <li class="slider__item"></li>

@@ -1,0 +1,25 @@
+{
+  "name": "Glide.js",
+  "version": "2.0.0",
+  "description": "Simple, lightweight and fast jQuery slider",
+  "main": "Gruntfile.js",
+  "author": "@jedrzejchalubek",
+  "homepage": "http://glide.jedrzejchalubek.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jedrzejchalubek/Glide.js.git"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-autoprefixer": "*",
+    "grunt-contrib-less": "*",
+    "grunt-contrib-coffee": "*",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-jasmine": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-watch": "*",
+    "matchdep": "*",
+    "module": "0.0.1"
+  }
+}

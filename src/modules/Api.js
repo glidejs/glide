@@ -6,35 +6,62 @@
  * @return {Glide.Api}
  */
 
-Glide.Api = (function (self) {
+var Api = function (Glide, Core) {
 
+	/**
+	 * Construnct modules
+	 * and inject Glide and Core as dependency
+	 */
+	function Module() {}
 
 	/**
 	 * Api instance
 	 * @return {object}
 	 */
-	self.instance = function () {
+	Module.prototype.instance = function () {
+
 		return {
-			reinit: Glide.Core.init,
-			current: Glide.Api.current,
-			go: Glide.Animation.run,
-			play: Glide.Animation.play,
-			pause: Glide.Animation.pause
+
+			/**
+			 * Get current slide index
+			 * @return {int}
+			 */
+			current: function() {
+				return Glide.current;
+			},
+
+			/**
+			 * Go to specifed slide
+			 * @param  {String}   distance
+			 * @param  {Function} callback
+			 * @return {Core.Animation}
+			 */
+			go: function(distance, callback) {
+				return Core.Animation.run(distance, callback);
+			},
+
+			/**
+			 * Start autoplay
+			 * @return {Core.Animation}
+			 */
+			play: function(){
+				return Core.Animation.play();
+			},
+
+			/**
+			 * Stop autoplay
+			 * @return {Core.Animation}
+			 */
+			pause: function() {
+				return Core.Animation.pause();
+			}
+
+
 		};
+
 	};
 
+	// @return Module
+	return new Module();
 
-	/**
-	 * Get current slide index
-	 * @return {int}
-	 */
-	self.current = function () {
-		return Glide.Core.current;
-	};
-
-
-	// @return module
-	return self;
-
-
-}(Glide.Api || {}));
+};

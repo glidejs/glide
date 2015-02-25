@@ -72,8 +72,8 @@ module.exports = function(grunt){
 			dist: {
 				files: {
 					'<%= paths.dist %>/glide.js': [
-						'<%= paths.src %>/*.js',
-						'<%= paths.src %>/modules/*.js'
+						'<%= paths.src %>/modules/*.js',
+						'<%= paths.src %>/*.js'
 					]
 				}
 			}

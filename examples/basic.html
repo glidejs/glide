@@ -75,10 +75,12 @@
 			var carousel = $('#Carousel').glide({
 				type: 'carousel',
 				startAt: 2,
-				autoplay: false,
+				autoplay: 4000,
 				animationTimingFunc: 'ease',
 			});
 			var carousel_api = carousel.data('glide_api');
+
+			console.log(carousel_api);
 
 			carousel.find('.box').on('click', function () {
 				carousel_api.go('=1');
@@ -91,10 +93,6 @@
 				animationTimingFunc: 'ease',
 			});
 			var slider_api = slider.data('glide_api');
-
-			slider.find('.box').on('click', function () {
-				slider_api.go('=3');
-			});
 		</script>
 
 	</body>

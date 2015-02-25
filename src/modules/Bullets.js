@@ -6,35 +6,31 @@
  * @return {Glide.Bullets}
  */
 
-Glide.Bullets = (function (self) {
+var Bullets = function (Glide, Core) {
 
+	function Module() {
 
-	/**
-	 * Init bullets
-	 * build DOM and bind events
-	 */
-	self.init = function () {
-		self.build();
-		self.bind();
-	};
+		this.build();
+		this.bind();
 
+	}
 
 	/**
 	 * Build
 	 * bullets DOM
 	 */
-	self.build = function () {
+	Module.prototype.build = function () {
 
-		self.wrapper = Glide.Core.slider.children('.' + Glide.options.classes.bullets);
+		this.wrapper = Glide.slider.children('.' + Glide.options.classes.bullets);
 
-		for(var i = 1; i <= Glide.Core.length; i++) {
+		for(var i = 1; i <= Glide.length; i++) {
 			$('<li>', {
 				'class': Glide.options.classes.bullet,
 				'data-glide-dir': '=' + i
-			}).appendTo(self.wrapper);
+			}).appendTo(this.wrapper);
 		}
 
-		self.items = self.wrapper.children();
+		this.items = this.wrapper.children();
 
 	};
 
@@ -43,19 +39,17 @@ Glide.Bullets = (function (self) {
 	 * Bind
 	 * bullets events
 	 */
-	self.bind = function () {
+	Module.prototype.bind = function () {
 
-		self.items.on('click', function(){
-			if (!Glide.Events.disabled) {
-				Glide.Animation.run($(this).data('glide-dir'));
+		this.items.on('click', function(event){
+			event.preventDefault();
+			if (!Core.Events.disabled) {
+				Core.Animation.run($(this).data('glide-dir'));
 			}
 		});
 
 	};
 
+	return new Module();
 
-	// @return module
-	return self;
-
-
-}(Glide.Bullets || {}));
+};

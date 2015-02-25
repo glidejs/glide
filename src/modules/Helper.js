@@ -6,26 +6,19 @@
  * @return {Glide.Helper}
  */
 
-Glide.Helper = (function (self) {
+var Helper = function (Glide, Core) {
 
+	function Module() {}
 
 	/**
 	 * Capitalise string
 	 * @param  {string} s
 	 * @return {string}
 	 */
-	self.capitalise = function (s) {
+	Module.prototype.capitalise = function (s) {
 		return s.charAt(0).toUpperCase() + s.slice(1);
 	};
 
+	return new Module();
 
-	self.isNumber = function (n) {
-		return !isNaN(parseFloat(n)) && isFinite(n);
-	};
-
-
-	// @return module
-	return self;
-
-
-}(Glide.Helper || {}));
+};

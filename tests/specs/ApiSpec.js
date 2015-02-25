@@ -117,15 +117,14 @@ describe("Api", function() {
 
 
 	it("Api.pause should stop autoplay", function() {
-		api.pause();
-		expect(Glide.Animation.interval).toBeUndefined();
+		api.play();
+		expect(api.pause()).toBeUndefined();
 	});
 
 
 	it("Api.play should start autoplay", function() {
 		api.pause();
-		api.play();
-		expect(Glide.Animation.interval).toBeGreaterThan(0);
+		expect(api.play()).toBeGreaterThan(0);
 	});
 
 

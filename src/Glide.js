@@ -4,10 +4,12 @@
  * --------------------------------
  * Responsible for slider initiation,
  * extending defaults, returning public api
+ * @param {jQuery} element Root element
+ * @param {Object} options Plugin init options
  * @return {Glide}
  */
 
-var Glide = (function (self) {
+var Glide = function (element, options) {
 
 	/**
 	 * Default options
@@ -18,6 +20,7 @@ var Glide = (function (self) {
 		type: 'slider',
 		startAt: 1,
 		hoverpause: true,
+		keyboard: true,
 		animationDuration: 500,
 		animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
 		classes: {
@@ -29,35 +32,47 @@ var Glide = (function (self) {
 			bullets: 'glide__bullets',
 			bullet: 'glide__bullet'
 		},
+		beforeInit: function(el) {},
+		afterInit: function(el) {},
 		beforeTransition: function(i, el) {},
 		afterTransition: function(i, el) {},
 	};
 
+	// Extend options
+	this.options = $.extend({}, defaults, options);
+
+	this.slider = element.addClass(this.options.classes.base + '--' + this.options.type);
+	this.wrapper = this.slider.children('.' + this.options.classes.wrapper);
+	this.slides = this.wrapper.children('.' + this.options.classes.slide);
+
+	this.current = parseInt(this.options.startAt);
+	this.width = this.slider.width();
+	this.length = this.slides.length;
+
+	// Call before init callback
+	this.options.beforeInit(this.slider);
 
 	/**
-	 * Init Glide
-	 * @param  {jquery} element
-	 * @param  {object} options
-	 * @return {Glide.Api}
+	 * Construct Core with modules
+	 * @type {Core}
 	 */
-	self.init = function (element, options) {
+	var core = new Core(this, {
+		Helper: Helper,
+		Translate: Translate,
+		Transition: Transition,
+		Events: Events,
+		Arrows: Arrows,
+		Bullets: Bullets,
+		Animation: Animation,
+		Build: Build,
+		Api: Api
+	});
 
-		self.element = element;
-		self.options = $.extend({}, defaults, options);
+	// Call after init callback
+	this.options.afterInit(this.slider);
 
-		Glide.Core.init();
+	// api return
+	return core.Api.instance();
 
-		// console.log(element.attr('id'));
+};
 
-		// Glide.Arrows.items.each(function(i, el){
-		// 	console.log($._data( el[0], 'events' ));
-		// });
-		// console.log("================");
-
-		return Glide.Api.instance();
-
-	};
-
-	return self;
-
-}(Glide || {}));

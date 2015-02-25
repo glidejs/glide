@@ -6,22 +6,19 @@ describe("Helper", function() {
 
 	var slider;
 	var api;
+	var helper;
 
 
 	beforeEach(function () {
 		loadFixtures('base.html');
 		loadStyleFixtures('glide.css');
+
+		helper = new Helper();
 	});
 
 
 	it("Capitalise passed string", function() {
-		expect(Glide.Helper.capitalise('hello')).toEqual('Hello');
-	});
-
-
-	it("Check for number", function() {
-		expect(Glide.Helper.isNumber(4)).toEqual(true);
-		expect(Glide.Helper.isNumber('>')).toEqual(false);
+		expect(helper.capitalise('hello')).toEqual('Hello');
 	});
 
 

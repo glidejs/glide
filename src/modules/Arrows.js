@@ -6,27 +6,23 @@
  * @return {Glide.Arrows}
  */
 
-Glide.Arrows = (function (self) {
+var Arrows = function (Glide, Core) {
 
+	function Module() {
 
-	/**
-	 * Init arrows
-	 * build DOM and bind events
-	 */
-	self.init = function () {
-		self.build();
-		self.bind();
-	};
+		this.build();
+		this.bind();
 
+	}
 
 	/**
 	 * Build
 	 * arrows DOM
 	 */
-	self.build = function () {
+	Module.prototype.build = function () {
 
-		self.wrapper = Glide.Core.slider.children('.' + Glide.options.classes.arrows);
-		self.items = self.wrapper.children();
+		this.wrapper = Glide.slider.children('.' + Glide.options.classes.arrows);
+		this.items = this.wrapper.children();
 
 	};
 
@@ -35,19 +31,17 @@ Glide.Arrows = (function (self) {
 	 * Bind
 	 * arrows events
 	 */
-	self.bind = function () {
+	Module.prototype.bind = function () {
 
-		self.items.on('click', function(e){
-			if (!Glide.Events.disabled) {
-				Glide.Animation.run($(this).data('glide-dir'));
+		this.items.on('click', function(event){
+			event.preventDefault();
+			if (!Core.Events.disabled) {
+				Core.Animation.run($(this).data('glide-dir'));
 			}
 		});
 
 	};
 
+	return new Module();
 
-	// @return module
-	return self;
-
-
-}(Glide.Arrows || {}));
+};

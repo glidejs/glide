@@ -108,7 +108,7 @@ var Animation = function (Glide, Core) {
 		this['run' + Core.Helper.capitalise(Glide.options.type)](direction);
 
 		// When animation is done
-		this.afterAnimation(function(){
+		this.after(function(){
 			// Set active flags
 			Core.Build.active();
 			// Enable events and call callbacks
@@ -125,10 +125,10 @@ var Animation = function (Glide, Core) {
 	 * @param  {Function} callback
 	 * @return {Int}
 	 */
-	Module.prototype.afterAnimation = function(callback, steps) {
+	Module.prototype.after = function(callback, steps) {
 		return setTimeout(function(){
 			callback();
-		}, Glide.options.animationDuration + 10);
+		}, Glide.options.animationDuration + 20);
 	};
 
 
@@ -142,7 +142,7 @@ var Animation = function (Glide, Core) {
 
 		Glide.wrapper.css({
 			'transition': Core.Transition.get('transform'),
-			'transform': Core.Translate.get('x', translate)
+			'transform': Core.Translate.set('x', translate)
 		});
 
 	};
@@ -171,10 +171,10 @@ var Animation = function (Glide, Core) {
 
 			// After offset animation is done,
 			// clear transition and jump to last slide
-			this.afterAnimation(function() {
+			this.after(function() {
 				Glide.wrapper.css({
 					'transition': Core.Transition.clear('transform'),
-					'transform': Core.Translate.get('x', Glide.length * Glide.width)
+					'transform': Core.Translate.set('x', Glide.length * Glide.width)
 				});
 			});
 
@@ -195,10 +195,10 @@ var Animation = function (Glide, Core) {
 
 			// After offset animation is done,
 			// clear transition and jump to first slide
-			this.afterAnimation(function() {
+			this.after(function() {
 				Glide.wrapper.css({
 					'transition': Core.Transition.clear('transform'),
-					'transform': Core.Translate.get('x', Glide.width)
+					'transform': Core.Translate.set('x', Glide.width)
 				});
 			});
 
@@ -219,7 +219,7 @@ var Animation = function (Glide, Core) {
 		 */
 		Glide.wrapper.css({
 			'transition': Core.Transition.get('transform'),
-			'transform': Core.Translate.get('x', translate)
+			'transform': Core.Translate.set('x', translate)
 		});
 
 	};
@@ -344,7 +344,7 @@ var Arrows = function (Glide, Core) {
 	 */
 	Module.prototype.bind = function () {
 
-		this.items.on('click', function(event){
+		this.items.on('click touchstart', function(event){
 			event.preventDefault();
 			if (!Core.Events.disabled) {
 				Core.Animation.run($(this).data('glide-dir'));
@@ -381,7 +381,8 @@ var Build = function (Glide, Core) {
 
 		Glide.wrapper.css({
 			'width': Glide.width * Glide.length,
-			'transform': Core.Translate.get('x', Glide.width * (Glide.options.startAt - 1))
+			'transform': Core.Translate.set('x', Glide.width * (Glide.options.startAt - 1)),
+			'transition': Core.Transition.get('translate')
 		});
 
 		Glide.slides.width(Glide.width);
@@ -391,17 +392,18 @@ var Build = function (Glide, Core) {
 	Module.prototype.carousel = function() {
 
 		this.clones.first = Glide.slides.filter(':first-child')
-			.clone().addClass('isCloned').width(Glide.width);
+			.clone().addClass('clone').width(Glide.width);
 
 		this.clones.last = Glide.slides.filter(':last-child')
-			.clone().addClass('isCloned').width(Glide.width);
+			.clone().addClass('clone').width(Glide.width);
 
 		Glide.wrapper
 			.append(this.clones.first)
 			.prepend(this.clones.last)
 			.css({
 				'width': (Glide.width * Glide.length) + (Glide.width * 2),
-				'transform': Core.Translate.get('x', Glide.width * Glide.options.startAt)
+				'transform': Core.Translate.set('x', Glide.width * Glide.options.startAt),
+				'transition': Core.Transition.get('translate')
 			});
 
 		Glide.slides.width(Glide.width);
@@ -413,6 +415,7 @@ var Build = function (Glide, Core) {
 
 		Glide.slides.eq(Glide.options.startAt - 1)
 			.css({
+				'transition': Core.Transition.get('translate'),
 				'opacity': 1,
 				'z-index': 1
 			})
@@ -479,7 +482,7 @@ var Bullets = function (Glide, Core) {
 	 */
 	Module.prototype.bind = function () {
 
-		this.items.on('click', function(event){
+		this.items.on('click touchstart', function(event){
 			event.preventDefault();
 			if (!Core.Events.disabled) {
 				Core.Animation.run($(this).data('glide-dir'));
@@ -620,6 +623,116 @@ var Helper = function (Glide, Core) {
 	return new Module();
 
 };
+;var Touch = function (Glide, Core) {
+
+
+	function Module() {
+
+		if (Glide.options.touchDistance) {
+			Glide.slider.on({
+				'touchstart': this.start,
+				'touchmove': this.move,
+				'touchend': this.end
+			});
+		}
+
+	}
+
+	Module.prototype.start = function(event) {
+
+		// Escape if events disabled
+		if (Core.Events.disabled) return;
+
+		// Cache event
+		var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+
+		// Get touch start points
+		this.touchStartX = parseInt(touch.pageX);
+		this.touchStartY = parseInt(touch.pageY);
+		this.touchSin = null;
+		this.translate = Core.Translate.get();
+
+	};
+
+
+	Module.prototype.move = function(event) {
+
+		// Escape if events disabled
+		if (Core.Events.disabled) return;
+
+		// Cache event
+		var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+
+		// Calculate start, end points
+		var subExSx = parseInt(touch.pageX) - this.touchStartX;
+		var subEySy = parseInt(touch.pageY) - this.touchStartY;
+		// Bitwise subExSx pow
+		var powEX = Math.abs( subExSx << 2 );
+		// Bitwise subEySy pow
+		var powEY = Math.abs( subEySy << 2 );
+		// Calculate the length of the hypotenuse segment
+		var touchHypotenuse = Math.sqrt( powEX + powEY );
+		// Calculate the length of the cathetus segment
+		var touchCathetus = Math.sqrt( powEY );
+
+		// Calculate the sine of the angle
+		this.touchSin = Math.asin( touchCathetus/touchHypotenuse );
+
+		if ( (this.touchSin * (180 / Math.PI)) < 45 ) event.preventDefault();
+
+		// var translate = Core.Translate.get() - subExSx/10;
+
+		// console.log(translate);
+
+		// if (translate > 0) {
+		// 	Glide.wrapper.css({
+		// 		transform: Core.Translate.set('x', Core.Translate.get() - subExSx/10)
+		// 	});
+		// } else {
+		// 	Glide.wrapper.css({
+		// 		transform: Core.Translate.set('x', Core.Translate.get() - subExSx/10)
+		// 	});
+		// }
+
+	};
+
+
+	Module.prototype.end = function(event) {
+
+		// Escape if events disabled
+		if (Core.Events.disabled) return;
+		if(Glide.options.autoplay) Core.Animation.pause();
+		Core.Events.disable();
+
+		// Cache event
+		var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+
+		// Calculate touch distance
+		var touchDistance = touch.pageX - this.touchStartX;
+
+		// While touch is positive and greater than distance set in options
+		if ( (touchDistance > Glide.options.touchDistance) && ( (this.touchSin * (180 / Math.PI)) < 45) ) {
+			// Slide one backward
+			Core.Animation.run('<');
+		// While touch is negative and lower than negative distance set in options
+		} else if (
+			(touchDistance < -Glide.options.touchDistance) && ( (this.touchSin * (180 / Math.PI)) < 45) ) {
+			// Slide one forward
+			Core.Animation.run('>');
+		}
+
+		Core.Animation.after(function(){
+			Core.Events.enable();
+			if(Glide.options.autoplay) Core.Animation.play();
+		});
+
+	};
+
+
+	// @return Module
+	return new Module();
+
+};
 ;var Transition = function (Glide, Core) {
 
 	function Module() {}
@@ -664,11 +777,21 @@ var Helper = function (Glide, Core) {
 
 	/**
 	 * Get translate
+	 * @return {string}
+	 */
+	Module.prototype.get = function() {
+		var matrix = Glide.wrapper.css('transform').replace(/[^0-9\-.,]/g, '').split(',');
+		return parseInt(matrix[12] || matrix[4]);
+	};
+
+
+	/**
+	 * Set translate
 	 * @param  {string} axis
 	 * @param  {int} value
 	 * @return {string}
 	 */
-	Module.prototype.get = function(axis, value) {
+	Module.prototype.set = function(axis, value) {
 		this.axes[axis] = parseInt(value);
 		return 'translate3d(-' + this.axes.x + 'px, ' + this.axes.y + 'px, ' + this.axes.z + 'px)';
 	};
@@ -701,6 +824,7 @@ var Glide = function (element, options) {
 		startAt: 1,
 		hoverpause: true,
 		keyboard: true,
+		touchDistance: 60,
 		animationDuration: 500,
 		animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
 		classes: {
@@ -741,6 +865,7 @@ var Glide = function (element, options) {
 		Translate: Translate,
 		Transition: Transition,
 		Events: Events,
+		Touch: Touch,
 		Arrows: Arrows,
 		Bullets: Bullets,
 		Animation: Animation,

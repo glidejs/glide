@@ -41,7 +41,7 @@ var Bullets = function (Glide, Core) {
 	 */
 	Module.prototype.bind = function () {
 
-		this.items.on('click', function(event){
+		this.items.on('click touchstart', function(event){
 			event.preventDefault();
 			if (!Core.Events.disabled) {
 				Core.Animation.run($(this).data('glide-dir'));

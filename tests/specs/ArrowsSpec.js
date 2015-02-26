@@ -8,15 +8,18 @@ describe("Arrows", function() {
 	var slides;
 	var arrows;
 	var arrowsWrapper;
+	var options;
 
 	beforeEach(function () {
 
 		loadFixtures('base.html');
 		loadStyleFixtures('glide.css');
 
-		slider = $('.glide').glide({
+		options = {
 			animationDuration: 10
-		});
+		};
+
+		slider = $('.glide').glide(options);
 		wrapper = slider.children('.glide__wrapper');
 		slides = wrapper.children();
 		arrowsWrapper = slider.children('.glide__arrows');
@@ -39,8 +42,8 @@ describe("Arrows", function() {
 			setTimeout(function(){
 				expect(slides.index($('.active')) + 1).toBe(current + 1);
 				done();
-			}, 20);
-		}, 20);
+			}, options.animationDuration*5);
+		}, options.animationDuration*5);
 
 	});
 
@@ -53,8 +56,8 @@ describe("Arrows", function() {
 			setTimeout(function(){
 				expect(slides.index($('.active')) + 1).toBe(slides.length);
 				done();
-			}, 20);
-		}, 20);
+			}, options.animationDuration*5);
+		}, options.animationDuration*5);
 	});
 
 });

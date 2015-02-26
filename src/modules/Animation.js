@@ -98,7 +98,7 @@ var Animation = function (Glide, Core) {
 		this['run' + Core.Helper.capitalise(Glide.options.type)](direction);
 
 		// When animation is done
-		this.afterAnimation(function(){
+		this.after(function(){
 			// Set active flags
 			Core.Build.active();
 			// Enable events and call callbacks
@@ -115,10 +115,10 @@ var Animation = function (Glide, Core) {
 	 * @param  {Function} callback
 	 * @return {Int}
 	 */
-	Module.prototype.afterAnimation = function(callback, steps) {
+	Module.prototype.after = function(callback, steps) {
 		return setTimeout(function(){
 			callback();
-		}, Glide.options.animationDuration + 10);
+		}, Glide.options.animationDuration + 20);
 	};
 
 
@@ -132,7 +132,7 @@ var Animation = function (Glide, Core) {
 
 		Glide.wrapper.css({
 			'transition': Core.Transition.get('transform'),
-			'transform': Core.Translate.get('x', translate)
+			'transform': Core.Translate.set('x', translate)
 		});
 
 	};
@@ -161,10 +161,10 @@ var Animation = function (Glide, Core) {
 
 			// After offset animation is done,
 			// clear transition and jump to last slide
-			this.afterAnimation(function() {
+			this.after(function() {
 				Glide.wrapper.css({
 					'transition': Core.Transition.clear('transform'),
-					'transform': Core.Translate.get('x', Glide.length * Glide.width)
+					'transform': Core.Translate.set('x', Glide.length * Glide.width)
 				});
 			});
 
@@ -185,10 +185,10 @@ var Animation = function (Glide, Core) {
 
 			// After offset animation is done,
 			// clear transition and jump to first slide
-			this.afterAnimation(function() {
+			this.after(function() {
 				Glide.wrapper.css({
 					'transition': Core.Transition.clear('transform'),
-					'transform': Core.Translate.get('x', Glide.width)
+					'transform': Core.Translate.set('x', Glide.width)
 				});
 			});
 
@@ -209,7 +209,7 @@ var Animation = function (Glide, Core) {
 		 */
 		Glide.wrapper.css({
 			'transition': Core.Transition.get('transform'),
-			'transform': Core.Translate.get('x', translate)
+			'transform': Core.Translate.set('x', translate)
 		});
 
 	};

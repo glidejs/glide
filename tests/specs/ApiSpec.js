@@ -45,9 +45,9 @@ describe("Api", function() {
 			setTimeout(function(){
 				expect(slides.index($('.active')) + 1).toEqual(index + 1);
 				done();
-			}, options.animationDuration*2);
+			}, options.animationDuration*5);
 
-		}, options.animationDuration*2);
+		}, options.animationDuration*5);
 	});
 
 
@@ -60,9 +60,9 @@ describe("Api", function() {
 			setTimeout(function(){
 				expect(slides.index($('.active')) + 1).toEqual(slides.length);
 				done();
-			}, options.animationDuration*2);
+			}, options.animationDuration*5);
 
-		}, options.animationDuration*2);
+		}, options.animationDuration*5);
 
 	});
 
@@ -75,9 +75,9 @@ describe("Api", function() {
 			setTimeout(function(){
 				expect(slides.index($('.active')) + 1).toEqual(slides.length);
 				done();
-			}, options.animationDuration*2);
+			}, options.animationDuration*5);
 
-		}, options.animationDuration*2);
+		}, options.animationDuration*5);
 	});
 
 
@@ -94,11 +94,11 @@ describe("Api", function() {
 				setTimeout(function(){
 					expect(slides.index($('.active')) + 1).toEqual(1);
 					done();
-				}, options.animationDuration*2);
+				}, options.animationDuration*5);
 
-			}, options.animationDuration*2);
+			}, options.animationDuration*5);
 
-		}, options.animationDuration*2);
+		}, options.animationDuration*5);
 	});
 
 
@@ -110,9 +110,9 @@ describe("Api", function() {
 			setTimeout(function(){
 				expect(slides.index($('.active')) + 1).toEqual(3);
 				done();
-			}, options.animationDuration*2);
+			}, options.animationDuration*5);
 
-		}, options.animationDuration*2);
+		}, options.animationDuration*5);
 	});
 
 

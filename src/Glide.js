@@ -21,6 +21,7 @@ var Glide = function (element, options) {
 		startAt: 1,
 		hoverpause: true,
 		keyboard: true,
+		touchDistance: 60,
 		animationDuration: 500,
 		animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
 		classes: {
@@ -61,6 +62,7 @@ var Glide = function (element, options) {
 		Translate: Translate,
 		Transition: Transition,
 		Events: Events,
+		Touch: Touch,
 		Arrows: Arrows,
 		Bullets: Bullets,
 		Animation: Animation,

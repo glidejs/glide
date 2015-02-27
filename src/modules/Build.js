@@ -1,10 +1,10 @@
 /**
  * --------------------------------
- * Glide Core
+ * Glide Build
  * --------------------------------
- * Core logic module
+ * Build slider DOM
  * @param {Glide} Glide
- * @param {Animation} Animation
+ * @param {Core} Core
  * @return {Module}
  */
 

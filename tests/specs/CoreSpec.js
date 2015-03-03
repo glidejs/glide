@@ -19,16 +19,16 @@ describe("Core", function() {
 			startAt: 2
 		};
 
-		slider = $('.glide').glide(options);
-		wrapper = slider.children('.glide__wrapper');
+		wrapper = $('.glide').children('.glide__wrapper');
 		slides = wrapper.children();
+		slider = $('.glide').glide(options);
 		arrows = slider.children('.glide__arrows').children();
 		bullets = slider.children('.glide__bullets').children();
 
 	});
 
 	it("Wrapper width value should be width of slide * number of slides", function() {
-		expect(wrapper.width()).toEqual(slides.eq(0).width() * slides.length);
+		expect(wrapper.width()).toEqual($('.glide__wrapper').children().eq(0).width() * $('.glide__wrapper').children().length);
 	});
 
 	it("Slide width should be width of slider", function() {

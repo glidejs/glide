@@ -20,8 +20,8 @@ var Animation = function (Glide, Core) {
 
 
 	function Module() {
-		this.interval = 0;
-		this.flag = 0;
+		this.stared = false;
+		this.flag = false;
 		this.play();
 	}
 
@@ -34,10 +34,15 @@ var Animation = function (Glide, Core) {
 
 		var that = this;
 
-		if (Glide.options.autoplay) {
-			this.interval = setInterval(function() {
-				that.run('>');
-			}, Glide.options.autoplay);
+		if (Glide.options.autoplay || this.started) {
+
+			if (typeof this.interval === 'undefined') {
+				console.log('play');
+				this.interval = setInterval(function() {
+					that.run('>');
+				}, Glide.options.autoplay);
+			}
+
 		}
 
 		return this.interval;
@@ -50,8 +55,13 @@ var Animation = function (Glide, Core) {
 	 * Clear interval
 	 */
 	Module.prototype.pause = function() {
-		if (Glide.options.autoplay) this.interval = clearInterval(this.interval);
+
+		if (Glide.options.autoplay  || this.started) {
+			if (this.interval >= 0) this.interval = clearInterval(this.interval);
+		}
+
 		return this.interval;
+
 	};
 
 
@@ -107,6 +117,9 @@ var Animation = function (Glide, Core) {
 		// Run actual translate animation
 		this['run' + Core.Helper.capitalise(Glide.options.type)](direction);
 
+		// Set active bullet
+		Core.Bullets.active();
+
 		// When animation is done
 		this.after(function(){
 			// Set active flags
@@ -144,6 +157,10 @@ var Animation = function (Glide, Core) {
 			'transition': Core.Transition.get('transform'),
 			'transform': Core.Translate.set('x', translate)
 		});
+
+		if (Glide.current === 1) Core.Arrows.hide('prev');
+		else if (Glide.current === Glide.length) Core.Arrows.hide('next');
+		else Core.Arrows.show();
 
 	};
 
@@ -288,12 +305,22 @@ var Api = function (Glide, Core) {
 			 * Start autoplay
 			 * @return {Core.Animation}
 			 */
+			start: function(interval){
+				Core.Animation.started = true;
+				Glide.options.autoplay = parseInt(interval);
+				return Core.Animation.play();
+			},
+
+			/**
+			 * Play autoplay
+			 * @return {Core.Animation}
+			 */
 			play: function(){
 				return Core.Animation.play();
 			},
 
 			/**
-			 * Stop autoplay
+			 * Pause autoplay
 			 * @return {Core.Animation}
 			 */
 			pause: function() {
@@ -319,12 +346,14 @@ var Api = function (Glide, Core) {
 
 var Arrows = function (Glide, Core) {
 
+
 	function Module() {
 
 		this.build();
 		this.bind();
 
 	}
+
 
 	/**
 	 * Build
@@ -339,12 +368,35 @@ var Arrows = function (Glide, Core) {
 
 
 	/**
+	 * Hide arrow
+	 */
+	Module.prototype.hide = function (type) {
+
+		return this.items.filter('.' + Glide.options.classes['arrow' + Core.Helper.capitalise(type)])
+			.css({ opacity: 0, visibility: 'hidden' })
+			.siblings().css({ opacity: 1, visibility: 'visible' })
+			.end();
+
+	};
+
+
+	/**
+	 * Show arrows
+	 */
+	Module.prototype.show = function () {
+
+		return this.items.css({ opacity: 1, visibility: 'visible' });
+
+	};
+
+
+	/**
 	 * Bind
 	 * arrows events
 	 */
 	Module.prototype.bind = function () {
 
-		this.items.on('click touchstart', function(event){
+		return this.items.on('click touchstart', function(event){
 			event.preventDefault();
 			if (!Core.Events.disabled) {
 				Core.Animation.run($(this).data('glide-dir'));
@@ -374,6 +426,7 @@ var Build = function (Glide, Core) {
 
 		this[Glide.options.type]();
 		this.active();
+		Core.Bullets.active();
 
 	}
 
@@ -430,10 +483,6 @@ var Build = function (Glide, Core) {
 			.eq(Glide.current - 1).addClass('active')
 			.siblings().removeClass('active');
 
-		Core.Bullets.items
-			.eq(Glide.current - 1).addClass('active')
-			.siblings().removeClass('active');
-
 	};
 
 	return new Module();
@@ -472,6 +521,15 @@ var Bullets = function (Glide, Core) {
 		}
 
 		this.items = this.wrapper.children();
+
+	};
+
+
+	Module.prototype.active = function () {
+
+		Core.Bullets.items
+			.eq(Glide.current - 1).addClass('active')
+			.siblings().removeClass('active');
 
 	};
 
@@ -684,20 +742,6 @@ var Helper = function (Glide, Core) {
 
 			if ( (this.touchSin * (180 / Math.PI)) < 45 ) event.preventDefault();
 
-			// var translate = Core.Translate.get() - subExSx/10;
-
-			// console.log(translate);
-
-			// if (translate > 0) {
-			// 	Glide.wrapper.css({
-			// 		transform: Core.Translate.set('x', Core.Translate.get() - subExSx/10)
-			// 	});
-			// } else {
-			// 	Glide.wrapper.css({
-			// 		transform: Core.Translate.set('x', Core.Translate.get() - subExSx/10)
-			// 	});
-			// }
-
 		}
 
 	};
@@ -823,12 +867,12 @@ var Glide = function (element, options) {
 	 */
 	var defaults = {
 		autoplay: 2000,
-		type: 'slider',
+		type: 'carousel',
 		startAt: 1,
 		hoverpause: true,
 		keyboard: true,
 		touchDistance: 60,
-		animationDuration: 500,
+		animationDuration: 750,
 		animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
 		classes: {
 			base: 'glide',
@@ -836,6 +880,8 @@ var Glide = function (element, options) {
 			slide: 'glide__slide',
 			arrows: 'glide__arrows',
 			arrow: 'glide__arrow',
+			arrowNext: 'next',
+			arrowPrev: 'prev',
 			bullets: 'glide__bullets',
 			bullet: 'glide__bullet'
 		},

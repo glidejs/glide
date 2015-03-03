@@ -44,12 +44,22 @@ var Api = function (Glide, Core) {
 			 * Start autoplay
 			 * @return {Core.Animation}
 			 */
+			start: function(interval){
+				Core.Animation.started = true;
+				Glide.options.autoplay = parseInt(interval);
+				return Core.Animation.play();
+			},
+
+			/**
+			 * Play autoplay
+			 * @return {Core.Animation}
+			 */
 			play: function(){
 				return Core.Animation.play();
 			},
 
 			/**
-			 * Stop autoplay
+			 * Pause autoplay
 			 * @return {Core.Animation}
 			 */
 			pause: function() {

@@ -19,9 +19,9 @@ describe("Arrows", function() {
 			animationDuration: 10
 		};
 
-		slider = $('.glide').glide(options);
-		wrapper = slider.children('.glide__wrapper');
+		wrapper = $('.glide').children('.glide__wrapper');
 		slides = wrapper.children();
+		slider = $('.glide').glide(options);
 		arrowsWrapper = slider.children('.glide__arrows');
 		arrows = arrowsWrapper.children();
 	});

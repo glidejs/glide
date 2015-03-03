@@ -59,20 +59,6 @@ var Touch = function (Glide, Core) {
 
 			if ( (this.touchSin * (180 / Math.PI)) < 45 ) event.preventDefault();
 
-			// var translate = Core.Translate.get() - subExSx/10;
-
-			// console.log(translate);
-
-			// if (translate > 0) {
-			// 	Glide.wrapper.css({
-			// 		transform: Core.Translate.set('x', Core.Translate.get() - subExSx/10)
-			// 	});
-			// } else {
-			// 	Glide.wrapper.css({
-			// 		transform: Core.Translate.set('x', Core.Translate.get() - subExSx/10)
-			// 	});
-			// }
-
 		}
 
 	};

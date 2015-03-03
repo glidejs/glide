@@ -10,8 +10,8 @@ var Animation = function (Glide, Core) {
 
 
 	function Module() {
-		this.interval = 0;
-		this.flag = 0;
+		this.stared = false;
+		this.flag = false;
 		this.play();
 	}
 
@@ -24,10 +24,15 @@ var Animation = function (Glide, Core) {
 
 		var that = this;
 
-		if (Glide.options.autoplay) {
-			this.interval = setInterval(function() {
-				that.run('>');
-			}, Glide.options.autoplay);
+		if (Glide.options.autoplay || this.started) {
+
+			if (typeof this.interval === 'undefined') {
+				console.log('play');
+				this.interval = setInterval(function() {
+					that.run('>');
+				}, Glide.options.autoplay);
+			}
+
 		}
 
 		return this.interval;
@@ -40,8 +45,13 @@ var Animation = function (Glide, Core) {
 	 * Clear interval
 	 */
 	Module.prototype.pause = function() {
-		if (Glide.options.autoplay) this.interval = clearInterval(this.interval);
+
+		if (Glide.options.autoplay  || this.started) {
+			if (this.interval >= 0) this.interval = clearInterval(this.interval);
+		}
+
 		return this.interval;
+
 	};
 
 
@@ -97,6 +107,9 @@ var Animation = function (Glide, Core) {
 		// Run actual translate animation
 		this['run' + Core.Helper.capitalise(Glide.options.type)](direction);
 
+		// Set active bullet
+		Core.Bullets.active();
+
 		// When animation is done
 		this.after(function(){
 			// Set active flags
@@ -134,6 +147,10 @@ var Animation = function (Glide, Core) {
 			'transition': Core.Transition.get('transform'),
 			'transform': Core.Translate.set('x', translate)
 		});
+
+		if (Glide.current === 1) Core.Arrows.hide('prev');
+		else if (Glide.current === Glide.length) Core.Arrows.hide('next');
+		else Core.Arrows.show();
 
 	};
 

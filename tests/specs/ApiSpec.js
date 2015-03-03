@@ -15,12 +15,13 @@ describe("Api", function() {
 		loadStyleFixtures('glide.css');
 
 		options = {
-			animationDuration: 10
+			animationDuration: 10,
+			autoplay: 200,
 		};
 
-		slider = $('.glide').glide(options);
-		wrapper = slider.children('.glide__wrapper');
+		wrapper = $('.glide').children('.glide__wrapper');
 		slides = wrapper.children();
+		slider = $('.glide').glide(options);
 		api = slider.data('glide_api');
 		index = slides.index($('.active')) + 1;
 	});
@@ -122,9 +123,13 @@ describe("Api", function() {
 	});
 
 
-	it("Api.play should start autoplay", function() {
+	it("Api.play should start autoplay", function(done) {
 		api.pause();
-		expect(api.play()).toBeGreaterThan(0);
+		api.play();
+		setTimeout(function(){
+			expect(api.play()).toBeTruthy();
+			done();
+		}, options.autoplay + 10);
 	});
 
 

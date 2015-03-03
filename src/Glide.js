@@ -17,12 +17,12 @@ var Glide = function (element, options) {
 	 */
 	var defaults = {
 		autoplay: 2000,
-		type: 'slider',
+		type: 'carousel',
 		startAt: 1,
 		hoverpause: true,
 		keyboard: true,
 		touchDistance: 60,
-		animationDuration: 500,
+		animationDuration: 750,
 		animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
 		classes: {
 			base: 'glide',
@@ -30,6 +30,8 @@ var Glide = function (element, options) {
 			slide: 'glide__slide',
 			arrows: 'glide__arrows',
 			arrow: 'glide__arrow',
+			arrowNext: 'next',
+			arrowPrev: 'prev',
 			bullets: 'glide__bullets',
 			bullet: 'glide__bullet'
 		},

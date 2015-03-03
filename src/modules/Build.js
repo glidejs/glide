@@ -16,6 +16,7 @@ var Build = function (Glide, Core) {
 
 		this[Glide.options.type]();
 		this.active();
+		Core.Bullets.active();
 
 	}
 
@@ -69,10 +70,6 @@ var Build = function (Glide, Core) {
 	Module.prototype.active = function () {
 
 		Glide.slides
-			.eq(Glide.current - 1).addClass('active')
-			.siblings().removeClass('active');
-
-		Core.Bullets.items
 			.eq(Glide.current - 1).addClass('active')
 			.siblings().removeClass('active');
 

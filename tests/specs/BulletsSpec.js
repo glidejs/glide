@@ -12,11 +12,13 @@ describe("Bullets", function() {
 		loadFixtures('base.html');
 		loadStyleFixtures('glide.css');
 
-		slider = $('.glide').glide({
+		options = {
 			animationDuration: 10
-		});
-		wrapper = slider.children('.glide__wrapper');
+		};
+
+		wrapper = $('.glide').children('.glide__wrapper');
 		slides = wrapper.children();
+		slider = $('.glide').glide(options);
 		bulletsWrapper = slider.children('.glide__bullets');
 		bullets = bulletsWrapper.children();
 

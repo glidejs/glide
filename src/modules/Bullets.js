@@ -35,6 +35,15 @@ var Bullets = function (Glide, Core) {
 	};
 
 
+	Module.prototype.active = function () {
+
+		Core.Bullets.items
+			.eq(Glide.current - 1).addClass('active')
+			.siblings().removeClass('active');
+
+	};
+
+
 	/**
 	 * Bind
 	 * bullets events

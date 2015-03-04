@@ -67,8 +67,9 @@ var Glide = function (element, options) {
 		Touch: Touch,
 		Arrows: Arrows,
 		Bullets: Bullets,
-		Animation: Animation,
 		Build: Build,
+		Run: Run,
+		Animation: Animation,
 		Api: Api
 	});
 

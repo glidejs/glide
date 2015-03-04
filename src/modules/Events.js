@@ -19,8 +19,8 @@ var Events = function (Glide, Core) {
 	Module.prototype.keyboard = function() {
 		if (Glide.options.keyboard) {
 			$(window).on('keyup.glide', function(event){
-				if (event.keyCode === 39) Core.Animation.run('>');
-				if (event.keyCode === 37) Core.Animation.run('<');
+				if (event.keyCode === 39) Core.Run.run('>');
+				if (event.keyCode === 37) Core.Run.run('<');
 			});
 		}
 	};
@@ -32,10 +32,10 @@ var Events = function (Glide, Core) {
 
 			Glide.slider
 				.on('mouseover.glide', function(){
-					Core.Animation.pause();
+					Core.Run.pause();
 				})
 				.on('mouseout.glide', function(){
-					Core.Animation.play();
+					Core.Run.play();
 				});
 
 		}

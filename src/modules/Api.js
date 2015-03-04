@@ -34,36 +34,36 @@ var Api = function (Glide, Core) {
 			 * Go to specifed slide
 			 * @param  {String}   distance
 			 * @param  {Function} callback
-			 * @return {Core.Animation}
+			 * @return {Core.Run}
 			 */
 			go: function(distance, callback) {
-				return Core.Animation.run(distance, callback);
+				return Core.Run.run(distance, callback);
 			},
 
 			/**
 			 * Start autoplay
-			 * @return {Core.Animation}
+			 * @return {Core.Run}
 			 */
 			start: function(interval){
-				Core.Animation.started = true;
+				Core.Run.started = true;
 				Glide.options.autoplay = parseInt(interval);
-				return Core.Animation.play();
+				return Core.Run.play();
 			},
 
 			/**
 			 * Play autoplay
-			 * @return {Core.Animation}
+			 * @return {Core.Run}
 			 */
 			play: function(){
-				return Core.Animation.play();
+				return Core.Run.play();
 			},
 
 			/**
 			 * Pause autoplay
-			 * @return {Core.Animation}
+			 * @return {Core.Run}
 			 */
 			pause: function() {
-				return Core.Animation.pause();
+				return Core.Run.pause();
 			}
 
 

@@ -12,123 +12,25 @@
  * --------------------------------
  * Glide Animation
  * --------------------------------
- * Animation logic module
- * @return {Module}
+ * Animation functions
+ * @return {Glide.Animation}
  */
 
 var Animation = function (Glide, Core) {
 
 
-	function Module() {
-		this.stared = false;
-		this.flag = false;
-		this.play();
-	}
+	function Module() {}
 
 
 	/**
-	 * Start autoplay animation
-	 * Setup interval
+	 * Make specifed animation type
+	 * @return {[type]} [description]
 	 */
-	Module.prototype.play = function() {
+	Module.prototype.make = function() {
 
-		var that = this;
-
-		if (Glide.options.autoplay || this.started) {
-
-			if (typeof this.interval === 'undefined') {
-				console.log('play');
-				this.interval = setInterval(function() {
-					that.run('>');
-				}, Glide.options.autoplay);
-			}
-
-		}
-
-		return this.interval;
-
-	};
-
-
-	/**
-	 * Pasue autoplay animation
-	 * Clear interval
-	 */
-	Module.prototype.pause = function() {
-
-		if (Glide.options.autoplay  || this.started) {
-			if (this.interval >= 0) this.interval = clearInterval(this.interval);
-		}
-
-		return this.interval;
-
-	};
-
-
-	/**
-	 * Run move animation
-	 * @param  {string} move Code in pattern {direction}{steps} eq. ">3"
-	 */
-	Module.prototype.run = function (move, callback) {
-
-		var that = this;
-		// Extract move direction
-		var direction = move.substr(0, 1);
-		// Extract move steps
-		var steps = (move.substr(1)) ? move.substr(1) : 0;
-
-		// Stop autoplay until hoverpause is not set
-		if(!Glide.options.hoverpause) this.pause();
-		// Disable events and call before transition callback
-		Core.Events.disable().call(Glide.options.beforeTransition);
-
-		// Based on direction
-		switch(direction) {
-
-			case '>':
-				// When we at last slide and move forward and steps are number
-				// Set flag and current slide to first
-				if (Glide.current == Glide.length) Glide.current = 1, this.flag = true;
-				// When steps is not number, but '>'
-				// scroll slider to end
-				else if (steps === '>') Glide.current = Glide.length;
-				// Otherwise change normally
-				else Glide.current = Glide.current + 1;
-				break;
-
-			case '<':
-				// When we at first slide and move backward and steps are number
-				// Set flag and current slide to last
-				if(Glide.current == 1) Glide.current = Glide.length, this.flag = true;
-				// When steps is not number, but '<'
-				// scroll slider to start
-				else if (steps === '<') Glide.current = 1;
-				// Otherwise change normally
-				else Glide.current = Glide.current - 1;
-				break;
-
-			case '=':
-				// Jump to specifed slide
-				Glide.current = parseInt(steps);
-				break;
-
-		}
-
-		// Run actual translate animation
-		this['run' + Core.Helper.capitalise(Glide.options.type)](direction);
-
-		// Set active bullet
-		Core.Bullets.active();
-
-		// When animation is done
-		this.after(function(){
-			// Set active flags
-			Core.Build.active();
-			// Enable events and call callbacks
-			Core.Events.enable().call(callback).call(Glide.options.afterTransition);
-			// Start autoplay until hoverpause is not set
-			if(!Glide.options.hoverpause) that.play();
-		});
+		// Animation actual translate animation
+		this[Glide.options.type]();
+		return this;
 
 	};
 
@@ -138,7 +40,7 @@ var Animation = function (Glide, Core) {
 	 * @param  {Function} callback
 	 * @return {Int}
 	 */
-	Module.prototype.after = function(callback, steps) {
+	Module.prototype.after = function(callback) {
 		return setTimeout(function(){
 			callback();
 		}, Glide.options.animationDuration + 20);
@@ -146,10 +48,10 @@ var Animation = function (Glide, Core) {
 
 
 	/**
-	 * Run slider type animation
+	 * Animation slider animation type
 	 * @param {string} direction
 	 */
-	Module.prototype.runSlider = function (direction) {
+	Module.prototype.slider = function () {
 
 		var translate = (Glide.current * Glide.width) - Glide.width;
 
@@ -166,10 +68,10 @@ var Animation = function (Glide, Core) {
 
 
 	/**
-	 * Run carousel type animation
+	 * Animation carousel animation type
 	 * @param {string} direction
 	 */
-	Module.prototype.runCarousel = function (direction) {
+	Module.prototype.carousel = function () {
 
 		// Translate container
 		var translate;
@@ -179,12 +81,12 @@ var Animation = function (Glide, Core) {
 		 * so we're on the first slide
 		 * and need to make offset translate
 		 */
-		if (this.flag && direction === '<') {
+		if (Core.Run.flag && Core.Run.direction === '<') {
 
 			// Translate is 0 (left edge of wrapper)
 			translate = 0;
 			// Reset flag
-			this.flag = false;
+			Core.Run.flag = false;
 
 			// After offset animation is done,
 			// clear transition and jump to last slide
@@ -203,12 +105,12 @@ var Animation = function (Glide, Core) {
 		 * so we're on the last slide
 		 * and need to make offset translate
 		 */
-		else if (this.flag && direction === '>') {
+		else if (Core.Run.flag && Core.Run.direction === '>') {
 
 			// Translate is euqal wrapper width with offset
 			translate = (Glide.length * Glide.width) + Glide.width;
 			// Reset flag
-			this.flag = false;
+			Core.Run.flag = false;
 
 			// After offset animation is done,
 			// clear transition and jump to first slide
@@ -243,10 +145,10 @@ var Animation = function (Glide, Core) {
 
 
 	/**
-	 * Run slideshow type animation
+	 * Animation slideshow animation type
 	 * @param {string} direction
 	 */
-	Module.prototype.runSlideshow = function (direction) {
+	Module.prototype.slideshow = function (direction) {
 
 		Glide.slides.css({
 			'transition': Core.Transition.get('opacity'),
@@ -295,36 +197,36 @@ var Api = function (Glide, Core) {
 			 * Go to specifed slide
 			 * @param  {String}   distance
 			 * @param  {Function} callback
-			 * @return {Core.Animation}
+			 * @return {Core.Run}
 			 */
 			go: function(distance, callback) {
-				return Core.Animation.run(distance, callback);
+				return Core.Run.run(distance, callback);
 			},
 
 			/**
 			 * Start autoplay
-			 * @return {Core.Animation}
+			 * @return {Core.Run}
 			 */
 			start: function(interval){
-				Core.Animation.started = true;
+				Core.Run.started = true;
 				Glide.options.autoplay = parseInt(interval);
-				return Core.Animation.play();
+				return Core.Run.play();
 			},
 
 			/**
 			 * Play autoplay
-			 * @return {Core.Animation}
+			 * @return {Core.Run}
 			 */
 			play: function(){
-				return Core.Animation.play();
+				return Core.Run.play();
 			},
 
 			/**
 			 * Pause autoplay
-			 * @return {Core.Animation}
+			 * @return {Core.Run}
 			 */
 			pause: function() {
-				return Core.Animation.pause();
+				return Core.Run.pause();
 			}
 
 
@@ -399,7 +301,7 @@ var Arrows = function (Glide, Core) {
 		return this.items.on('click touchstart', function(event){
 			event.preventDefault();
 			if (!Core.Events.disabled) {
-				Core.Animation.run($(this).data('glide-dir'));
+				Core.Run.run($(this).data('glide-dir'));
 			}
 		});
 
@@ -543,7 +445,7 @@ var Bullets = function (Glide, Core) {
 		this.items.on('click touchstart', function(event){
 			event.preventDefault();
 			if (!Core.Events.disabled) {
-				Core.Animation.run($(this).data('glide-dir'));
+				Core.Run.run($(this).data('glide-dir'));
 			}
 		});
 
@@ -600,8 +502,8 @@ var Events = function (Glide, Core) {
 	Module.prototype.keyboard = function() {
 		if (Glide.options.keyboard) {
 			$(window).on('keyup.glide', function(event){
-				if (event.keyCode === 39) Core.Animation.run('>');
-				if (event.keyCode === 37) Core.Animation.run('<');
+				if (event.keyCode === 39) Core.Run.run('>');
+				if (event.keyCode === 37) Core.Run.run('<');
 			});
 		}
 	};
@@ -613,10 +515,10 @@ var Events = function (Glide, Core) {
 
 			Glide.slider
 				.on('mouseover.glide', function(){
-					Core.Animation.pause();
+					Core.Run.pause();
 				})
 				.on('mouseout.glide', function(){
-					Core.Animation.play();
+					Core.Run.play();
 				});
 
 		}
@@ -681,6 +583,130 @@ var Helper = function (Glide, Core) {
 	return new Module();
 
 };
+;/**
+ * --------------------------------
+ * Glide Run
+ * --------------------------------
+ * Run logic module
+ * @return {Module}
+ */
+
+var Run = function (Glide, Core) {
+
+
+	function Module() {
+		this.stared = false;
+		this.flag = false;
+		this.play();
+	}
+
+
+	/**
+	 * Start autoplay animation
+	 * Setup interval
+	 */
+	Module.prototype.play = function() {
+
+		var that = this;
+
+		if (Glide.options.autoplay || this.started) {
+
+			if (typeof this.interval === 'undefined') {
+				this.interval = setInterval(function() {
+					that.run('>');
+				}, Glide.options.autoplay);
+			}
+
+		}
+
+		return this.interval;
+
+	};
+
+
+	/**
+	 * Pasue autoplay animation
+	 * Clear interval
+	 */
+	Module.prototype.pause = function() {
+
+		if (Glide.options.autoplay  || this.started) {
+			if (this.interval >= 0) this.interval = clearInterval(this.interval);
+		}
+
+		return this.interval;
+
+	};
+
+
+	/**
+	 * Run move animation
+	 * @param  {string} move Code in pattern {direction}{steps} eq. ">3"
+	 */
+	Module.prototype.run = function (move, callback) {
+
+		var that = this;
+		// Extract move direction
+		this.direction = move.substr(0, 1);
+		// Extract move steps
+		this.steps = (move.substr(1)) ? move.substr(1) : 0;
+
+		// Stop autoplay until hoverpause is not set
+		if(!Glide.options.hoverpause) this.pause();
+		// Disable events and call before transition callback
+		Core.Events.disable().call(Glide.options.beforeTransition);
+
+		// Based on direction
+		switch(this.direction) {
+
+			case '>':
+				// When we at last slide and move forward and steps are number
+				// Set flag and current slide to first
+				if (Glide.current == Glide.length) Glide.current = 1, this.flag = true;
+				// When steps is not number, but '>'
+				// scroll slider to end
+				else if (this.steps === '>') Glide.current = Glide.length;
+				// Otherwise change normally
+				else Glide.current = Glide.current + 1;
+				break;
+
+			case '<':
+				// When we at first slide and move backward and steps are number
+				// Set flag and current slide to last
+				if(Glide.current == 1) Glide.current = Glide.length, this.flag = true;
+				// When steps is not number, but '<'
+				// scroll slider to start
+				else if (this.steps === '<') Glide.current = 1;
+				// Otherwise change normally
+				else Glide.current = Glide.current - 1;
+				break;
+
+			case '=':
+				// Jump to specifed slide
+				Glide.current = parseInt(this.steps);
+				break;
+
+		}
+
+		// Set active bullet
+		Core.Bullets.active();
+
+		// Run actual translate animation
+		Core.Animation.make().after(function(){
+			// Set active flags
+			Core.Build.active();
+			// Enable events and call callbacks
+			Core.Events.enable().call(callback).call(Glide.options.afterTransition);
+			// Start autoplay until hoverpause is not set
+			if(!Glide.options.hoverpause) that.play();
+		});
+
+	};
+
+
+	return new Module();
+
+};
 ;var Touch = function (Glide, Core) {
 
 
@@ -688,9 +714,9 @@ var Helper = function (Glide, Core) {
 
 		if (Glide.options.touchDistance) {
 			Glide.slider.on({
-				'touchstart': this.start,
-				'touchmove': this.move,
-				'touchend': this.end
+				'touchstart.glide': this.start,
+				'touchmove.glide': this.move,
+				'touchend.glide': this.end
 			});
 		}
 
@@ -720,7 +746,7 @@ var Helper = function (Glide, Core) {
 		// Escape if events disabled
 		if (!Core.Events.disabled) {
 
-			if(Glide.options.autoplay) Core.Animation.pause();
+			if(Glide.options.autoplay) Core.Run.pause();
 
 			// Cache event
 			var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
@@ -762,13 +788,13 @@ var Helper = function (Glide, Core) {
 			var touchDeg = this.touchSin * (180 / Math.PI);
 
 			// While touch is positive and greater than distance set in options
-			if (touchDistance > Glide.options.touchDistance && touchDeg < 45) Core.Animation.run('<');
+			if (touchDistance > Glide.options.touchDistance && touchDeg < 45) Core.Run.run('<');
 			// While touch is negative and lower than negative distance set in options
-			else if (touchDistance < -Glide.options.touchDistance && touchDeg < 45) Core.Animation.run('>');
+			else if (touchDistance < -Glide.options.touchDistance && touchDeg < 45) Core.Run.run('>');
 
 			Core.Animation.after(function(){
 				Core.Events.enable();
-				if(Glide.options.autoplay) Core.Animation.play();
+				if(Glide.options.autoplay) Core.Run.play();
 			});
 
 		}
@@ -917,8 +943,9 @@ var Glide = function (element, options) {
 		Touch: Touch,
 		Arrows: Arrows,
 		Bullets: Bullets,
-		Animation: Animation,
 		Build: Build,
+		Run: Run,
+		Animation: Animation,
 		Api: Api
 	});
 

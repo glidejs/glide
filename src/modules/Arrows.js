@@ -61,7 +61,7 @@ var Arrows = function (Glide, Core) {
 		return this.items.on('click touchstart', function(event){
 			event.preventDefault();
 			if (!Core.Events.disabled) {
-				Core.Animation.run($(this).data('glide-dir'));
+				Core.Run.run($(this).data('glide-dir'));
 			}
 		});
 

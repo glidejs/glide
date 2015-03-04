@@ -5,9 +5,9 @@ var Touch = function (Glide, Core) {
 
 		if (Glide.options.touchDistance) {
 			Glide.slider.on({
-				'touchstart': this.start,
-				'touchmove': this.move,
-				'touchend': this.end
+				'touchstart.glide': this.start,
+				'touchmove.glide': this.move,
+				'touchend.glide': this.end
 			});
 		}
 
@@ -37,7 +37,7 @@ var Touch = function (Glide, Core) {
 		// Escape if events disabled
 		if (!Core.Events.disabled) {
 
-			if(Glide.options.autoplay) Core.Animation.pause();
+			if(Glide.options.autoplay) Core.Run.pause();
 
 			// Cache event
 			var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
@@ -79,13 +79,13 @@ var Touch = function (Glide, Core) {
 			var touchDeg = this.touchSin * (180 / Math.PI);
 
 			// While touch is positive and greater than distance set in options
-			if (touchDistance > Glide.options.touchDistance && touchDeg < 45) Core.Animation.run('<');
+			if (touchDistance > Glide.options.touchDistance && touchDeg < 45) Core.Run.run('<');
 			// While touch is negative and lower than negative distance set in options
-			else if (touchDistance < -Glide.options.touchDistance && touchDeg < 45) Core.Animation.run('>');
+			else if (touchDistance < -Glide.options.touchDistance && touchDeg < 45) Core.Run.run('>');
 
 			Core.Animation.after(function(){
 				Core.Events.enable();
-				if(Glide.options.autoplay) Core.Animation.play();
+				if(Glide.options.autoplay) Core.Run.play();
 			});
 
 		}

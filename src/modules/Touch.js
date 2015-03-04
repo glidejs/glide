@@ -79,9 +79,9 @@ var Touch = function (Glide, Core) {
 			var touchDeg = this.touchSin * (180 / Math.PI);
 
 			// While touch is positive and greater than distance set in options
-			if (touchDistance > Glide.options.touchDistance && touchDeg < 45) Core.Run.run('<');
+			if (touchDistance > Glide.options.touchDistance && touchDeg < 45) Core.Run.make('<');
 			// While touch is negative and lower than negative distance set in options
-			else if (touchDistance < -Glide.options.touchDistance && touchDeg < 45) Core.Run.run('>');
+			else if (touchDistance < -Glide.options.touchDistance && touchDeg < 45) Core.Run.make('>');
 
 			Core.Animation.after(function(){
 				Core.Events.enable();

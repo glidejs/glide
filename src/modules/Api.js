@@ -37,7 +37,7 @@ var Api = function (Glide, Core) {
 			 * @return {Core.Run}
 			 */
 			go: function(distance, callback) {
-				return Core.Run.run(distance, callback);
+				return Core.Run.make(distance, callback);
 			},
 
 			/**

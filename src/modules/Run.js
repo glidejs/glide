@@ -28,7 +28,7 @@ var Run = function (Glide, Core) {
 
 			if (typeof this.interval === 'undefined') {
 				this.interval = setInterval(function() {
-					that.run('>');
+					that.make('>');
 				}, Glide.options.autoplay);
 			}
 
@@ -58,7 +58,7 @@ var Run = function (Glide, Core) {
 	 * Run move animation
 	 * @param  {string} move Code in pattern {direction}{steps} eq. ">3"
 	 */
-	Module.prototype.run = function (move, callback) {
+	Module.prototype.make = function (move, callback) {
 
 		var that = this;
 		// Extract move direction

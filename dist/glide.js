@@ -200,7 +200,7 @@ var Api = function (Glide, Core) {
 			 * @return {Core.Run}
 			 */
 			go: function(distance, callback) {
-				return Core.Run.run(distance, callback);
+				return Core.Run.make(distance, callback);
 			},
 
 			/**
@@ -301,7 +301,7 @@ var Arrows = function (Glide, Core) {
 		return this.items.on('click touchstart', function(event){
 			event.preventDefault();
 			if (!Core.Events.disabled) {
-				Core.Run.run($(this).data('glide-dir'));
+				Core.Run.make($(this).data('glide-dir'));
 			}
 		});
 
@@ -445,7 +445,7 @@ var Bullets = function (Glide, Core) {
 		this.items.on('click touchstart', function(event){
 			event.preventDefault();
 			if (!Core.Events.disabled) {
-				Core.Run.run($(this).data('glide-dir'));
+				Core.Run.make($(this).data('glide-dir'));
 			}
 		});
 
@@ -502,8 +502,8 @@ var Events = function (Glide, Core) {
 	Module.prototype.keyboard = function() {
 		if (Glide.options.keyboard) {
 			$(window).on('keyup.glide', function(event){
-				if (event.keyCode === 39) Core.Run.run('>');
-				if (event.keyCode === 37) Core.Run.run('<');
+				if (event.keyCode === 39) Core.Run.make('>');
+				if (event.keyCode === 37) Core.Run.make('<');
 			});
 		}
 	};
@@ -613,7 +613,7 @@ var Run = function (Glide, Core) {
 
 			if (typeof this.interval === 'undefined') {
 				this.interval = setInterval(function() {
-					that.run('>');
+					that.make('>');
 				}, Glide.options.autoplay);
 			}
 
@@ -643,7 +643,7 @@ var Run = function (Glide, Core) {
 	 * Run move animation
 	 * @param  {string} move Code in pattern {direction}{steps} eq. ">3"
 	 */
-	Module.prototype.run = function (move, callback) {
+	Module.prototype.make = function (move, callback) {
 
 		var that = this;
 		// Extract move direction
@@ -788,9 +788,9 @@ var Run = function (Glide, Core) {
 			var touchDeg = this.touchSin * (180 / Math.PI);
 
 			// While touch is positive and greater than distance set in options
-			if (touchDistance > Glide.options.touchDistance && touchDeg < 45) Core.Run.run('<');
+			if (touchDistance > Glide.options.touchDistance && touchDeg < 45) Core.Run.make('<');
 			// While touch is negative and lower than negative distance set in options
-			else if (touchDistance < -Glide.options.touchDistance && touchDeg < 45) Core.Run.run('>');
+			else if (touchDistance < -Glide.options.touchDistance && touchDeg < 45) Core.Run.make('>');
 
 			Core.Animation.after(function(){
 				Core.Events.enable();

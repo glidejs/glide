@@ -30,7 +30,6 @@ var Build = function (Glide, Core) {
 		Glide.wrapper.css({
 			'width': Glide.width * Glide.length,
 			'transform': Core.Translate.set('x', Glide.width * (Glide.options.startAt - 1)),
-			'transition': Core.Transition.get('all')
 		});
 
 		Glide.slides.width(Glide.width);
@@ -51,7 +50,6 @@ var Build = function (Glide, Core) {
 			.css({
 				'width': (Glide.width * Glide.length) + (Glide.width * 2),
 				'transform': Core.Translate.set('x', Glide.width * Glide.options.startAt),
-				'transition': Core.Transition.get('all')
 			});
 
 		Glide.slides.width(Glide.width);
@@ -63,7 +61,6 @@ var Build = function (Glide, Core) {
 
 		Glide.slides.eq(Glide.options.startAt - 1)
 			.css({
-				'transition': Core.Transition.get('all'),
 				'opacity': 1,
 				'z-index': 1
 			})

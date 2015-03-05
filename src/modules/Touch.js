@@ -3,6 +3,8 @@ var Touch = function (Glide, Core) {
 
 	function Module() {
 
+		this.dragging = false;
+
 		if (Glide.options.touchDistance) {
 			Glide.slider.on({
 				'touchstart.glide': Core.Events.throttle(this.start, Glide.options.throttle),
@@ -16,7 +18,7 @@ var Touch = function (Glide, Core) {
 	Module.prototype.start = function(event) {
 
 		// Escape if events disabled
-		if (!Core.Events.disabled) {
+		if (!Core.Events.disabled && !this.dragging) {
 
 			// Cache event
 			var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
@@ -27,6 +29,8 @@ var Touch = function (Glide, Core) {
 			this.touchSin = null;
 			this.translate = Core.Translate.get();
 
+			this.dragging = true;
+
 		}
 
 	};
@@ -35,7 +39,7 @@ var Touch = function (Glide, Core) {
 	Module.prototype.move = function(event) {
 
 		// Escape if events disabled
-		if (!Core.Events.disabled) {
+		if (!Core.Events.disabled && !this.dragging) {
 
 			if(Glide.options.autoplay) Core.Run.pause();
 
@@ -64,7 +68,7 @@ var Touch = function (Glide, Core) {
 				// Move slider with swipe distance
 				Glide.wrapper.css({
 					transform: Core.Translate.set('x',
-						(Glide.width * (Glide.current - 1 + Core.Build.clones.length/2)) - subExSx
+						(Glide.width * (Glide.current - 1 + Core.Build.clones.length/2)) - subExSx*2
 					)
 				});
 			}
@@ -77,7 +81,7 @@ var Touch = function (Glide, Core) {
 	Module.prototype.end = function(event) {
 
 		// Escape if events disabled
-		if (!Core.Events.disabled) {
+		if (!Core.Events.disabled && !this.dragging) {
 
 			Core.Events.disable();
 
@@ -108,6 +112,7 @@ var Touch = function (Glide, Core) {
 			Core.Animation.after(function(){
 				Core.Events.enable();
 				if(Glide.options.autoplay) Core.Run.play();
+				this.dragging = false;
 			});
 
 		}

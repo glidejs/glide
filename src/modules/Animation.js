@@ -87,11 +87,6 @@ var Animation = function (Glide, Core) {
 					'transform': Core.Translate.set('x', Glide.length * Glide.width)
 				});
 
-				// Set back transition
-				setTimeout(function(){
-					Glide.wrapper.css({ 'transition': Core.Transition.get('all') });
-				}, 15);
-
 			});
 
 		}
@@ -117,11 +112,6 @@ var Animation = function (Glide, Core) {
 					'transition': Core.Transition.clear('all'),
 					'transform': Core.Translate.set('x', Glide.width)
 				});
-
-				// Set back transition
-				setTimeout(function(){
-					Glide.wrapper.css({ 'transition': Core.Transition.get('all') });
-				}, 15);
 
 			});
 

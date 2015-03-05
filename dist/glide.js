@@ -97,11 +97,6 @@ var Animation = function (Glide, Core) {
 					'transform': Core.Translate.set('x', Glide.length * Glide.width)
 				});
 
-				// Set back transition
-				setTimeout(function(){
-					Glide.wrapper.css({ 'transition': Core.Transition.get('all') });
-				}, 15);
-
 			});
 
 		}
@@ -127,11 +122,6 @@ var Animation = function (Glide, Core) {
 					'transition': Core.Transition.clear('all'),
 					'transform': Core.Translate.set('x', Glide.width)
 				});
-
-				// Set back transition
-				setTimeout(function(){
-					Glide.wrapper.css({ 'transition': Core.Transition.get('all') });
-				}, 15);
 
 			});
 
@@ -379,7 +369,6 @@ var Build = function (Glide, Core) {
 		Glide.wrapper.css({
 			'width': Glide.width * Glide.length,
 			'transform': Core.Translate.set('x', Glide.width * (Glide.options.startAt - 1)),
-			'transition': Core.Transition.get('all')
 		});
 
 		Glide.slides.width(Glide.width);
@@ -400,7 +389,6 @@ var Build = function (Glide, Core) {
 			.css({
 				'width': (Glide.width * Glide.length) + (Glide.width * 2),
 				'transform': Core.Translate.set('x', Glide.width * Glide.options.startAt),
-				'transition': Core.Transition.get('all')
 			});
 
 		Glide.slides.width(Glide.width);
@@ -412,7 +400,6 @@ var Build = function (Glide, Core) {
 
 		Glide.slides.eq(Glide.options.startAt - 1)
 			.css({
-				'transition': Core.Transition.get('all'),
 				'opacity': 1,
 				'z-index': 1
 			})
@@ -816,6 +803,8 @@ var Run = function (Glide, Core) {
 
 	function Module() {
 
+		this.dragging = false;
+
 		if (Glide.options.touchDistance) {
 			Glide.slider.on({
 				'touchstart.glide': Core.Events.throttle(this.start, Glide.options.throttle),
@@ -829,7 +818,7 @@ var Run = function (Glide, Core) {
 	Module.prototype.start = function(event) {
 
 		// Escape if events disabled
-		if (!Core.Events.disabled) {
+		if (!Core.Events.disabled && !this.dragging) {
 
 			// Cache event
 			var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
@@ -840,6 +829,8 @@ var Run = function (Glide, Core) {
 			this.touchSin = null;
 			this.translate = Core.Translate.get();
 
+			this.dragging = true;
+
 		}
 
 	};
@@ -848,7 +839,7 @@ var Run = function (Glide, Core) {
 	Module.prototype.move = function(event) {
 
 		// Escape if events disabled
-		if (!Core.Events.disabled) {
+		if (!Core.Events.disabled && !this.dragging) {
 
 			if(Glide.options.autoplay) Core.Run.pause();
 
@@ -877,7 +868,7 @@ var Run = function (Glide, Core) {
 				// Move slider with swipe distance
 				Glide.wrapper.css({
 					transform: Core.Translate.set('x',
-						(Glide.width * (Glide.current - 1 + Core.Build.clones.length/2)) - subExSx
+						(Glide.width * (Glide.current - 1 + Core.Build.clones.length/2)) - subExSx*2
 					)
 				});
 			}
@@ -890,7 +881,7 @@ var Run = function (Glide, Core) {
 	Module.prototype.end = function(event) {
 
 		// Escape if events disabled
-		if (!Core.Events.disabled) {
+		if (!Core.Events.disabled && !this.dragging) {
 
 			Core.Events.disable();
 
@@ -921,6 +912,7 @@ var Run = function (Glide, Core) {
 			Core.Animation.after(function(){
 				Core.Events.enable();
 				if(Glide.options.autoplay) Core.Run.play();
+				this.dragging = false;
 			});
 
 		}

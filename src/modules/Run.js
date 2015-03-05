@@ -10,7 +10,7 @@ var Run = function (Glide, Core) {
 
 
 	function Module() {
-		this.stared = false;
+		this.running = false;
 		this.flag = false;
 		this.play();
 	}
@@ -24,7 +24,7 @@ var Run = function (Glide, Core) {
 
 		var that = this;
 
-		if (Glide.options.autoplay || this.started) {
+		if (Glide.options.autoplay || this.running) {
 
 			if (typeof this.interval === 'undefined') {
 				this.interval = setInterval(function() {
@@ -45,7 +45,7 @@ var Run = function (Glide, Core) {
 	 */
 	Module.prototype.pause = function() {
 
-		if (Glide.options.autoplay  || this.started) {
+		if (Glide.options.autoplay  || this.running) {
 			if (this.interval >= 0) this.interval = clearInterval(this.interval);
 		}
 

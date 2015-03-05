@@ -185,6 +185,7 @@ var Api = function (Glide, Core) {
 
 		return {
 
+
 			/**
 			 * Get current slide index
 			 * @return {int}
@@ -192,6 +193,7 @@ var Api = function (Glide, Core) {
 			current: function() {
 				return Glide.current;
 			},
+
 
 			/**
 			 * Go to specifed slide
@@ -203,15 +205,35 @@ var Api = function (Glide, Core) {
 				return Core.Run.make(distance, callback);
 			},
 
+
+			/**
+			 * Jump without animation to specifed slide
+			 * @param  {String}   distance
+			 * @param  {Function} callback
+			 * @return {Core.Run}
+			 */
+			jump: function(distance, callback) {
+				// Let know that we want jumping
+				Core.Transition.jumping = true;
+				Core.Animation.after(function () {
+					// Jumping done, take down flag
+					Core.Transition.jumping = false;
+				});
+				return Core.Run.make(distance, callback);
+			},
+
+
 			/**
 			 * Start autoplay
 			 * @return {Core.Run}
 			 */
-			start: function(interval){
-				Core.Run.started = true;
+			start: function(interval) {
+				// We want running
+				Core.Run.running = true;
 				Glide.options.autoplay = parseInt(interval);
 				return Core.Run.play();
 			},
+
 
 			/**
 			 * Play autoplay
@@ -220,6 +242,7 @@ var Api = function (Glide, Core) {
 			play: function(){
 				return Core.Run.play();
 			},
+
 
 			/**
 			 * Pause autoplay
@@ -595,7 +618,7 @@ var Run = function (Glide, Core) {
 
 
 	function Module() {
-		this.stared = false;
+		this.running = false;
 		this.flag = false;
 		this.play();
 	}
@@ -609,7 +632,7 @@ var Run = function (Glide, Core) {
 
 		var that = this;
 
-		if (Glide.options.autoplay || this.started) {
+		if (Glide.options.autoplay || this.running) {
 
 			if (typeof this.interval === 'undefined') {
 				this.interval = setInterval(function() {
@@ -630,7 +653,7 @@ var Run = function (Glide, Core) {
 	 */
 	Module.prototype.pause = function() {
 
-		if (Glide.options.autoplay  || this.started) {
+		if (Glide.options.autoplay  || this.running) {
 			if (this.interval >= 0) this.interval = clearInterval(this.interval);
 		}
 
@@ -808,7 +831,9 @@ var Run = function (Glide, Core) {
 };
 ;var Transition = function (Glide, Core) {
 
-	function Module() {}
+	function Module() {
+		this.jumping = false;
+	}
 
 	/**
 	 * Get transition settings
@@ -816,7 +841,11 @@ var Run = function (Glide, Core) {
 	 * @return {string}
 	 */
 	Module.prototype.get = function(property) {
-		return property + ' ' + Glide.options.animationDuration + 'ms ' + Glide.options.animationTimingFunc;
+		if (!this.jumping) {
+			return property + ' ' + Glide.options.animationDuration + 'ms ' + Glide.options.animationTimingFunc;
+		} else {
+			return this.clear();
+		}
 	};
 
 

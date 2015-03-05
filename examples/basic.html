@@ -103,6 +103,10 @@
 			});
 			var carousel_api = carousel.data('glide_api');
 
+			$('.box').on('click', function () {
+				carousel_api.jump('=3');
+			});
+
 			var slider = $('#Slider').glide({
 				type: 'slider',
 				startAt: 1,

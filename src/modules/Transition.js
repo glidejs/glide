@@ -1,6 +1,8 @@
 var Transition = function (Glide, Core) {
 
-	function Module() {}
+	function Module() {
+		this.jumping = false;
+	}
 
 	/**
 	 * Get transition settings
@@ -8,7 +10,11 @@ var Transition = function (Glide, Core) {
 	 * @return {string}
 	 */
 	Module.prototype.get = function(property) {
-		return property + ' ' + Glide.options.animationDuration + 'ms ' + Glide.options.animationTimingFunc;
+		if (!this.jumping) {
+			return property + ' ' + Glide.options.animationDuration + 'ms ' + Glide.options.animationTimingFunc;
+		} else {
+			return this.clear();
+		}
 	};
 
 

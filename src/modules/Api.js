@@ -22,6 +22,7 @@ var Api = function (Glide, Core) {
 
 		return {
 
+
 			/**
 			 * Get current slide index
 			 * @return {int}
@@ -29,6 +30,7 @@ var Api = function (Glide, Core) {
 			current: function() {
 				return Glide.current;
 			},
+
 
 			/**
 			 * Go to specifed slide
@@ -40,15 +42,35 @@ var Api = function (Glide, Core) {
 				return Core.Run.make(distance, callback);
 			},
 
+
+			/**
+			 * Jump without animation to specifed slide
+			 * @param  {String}   distance
+			 * @param  {Function} callback
+			 * @return {Core.Run}
+			 */
+			jump: function(distance, callback) {
+				// Let know that we want jumping
+				Core.Transition.jumping = true;
+				Core.Animation.after(function () {
+					// Jumping done, take down flag
+					Core.Transition.jumping = false;
+				});
+				return Core.Run.make(distance, callback);
+			},
+
+
 			/**
 			 * Start autoplay
 			 * @return {Core.Run}
 			 */
-			start: function(interval){
-				Core.Run.started = true;
+			start: function(interval) {
+				// We want running
+				Core.Run.running = true;
 				Glide.options.autoplay = parseInt(interval);
 				return Core.Run.play();
 			},
+
 
 			/**
 			 * Play autoplay
@@ -57,6 +79,7 @@ var Api = function (Glide, Core) {
 			play: function(){
 				return Core.Run.play();
 			},
+
 
 			/**
 			 * Pause autoplay

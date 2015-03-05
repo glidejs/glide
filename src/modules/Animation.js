@@ -46,7 +46,7 @@ var Animation = function (Glide, Core) {
 		var translate = (Glide.current * Glide.width) - Glide.width;
 
 		Glide.wrapper.css({
-			'transition': Core.Transition.get('transform'),
+			'transition': Core.Transition.get('all'),
 			'transform': Core.Translate.set('x', translate)
 		});
 
@@ -79,12 +79,19 @@ var Animation = function (Glide, Core) {
 			Core.Run.flag = false;
 
 			// After offset animation is done,
-			// clear transition and jump to last slide
 			this.after(function() {
+
+				// clear transition and jump to last slide
 				Glide.wrapper.css({
-					'transition': Core.Transition.clear('transform'),
+					'transition': Core.Transition.clear('all'),
 					'transform': Core.Translate.set('x', Glide.length * Glide.width)
 				});
+
+				// Set back transition
+				setTimeout(function(){
+					Glide.wrapper.css({ 'transition': Core.Transition.get('all') });
+				}, 15);
+
 			});
 
 		}
@@ -103,12 +110,19 @@ var Animation = function (Glide, Core) {
 			Core.Run.flag = false;
 
 			// After offset animation is done,
-			// clear transition and jump to first slide
 			this.after(function() {
+
+				// Clear transition and jump to first slide
 				Glide.wrapper.css({
-					'transition': Core.Transition.clear('transform'),
+					'transition': Core.Transition.clear('all'),
 					'transform': Core.Translate.set('x', Glide.width)
 				});
+
+				// Set back transition
+				setTimeout(function(){
+					Glide.wrapper.css({ 'transition': Core.Transition.get('all') });
+				}, 15);
+
 			});
 
 		}
@@ -127,7 +141,7 @@ var Animation = function (Glide, Core) {
 		 * overwrite transition (can be pre-cleared)
 		 */
 		Glide.wrapper.css({
-			'transition': Core.Transition.get('transform'),
+			'transition': Core.Transition.get('all'),
 			'transform': Core.Translate.set('x', translate)
 		});
 

@@ -12,20 +12,25 @@ var Build = function (Glide, Core) {
 
 	function Module() {
 
-		this.clones = {};
+		this.clones = [];
+		this.init();
 
+	}
+
+
+	Module.prototype.init = function() {
 		this[Glide.options.type]();
 		this.active();
 		Core.Bullets.active();
+	};
 
-	}
 
 	Module.prototype.slider = function() {
 
 		Glide.wrapper.css({
 			'width': Glide.width * Glide.length,
 			'transform': Core.Translate.set('x', Glide.width * (Glide.options.startAt - 1)),
-			'transition': Core.Transition.get('translate')
+			'transition': Core.Transition.get('all')
 		});
 
 		Glide.slides.width(Glide.width);
@@ -34,19 +39,19 @@ var Build = function (Glide, Core) {
 
 	Module.prototype.carousel = function() {
 
-		this.clones.first = Glide.slides.filter(':first-child')
-			.clone().addClass('clone').width(Glide.width);
+		this.clones.push(Glide.slides.filter(':first-child')
+			.clone().addClass('clone'));
 
-		this.clones.last = Glide.slides.filter(':last-child')
-			.clone().addClass('clone').width(Glide.width);
+		this.clones.push(Glide.slides.filter(':last-child')
+			.clone().addClass('clone'));
 
 		Glide.wrapper
-			.append(this.clones.first)
-			.prepend(this.clones.last)
+			.append(this.clones[0].width(Glide.width))
+			.prepend(this.clones[1].width(Glide.width))
 			.css({
 				'width': (Glide.width * Glide.length) + (Glide.width * 2),
 				'transform': Core.Translate.set('x', Glide.width * Glide.options.startAt),
-				'transition': Core.Transition.get('translate')
+				'transition': Core.Transition.get('all')
 			});
 
 		Glide.slides.width(Glide.width);
@@ -58,7 +63,7 @@ var Build = function (Glide, Core) {
 
 		Glide.slides.eq(Glide.options.startAt - 1)
 			.css({
-				'transition': Core.Transition.get('translate'),
+				'transition': Core.Transition.get('all'),
 				'opacity': 1,
 				'z-index': 1
 			})

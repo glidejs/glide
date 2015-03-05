@@ -56,7 +56,7 @@ var Animation = function (Glide, Core) {
 		var translate = (Glide.current * Glide.width) - Glide.width;
 
 		Glide.wrapper.css({
-			'transition': Core.Transition.get('transform'),
+			'transition': Core.Transition.get('all'),
 			'transform': Core.Translate.set('x', translate)
 		});
 
@@ -89,12 +89,19 @@ var Animation = function (Glide, Core) {
 			Core.Run.flag = false;
 
 			// After offset animation is done,
-			// clear transition and jump to last slide
 			this.after(function() {
+
+				// clear transition and jump to last slide
 				Glide.wrapper.css({
-					'transition': Core.Transition.clear('transform'),
+					'transition': Core.Transition.clear('all'),
 					'transform': Core.Translate.set('x', Glide.length * Glide.width)
 				});
+
+				// Set back transition
+				setTimeout(function(){
+					Glide.wrapper.css({ 'transition': Core.Transition.get('all') });
+				}, 15);
+
 			});
 
 		}
@@ -113,12 +120,19 @@ var Animation = function (Glide, Core) {
 			Core.Run.flag = false;
 
 			// After offset animation is done,
-			// clear transition and jump to first slide
 			this.after(function() {
+
+				// Clear transition and jump to first slide
 				Glide.wrapper.css({
-					'transition': Core.Transition.clear('transform'),
+					'transition': Core.Transition.clear('all'),
 					'transform': Core.Translate.set('x', Glide.width)
 				});
+
+				// Set back transition
+				setTimeout(function(){
+					Glide.wrapper.css({ 'transition': Core.Transition.get('all') });
+				}, 15);
+
 			});
 
 		}
@@ -137,7 +151,7 @@ var Animation = function (Glide, Core) {
 		 * overwrite transition (can be pre-cleared)
 		 */
 		Glide.wrapper.css({
-			'transition': Core.Transition.get('transform'),
+			'transition': Core.Transition.get('all'),
 			'transform': Core.Translate.set('x', translate)
 		});
 
@@ -347,20 +361,25 @@ var Build = function (Glide, Core) {
 
 	function Module() {
 
-		this.clones = {};
+		this.clones = [];
+		this.init();
 
+	}
+
+
+	Module.prototype.init = function() {
 		this[Glide.options.type]();
 		this.active();
 		Core.Bullets.active();
+	};
 
-	}
 
 	Module.prototype.slider = function() {
 
 		Glide.wrapper.css({
 			'width': Glide.width * Glide.length,
 			'transform': Core.Translate.set('x', Glide.width * (Glide.options.startAt - 1)),
-			'transition': Core.Transition.get('translate')
+			'transition': Core.Transition.get('all')
 		});
 
 		Glide.slides.width(Glide.width);
@@ -369,19 +388,19 @@ var Build = function (Glide, Core) {
 
 	Module.prototype.carousel = function() {
 
-		this.clones.first = Glide.slides.filter(':first-child')
-			.clone().addClass('clone').width(Glide.width);
+		this.clones.push(Glide.slides.filter(':first-child')
+			.clone().addClass('clone'));
 
-		this.clones.last = Glide.slides.filter(':last-child')
-			.clone().addClass('clone').width(Glide.width);
+		this.clones.push(Glide.slides.filter(':last-child')
+			.clone().addClass('clone'));
 
 		Glide.wrapper
-			.append(this.clones.first)
-			.prepend(this.clones.last)
+			.append(this.clones[0].width(Glide.width))
+			.prepend(this.clones[1].width(Glide.width))
 			.css({
 				'width': (Glide.width * Glide.length) + (Glide.width * 2),
 				'transform': Core.Translate.set('x', Glide.width * Glide.options.startAt),
-				'transition': Core.Transition.get('translate')
+				'transition': Core.Transition.get('all')
 			});
 
 		Glide.slides.width(Glide.width);
@@ -393,7 +412,7 @@ var Build = function (Glide, Core) {
 
 		Glide.slides.eq(Glide.options.startAt - 1)
 			.css({
-				'transition': Core.Transition.get('translate'),
+				'transition': Core.Transition.get('all'),
 				'opacity': 1,
 				'z-index': 1
 			})
@@ -519,6 +538,7 @@ var Events = function (Glide, Core) {
 		this.disabled = false;
 		this.keyboard();
 		this.hoverpause();
+		this.resize();
 	}
 
 
@@ -546,6 +566,19 @@ var Events = function (Glide, Core) {
 
 		}
 
+	};
+
+
+	Module.prototype.resize = function() {
+		$(window).on('resize', this.throttle(function() {
+			Core.Transition.jumping = true;
+			Core.Run.pause();
+			Glide.init();
+			Core.Build.init();
+			Core.Run.make('=' + Glide.current);
+			Core.Run.play();
+			Core.Transition.jumping = false;
+		}, Glide.options.throttle));
 	};
 
 
@@ -578,6 +611,54 @@ var Events = function (Glide, Core) {
 		if ( (func !== 'undefined') && (typeof func === 'function') ) func(Glide.current, Glide.slides.eq(Glide.current - 1));
 		return this;
 	};
+
+
+	/**
+	 * Throttle
+	 * @source http://underscorejs.org/
+	 */
+	Module.prototype.throttle = function(func, wait, options) {
+		var that = this;
+		var context, args, result;
+		var timeout = null;
+		var previous = 0;
+		if (!options) options = {};
+		var later = function() {
+			previous = options.leading === false ? 0 : that.now();
+			timeout = null;
+			result = func.apply(context, args);
+			if (!timeout) context = args = null;
+		};
+		return function() {
+			var now = that.now();
+			if (!previous && options.leading === false) previous = now;
+			var remaining = wait - (now - previous);
+			context = this;
+			args = arguments;
+			if (remaining <= 0 || remaining > wait) {
+				if (timeout) {
+					clearTimeout(timeout);
+					timeout = null;
+				}
+				previous = now;
+				result = func.apply(context, args);
+				if (!timeout) context = args = null;
+			} else if (!timeout && options.trailing !== false) {
+				timeout = setTimeout(later, remaining);
+			}
+			return result;
+		};
+	};
+
+
+	/**
+	 * Get time
+	 * @source http://underscorejs.org/
+	 */
+	Module.prototype.now = Date.now || function() {
+		return new Date().getTime();
+	};
+
 
 	return new Module();
 
@@ -737,9 +818,9 @@ var Run = function (Glide, Core) {
 
 		if (Glide.options.touchDistance) {
 			Glide.slider.on({
-				'touchstart.glide': this.start,
-				'touchmove.glide': this.move,
-				'touchend.glide': this.end
+				'touchstart.glide': Core.Events.throttle(this.start, Glide.options.throttle),
+				'touchmove.glide': Core.Events.throttle(this.move, Glide.options.throttle),
+				'touchend.glide': Core.Events.throttle(this.end, Glide.options.throttle)
 			});
 		}
 
@@ -790,6 +871,16 @@ var Run = function (Glide, Core) {
 			this.touchSin = Math.asin( touchCathetus/touchHypotenuse );
 
 			if ( (this.touchSin * (180 / Math.PI)) < 45 ) event.preventDefault();
+			else return;
+
+			if (Glide.options.type !== 'slideshow') {
+				// Move slider with swipe distance
+				Glide.wrapper.css({
+					transform: Core.Translate.set('x',
+						(Glide.width * (Glide.current - 1 + Core.Build.clones.length/2)) - subExSx
+					)
+				});
+			}
 
 		}
 
@@ -814,6 +905,18 @@ var Run = function (Glide, Core) {
 			if (touchDistance > Glide.options.touchDistance && touchDeg < 45) Core.Run.make('<');
 			// While touch is negative and lower than negative distance set in options
 			else if (touchDistance < -Glide.options.touchDistance && touchDeg < 45) Core.Run.make('>');
+			// While swipe don't reach distance appy previous transform
+			else {
+
+				if (Glide.options.type !== 'slideshow') {
+					Glide.wrapper.css({
+						transition: Core.Transition.get('all'),
+						transform: Core.Translate.set('x',
+							(Glide.width * (Glide.current - 1 + Core.Build.clones.length/2)))
+					});
+				}
+
+			}
 
 			Core.Animation.after(function(){
 				Core.Events.enable();
@@ -895,7 +998,7 @@ var Run = function (Glide, Core) {
 	 */
 	Module.prototype.set = function(axis, value) {
 		this.axes[axis] = parseInt(value);
-		return 'translate3d(-' + this.axes.x + 'px, ' + this.axes.y + 'px, ' + this.axes.z + 'px)';
+		return 'translate3d(' + -1*this.axes.x + 'px, ' + this.axes.y + 'px, ' + this.axes.z + 'px)';
 	};
 
 
@@ -927,8 +1030,9 @@ var Glide = function (element, options) {
 		hoverpause: true,
 		keyboard: true,
 		touchDistance: 60,
-		animationDuration: 750,
+		animationDuration: 300,
 		animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
+		throttle: 29.97,
 		classes: {
 			base: 'glide',
 			wrapper: 'glide__wrapper',
@@ -952,10 +1056,9 @@ var Glide = function (element, options) {
 	this.slider = element.addClass(this.options.classes.base + '--' + this.options.type);
 	this.wrapper = this.slider.children('.' + this.options.classes.wrapper);
 	this.slides = this.wrapper.children('.' + this.options.classes.slide);
-
 	this.current = parseInt(this.options.startAt);
-	this.width = this.slider.width();
-	this.length = this.slides.length;
+
+	this.init();
 
 	// Call before init callback
 	this.options.beforeInit(this.slider);
@@ -969,12 +1072,12 @@ var Glide = function (element, options) {
 		Translate: Translate,
 		Transition: Transition,
 		Events: Events,
-		Touch: Touch,
 		Arrows: Arrows,
 		Bullets: Bullets,
 		Build: Build,
 		Run: Run,
 		Animation: Animation,
+		Touch: Touch,
 		Api: Api
 	});
 
@@ -986,6 +1089,11 @@ var Glide = function (element, options) {
 
 };
 
+
+Glide.prototype.init = function() {
+	this.width = this.slider.width();
+	this.length = this.slides.length;
+};
 ;/**
  * Wire Glide to jQuery
  * @param  {object} options Plugin options

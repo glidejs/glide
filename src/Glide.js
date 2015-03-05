@@ -22,8 +22,9 @@ var Glide = function (element, options) {
 		hoverpause: true,
 		keyboard: true,
 		touchDistance: 60,
-		animationDuration: 750,
+		animationDuration: 300,
 		animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
+		throttle: 29.97,
 		classes: {
 			base: 'glide',
 			wrapper: 'glide__wrapper',
@@ -47,10 +48,9 @@ var Glide = function (element, options) {
 	this.slider = element.addClass(this.options.classes.base + '--' + this.options.type);
 	this.wrapper = this.slider.children('.' + this.options.classes.wrapper);
 	this.slides = this.wrapper.children('.' + this.options.classes.slide);
-
 	this.current = parseInt(this.options.startAt);
-	this.width = this.slider.width();
-	this.length = this.slides.length;
+
+	this.init();
 
 	// Call before init callback
 	this.options.beforeInit(this.slider);
@@ -64,12 +64,12 @@ var Glide = function (element, options) {
 		Translate: Translate,
 		Transition: Transition,
 		Events: Events,
-		Touch: Touch,
 		Arrows: Arrows,
 		Bullets: Bullets,
 		Build: Build,
 		Run: Run,
 		Animation: Animation,
+		Touch: Touch,
 		Api: Api
 	});
 
@@ -81,3 +81,8 @@ var Glide = function (element, options) {
 
 };
 
+
+Glide.prototype.init = function() {
+	this.width = this.slider.width();
+	this.length = this.slides.length;
+};

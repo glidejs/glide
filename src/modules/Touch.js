@@ -5,9 +5,9 @@ var Touch = function (Glide, Core) {
 
 		if (Glide.options.touchDistance) {
 			Glide.slider.on({
-				'touchstart.glide': this.start,
-				'touchmove.glide': this.move,
-				'touchend.glide': this.end
+				'touchstart.glide': Core.Events.throttle(this.start, Glide.options.throttle),
+				'touchmove.glide': Core.Events.throttle(this.move, Glide.options.throttle),
+				'touchend.glide': Core.Events.throttle(this.end, Glide.options.throttle)
 			});
 		}
 
@@ -58,6 +58,16 @@ var Touch = function (Glide, Core) {
 			this.touchSin = Math.asin( touchCathetus/touchHypotenuse );
 
 			if ( (this.touchSin * (180 / Math.PI)) < 45 ) event.preventDefault();
+			else return;
+
+			if (Glide.options.type !== 'slideshow') {
+				// Move slider with swipe distance
+				Glide.wrapper.css({
+					transform: Core.Translate.set('x',
+						(Glide.width * (Glide.current - 1 + Core.Build.clones.length/2)) - subExSx
+					)
+				});
+			}
 
 		}
 
@@ -82,6 +92,18 @@ var Touch = function (Glide, Core) {
 			if (touchDistance > Glide.options.touchDistance && touchDeg < 45) Core.Run.make('<');
 			// While touch is negative and lower than negative distance set in options
 			else if (touchDistance < -Glide.options.touchDistance && touchDeg < 45) Core.Run.make('>');
+			// While swipe don't reach distance appy previous transform
+			else {
+
+				if (Glide.options.type !== 'slideshow') {
+					Glide.wrapper.css({
+						transition: Core.Transition.get('all'),
+						transform: Core.Translate.set('x',
+							(Glide.width * (Glide.current - 1 + Core.Build.clones.length/2)))
+					});
+				}
+
+			}
 
 			Core.Animation.after(function(){
 				Core.Events.enable();

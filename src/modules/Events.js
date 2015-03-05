@@ -13,6 +13,7 @@ var Events = function (Glide, Core) {
 		this.disabled = false;
 		this.keyboard();
 		this.hoverpause();
+		this.resize();
 	}
 
 
@@ -40,6 +41,19 @@ var Events = function (Glide, Core) {
 
 		}
 
+	};
+
+
+	Module.prototype.resize = function() {
+		$(window).on('resize', this.throttle(function() {
+			Core.Transition.jumping = true;
+			Core.Run.pause();
+			Glide.init();
+			Core.Build.init();
+			Core.Run.make('=' + Glide.current);
+			Core.Run.play();
+			Core.Transition.jumping = false;
+		}, Glide.options.throttle));
 	};
 
 
@@ -72,6 +86,54 @@ var Events = function (Glide, Core) {
 		if ( (func !== 'undefined') && (typeof func === 'function') ) func(Glide.current, Glide.slides.eq(Glide.current - 1));
 		return this;
 	};
+
+
+	/**
+	 * Throttle
+	 * @source http://underscorejs.org/
+	 */
+	Module.prototype.throttle = function(func, wait, options) {
+		var that = this;
+		var context, args, result;
+		var timeout = null;
+		var previous = 0;
+		if (!options) options = {};
+		var later = function() {
+			previous = options.leading === false ? 0 : that.now();
+			timeout = null;
+			result = func.apply(context, args);
+			if (!timeout) context = args = null;
+		};
+		return function() {
+			var now = that.now();
+			if (!previous && options.leading === false) previous = now;
+			var remaining = wait - (now - previous);
+			context = this;
+			args = arguments;
+			if (remaining <= 0 || remaining > wait) {
+				if (timeout) {
+					clearTimeout(timeout);
+					timeout = null;
+				}
+				previous = now;
+				result = func.apply(context, args);
+				if (!timeout) context = args = null;
+			} else if (!timeout && options.trailing !== false) {
+				timeout = setTimeout(later, remaining);
+			}
+			return result;
+		};
+	};
+
+
+	/**
+	 * Get time
+	 * @source http://underscorejs.org/
+	 */
+	Module.prototype.now = Date.now || function() {
+		return new Date().getTime();
+	};
+
 
 	return new Module();
 

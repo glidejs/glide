@@ -87,6 +87,25 @@ var Api = function (Glide, Core) {
 			 */
 			pause: function() {
 				return Core.Run.pause();
+			},
+
+
+			/**
+			 * Destroy
+			 * @return {Glide.slider}
+			 */
+			destroy: function() {
+
+				Core.Events.unbind();
+				Core.Touch.unbind();
+				Core.Arrows.unbind();
+				Core.Bullets.unbind();
+				Glide.slider.removeData('glide_api');
+
+				delete Glide.slider;
+				delete Glide.wrapper;
+				delete Glide.slides;
+
 			}
 
 

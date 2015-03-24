@@ -27,6 +27,9 @@ var Build = function (Glide, Core) {
 
 	Module.prototype.slider = function() {
 
+		if (Glide.current === Glide.length) Core.Arrows.hide('next');
+		if (Glide.current === 1) Core.Arrows.hide('prev');
+
 		Glide.wrapper.css({
 			'width': Glide.width * Glide.length,
 			'transform': Core.Translate.set('x', Glide.width * (Glide.options.startAt - 1)),

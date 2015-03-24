@@ -58,13 +58,22 @@ var Arrows = function (Glide, Core) {
 	 */
 	Module.prototype.bind = function () {
 
-		return this.items.on('click touchstart', function(event){
+		return this.items.on('click.glide touchstart.glide', function(event){
 			event.preventDefault();
 			if (!Core.Events.disabled) {
 				Core.Run.make($(this).data('glide-dir'));
 			}
 		});
 
+	};
+
+
+	/**
+	 * Unbind
+	 * arrows events
+	 */
+	Module.prototype.unbind = function () {
+		return this.items.unbind('click.glide touchstart.glide');
 	};
 
 	return new Module();

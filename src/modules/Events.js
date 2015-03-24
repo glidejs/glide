@@ -45,7 +45,7 @@ var Events = function (Glide, Core) {
 
 
 	Module.prototype.resize = function() {
-		$(window).on('resize', this.throttle(function() {
+		$(window).on('resize.glide', this.throttle(function() {
 			Core.Transition.jumping = true;
 			Core.Run.pause();
 			Glide.init();
@@ -85,6 +85,25 @@ var Events = function (Glide, Core) {
 	Module.prototype.call = function (func) {
 		if ( (func !== 'undefined') && (typeof func === 'function') ) func(Glide.current, Glide.slides.eq(Glide.current - 1));
 		return this;
+	};
+
+
+	/*
+	 * Call function
+	 * @param {Function} func
+	 * @return {Glide.Events}
+	 */
+	Module.prototype.unbind = function (func) {
+
+		Glide.slider
+			.unbind('keyup.glide')
+			.unbind('mouseover.glide')
+			.unbind('mouseout.glide');
+
+		$(window)
+			.unbind('keyup.glide')
+			.unbind('resize.glide');
+
 	};
 
 

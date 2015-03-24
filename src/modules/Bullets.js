@@ -50,7 +50,7 @@ var Bullets = function (Glide, Core) {
 	 */
 	Module.prototype.bind = function () {
 
-		this.items.on('click touchstart', function(event){
+		this.items.on('click.glide touchstart.glide', function(event){
 			event.preventDefault();
 			if (!Core.Events.disabled) {
 				Core.Run.make($(this).data('glide-dir'));
@@ -58,6 +58,16 @@ var Bullets = function (Glide, Core) {
 		});
 
 	};
+
+
+	/**
+	 * Unbind
+	 * bullets events
+	 */
+	Module.prototype.unbind = function () {
+		this.items.unbind('click.glide touchstart.glide');
+	};
+
 
 	return new Module();
 

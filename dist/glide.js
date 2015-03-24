@@ -254,6 +254,25 @@ var Api = function (Glide, Core) {
 			 */
 			pause: function() {
 				return Core.Run.pause();
+			},
+
+
+			/**
+			 * Destroy
+			 * @return {Glide.slider}
+			 */
+			destroy: function() {
+
+				Core.Events.unbind();
+				Core.Touch.unbind();
+				Core.Arrows.unbind();
+				Core.Bullets.unbind();
+				Glide.slider.removeData('glide_api');
+
+				delete Glide.slider;
+				delete Glide.wrapper;
+				delete Glide.slides;
+
 			}
 
 
@@ -325,13 +344,22 @@ var Arrows = function (Glide, Core) {
 	 */
 	Module.prototype.bind = function () {
 
-		return this.items.on('click touchstart', function(event){
+		return this.items.on('click.glide touchstart.glide', function(event){
 			event.preventDefault();
 			if (!Core.Events.disabled) {
 				Core.Run.make($(this).data('glide-dir'));
 			}
 		});
 
+	};
+
+
+	/**
+	 * Unbind
+	 * arrows events
+	 */
+	Module.prototype.unbind = function () {
+		return this.items.unbind('click.glide touchstart.glide');
 	};
 
 	return new Module();
@@ -365,6 +393,9 @@ var Build = function (Glide, Core) {
 
 
 	Module.prototype.slider = function() {
+
+		if (Glide.current === Glide.length) Core.Arrows.hide('next');
+		if (Glide.current === 1) Core.Arrows.hide('prev');
 
 		Glide.wrapper.css({
 			'width': Glide.width * Glide.length,
@@ -471,7 +502,7 @@ var Bullets = function (Glide, Core) {
 	 */
 	Module.prototype.bind = function () {
 
-		this.items.on('click touchstart', function(event){
+		this.items.on('click.glide touchstart.glide', function(event){
 			event.preventDefault();
 			if (!Core.Events.disabled) {
 				Core.Run.make($(this).data('glide-dir'));
@@ -479,6 +510,16 @@ var Bullets = function (Glide, Core) {
 		});
 
 	};
+
+
+	/**
+	 * Unbind
+	 * bullets events
+	 */
+	Module.prototype.unbind = function () {
+		this.items.unbind('click.glide touchstart.glide');
+	};
+
 
 	return new Module();
 
@@ -557,7 +598,7 @@ var Events = function (Glide, Core) {
 
 
 	Module.prototype.resize = function() {
-		$(window).on('resize', this.throttle(function() {
+		$(window).on('resize.glide', this.throttle(function() {
 			Core.Transition.jumping = true;
 			Core.Run.pause();
 			Glide.init();
@@ -597,6 +638,25 @@ var Events = function (Glide, Core) {
 	Module.prototype.call = function (func) {
 		if ( (func !== 'undefined') && (typeof func === 'function') ) func(Glide.current, Glide.slides.eq(Glide.current - 1));
 		return this;
+	};
+
+
+	/*
+	 * Call function
+	 * @param {Function} func
+	 * @return {Glide.Events}
+	 */
+	Module.prototype.unbind = function (func) {
+
+		Glide.slider
+			.unbind('keyup.glide')
+			.unbind('mouseover.glide')
+			.unbind('mouseout.glide');
+
+		$(window)
+			.unbind('keyup.glide')
+			.unbind('resize.glide');
+
 	};
 
 
@@ -815,11 +875,14 @@ var Run = function (Glide, Core) {
 
 	}
 
-	Module.prototype.start = function(event) {
+	Module.prototype.unbind = function() {
+		Glide.slider
+			.unbind('touchstart.glide')
+			.unbind('touchmove.glide')
+			.unbind('touchend.glide');
+	};
 
-		console.log(!Core.Events.disabled);
-		console.log(!this.dragging);
-		console.log(!Core.Events.disabled && !this.dragging);
+	Module.prototype.start = function(event) {
 
 		// Escape if events disabled
 		if (!Core.Events.disabled && !this.dragging) {

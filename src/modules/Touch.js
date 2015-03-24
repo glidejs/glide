@@ -15,11 +15,14 @@ var Touch = function (Glide, Core) {
 
 	}
 
-	Module.prototype.start = function(event) {
+	Module.prototype.unbind = function() {
+		Glide.slider
+			.unbind('touchstart.glide')
+			.unbind('touchmove.glide')
+			.unbind('touchend.glide');
+	};
 
-		console.log(!Core.Events.disabled);
-		console.log(!this.dragging);
-		console.log(!Core.Events.disabled && !this.dragging);
+	Module.prototype.start = function(event) {
 
 		// Escape if events disabled
 		if (!Core.Events.disabled && !this.dragging) {

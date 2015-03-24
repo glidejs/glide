@@ -105,6 +105,8 @@ var Api = function (Glide, Core) {
 				delete Glide.slider;
 				delete Glide.wrapper;
 				delete Glide.slides;
+				delete Glide.width;
+				delete Glide.length;
 
 			}
 

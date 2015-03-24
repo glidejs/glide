@@ -17,6 +17,10 @@ var Touch = function (Glide, Core) {
 
 	Module.prototype.start = function(event) {
 
+		console.log(!Core.Events.disabled);
+		console.log(!this.dragging);
+		console.log(!Core.Events.disabled && !this.dragging);
+
 		// Escape if events disabled
 		if (!Core.Events.disabled && !this.dragging) {
 
@@ -39,7 +43,7 @@ var Touch = function (Glide, Core) {
 	Module.prototype.move = function(event) {
 
 		// Escape if events disabled
-		if (!Core.Events.disabled && !this.dragging) {
+		if (!Core.Events.disabled && this.dragging) {
 
 			if(Glide.options.autoplay) Core.Run.pause();
 
@@ -68,7 +72,7 @@ var Touch = function (Glide, Core) {
 				// Move slider with swipe distance
 				Glide.wrapper.css({
 					transform: Core.Translate.set('x',
-						(Glide.width * (Glide.current - 1 + Core.Build.clones.length/2)) - subExSx*2
+						(Glide.width * (Glide.current - 1 + Core.Build.clones.length/2)) - subExSx/2
 					)
 				});
 			}
@@ -81,8 +85,9 @@ var Touch = function (Glide, Core) {
 	Module.prototype.end = function(event) {
 
 		// Escape if events disabled
-		if (!Core.Events.disabled && !this.dragging) {
+		if (!Core.Events.disabled && this.dragging) {
 
+			this.dragging = false;
 			Core.Events.disable();
 
 			// Cache event
@@ -112,7 +117,6 @@ var Touch = function (Glide, Core) {
 			Core.Animation.after(function(){
 				Core.Events.enable();
 				if(Glide.options.autoplay) Core.Run.play();
-				this.dragging = false;
 			});
 
 		}

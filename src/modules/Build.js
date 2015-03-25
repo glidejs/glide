@@ -11,10 +11,8 @@
 var Build = function (Glide, Core) {
 
 	function Module() {
-
 		this.clones = [];
 		this.init();
-
 	}
 
 
@@ -25,6 +23,11 @@ var Build = function (Glide, Core) {
 	};
 
 
+	Module.prototype.removeClones = function() {
+		return Glide.wrapper.find('.clone').remove();
+	};
+
+
 	Module.prototype.slider = function() {
 
 		if (Glide.current === Glide.length) Core.Arrows.hide('next');
@@ -32,27 +35,27 @@ var Build = function (Glide, Core) {
 
 		Glide.wrapper.css({
 			'width': Glide.width * Glide.length,
-			'transform': Core.Translate.set('x', Glide.width * (Glide.options.startAt - 1)),
+			'transform': Core.Translate.set('x', Glide.width * (Glide.current - 1)),
 		});
 
 		Glide.slides.width(Glide.width);
 
 	};
 
+
 	Module.prototype.carousel = function() {
 
-		this.clones.push(Glide.slides.filter(':first-child')
-			.clone().addClass('clone'));
-
-		this.clones.push(Glide.slides.filter(':last-child')
-			.clone().addClass('clone'));
+		var firstClone = Glide.slides.filter(':first-child')
+			.clone().addClass('clone');
+		var lastClone = Glide.slides.filter(':last-child')
+			.clone().addClass('clone');
 
 		Glide.wrapper
-			.append(this.clones[0].width(Glide.width))
-			.prepend(this.clones[1].width(Glide.width))
+			.append(firstClone.width(Glide.width))
+			.prepend(lastClone.width(Glide.width))
 			.css({
 				'width': (Glide.width * Glide.length) + (Glide.width * 2),
-				'transform': Core.Translate.set('x', Glide.width * Glide.options.startAt),
+				'transform': Core.Translate.set('x', Glide.width * Glide.current),
 			});
 
 		Glide.slides.width(Glide.width);
@@ -62,7 +65,7 @@ var Build = function (Glide, Core) {
 
 	Module.prototype.slideshow = function () {
 
-		Glide.slides.eq(Glide.options.startAt - 1)
+		Glide.slides.eq(Glide.current - 1)
 			.css({
 				'opacity': 1,
 				'z-index': 1

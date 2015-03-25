@@ -23,6 +23,8 @@
 	</head>
 	<body>
 
+		<button>Add</button>
+
 		<div id="Carousel" class="glide">
 
 			<div class="glide__arrows">
@@ -103,9 +105,22 @@
 			});
 			var carousel_api = carousel.data('glide_api');
 
-			// $('.box').on('click', function () {
-			// 	carousel_api.destroy();
-			// });
+			$('button').on('click', function (e) {
+
+				e.preventDefault();
+
+				var item = $('<li>', {
+					class: 'glide__slide'
+				}).appendTo(carousel.children('.glide__wrapper'));
+
+				$('<div>', {
+					class: 'box',
+					style: 'background-color: green;'
+				}).appendTo(item);
+
+				carousel_api.refresh();
+
+			});
 
 			var slider = $('#Slider').glide({
 				type: 'slider',

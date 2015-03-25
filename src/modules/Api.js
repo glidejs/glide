@@ -108,7 +108,19 @@ var Api = function (Glide, Core) {
 				delete Glide.width;
 				delete Glide.length;
 
-			}
+			},
+
+
+			/**
+			 * Refresh slider
+			 * @return {Core.Run}
+			 */
+			refresh: function() {
+				Core.Build.removeClones();
+				Glide.collect();
+				Glide.init();
+				Core.Build.init();
+			},
 
 
 		};

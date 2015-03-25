@@ -44,12 +44,10 @@ var Glide = function (element, options) {
 
 	// Extend options
 	this.options = $.extend({}, defaults, options);
-
-	this.slider = element.addClass(this.options.classes.base + '--' + this.options.type);
-	this.wrapper = this.slider.children('.' + this.options.classes.wrapper);
-	this.slides = this.wrapper.children('.' + this.options.classes.slide);
 	this.current = parseInt(this.options.startAt);
+	this.element = element;
 
+	this.collect();
 	this.init();
 
 	// Call before init callback
@@ -79,6 +77,13 @@ var Glide = function (element, options) {
 	// api return
 	return core.Api.instance();
 
+};
+
+
+Glide.prototype.collect = function() {
+	this.slider = this.element.addClass(this.options.classes.base + '--' + this.options.type);
+	this.wrapper = this.slider.children('.' + this.options.classes.wrapper);
+	this.slides = this.wrapper.children('.' + this.options.classes.slide);
 };
 
 

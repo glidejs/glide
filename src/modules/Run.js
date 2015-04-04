@@ -9,6 +9,9 @@
 var Run = function (Glide, Core) {
 
 
+	/**
+	 * Run Module Constructor
+	 */
 	function Module() {
 		this.running = false;
 		this.flag = false;
@@ -19,6 +22,7 @@ var Run = function (Glide, Core) {
 	/**
 	 * Start autoplay animation
 	 * Setup interval
+	 * @return {Int/Undefined}
 	 */
 	Module.prototype.play = function() {
 
@@ -42,6 +46,7 @@ var Run = function (Glide, Core) {
 	/**
 	 * Pasue autoplay animation
 	 * Clear interval
+	 * @return {Int/Undefined}
 	 */
 	Module.prototype.pause = function() {
 
@@ -60,6 +65,7 @@ var Run = function (Glide, Core) {
 	 */
 	Module.prototype.make = function (move, callback) {
 
+		// Cache
 		var that = this;
 		// Extract move direction
 		this.direction = move.substr(0, 1);

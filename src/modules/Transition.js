@@ -1,8 +1,13 @@
 var Transition = function (Glide, Core) {
 
+
+	/**
+	 * Transition Module Constructor
+	 */
 	function Module() {
 		this.jumping = false;
 	}
+
 
 	/**
 	 * Get transition settings
@@ -28,6 +33,7 @@ var Transition = function (Glide, Core) {
 	};
 
 
+	// @return Module
 	return new Module();
 
 

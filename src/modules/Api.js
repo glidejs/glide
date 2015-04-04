@@ -8,11 +8,12 @@
 
 var Api = function (Glide, Core) {
 
+
 	/**
-	 * Construnct modules
-	 * and inject Glide and Core as dependency
+	 * Api Module Constructor
 	 */
 	function Module() {}
+
 
 	/**
 	 * Api instance
@@ -21,7 +22,6 @@ var Api = function (Glide, Core) {
 	Module.prototype.instance = function () {
 
 		return {
-
 
 			/**
 			 * Get current slide index
@@ -122,12 +122,13 @@ var Api = function (Glide, Core) {
 				Core.Build.init();
 			},
 
-
 		};
 
 	};
 
+
 	// @return Module
 	return new Module();
+
 
 };

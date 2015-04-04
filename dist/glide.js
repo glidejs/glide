@@ -60,8 +60,11 @@ var Animation = function (Glide, Core) {
 			'transform': Core.Translate.set('x', translate)
 		});
 
+		// If on start hide prev arrow
 		if (Glide.current === 1) Core.Arrows.hide('prev');
+		// If on end hide next arrow
 		else if (Glide.current === Glide.length) Core.Arrows.hide('next');
+		// Show arrows
 		else Core.Arrows.show();
 
 	};
@@ -175,11 +178,12 @@ var Animation = function (Glide, Core) {
 
 var Api = function (Glide, Core) {
 
+
 	/**
-	 * Construnct modules
-	 * and inject Glide and Core as dependency
+	 * Api Module Constructor
 	 */
 	function Module() {}
+
 
 	/**
 	 * Api instance
@@ -188,7 +192,6 @@ var Api = function (Glide, Core) {
 	Module.prototype.instance = function () {
 
 		return {
-
 
 			/**
 			 * Get current slide index
@@ -289,13 +292,14 @@ var Api = function (Glide, Core) {
 				Core.Build.init();
 			},
 
-
 		};
 
 	};
 
+
 	// @return Module
 	return new Module();
+
 
 };
 ;/**
@@ -309,11 +313,12 @@ var Api = function (Glide, Core) {
 var Arrows = function (Glide, Core) {
 
 
+	/**
+	 * Arrows Module Constructor
+	 */
 	function Module() {
-
 		this.build();
 		this.bind();
-
 	}
 
 
@@ -376,6 +381,8 @@ var Arrows = function (Glide, Core) {
 		return this.items.unbind('click.glide touchstart.glide');
 	};
 
+
+	// @return Module
 	return new Module();
 
 };
@@ -391,26 +398,42 @@ var Arrows = function (Glide, Core) {
 
 var Build = function (Glide, Core) {
 
+
+	// Build Module Constructor
 	function Module() {
-		this.clones = [];
 		this.init();
 	}
 
 
+	/**
+	 * Init slider build
+	 * @return {[type]} [description]
+	 */
 	Module.prototype.init = function() {
+		// Build proper slider type
 		this[Glide.options.type]();
+		// Set slide active class
 		this.active();
+		// Set bullet active class
 		Core.Bullets.active();
 	};
 
 
+	/**
+	 * Remove slides
+	 * clones
+	 */
 	Module.prototype.removeClones = function() {
 		return Glide.wrapper.find('.clone').remove();
 	};
 
 
+	/**
+	 * Build Slider type
+	 */
 	Module.prototype.slider = function() {
 
+		// Hide next/prev arrow when on the end/start
 		if (Glide.current === Glide.length) Core.Arrows.hide('next');
 		if (Glide.current === 1) Core.Arrows.hide('prev');
 
@@ -424,10 +447,16 @@ var Build = function (Glide, Core) {
 	};
 
 
+	/**
+	 * Build Carousel type
+	 * @return {[type]} [description]
+	 */
 	Module.prototype.carousel = function() {
 
+		// Clone first slide
 		var firstClone = Glide.slides.filter(':first-child')
 			.clone().addClass('clone');
+		// Clone last slide
 		var lastClone = Glide.slides.filter(':last-child')
 			.clone().addClass('clone');
 
@@ -444,6 +473,10 @@ var Build = function (Glide, Core) {
 	};
 
 
+	/**
+	 * Build Slideshow type
+	 * @return {[type]} [description]
+	 */
 	Module.prototype.slideshow = function () {
 
 		Glide.slides.eq(Glide.current - 1)
@@ -456,6 +489,10 @@ var Build = function (Glide, Core) {
 	};
 
 
+	/**
+	 * Set active class
+	 * to current slide
+	 */
 	Module.prototype.active = function () {
 
 		Glide.slides
@@ -464,6 +501,8 @@ var Build = function (Glide, Core) {
 
 	};
 
+
+	// @return Module
 	return new Module();
 
 };
@@ -477,12 +516,15 @@ var Build = function (Glide, Core) {
 
 var Bullets = function (Glide, Core) {
 
-	function Module() {
 
+	/**
+	 * Bullets Module Constructor
+	 */
+	function Module() {
 		this.build();
 		this.bind();
-
 	}
+
 
 	/**
 	 * Build
@@ -538,6 +580,7 @@ var Bullets = function (Glide, Core) {
 	};
 
 
+	// @return Module
 	return new Module();
 
 };
@@ -553,8 +596,8 @@ var Bullets = function (Glide, Core) {
 var Core = function (Glide, Modules) {
 
 	/**
-	 * Construnct modules
-	 * and inject Glide and Core as dependency
+	 * Core Module Constructor
+	 * Construct modules and inject Glide and Core as dependency
 	 */
 	function Module() {
 
@@ -579,6 +622,9 @@ var Core = function (Glide, Modules) {
 var Events = function (Glide, Core) {
 
 
+	/**
+	 * Events Module Constructor
+	 */
 	function Module() {
 		this.disabled = false;
 		this.keyboard();
@@ -587,6 +633,9 @@ var Events = function (Glide, Core) {
 	}
 
 
+	/**
+	 * Keyboard events
+	 */
 	Module.prototype.keyboard = function() {
 		if (Glide.options.keyboard) {
 			$(window).on('keyup.glide', function(event){
@@ -596,7 +645,9 @@ var Events = function (Glide, Core) {
 		}
 	};
 
-
+	/**
+	 * Hover pause event
+	 */
 	Module.prototype.hoverpause = function() {
 
 		if (Glide.options.hoverpause) {
@@ -614,7 +665,11 @@ var Events = function (Glide, Core) {
 	};
 
 
+	/**
+	 * Resize window event
+	 */
 	Module.prototype.resize = function() {
+
 		$(window).on('resize.glide', this.throttle(function() {
 			Core.Transition.jumping = true;
 			Core.Run.pause();
@@ -624,6 +679,7 @@ var Events = function (Glide, Core) {
 			Core.Run.play();
 			Core.Transition.jumping = false;
 		}, Glide.options.throttle));
+
 	};
 
 
@@ -724,6 +780,7 @@ var Events = function (Glide, Core) {
 	};
 
 
+	// @return Module
 	return new Module();
 
 };
@@ -737,7 +794,12 @@ var Events = function (Glide, Core) {
 
 var Helper = function (Glide, Core) {
 
+
+	/**
+	 * Helper Module Constructor
+	 */
 	function Module() {}
+
 
 	/**
 	 * Capitalise string
@@ -748,7 +810,10 @@ var Helper = function (Glide, Core) {
 		return s.charAt(0).toUpperCase() + s.slice(1);
 	};
 
+
+	// @return Module
 	return new Module();
+
 
 };
 ;/**
@@ -762,6 +827,9 @@ var Helper = function (Glide, Core) {
 var Run = function (Glide, Core) {
 
 
+	/**
+	 * Run Module Constructor
+	 */
 	function Module() {
 		this.running = false;
 		this.flag = false;
@@ -772,6 +840,7 @@ var Run = function (Glide, Core) {
 	/**
 	 * Start autoplay animation
 	 * Setup interval
+	 * @return {Int/Undefined}
 	 */
 	Module.prototype.play = function() {
 
@@ -795,6 +864,7 @@ var Run = function (Glide, Core) {
 	/**
 	 * Pasue autoplay animation
 	 * Clear interval
+	 * @return {Int/Undefined}
 	 */
 	Module.prototype.pause = function() {
 
@@ -813,6 +883,7 @@ var Run = function (Glide, Core) {
 	 */
 	Module.prototype.make = function (move, callback) {
 
+		// Cache
 		var that = this;
 		// Extract move direction
 		this.direction = move.substr(0, 1);
@@ -878,6 +949,9 @@ var Run = function (Glide, Core) {
 ;var Touch = function (Glide, Core) {
 
 
+	/**
+	 * Touch Module Constructor
+	 */
 	function Module() {
 
 		this.dragging = false;
@@ -892,6 +966,10 @@ var Run = function (Glide, Core) {
 
 	}
 
+
+	/**
+	 * Unbind touch events
+	 */
 	Module.prototype.unbind = function() {
 		Glide.slider
 			.unbind('touchstart.glide')
@@ -899,6 +977,11 @@ var Run = function (Glide, Core) {
 			.unbind('touchend.glide');
 	};
 
+
+	/**
+	 * Start touch event
+	 * @param  {Object} event
+	 */
 	Module.prototype.start = function(event) {
 
 		// Escape if events disabled
@@ -920,6 +1003,10 @@ var Run = function (Glide, Core) {
 	};
 
 
+	/**
+	 * Touch move event
+	 * @param  {Object} event
+	 */
 	Module.prototype.move = function(event) {
 
 		// Escape if events disabled
@@ -962,12 +1049,18 @@ var Run = function (Glide, Core) {
 	};
 
 
+	/**
+	 * Touch end event
+	 * @param  {Onject} event
+	 */
 	Module.prototype.end = function(event) {
 
-		// Escape if events disabled
+		// If events not disabled and still dragging
 		if (!Core.Events.disabled && this.dragging) {
 
+			// Unset dragging
 			this.dragging = false;
+			// Disable other events
 			Core.Events.disable();
 
 			// Cache event
@@ -984,7 +1077,9 @@ var Run = function (Glide, Core) {
 			// While swipe don't reach distance appy previous transform
 			else {
 
+				// If slider type is not slideshow
 				if (Glide.options.type !== 'slideshow') {
+					// Restore the starting position
 					Glide.wrapper.css({
 						transition: Core.Transition.get('all'),
 						transform: Core.Translate.set('x',
@@ -994,8 +1089,11 @@ var Run = function (Glide, Core) {
 
 			}
 
+			// After animation
 			Core.Animation.after(function(){
+				// Enable events
 				Core.Events.enable();
+				// If autoplay start auto run
 				if(Glide.options.autoplay) Core.Run.play();
 			});
 
@@ -1010,9 +1108,14 @@ var Run = function (Glide, Core) {
 };
 ;var Transition = function (Glide, Core) {
 
+
+	/**
+	 * Transition Module Constructor
+	 */
 	function Module() {
 		this.jumping = false;
 	}
+
 
 	/**
 	 * Get transition settings
@@ -1038,6 +1141,7 @@ var Run = function (Glide, Core) {
 	};
 
 
+	// @return Module
 	return new Module();
 
 
@@ -1045,6 +1149,9 @@ var Run = function (Glide, Core) {
 ;var Translate = function (Glide, Core) {
 
 
+	/**
+	 * Translate Module Constructor
+	 */
 	function Module() {
 
 		this.axes = {
@@ -1078,6 +1185,7 @@ var Run = function (Glide, Core) {
 	};
 
 
+	// @return Module
 	return new Module();
 
 
@@ -1131,7 +1239,9 @@ var Glide = function (element, options) {
 	this.current = parseInt(this.options.startAt);
 	this.element = element;
 
+	// Collect DOM
 	this.collect();
+	// Init values
 	this.init();
 
 	// Call before init callback
@@ -1164,6 +1274,10 @@ var Glide = function (element, options) {
 };
 
 
+/**
+ * Collect DOM
+ * and set classes
+ */
 Glide.prototype.collect = function() {
 	this.slider = this.element.addClass(this.options.classes.base + '--' + this.options.type);
 	this.wrapper = this.slider.children('.' + this.options.classes.wrapper);
@@ -1171,6 +1285,10 @@ Glide.prototype.collect = function() {
 };
 
 
+/**
+ * Init
+ * properties
+ */
 Glide.prototype.init = function() {
 	this.width = this.slider.width();
 	this.length = this.slides.length;

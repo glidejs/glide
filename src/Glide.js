@@ -47,7 +47,9 @@ var Glide = function (element, options) {
 	this.current = parseInt(this.options.startAt);
 	this.element = element;
 
+	// Collect DOM
 	this.collect();
+	// Init values
 	this.init();
 
 	// Call before init callback
@@ -80,6 +82,10 @@ var Glide = function (element, options) {
 };
 
 
+/**
+ * Collect DOM
+ * and set classes
+ */
 Glide.prototype.collect = function() {
 	this.slider = this.element.addClass(this.options.classes.base + '--' + this.options.type);
 	this.wrapper = this.slider.children('.' + this.options.classes.wrapper);
@@ -87,6 +93,10 @@ Glide.prototype.collect = function() {
 };
 
 
+/**
+ * Init
+ * properties
+ */
 Glide.prototype.init = function() {
 	this.width = this.slider.width();
 	this.length = this.slides.length;

@@ -9,6 +9,9 @@
 var Events = function (Glide, Core) {
 
 
+	/**
+	 * Events Module Constructor
+	 */
 	function Module() {
 		this.disabled = false;
 		this.keyboard();
@@ -17,6 +20,9 @@ var Events = function (Glide, Core) {
 	}
 
 
+	/**
+	 * Keyboard events
+	 */
 	Module.prototype.keyboard = function() {
 		if (Glide.options.keyboard) {
 			$(window).on('keyup.glide', function(event){
@@ -26,7 +32,9 @@ var Events = function (Glide, Core) {
 		}
 	};
 
-
+	/**
+	 * Hover pause event
+	 */
 	Module.prototype.hoverpause = function() {
 
 		if (Glide.options.hoverpause) {
@@ -44,7 +52,11 @@ var Events = function (Glide, Core) {
 	};
 
 
+	/**
+	 * Resize window event
+	 */
 	Module.prototype.resize = function() {
+
 		$(window).on('resize.glide', this.throttle(function() {
 			Core.Transition.jumping = true;
 			Core.Run.pause();
@@ -54,6 +66,7 @@ var Events = function (Glide, Core) {
 			Core.Run.play();
 			Core.Transition.jumping = false;
 		}, Glide.options.throttle));
+
 	};
 
 
@@ -154,6 +167,7 @@ var Events = function (Glide, Core) {
 	};
 
 
+	// @return Module
 	return new Module();
 
 };

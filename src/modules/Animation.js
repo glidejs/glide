@@ -50,8 +50,11 @@ var Animation = function (Glide, Core) {
 			'transform': Core.Translate.set('x', translate)
 		});
 
+		// If on start hide prev arrow
 		if (Glide.current === 1) Core.Arrows.hide('prev');
+		// If on end hide next arrow
 		else if (Glide.current === Glide.length) Core.Arrows.hide('next');
+		// Show arrows
 		else Core.Arrows.show();
 
 	};

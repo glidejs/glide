@@ -10,8 +10,8 @@
 var Core = function (Glide, Modules) {
 
 	/**
-	 * Construnct modules
-	 * and inject Glide and Core as dependency
+	 * Core Module Constructor
+	 * Construct modules and inject Glide and Core as dependency
 	 */
 	function Module() {
 

@@ -1,6 +1,9 @@
 var Translate = function (Glide, Core) {
 
 
+	/**
+	 * Translate Module Constructor
+	 */
 	function Module() {
 
 		this.axes = {
@@ -34,6 +37,7 @@ var Translate = function (Glide, Core) {
 	};
 
 
+	// @return Module
 	return new Module();
 
 

@@ -10,26 +10,42 @@
 
 var Build = function (Glide, Core) {
 
+
+	// Build Module Constructor
 	function Module() {
-		this.clones = [];
 		this.init();
 	}
 
 
+	/**
+	 * Init slider build
+	 * @return {[type]} [description]
+	 */
 	Module.prototype.init = function() {
+		// Build proper slider type
 		this[Glide.options.type]();
+		// Set slide active class
 		this.active();
+		// Set bullet active class
 		Core.Bullets.active();
 	};
 
 
+	/**
+	 * Remove slides
+	 * clones
+	 */
 	Module.prototype.removeClones = function() {
 		return Glide.wrapper.find('.clone').remove();
 	};
 
 
+	/**
+	 * Build Slider type
+	 */
 	Module.prototype.slider = function() {
 
+		// Hide next/prev arrow when on the end/start
 		if (Glide.current === Glide.length) Core.Arrows.hide('next');
 		if (Glide.current === 1) Core.Arrows.hide('prev');
 
@@ -43,10 +59,16 @@ var Build = function (Glide, Core) {
 	};
 
 
+	/**
+	 * Build Carousel type
+	 * @return {[type]} [description]
+	 */
 	Module.prototype.carousel = function() {
 
+		// Clone first slide
 		var firstClone = Glide.slides.filter(':first-child')
 			.clone().addClass('clone');
+		// Clone last slide
 		var lastClone = Glide.slides.filter(':last-child')
 			.clone().addClass('clone');
 
@@ -63,6 +85,10 @@ var Build = function (Glide, Core) {
 	};
 
 
+	/**
+	 * Build Slideshow type
+	 * @return {[type]} [description]
+	 */
 	Module.prototype.slideshow = function () {
 
 		Glide.slides.eq(Glide.current - 1)
@@ -75,6 +101,10 @@ var Build = function (Glide, Core) {
 	};
 
 
+	/**
+	 * Set active class
+	 * to current slide
+	 */
 	Module.prototype.active = function () {
 
 		Glide.slides
@@ -83,6 +113,8 @@ var Build = function (Glide, Core) {
 
 	};
 
+
+	// @return Module
 	return new Module();
 
 };

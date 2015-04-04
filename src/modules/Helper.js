@@ -8,7 +8,12 @@
 
 var Helper = function (Glide, Core) {
 
+
+	/**
+	 * Helper Module Constructor
+	 */
 	function Module() {}
+
 
 	/**
 	 * Capitalise string
@@ -19,6 +24,9 @@ var Helper = function (Glide, Core) {
 		return s.charAt(0).toUpperCase() + s.slice(1);
 	};
 
+
+	// @return Module
 	return new Module();
+
 
 };

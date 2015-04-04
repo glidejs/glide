@@ -1,6 +1,9 @@
 var Touch = function (Glide, Core) {
 
 
+	/**
+	 * Touch Module Constructor
+	 */
 	function Module() {
 
 		this.dragging = false;
@@ -15,6 +18,10 @@ var Touch = function (Glide, Core) {
 
 	}
 
+
+	/**
+	 * Unbind touch events
+	 */
 	Module.prototype.unbind = function() {
 		Glide.slider
 			.unbind('touchstart.glide')
@@ -22,6 +29,11 @@ var Touch = function (Glide, Core) {
 			.unbind('touchend.glide');
 	};
 
+
+	/**
+	 * Start touch event
+	 * @param  {Object} event
+	 */
 	Module.prototype.start = function(event) {
 
 		// Escape if events disabled
@@ -43,6 +55,10 @@ var Touch = function (Glide, Core) {
 	};
 
 
+	/**
+	 * Touch move event
+	 * @param  {Object} event
+	 */
 	Module.prototype.move = function(event) {
 
 		// Escape if events disabled
@@ -85,12 +101,18 @@ var Touch = function (Glide, Core) {
 	};
 
 
+	/**
+	 * Touch end event
+	 * @param  {Onject} event
+	 */
 	Module.prototype.end = function(event) {
 
-		// Escape if events disabled
+		// If events not disabled and still dragging
 		if (!Core.Events.disabled && this.dragging) {
 
+			// Unset dragging
 			this.dragging = false;
+			// Disable other events
 			Core.Events.disable();
 
 			// Cache event
@@ -107,7 +129,9 @@ var Touch = function (Glide, Core) {
 			// While swipe don't reach distance appy previous transform
 			else {
 
+				// If slider type is not slideshow
 				if (Glide.options.type !== 'slideshow') {
+					// Restore the starting position
 					Glide.wrapper.css({
 						transition: Core.Transition.get('all'),
 						transform: Core.Translate.set('x',
@@ -117,8 +141,11 @@ var Touch = function (Glide, Core) {
 
 			}
 
+			// After animation
 			Core.Animation.after(function(){
+				// Enable events
 				Core.Events.enable();
+				// If autoplay start auto run
 				if(Glide.options.autoplay) Core.Run.play();
 			});
 

@@ -9,11 +9,12 @@
 var Arrows = function (Glide, Core) {
 
 
+	/**
+	 * Arrows Module Constructor
+	 */
 	function Module() {
-
 		this.build();
 		this.bind();
-
 	}
 
 
@@ -76,6 +77,8 @@ var Arrows = function (Glide, Core) {
 		return this.items.unbind('click.glide touchstart.glide');
 	};
 
+
+	// @return Module
 	return new Module();
 
 };

@@ -8,12 +8,15 @@
 
 var Bullets = function (Glide, Core) {
 
-	function Module() {
 
+	/**
+	 * Bullets Module Constructor
+	 */
+	function Module() {
 		this.build();
 		this.bind();
-
 	}
+
 
 	/**
 	 * Build
@@ -69,6 +72,7 @@ var Bullets = function (Glide, Core) {
 	};
 
 
+	// @return Module
 	return new Module();
 
 };

@@ -2,8 +2,11 @@
 
 [Glide.js](http://glide.jedrzejchalubek.com/) is responsive and touch-friendly jQuery slider. Based on CSS3 transitions. It's simple, lightweight and fast. Designed to slide, no less, no more.
 
+##Announcement
+Plugin in version relases `2.*.*` and `1.*.*` are NOT compatible. Big changes are made, so read documentation before upgrade.
+
 ##Documentation
-Available at: https://glide.jedrzejchalubek/documentation/
+Available at: http://glide.jedrzejchalubek.com/documentation/
 
 ##Building
 Build using Grunt and Bower. The following tasks are available:
@@ -16,7 +19,7 @@ Build using Grunt and Bower. The following tasks are available:
 - MOOOAR TESTS!!!1one
 - Optimizations in touch module
 - Better comments
-...
+- ...
 
 ##Changelog
 `2.0.0` / `10.04.2015`

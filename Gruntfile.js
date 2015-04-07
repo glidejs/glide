@@ -175,4 +175,9 @@ module.exports = function(grunt){
 		'concat', 'uglify',
 	]);
 
+	grunt.registerTask('test', [
+		'jshint',
+		'jasmine'
+	]);
+
 };

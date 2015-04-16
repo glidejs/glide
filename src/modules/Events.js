@@ -17,6 +17,7 @@ var Events = function (Glide, Core) {
 		this.keyboard();
 		this.hoverpause();
 		this.resize();
+		this.triggers();
 	}
 
 
@@ -71,6 +72,25 @@ var Events = function (Glide, Core) {
 
 
 	/**
+	 * Triggers event
+	 */
+	Module.prototype.triggers = function() {
+
+		this.triggers = Glide.slider.find('[data-glide-trigger]');
+
+		if (this.triggers.length) {
+
+			this.triggers.on('click.glide', function(event) {
+				event.preventDefault();
+				if (!Core.Events.disabled) Core.Run.make($(this).data('glide-dir'));
+			});
+
+		}
+
+	};
+
+
+	/**
 	 * Disable all events
 	 * @return {Glide.Events}
 	 */
@@ -106,12 +126,15 @@ var Events = function (Glide, Core) {
 	 * @param {Function} func
 	 * @return {Glide.Events}
 	 */
-	Module.prototype.unbind = function (func) {
+	Module.prototype.unbind = function () {
 
 		Glide.slider
 			.unbind('keyup.glide')
 			.unbind('mouseover.glide')
 			.unbind('mouseout.glide');
+
+		this.triggers
+			.unbind('click.glide');
 
 		$(window)
 			.unbind('keyup.glide')

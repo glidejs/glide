@@ -24,7 +24,7 @@ var Glide = function (element, options) {
 		touchDistance: 60,
 		animationDuration: 300,
 		animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
-		throttle: 29.97,
+		throttle: 30,
 		classes: {
 			base: 'glide',
 			wrapper: 'glide__wrapper',

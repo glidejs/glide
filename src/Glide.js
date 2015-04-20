@@ -16,7 +16,7 @@ var Glide = function (element, options) {
 	 * @type {Object}
 	 */
 	var defaults = {
-		autoplay: 2000,
+		autoplay: 4000,
 		type: 'carousel',
 		startAt: 1,
 		hoverpause: true,

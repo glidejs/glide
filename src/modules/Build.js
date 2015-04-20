@@ -92,10 +92,7 @@ var Build = function (Glide, Core) {
 	Module.prototype.slideshow = function () {
 
 		Glide.slides.eq(Glide.current - 1)
-			.css({
-				'opacity': 1,
-				'z-index': 1
-			})
+			.css('opacity', 1 )
 			.siblings().css('opacity', 0);
 
 	};

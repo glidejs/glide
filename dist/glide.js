@@ -157,11 +157,9 @@ var Animation = function (Glide, Core) {
 	 */
 	Module.prototype.slideshow = function (direction) {
 
-		Glide.slides.css({
-			'transition': Core.Transition.get('opacity'),
-		}).eq(Glide.current - 1).css({
-			'opacity': '1'
-		}).siblings().css('opacity', 0);
+		Glide.slides.css('transition', Core.Transition.get('opacity'))
+			.eq(Glide.current - 1).css('opacity', '1')
+			.siblings().css('opacity', 0);
 
 	};
 
@@ -480,10 +478,7 @@ var Build = function (Glide, Core) {
 	Module.prototype.slideshow = function () {
 
 		Glide.slides.eq(Glide.current - 1)
-			.css({
-				'opacity': 1,
-				'z-index': 1
-			})
+			.css('opacity', 1 )
 			.siblings().css('opacity', 0);
 
 	};
@@ -1231,7 +1226,7 @@ var Glide = function (element, options) {
 	 * @type {Object}
 	 */
 	var defaults = {
-		autoplay: 2000,
+		autoplay: 4000,
 		type: 'carousel',
 		startAt: 1,
 		hoverpause: true,

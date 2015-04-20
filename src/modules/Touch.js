@@ -9,10 +9,10 @@ var Touch = function (Glide, Core) {
 		this.dragging = false;
 
 		if (Glide.options.touchDistance) {
-			Glide.slider.on({
-				'touchstart.glide': Core.Events.throttle(this.start, Glide.options.throttle),
-				'touchmove.glide': Core.Events.throttle(this.move, Glide.options.throttle),
-				'touchend.glide': Core.Events.throttle(this.end, Glide.options.throttle)
+			Glide.wrapper.on({
+				'touchstart.glide mousedown.glide': Core.Events.throttle(this.start, Glide.options.throttle),
+				'touchmove.glide mousemove.glide': Core.Events.throttle(this.move, Glide.options.throttle),
+				'touchend.glide mouseup.glide': Core.Events.throttle(this.end, Glide.options.throttle)
 			});
 		}
 
@@ -24,9 +24,9 @@ var Touch = function (Glide, Core) {
 	 */
 	Module.prototype.unbind = function() {
 		Glide.slider
-			.unbind('touchstart.glide')
-			.unbind('touchmove.glide')
-			.unbind('touchend.glide');
+			.unbind('touchstart.glide mousedown.glide')
+			.unbind('touchmove.glide mousemove.glide')
+			.unbind('touchend.glide mouseup.glide');
 	};
 
 
@@ -39,8 +39,11 @@ var Touch = function (Glide, Core) {
 		// Escape if events disabled
 		if (!Core.Events.disabled && !this.dragging) {
 
+			var touch;
+
 			// Cache event
-			var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+			if (event.type === 'mousedown') touch = event.originalEvent;
+			else touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
 
 			// Get touch start points
 			this.touchStartX = parseInt(touch.pageX);
@@ -66,8 +69,11 @@ var Touch = function (Glide, Core) {
 
 			if(Glide.options.autoplay) Core.Run.pause();
 
+			var touch;
+
 			// Cache event
-			var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+			if (event.type === 'mousemove') touch = event.originalEvent;
+			else touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
 
 			// Calculate start, end points
 			var subExSx = parseInt(touch.pageX) - this.touchStartX;
@@ -115,8 +121,12 @@ var Touch = function (Glide, Core) {
 			// Disable other events
 			Core.Events.disable();
 
+			var touch;
+
 			// Cache event
-			var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+			if (event.type === 'mouseup') touch = event.originalEvent;
+			else touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+
 			// Calculate touch distance
 			var touchDistance = touch.pageX - this.touchStartX;
 			// Calculate degree

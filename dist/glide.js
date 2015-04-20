@@ -399,6 +399,7 @@ var Build = function (Glide, Core) {
 
 	// Build Module Constructor
 	function Module() {
+		this.clones = [];
 		this.init();
 	}
 
@@ -452,15 +453,15 @@ var Build = function (Glide, Core) {
 	Module.prototype.carousel = function() {
 
 		// Clone first slide
-		var firstClone = Glide.slides.filter(':first-child')
+		this.clones[0] = Glide.slides.filter(':first-child')
 			.clone().addClass('clone');
 		// Clone last slide
-		var lastClone = Glide.slides.filter(':last-child')
+		this.clones[1] = Glide.slides.filter(':last-child')
 			.clone().addClass('clone');
 
 		Glide.wrapper
-			.append(firstClone.width(Glide.width))
-			.prepend(lastClone.width(Glide.width))
+			.append(this.clones[0].width(Glide.width))
+			.prepend(this.clones[1].width(Glide.width))
 			.css({
 				'width': (Glide.width * Glide.length) + (Glide.width * 2),
 				'transform': Core.Translate.set('x', Glide.width * Glide.current),
@@ -975,10 +976,10 @@ var Run = function (Glide, Core) {
 		this.dragging = false;
 
 		if (Glide.options.touchDistance) {
-			Glide.slider.on({
-				'touchstart.glide': Core.Events.throttle(this.start, Glide.options.throttle),
-				'touchmove.glide': Core.Events.throttle(this.move, Glide.options.throttle),
-				'touchend.glide': Core.Events.throttle(this.end, Glide.options.throttle)
+			Glide.wrapper.on({
+				'touchstart.glide mousedown.glide': Core.Events.throttle(this.start, Glide.options.throttle),
+				'touchmove.glide mousemove.glide': Core.Events.throttle(this.move, Glide.options.throttle),
+				'touchend.glide mouseup.glide': Core.Events.throttle(this.end, Glide.options.throttle)
 			});
 		}
 
@@ -990,9 +991,9 @@ var Run = function (Glide, Core) {
 	 */
 	Module.prototype.unbind = function() {
 		Glide.slider
-			.unbind('touchstart.glide')
-			.unbind('touchmove.glide')
-			.unbind('touchend.glide');
+			.unbind('touchstart.glide mousedown.glide')
+			.unbind('touchmove.glide mousemove.glide')
+			.unbind('touchend.glide mouseup.glide');
 	};
 
 
@@ -1005,8 +1006,11 @@ var Run = function (Glide, Core) {
 		// Escape if events disabled
 		if (!Core.Events.disabled && !this.dragging) {
 
+			var touch;
+
 			// Cache event
-			var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+			if (event.type === 'mousedown') touch = event.originalEvent;
+			else touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
 
 			// Get touch start points
 			this.touchStartX = parseInt(touch.pageX);
@@ -1032,8 +1036,11 @@ var Run = function (Glide, Core) {
 
 			if(Glide.options.autoplay) Core.Run.pause();
 
+			var touch;
+
 			// Cache event
-			var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+			if (event.type === 'mousemove') touch = event.originalEvent;
+			else touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
 
 			// Calculate start, end points
 			var subExSx = parseInt(touch.pageX) - this.touchStartX;
@@ -1081,8 +1088,12 @@ var Run = function (Glide, Core) {
 			// Disable other events
 			Core.Events.disable();
 
+			var touch;
+
 			// Cache event
-			var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+			if (event.type === 'mouseup') touch = event.originalEvent;
+			else touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+
 			// Calculate touch distance
 			var touchDistance = touch.pageX - this.touchStartX;
 			// Calculate degree
@@ -1231,10 +1242,10 @@ var Glide = function (element, options) {
 		startAt: 1,
 		hoverpause: true,
 		keyboard: true,
-		touchDistance: 60,
-		animationDuration: 300,
+		touchDistance: 80,
+		animationDuration: 400,
 		animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
-		throttle: 30,
+		throttle: 16,
 		classes: {
 			base: 'glide',
 			wrapper: 'glide__wrapper',

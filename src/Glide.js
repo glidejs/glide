@@ -21,10 +21,10 @@ var Glide = function (element, options) {
 		startAt: 1,
 		hoverpause: true,
 		keyboard: true,
-		touchDistance: 60,
-		animationDuration: 300,
+		touchDistance: 80,
+		animationDuration: 400,
 		animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
-		throttle: 30,
+		throttle: 16,
 		classes: {
 			base: 'glide',
 			wrapper: 'glide__wrapper',

@@ -8,6 +8,9 @@ Plugin in version releases `2.*.*` and `1.*.*` are NOT compatible. Big changes a
 ##Documentation
 Available at: http://glide.jedrzejchalubek.com/documentation/
 
+##Contributing
+The issue channel is especially for improvement proposals and bug reporting. If you have implementing problems, please write on StackOverflow with [glidejs](http://stackoverflow.com/questions/tagged/glidejs) tag.
+
 ##Building
 Build using Grunt and Bower. The following tasks are available:
 - `default` Compiles script and styles into `/dist` folder

@@ -9,11 +9,13 @@ var Touch = function (Glide, Core) {
 		this.dragging = false;
 
 		if (Glide.options.touchDistance) {
-			Glide.wrapper.on({
+
+			Glide.slider.on({
 				'touchstart.glide mousedown.glide': Core.Events.throttle(this.start, Glide.options.throttle),
 				'touchmove.glide mousemove.glide': Core.Events.throttle(this.move, Glide.options.throttle),
-				'touchend.glide mouseup.glide mouseleave.gilde': Core.Events.throttle(this.end, Glide.options.throttle)
+				'touchend.glide mouseup.glide mouseleave': Core.Events.throttle(this.end, Glide.options.throttle)
 			});
+
 		}
 
 	}

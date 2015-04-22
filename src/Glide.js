@@ -50,7 +50,7 @@ var Glide = function (element, options) {
 	// Collect DOM
 	this.collect();
 	// Init values
-	this.init();
+	this.setup();
 
 	// Call before init callback
 	this.options.beforeInit(this.slider);
@@ -59,7 +59,7 @@ var Glide = function (element, options) {
 	 * Construct Core with modules
 	 * @type {Core}
 	 */
-	var core = new Core(this, {
+	var Engine = new Core(this, {
 		Helper: Helper,
 		Translate: Translate,
 		Transition: Transition,
@@ -77,7 +77,7 @@ var Glide = function (element, options) {
 	this.options.afterInit(this.slider);
 
 	// api return
-	return core.Api.instance();
+	return Engine.Api.instance();
 
 };
 
@@ -94,10 +94,10 @@ Glide.prototype.collect = function() {
 
 
 /**
- * Init
+ * Setup
  * properties
  */
-Glide.prototype.init = function() {
+Glide.prototype.setup = function() {
 	this.width = this.slider.width();
 	this.length = this.slides.length;
 };

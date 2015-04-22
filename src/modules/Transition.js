@@ -15,11 +15,10 @@ var Transition = function (Glide, Core) {
 	 * @return {string}
 	 */
 	Module.prototype.get = function(property) {
-		if (!this.jumping) {
-			return property + ' ' + Glide.options.animationDuration + 'ms ' + Glide.options.animationTimingFunc;
-		} else {
-			return this.clear();
-		}
+
+		if (!this.jumping) return property + ' ' + Glide.options.animationDuration + 'ms ' + Glide.options.animationTimingFunc;
+		else return this.clear();
+
 	};
 
 

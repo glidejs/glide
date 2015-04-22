@@ -118,7 +118,7 @@ var Api = function (Glide, Core) {
 			refresh: function() {
 				Core.Build.removeClones();
 				Glide.collect();
-				Glide.init();
+				Glide.setup();
 				Core.Build.init();
 			},
 

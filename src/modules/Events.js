@@ -61,7 +61,7 @@ var Events = function (Glide, Core) {
 		$(window).on('resize.glide', this.throttle(function() {
 			Core.Transition.jumping = true;
 			Core.Run.pause();
-			Glide.init();
+			Glide.setup();
 			Core.Build.init();
 			Core.Run.make('=' + Glide.current);
 			Core.Run.play();

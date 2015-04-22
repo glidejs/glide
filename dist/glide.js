@@ -286,7 +286,7 @@ var Api = function (Glide, Core) {
 			refresh: function() {
 				Core.Build.removeClones();
 				Glide.collect();
-				Glide.init();
+				Glide.setup();
 				Core.Build.init();
 			},
 
@@ -670,7 +670,7 @@ var Events = function (Glide, Core) {
 		$(window).on('resize.glide', this.throttle(function() {
 			Core.Transition.jumping = true;
 			Core.Run.pause();
-			Glide.init();
+			Glide.setup();
 			Core.Build.init();
 			Core.Run.make('=' + Glide.current);
 			Core.Run.play();
@@ -847,7 +847,8 @@ var Run = function (Glide, Core) {
 
 
 	/**
-	 * Run Module Constructor
+	 * Run Module
+	 * Constructor
 	 */
 	function Module() {
 		this.running = false;
@@ -1152,11 +1153,10 @@ var Run = function (Glide, Core) {
 	 * @return {string}
 	 */
 	Module.prototype.get = function(property) {
-		if (!this.jumping) {
-			return property + ' ' + Glide.options.animationDuration + 'ms ' + Glide.options.animationTimingFunc;
-		} else {
-			return this.clear();
-		}
+
+		if (!this.jumping) return property + ' ' + Glide.options.animationDuration + 'ms ' + Glide.options.animationTimingFunc;
+		else return this.clear();
+
 	};
 
 
@@ -1271,7 +1271,7 @@ var Glide = function (element, options) {
 	// Collect DOM
 	this.collect();
 	// Init values
-	this.init();
+	this.setup();
 
 	// Call before init callback
 	this.options.beforeInit(this.slider);
@@ -1280,7 +1280,7 @@ var Glide = function (element, options) {
 	 * Construct Core with modules
 	 * @type {Core}
 	 */
-	var core = new Core(this, {
+	var Engine = new Core(this, {
 		Helper: Helper,
 		Translate: Translate,
 		Transition: Transition,
@@ -1298,7 +1298,7 @@ var Glide = function (element, options) {
 	this.options.afterInit(this.slider);
 
 	// api return
-	return core.Api.instance();
+	return Engine.Api.instance();
 
 };
 
@@ -1315,10 +1315,10 @@ Glide.prototype.collect = function() {
 
 
 /**
- * Init
+ * Setup
  * properties
  */
-Glide.prototype.init = function() {
+Glide.prototype.setup = function() {
 	this.width = this.slider.width();
 	this.length = this.slides.length;
 };

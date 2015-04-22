@@ -10,7 +10,8 @@ var Run = function (Glide, Core) {
 
 
 	/**
-	 * Run Module Constructor
+	 * Run Module
+	 * Constructor
 	 */
 	function Module() {
 		this.running = false;

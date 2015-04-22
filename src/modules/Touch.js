@@ -10,10 +10,10 @@ var Touch = function (Glide, Core) {
 
 		if (Glide.options.touchDistance) {
 
-			Glide.slider.on({
+			Glide.wrapper.on({
 				'touchstart.glide mousedown.glide': Core.Events.throttle(this.start, Glide.options.throttle),
 				'touchmove.glide mousemove.glide': Core.Events.throttle(this.move, Glide.options.throttle),
-				'touchend.glide mouseup.glide mouseleave': Core.Events.throttle(this.end, Glide.options.throttle)
+				'touchend.glide mouseup.glide': Core.Events.throttle(this.end, Glide.options.throttle)
 			});
 
 		}

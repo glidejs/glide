@@ -88,9 +88,15 @@ var Glide = function (element, options) {
  * and set classes
  */
 Glide.prototype.collect = function() {
+
 	this.slider = this.element.addClass(this.options.classes.base + '--' + this.options.type);
 	this.wrapper = this.slider.children('.' + this.options.classes.wrapper);
 	this.slides = this.wrapper.children('.' + this.options.classes.slide);
+
+	this.clones = [];
+	this.clones[0] = this.slides.filter(':first-child').clone().addClass('clone');
+	this.clones[1] = this.slides.filter(':last-child').clone().addClass('clone');
+
 };
 
 

@@ -96,7 +96,7 @@ var Touch = function (Glide, Core) {
 
 			if (Glide.options.type !== 'slideshow') {
 				Glide.wrapper[0].style.transition = '';
-				Glide.wrapper[0].style.transform = Core.Translate.set('x', (Glide.width * (Glide.current - 1 + Core.Build.clones.length/2)) - subExSx/2);
+				Glide.wrapper[0].style.transform = Core.Translate.set('x', (Glide.width * (Glide.current - 1 + Glide.clones.length/2)) - subExSx/2);
 			}
 
 		}
@@ -142,7 +142,7 @@ var Touch = function (Glide, Core) {
 				if (Glide.options.type !== 'slideshow') {
 					// Restore the starting position
 					Glide.wrapper[0].style.transition = Core.Transition.get('all');
-					Glide.wrapper[0].style.transform = Core.Translate.set('x', (Glide.width * (Glide.current - 1 + Core.Build.clones.length/2)));
+					Glide.wrapper[0].style.transform = Core.Translate.set('x', (Glide.width * (Glide.current - 1 + Glide.clones.length/2)));
 				}
 
 			}

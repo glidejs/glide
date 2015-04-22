@@ -399,7 +399,6 @@ var Build = function (Glide, Core) {
 
 	// Build Module Constructor
 	function Module() {
-		this.clones = [];
 		this.init();
 	}
 
@@ -452,16 +451,9 @@ var Build = function (Glide, Core) {
 	 */
 	Module.prototype.carousel = function() {
 
-		// Clone first slide
-		this.clones[0] = Glide.slides.filter(':first-child')
-			.clone().addClass('clone');
-		// Clone last slide
-		this.clones[1] = Glide.slides.filter(':last-child')
-			.clone().addClass('clone');
-
 		Glide.wrapper
-			.append(this.clones[0].width(Glide.width))
-			.prepend(this.clones[1].width(Glide.width))
+			.append(Glide.clones[0].width(Glide.width))
+			.prepend(Glide.clones[1].width(Glide.width))
 			.css({
 				'width': (Glide.width * Glide.length) + (Glide.width * 2),
 				'transform': Core.Translate.set('x', Glide.width * Glide.current),
@@ -667,7 +659,7 @@ var Events = function (Glide, Core) {
 	 */
 	Module.prototype.resize = function() {
 
-		$(window).on('resize.glide', this.throttle(function() {
+		$(window).on('resize', this.throttle(function() {
 			Core.Transition.jumping = true;
 			Core.Run.pause();
 			Glide.setup();
@@ -1075,7 +1067,7 @@ var Run = function (Glide, Core) {
 
 			if (Glide.options.type !== 'slideshow') {
 				Glide.wrapper[0].style.transition = '';
-				Glide.wrapper[0].style.transform = Core.Translate.set('x', (Glide.width * (Glide.current - 1 + Core.Build.clones.length/2)) - subExSx/2);
+				Glide.wrapper[0].style.transform = Core.Translate.set('x', (Glide.width * (Glide.current - 1 + Glide.clones.length/2)) - subExSx/2);
 			}
 
 		}
@@ -1121,7 +1113,7 @@ var Run = function (Glide, Core) {
 				if (Glide.options.type !== 'slideshow') {
 					// Restore the starting position
 					Glide.wrapper[0].style.transition = Core.Transition.get('all');
-					Glide.wrapper[0].style.transform = Core.Translate.set('x', (Glide.width * (Glide.current - 1 + Core.Build.clones.length/2)));
+					Glide.wrapper[0].style.transform = Core.Translate.set('x', (Glide.width * (Glide.current - 1 + Glide.clones.length/2)));
 				}
 
 			}
@@ -1316,9 +1308,15 @@ var Glide = function (element, options) {
  * and set classes
  */
 Glide.prototype.collect = function() {
+
 	this.slider = this.element.addClass(this.options.classes.base + '--' + this.options.type);
 	this.wrapper = this.slider.children('.' + this.options.classes.wrapper);
 	this.slides = this.wrapper.children('.' + this.options.classes.slide);
+
+	this.clones = [];
+	this.clones[0] = this.slides.filter(':first-child').clone().addClass('clone');
+	this.clones[1] = this.slides.filter(':last-child').clone().addClass('clone');
+
 };
 
 

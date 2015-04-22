@@ -13,7 +13,6 @@ var Build = function (Glide, Core) {
 
 	// Build Module Constructor
 	function Module() {
-		this.clones = [];
 		this.init();
 	}
 
@@ -66,16 +65,9 @@ var Build = function (Glide, Core) {
 	 */
 	Module.prototype.carousel = function() {
 
-		// Clone first slide
-		this.clones[0] = Glide.slides.filter(':first-child')
-			.clone().addClass('clone');
-		// Clone last slide
-		this.clones[1] = Glide.slides.filter(':last-child')
-			.clone().addClass('clone');
-
 		Glide.wrapper
-			.append(this.clones[0].width(Glide.width))
-			.prepend(this.clones[1].width(Glide.width))
+			.append(Glide.clones[0].width(Glide.width))
+			.prepend(Glide.clones[1].width(Glide.width))
 			.css({
 				'width': (Glide.width * Glide.length) + (Glide.width * 2),
 				'transform': Core.Translate.set('x', Glide.width * Glide.current),

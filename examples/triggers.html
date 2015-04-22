@@ -15,20 +15,30 @@
 				margin: 0;
 				border: 0;
 			}
+
 			.box {
 				width: 100%;
 				height: 100%;
+			}
+
+			.custom-triggers {
+				width: 100%;
+				height: 100px;
+			}
+
+			.custom-triggers > div {
+				margin-top: 9px;
+				width: 33.333%;
+				height: 100%;
+				float: left;
+				clear: none;
+				cursor: pointer;
 			}
 		</style>
 	</head>
 	<body>
 
 		<div id="Glide" class="glide">
-
-			<div class="glide__arrows">
-				<span class="glide__arrow prev" data-glide-dir="<">prev</span>
-				<span class="glide__arrow next" data-glide-dir=">">next</span>
-			</div>
 
 			<ul class="glide__wrapper">
 				<li class="glide__slide">
@@ -42,8 +52,18 @@
 				</li>
 			</ul>
 
-			<ul class="glide__bullets"></div>
+		</div>
 
+		<div class="custom-triggers">
+			<div data-glide-trigger="#Glide" data-glide-dir="=1">
+				<div class="box" style="background-color: red;"></div>
+			</div>
+			<div data-glide-trigger="#Glide" data-glide-dir="=2">
+				<div class="box" style="background-color: blue;"></div>
+			</div>
+			<div data-glide-trigger="#Glide" data-glide-dir="=3">
+				<div class="box" style="background-color: purple;"></div>
+			</div>
 		</div>
 
 		<script src="../bower_components/jquery/dist/jquery.js"></script>

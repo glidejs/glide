@@ -76,13 +76,24 @@ var Events = function (Glide, Core) {
 	 */
 	Module.prototype.triggers = function() {
 
-		this.triggers = Glide.slider.find('[data-glide-trigger]');
+		this.triggers = $('[data-glide-trigger]');
 
 		if (this.triggers.length) {
 
 			this.triggers.on('click.glide', function(event) {
+
 				event.preventDefault();
-				if (!Core.Events.disabled) Core.Run.make($(this).data('glide-dir'));
+
+				if (!Core.Events.disabled) {
+
+					var target = $($(this).data('glide-trigger')).data('glide_api');
+
+					target.pause();
+					target.go($(this).data('glide-dir'));
+					target.play();
+
+				}
+
 			});
 
 		}

@@ -20,7 +20,7 @@ var Translate = function (Glide, Core) {
 	 * @return {string}
 	 */
 	Module.prototype.get = function() {
-		var matrix = Glide.wrapper.css('transform').replace(/[^0-9\-.,]/g, '').split(',');
+		var matrix = Glide.wrapper[0].styles.transform.replace(/[^0-9\-.,]/g, '').split(',');
 		return parseInt(matrix[12] || matrix[4]);
 	};
 

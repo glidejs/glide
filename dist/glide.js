@@ -980,7 +980,7 @@ var Run = function (Glide, Core) {
 			Glide.wrapper.on({
 				'touchstart.glide mousedown.glide': Core.Events.throttle(this.start, Glide.options.throttle),
 				'touchmove.glide mousemove.glide': Core.Events.throttle(this.move, Glide.options.throttle),
-				'touchend.glide mouseup.glide': Core.Events.throttle(this.end, Glide.options.throttle)
+				'touchend.glide mouseup.glide mouseleave.gilde': Core.Events.throttle(this.end, Glide.options.throttle)
 			});
 		}
 
@@ -1017,8 +1017,6 @@ var Run = function (Glide, Core) {
 			this.touchStartX = parseInt(touch.pageX);
 			this.touchStartY = parseInt(touch.pageY);
 			this.touchSin = null;
-			this.translate = Core.Translate.get();
-
 			this.dragging = true;
 
 		}
@@ -1035,7 +1033,10 @@ var Run = function (Glide, Core) {
 		// Escape if events disabled
 		if (!Core.Events.disabled && this.dragging) {
 
+			// Pause if autoplay
 			if(Glide.options.autoplay) Core.Run.pause();
+			// Add dragging class
+			Glide.wrapper.addClass(Glide.options.classes.dragging);
 
 			var touch;
 
@@ -1062,12 +1063,8 @@ var Run = function (Glide, Core) {
 			else return;
 
 			if (Glide.options.type !== 'slideshow') {
-				// Move slider with swipe distance
-				Glide.wrapper.css({
-					transform: Core.Translate.set('x',
-						(Glide.width * (Glide.current - 1 + Core.Build.clones.length/2)) - subExSx/2
-					)
-				});
+				Glide.wrapper[0].style.transition = '';
+				Glide.wrapper[0].style.transform = Core.Translate.set('x', (Glide.width * (Glide.current - 1 + Core.Build.clones.length/2)) - subExSx/2);
 			}
 
 		}
@@ -1088,11 +1085,13 @@ var Run = function (Glide, Core) {
 			this.dragging = false;
 			// Disable other events
 			Core.Events.disable();
+			// Remove dragging class
+			Glide.wrapper.removeClass(Glide.options.classes.dragging);
 
 			var touch;
 
 			// Cache event
-			if (event.type === 'mouseup') touch = event.originalEvent;
+			if (event.type === 'mouseup' || event.type === 'mouseleave') touch = event.originalEvent;
 			else touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
 
 			// Calculate touch distance
@@ -1110,11 +1109,8 @@ var Run = function (Glide, Core) {
 				// If slider type is not slideshow
 				if (Glide.options.type !== 'slideshow') {
 					// Restore the starting position
-					Glide.wrapper.css({
-						transition: Core.Transition.get('all'),
-						transform: Core.Translate.set('x',
-							(Glide.width * (Glide.current - 1 + Core.Build.clones.length/2)))
-					});
+					Glide.wrapper[0].style.transition = Core.Transition.get('all');
+					Glide.wrapper[0].style.transform = Core.Translate.set('x', (Glide.width * (Glide.current - 1 + Core.Build.clones.length/2)));
 				}
 
 			}
@@ -1255,7 +1251,8 @@ var Glide = function (element, options) {
 			arrowNext: 'next',
 			arrowPrev: 'prev',
 			bullets: 'glide__bullets',
-			bullet: 'glide__bullet'
+			bullet: 'glide__bullet',
+			dragging: 'dragging'
 		},
 		beforeInit: function(el) {},
 		afterInit: function(el) {},

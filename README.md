@@ -20,7 +20,6 @@ Build using Grunt and Bower. The following tasks are available:
 
 ##TODO
 - MOOOAR TESTS!!!1one
-- Optimizations in touch module
 - Better comments
 - ...
 

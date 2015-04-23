@@ -1,6 +1,8 @@
-#[![glide.js](http://glide.jedrzejchalubek.com/images/slide-glide-github.png)](http://glide.jedrzejchalubek.com)
+#[![glide.js](http://glide.jedrzejchalubek.com/images/glidejs-logotype-black.svg)](http://glide.jedrzejchalubek.com)
 
-[Glide.js](http://glide.jedrzejchalubek.com/) is responsive and touch-friendly jQuery slider. Based on CSS3 transitions. It's simple, lightweight and fast. Designed to slide, no less, no more.
+[Glide.js](http://glide.jedrzejchalubek.com) is responsive and touch-friendly jQuery slider. Based on CSS3 transitions. It's simple, lightweight and fast. Designed to slide, no less, no more.
+
+[![Build Status](https://travis-ci.org/jedrzejchalubek/Glide.js.svg?branch=master)](https://travis-ci.org/jedrzejchalubek/Glide.js)
 
 ##Announcement
 Plugin in version releases `2.*.*` and `1.*.*` are NOT compatible. Big changes are made, so read documentation before upgrade.
@@ -20,6 +22,7 @@ Build using Grunt and Bower. The following tasks are available:
 
 ##TODO
 - MOOOAR TESTS!!!1one
+- Touch module optimizations
 - Better comments
 - ...
 

@@ -1,6 +1,6 @@
 /*!
  * Glide.js
- * Version: 2.0.0
+ * Version: 2.0.1
  * Simple, lightweight and fast jQuery slider
  * Author: @jedrzejchalubek
  * Site: http://http://glide.jedrzejchalubek.com/
@@ -24,10 +24,12 @@ var Animation = function (Glide, Core) {
 
 	/**
 	 * Make specifed animation type
-	 * @return {[type]} [description]
+	 * @param {Number} offset Offset from current position
+	 * @return {Module}
 	 */
-	Module.prototype.make = function() {
+	Module.prototype.make = function(offset) {
 
+		this.offset = (typeof offset !== 'undefined') ? offset : 0;
 		// Animation actual translate animation
 		this[Glide.options.type]();
 		return this;
@@ -53,7 +55,7 @@ var Animation = function (Glide, Core) {
 	 */
 	Module.prototype.slider = function () {
 
-		var translate = (Glide.current * Glide.width) - Glide.width;
+		var translate = (Glide.current * Glide.width) - (Glide.width + this.offset);
 
 		Glide.wrapper.css({
 			'transition': Core.Transition.get('all'),
@@ -87,7 +89,7 @@ var Animation = function (Glide, Core) {
 		if (Core.Run.flag && Core.Run.direction === '<') {
 
 			// Translate is 0 (left edge of wrapper)
-			translate = 0;
+			translate = 0 - this.offset;
 			// Reset flag
 			Core.Run.flag = false;
 
@@ -113,7 +115,7 @@ var Animation = function (Glide, Core) {
 		else if (Core.Run.flag && Core.Run.direction === '>') {
 
 			// Translate is euqal wrapper width with offset
-			translate = (Glide.length * Glide.width) + Glide.width;
+			translate = (Glide.length * Glide.width) + (Glide.width - this.offset);
 			// Reset flag
 			Core.Run.flag = false;
 
@@ -136,7 +138,7 @@ var Animation = function (Glide, Core) {
 		 * make normal translate
 		 */
 		else {
-			translate = (Glide.current * Glide.width);
+			translate = (Glide.current * Glide.width) - this.offset;
 		}
 
 		/**
@@ -364,7 +366,11 @@ var Arrows = function (Glide, Core) {
 		return this.items.on('click.glide touchstart.glide', function(event){
 			event.preventDefault();
 			if (!Core.Events.disabled) {
+				Core.Run.pause();
 				Core.Run.make($(this).data('glide-dir'));
+				Core.Animation.after(function () {
+					Core.Run.play();
+				});
 			}
 		});
 
@@ -552,7 +558,11 @@ var Bullets = function (Glide, Core) {
 		this.items.on('click.glide touchstart.glide', function(event){
 			event.preventDefault();
 			if (!Core.Events.disabled) {
+				Core.Run.pause();
 				Core.Run.make($(this).data('glide-dir'));
+				Core.Animation.after(function () {
+					Core.Run.play();
+				});
 			}
 		});
 
@@ -891,7 +901,7 @@ var Run = function (Glide, Core) {
 	 */
 	Module.prototype.pause = function() {
 
-		if (Glide.options.autoplay  || this.running) {
+		if (Glide.options.autoplay || this.running) {
 			if (this.interval >= 0) this.interval = clearInterval(this.interval);
 		}
 
@@ -980,13 +990,11 @@ var Run = function (Glide, Core) {
 		this.dragging = false;
 
 		if (Glide.options.touchDistance) {
-
-			Glide.wrapper.on({
-				'touchstart.glide mousedown.glide': Core.Events.throttle(this.start, Glide.options.throttle),
+			Glide.slider.on({
+				'touchstart.glide mousedown.glide': this.start,
 				'touchmove.glide mousemove.glide': Core.Events.throttle(this.move, Glide.options.throttle),
-				'touchend.glide mouseup.glide': Core.Events.throttle(this.end, Glide.options.throttle)
+				'touchend.glide touchcancel.glide mouseup.glide mouseleave.glide': this.end
 			});
-
 		}
 
 	}
@@ -999,7 +1007,7 @@ var Run = function (Glide, Core) {
 		Glide.slider
 			.unbind('touchstart.glide mousedown.glide')
 			.unbind('touchmove.glide mousemove.glide')
-			.unbind('touchend.glide mouseup.glide');
+			.unbind('touchend.glide mouseup.glide mouseleave.glide');
 	};
 
 
@@ -1010,7 +1018,13 @@ var Run = function (Glide, Core) {
 	Module.prototype.start = function(event) {
 
 		// Escape if events disabled
+		// and event target is slider wrapper
 		if (!Core.Events.disabled && !this.dragging) {
+
+			// Pause if autoplay
+			Core.Run.pause();
+			// Turn on jumping flag
+			Core.Transition.jumping = true;
 
 			var touch;
 
@@ -1038,8 +1052,6 @@ var Run = function (Glide, Core) {
 		// Escape if events disabled
 		if (!Core.Events.disabled && this.dragging) {
 
-			// Pause if autoplay
-			if(Glide.options.autoplay) Core.Run.pause();
 			// Add dragging class
 			Glide.wrapper.addClass(Glide.options.classes.dragging);
 
@@ -1064,13 +1076,17 @@ var Run = function (Glide, Core) {
 			// Calculate the sine of the angle
 			this.touchSin = Math.asin( touchCathetus/touchHypotenuse );
 
-			if ( (this.touchSin * (180 / Math.PI)) < 45 ) event.preventDefault();
-			else return;
-
-			if (Glide.options.type !== 'slideshow') {
-				Glide.wrapper[0].style.transition = '';
-				Glide.wrapper[0].style.transform = Core.Translate.set('x', (Glide.width * (Glide.current - 1 + Glide.clones.length/2)) - subExSx/2);
+			// While angle is lower than 45 degree, prevent scrolling
+			if ( (this.touchSin * 180 / Math.PI) < 45 ) {
+				event.preventDefault();
+			// Else escape from event, we don't want move slider
+			} else {
+				this.dragging = false;
+				return;
 			}
+
+			// Make offset animation
+			Core.Animation.make(subExSx);
 
 		}
 
@@ -1092,6 +1108,8 @@ var Run = function (Glide, Core) {
 			Core.Events.disable();
 			// Remove dragging class
 			Glide.wrapper.removeClass(Glide.options.classes.dragging);
+			// Turn off jumping flag
+			Core.Transition.jumping = false;
 
 			var touch;
 
@@ -1102,30 +1120,23 @@ var Run = function (Glide, Core) {
 			// Calculate touch distance
 			var touchDistance = touch.pageX - this.touchStartX;
 			// Calculate degree
-			var touchDeg = this.touchSin * (180 / Math.PI);
+			var touchDeg = this.touchSin * 180 / Math.PI;
 
 			// While touch is positive and greater than distance set in options
+			// move backward
 			if (touchDistance > Glide.options.touchDistance && touchDeg < 45) Core.Run.make('<');
 			// While touch is negative and lower than negative distance set in options
+			// move forward
 			else if (touchDistance < -Glide.options.touchDistance && touchDeg < 45) Core.Run.make('>');
-			// While swipe don't reach distance appy previous transform
-			else {
-
-				// If slider type is not slideshow
-				if (Glide.options.type !== 'slideshow') {
-					// Restore the starting position
-					Glide.wrapper[0].style.transition = Core.Transition.get('all');
-					Glide.wrapper[0].style.transform = Core.Translate.set('x', (Glide.width * (Glide.current - 1 + Glide.clones.length/2)));
-				}
-
-			}
+			// While swipe don't reach distance apply previous transform
+			else Core.Animation.make();
 
 			// After animation
 			Core.Animation.after(function(){
 				// Enable events
 				Core.Events.enable();
 				// If autoplay start auto run
-				if(Glide.options.autoplay) Core.Run.play();
+				Core.Run.play();
 			});
 
 		}
@@ -1156,7 +1167,7 @@ var Run = function (Glide, Core) {
 	Module.prototype.get = function(property) {
 
 		if (!this.jumping) return property + ' ' + Glide.options.animationDuration + 'ms ' + Glide.options.animationTimingFunc;
-		else return this.clear();
+		else return this.clear('all');
 
 	};
 
@@ -1211,7 +1222,7 @@ var Run = function (Glide, Core) {
 	 */
 	Module.prototype.set = function(axis, value) {
 		this.axes[axis] = parseInt(value);
-		return 'translate3d(' + -1*this.axes.x + 'px, ' + this.axes.y + 'px, ' + this.axes.z + 'px)';
+		return 'translate3d(' + -1 * this.axes.x + 'px, ' + this.axes.y + 'px, ' + this.axes.z + 'px)';
 	};
 
 
@@ -1315,9 +1326,10 @@ Glide.prototype.collect = function() {
 	this.wrapper = this.slider.children('.' + this.options.classes.wrapper);
 	this.slides = this.wrapper.children('.' + this.options.classes.slide);
 
-	this.clones = [];
-	this.clones[0] = this.slides.filter(':first-child').clone().addClass('clone');
-	this.clones[1] = this.slides.filter(':last-child').clone().addClass('clone');
+	this.clones = [
+		this.slides.filter(':first-child').clone().addClass('clone'),
+		this.slides.filter(':last-child').clone().addClass('clone')
+	];
 
 };
 

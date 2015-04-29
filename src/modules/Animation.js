@@ -14,10 +14,12 @@ var Animation = function (Glide, Core) {
 
 	/**
 	 * Make specifed animation type
-	 * @return {[type]} [description]
+	 * @param {Number} offset Offset from current position
+	 * @return {Module}
 	 */
-	Module.prototype.make = function() {
+	Module.prototype.make = function(offset) {
 
+		this.offset = (typeof offset !== 'undefined') ? offset : 0;
 		// Animation actual translate animation
 		this[Glide.options.type]();
 		return this;
@@ -43,7 +45,7 @@ var Animation = function (Glide, Core) {
 	 */
 	Module.prototype.slider = function () {
 
-		var translate = (Glide.current * Glide.width) - Glide.width;
+		var translate = (Glide.current * Glide.width) - (Glide.width + this.offset);
 
 		Glide.wrapper.css({
 			'transition': Core.Transition.get('all'),
@@ -77,7 +79,7 @@ var Animation = function (Glide, Core) {
 		if (Core.Run.flag && Core.Run.direction === '<') {
 
 			// Translate is 0 (left edge of wrapper)
-			translate = 0;
+			translate = 0 - this.offset;
 			// Reset flag
 			Core.Run.flag = false;
 
@@ -103,7 +105,7 @@ var Animation = function (Glide, Core) {
 		else if (Core.Run.flag && Core.Run.direction === '>') {
 
 			// Translate is euqal wrapper width with offset
-			translate = (Glide.length * Glide.width) + Glide.width;
+			translate = (Glide.length * Glide.width) + (Glide.width - this.offset);
 			// Reset flag
 			Core.Run.flag = false;
 
@@ -126,7 +128,7 @@ var Animation = function (Glide, Core) {
 		 * make normal translate
 		 */
 		else {
-			translate = (Glide.current * Glide.width);
+			translate = (Glide.current * Glide.width) - this.offset;
 		}
 
 		/**

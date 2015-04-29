@@ -62,7 +62,11 @@ var Arrows = function (Glide, Core) {
 		return this.items.on('click.glide touchstart.glide', function(event){
 			event.preventDefault();
 			if (!Core.Events.disabled) {
+				Core.Run.pause();
 				Core.Run.make($(this).data('glide-dir'));
+				Core.Animation.after(function () {
+					Core.Run.play();
+				});
 			}
 		});
 

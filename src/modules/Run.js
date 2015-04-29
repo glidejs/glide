@@ -51,7 +51,7 @@ var Run = function (Glide, Core) {
 	 */
 	Module.prototype.pause = function() {
 
-		if (Glide.options.autoplay  || this.running) {
+		if (Glide.options.autoplay || this.running) {
 			if (this.interval >= 0) this.interval = clearInterval(this.interval);
 		}
 

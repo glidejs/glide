@@ -93,9 +93,10 @@ Glide.prototype.collect = function() {
 	this.wrapper = this.slider.children('.' + this.options.classes.wrapper);
 	this.slides = this.wrapper.children('.' + this.options.classes.slide);
 
-	this.clones = [];
-	this.clones[0] = this.slides.filter(':first-child').clone().addClass('clone');
-	this.clones[1] = this.slides.filter(':last-child').clone().addClass('clone');
+	this.clones = [
+		this.slides.filter(':first-child').clone().addClass('clone'),
+		this.slides.filter(':last-child').clone().addClass('clone')
+	];
 
 };
 

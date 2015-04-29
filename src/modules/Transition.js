@@ -17,7 +17,7 @@ var Transition = function (Glide, Core) {
 	Module.prototype.get = function(property) {
 
 		if (!this.jumping) return property + ' ' + Glide.options.animationDuration + 'ms ' + Glide.options.animationTimingFunc;
-		else return this.clear();
+		else return this.clear('all');
 
 	};
 

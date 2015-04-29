@@ -22,11 +22,13 @@ Build using Grunt and Bower. The following tasks are available:
 
 ##TODO
 - MOOOAR TESTS!!!1one
-- Touch module optimizations
+- <del>Touch module optimizations</del> [#93](/../../issues/93)
 - Better comments
 - ...
 
 ##Changelog
+`2.0.1` / `29.04.2015`
+- Touch module optimizations
 `2.0.0` / `10.04.2015`
 - Plugin v2 release
 

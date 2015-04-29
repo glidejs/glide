@@ -51,7 +51,7 @@ var Run = function (Glide, Core) {
 	 */
 	Module.prototype.pause = function() {
 
-		if (Glide.options.autoplay  || this.running) {
+		if (Glide.options.autoplay || this.running) {
 			if (this.interval >= 0) this.interval = clearInterval(this.interval);
 		}
 
@@ -106,6 +106,11 @@ var Run = function (Glide, Core) {
 			case '=':
 				// Jump to specifed slide
 				Glide.current = parseInt(this.steps);
+				break;
+
+			case '~':
+				// Jump to specifed slide
+				Glide.offset = parseInt(this.steps);
 				break;
 
 		}

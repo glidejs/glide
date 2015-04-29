@@ -9,13 +9,11 @@ var Touch = function (Glide, Core) {
 		this.dragging = false;
 
 		if (Glide.options.touchDistance) {
-
-			Glide.wrapper.on({
-				'touchstart.glide mousedown.glide': Core.Events.throttle(this.start, Glide.options.throttle),
-				'touchmove.glide mousemove.glide': Core.Events.throttle(this.move, Glide.options.throttle),
-				'touchend.glide mouseup.glide': Core.Events.throttle(this.end, Glide.options.throttle)
+			$(document).on({
+				'touchstart.glide mousedown.glide': $.proxy(this.start, this),
+				'touchmove.glide mousemove.glide': $.proxy(this.move, this),
+				'touchend.glide mouseup.glide': $.proxy(this.end, this)
 			});
-
 		}
 
 	}
@@ -38,8 +36,17 @@ var Touch = function (Glide, Core) {
 	 */
 	Module.prototype.start = function(event) {
 
+		// target is slider wrapper?
+		var target = $(event.target).parents('.' + Glide.options.classes.wrapper).attr('class') == Glide.wrapper.attr('class');
+
 		// Escape if events disabled
-		if (!Core.Events.disabled && !this.dragging) {
+		// and event target is slider wrapper
+		if (!Core.Events.disabled && !this.dragging && target) {
+
+			// Pause if autoplay
+			Core.Run.pause();
+			// Turn on jumping flag
+			Core.Transition.jumping = true;
 
 			var touch;
 
@@ -67,8 +74,6 @@ var Touch = function (Glide, Core) {
 		// Escape if events disabled
 		if (!Core.Events.disabled && this.dragging) {
 
-			// Pause if autoplay
-			if(Glide.options.autoplay) Core.Run.pause();
 			// Add dragging class
 			Glide.wrapper.addClass(Glide.options.classes.dragging);
 
@@ -93,13 +98,17 @@ var Touch = function (Glide, Core) {
 			// Calculate the sine of the angle
 			this.touchSin = Math.asin( touchCathetus/touchHypotenuse );
 
-			if ( (this.touchSin * (180 / Math.PI)) < 45 ) event.preventDefault();
-			else return;
-
-			if (Glide.options.type !== 'slideshow') {
-				Glide.wrapper[0].style.transition = '';
-				Glide.wrapper[0].style.transform = Core.Translate.set('x', (Glide.width * (Glide.current - 1 + Glide.clones.length/2)) - subExSx/2);
+			// While angle is lower than 45 degree, prevent scrolling
+			if ( (this.touchSin * 180 / Math.PI) < 45 ) {
+				event.preventDefault();
+			// Else escape from event, we don't want move slider
+			} else {
+				this.dragging = false;
+				return;
 			}
+
+			// Make offset animation
+			Core.Animation.make(subExSx);
 
 		}
 
@@ -121,6 +130,8 @@ var Touch = function (Glide, Core) {
 			Core.Events.disable();
 			// Remove dragging class
 			Glide.wrapper.removeClass(Glide.options.classes.dragging);
+			// Turn off jumping flag
+			Core.Transition.jumping = false;
 
 			var touch;
 
@@ -131,30 +142,23 @@ var Touch = function (Glide, Core) {
 			// Calculate touch distance
 			var touchDistance = touch.pageX - this.touchStartX;
 			// Calculate degree
-			var touchDeg = this.touchSin * (180 / Math.PI);
+			var touchDeg = this.touchSin * 180 / Math.PI;
 
 			// While touch is positive and greater than distance set in options
+			// move backward
 			if (touchDistance > Glide.options.touchDistance && touchDeg < 45) Core.Run.make('<');
 			// While touch is negative and lower than negative distance set in options
+			// move forward
 			else if (touchDistance < -Glide.options.touchDistance && touchDeg < 45) Core.Run.make('>');
-			// While swipe don't reach distance appy previous transform
-			else {
-
-				// If slider type is not slideshow
-				if (Glide.options.type !== 'slideshow') {
-					// Restore the starting position
-					Glide.wrapper[0].style.transition = Core.Transition.get('all');
-					Glide.wrapper[0].style.transform = Core.Translate.set('x', (Glide.width * (Glide.current - 1 + Glide.clones.length/2)));
-				}
-
-			}
+			// While swipe don't reach distance apply previous transform
+			else Core.Animation.make();
 
 			// After animation
 			Core.Animation.after(function(){
 				// Enable events
 				Core.Events.enable();
 				// If autoplay start auto run
-				if(Glide.options.autoplay) Core.Run.play();
+				Core.Run.play();
 			});
 
 		}

@@ -33,11 +33,12 @@ var Arrows = function (Glide, Core) {
 	/**
 	 * Hide arrow
 	 */
-	Module.prototype.hide = function (type) {
+	Module.prototype.disable = function (type) {
 
 		return this.items.filter('.' + Glide.options.classes['arrow' + Core.Helper.capitalise(type)])
-			.css({ opacity: 0, visibility: 'hidden' })
-			.siblings().css({ opacity: 1, visibility: 'visible' })
+			.unbind('click.glide touchstart.glide')
+			.addClass(Glide.options.classes.disabled)
+			.siblings().removeClass(Glide.options.classes.disabled)
 			.end();
 
 	};
@@ -46,9 +47,10 @@ var Arrows = function (Glide, Core) {
 	/**
 	 * Show arrows
 	 */
-	Module.prototype.show = function () {
+	Module.prototype.enable = function () {
 
-		return this.items.css({ opacity: 1, visibility: 'visible' });
+		this.bind();
+		return this.items.removeClass(Glide.options.classes.disabled);
 
 	};
 

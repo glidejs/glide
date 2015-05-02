@@ -9,7 +9,7 @@ var Touch = function (Glide, Core) {
 		this.dragging = false;
 
 		if (Glide.options.touchDistance) {
-			Glide.slider.on({
+			Glide.wrapper.on({
 				'touchstart.glide mousedown.glide': this.start,
 				'touchmove.glide mousemove.glide': Core.Events.throttle(this.move, Glide.options.throttle),
 				'touchend.glide touchcancel.glide mouseup.glide mouseleave.glide': this.end
@@ -23,7 +23,7 @@ var Touch = function (Glide, Core) {
 	 * Unbind touch events
 	 */
 	Module.prototype.unbind = function() {
-		Glide.slider
+		Glide.wrapper
 			.unbind('touchstart.glide mousedown.glide')
 			.unbind('touchmove.glide mousemove.glide')
 			.unbind('touchend.glide touchcancel.glide mouseup.glide mouseleave.glide');
@@ -140,6 +140,21 @@ var Touch = function (Glide, Core) {
 			var touchDistance = touch.pageX - this.touchStartX;
 			// Calculate degree
 			var touchDeg = this.touchSin * 180 / Math.PI;
+
+			// If slider type is slider
+			if (Glide.options.type == 'slider') {
+
+				// Prevent slide to right on first item (prev)
+				if (Glide.current === 1) {
+					if ( touchDistance > 0 ) touchDistance = 0;
+				}
+
+				// Prevent slide to left on last item (next)
+				if (Glide.current === Glide.length) {
+					if ( touchDistance < 0 ) touchDistance = 0;
+				}
+
+			}
 
 			// While touch is positive and greater than distance set in options
 			// move backward

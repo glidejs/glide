@@ -36,9 +36,9 @@
 
 	&__arrows {
 
-		position: absolute;
-		top: 50%;
+		position: relative;
 		width: 100%;
+		height: 100%;
 
 	}
 
@@ -46,11 +46,12 @@
 	&__arrow {
 
 		position: absolute;
-		top: 0;
+		top: 50%;
 		z-index: 2;
 		padding: 18px;
 		background: gray;
 		cursor: pointer;
+		transform: translateY(-50%);
 
 		&.prev { left: 0; }
 		&.next { right: 0; }
@@ -90,12 +91,12 @@
 
 		@{that}__arrow {
 
+			opacity: 1;
 			transition: visibility 0 ease 150ms,
 						opacity 150ms ease;
 
-			&.prev {
-				opacity: 0;
-				visibility: hidden;
+			&.disabled {
+				opacity: 0.5;
 			}
 
 		}

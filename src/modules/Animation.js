@@ -53,11 +53,11 @@ var Animation = function (Glide, Core) {
 		});
 
 		// If on start hide prev arrow
-		if (Glide.current === 1) Core.Arrows.hide('prev');
+		if (Glide.current === 1) Core.Arrows.disable('prev');
 		// If on end hide next arrow
-		else if (Glide.current === Glide.length) Core.Arrows.hide('next');
+		else if (Glide.current === Glide.length) Core.Arrows.disable('next');
 		// Show arrows
-		else Core.Arrows.show();
+		else Core.Arrows.enable();
 
 	};
 

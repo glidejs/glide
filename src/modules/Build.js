@@ -46,8 +46,8 @@ var Build = function (Glide, Core) {
 	Module.prototype.slider = function() {
 
 		// Hide next/prev arrow when on the end/start
-		if (Glide.current === Glide.length) Core.Arrows.hide('next');
-		if (Glide.current === 1) Core.Arrows.hide('prev');
+		if (Glide.current === Glide.length) Core.Arrows.disable('next');
+		if (Glide.current === 1) Core.Arrows.disable('prev');
 
 		Glide.wrapper.css({
 			'width': Glide.width * Glide.length,

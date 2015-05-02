@@ -40,7 +40,7 @@ var Events = function (Glide, Core) {
 
 		if (Glide.options.hoverpause) {
 
-			Glide.slider
+			Glide.wrapper
 				.on('mouseover.glide', function(){
 					Core.Run.pause();
 				})
@@ -80,7 +80,7 @@ var Events = function (Glide, Core) {
 
 		if (this.triggers.length) {
 
-			this.triggers.on('click.glide', function(event) {
+			this.triggers.on('click.glide touchstart.glide', function(event) {
 
 				event.preventDefault();
 
@@ -139,13 +139,13 @@ var Events = function (Glide, Core) {
 	 */
 	Module.prototype.unbind = function () {
 
-		Glide.slider
+		Glide.wrapper
 			.unbind('keyup.glide')
 			.unbind('mouseover.glide')
 			.unbind('mouseout.glide');
 
 		this.triggers
-			.unbind('click.glide');
+			.unbind('click.glide touchstart.glide');
 
 		$(window)
 			.unbind('keyup.glide')

@@ -1,6 +1,6 @@
 /*!
  * Glide.js
- * Version: 2.0.1
+ * Version: 2.0.2
  * Simple, lightweight and fast jQuery slider
  * Author: @jedrzejchalubek
  * Site: http://http://glide.jedrzejchalubek.com/
@@ -340,8 +340,9 @@ var Arrows = function (Glide, Core) {
 	Module.prototype.hide = function (type) {
 
 		return this.items.filter('.' + Glide.options.classes['arrow' + Core.Helper.capitalise(type)])
-			.css({ opacity: 0, visibility: 'hidden' })
-			.siblings().css({ opacity: 1, visibility: 'visible' })
+			.unbind('click.glide touchstart.glide')
+			.addClass(Glide.options.classes.disabled)
+			.siblings().removeClass(Glide.options.classes.disabled)
 			.end();
 
 	};
@@ -352,7 +353,8 @@ var Arrows = function (Glide, Core) {
 	 */
 	Module.prototype.show = function () {
 
-		return this.items.css({ opacity: 1, visibility: 'visible' });
+		this.bind();
+		return this.items.removeClass(Glide.options.classes.disabled);
 
 	};
 
@@ -651,7 +653,7 @@ var Events = function (Glide, Core) {
 
 		if (Glide.options.hoverpause) {
 
-			Glide.slider
+			Glide.wrapper
 				.on('mouseover.glide', function(){
 					Core.Run.pause();
 				})
@@ -750,7 +752,7 @@ var Events = function (Glide, Core) {
 	 */
 	Module.prototype.unbind = function () {
 
-		Glide.slider
+		Glide.wrapper
 			.unbind('keyup.glide')
 			.unbind('mouseover.glide')
 			.unbind('mouseout.glide');
@@ -990,7 +992,7 @@ var Run = function (Glide, Core) {
 		this.dragging = false;
 
 		if (Glide.options.touchDistance) {
-			Glide.slider.on({
+			Glide.wrapper.on({
 				'touchstart.glide mousedown.glide': this.start,
 				'touchmove.glide mousemove.glide': Core.Events.throttle(this.move, Glide.options.throttle),
 				'touchend.glide touchcancel.glide mouseup.glide mouseleave.glide': this.end
@@ -1004,10 +1006,10 @@ var Run = function (Glide, Core) {
 	 * Unbind touch events
 	 */
 	Module.prototype.unbind = function() {
-		Glide.slider
+		Glide.wrapper
 			.unbind('touchstart.glide mousedown.glide')
 			.unbind('touchmove.glide mousemove.glide')
-			.unbind('touchend.glide mouseup.glide mouseleave.glide');
+			.unbind('touchend.glide touchcancel.glide mouseup.glide mouseleave.glide');
 	};
 
 
@@ -1121,6 +1123,21 @@ var Run = function (Glide, Core) {
 			var touchDistance = touch.pageX - this.touchStartX;
 			// Calculate degree
 			var touchDeg = this.touchSin * 180 / Math.PI;
+
+			// If slider type is slider
+			if (Glide.options.type == 'slider') {
+
+				// Prevent slide to right on first item (prev)
+				if (Glide.current === 1) {
+					if ( touchDistance > 0 ) touchDistance = 0;
+				}
+
+				// Prevent slide to left on last item (next)
+				if (Glide.current === Glide.length) {
+					if ( touchDistance < 0 ) touchDistance = 0;
+				}
+
+			}
 
 			// While touch is positive and greater than distance set in options
 			// move backward
@@ -1268,7 +1285,8 @@ var Glide = function (element, options) {
 			arrowPrev: 'prev',
 			bullets: 'glide__bullets',
 			bullet: 'glide__bullet',
-			dragging: 'dragging'
+			dragging: 'dragging',
+			disabled: 'disabled'
 		},
 		beforeInit: function(el) {},
 		afterInit: function(el) {},

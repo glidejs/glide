@@ -29,17 +29,20 @@
   height: 100%;
 }
 .glide__arrows {
-  position: absolute;
-  top: 50%;
+  position: relative;
   width: 100%;
+  height: 100%;
 }
 .glide__arrow {
   position: absolute;
-  top: 0;
+  top: 50%;
   z-index: 2;
   padding: 18px;
   background: gray;
   cursor: pointer;
+  -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+          transform: translateY(-50%);
 }
 .glide__arrow.prev {
   left: 0;
@@ -70,14 +73,14 @@
   clear: none;
 }
 .glide--slider .glide__arrow {
+  opacity: 1;
   -webkit-transition: visibility 0 ease 150ms,
 						opacity 150ms ease;
           transition: visibility 0 ease 150ms,
 						opacity 150ms ease;
 }
-.glide--slider .glide__arrow.prev {
-  opacity: 0;
-  visibility: hidden;
+.glide--slider .glide__arrow.disabled {
+  opacity: 0.5;
 }
 .glide--carousel .glide__slide {
   float: left;

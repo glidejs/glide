@@ -35,7 +35,8 @@ var Glide = function (element, options) {
 			arrowPrev: 'prev',
 			bullets: 'glide__bullets',
 			bullet: 'glide__bullet',
-			dragging: 'dragging'
+			dragging: 'dragging',
+			disabled: 'disabled'
 		},
 		beforeInit: function(el) {},
 		afterInit: function(el) {},

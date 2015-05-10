@@ -36,7 +36,7 @@ var Arrows = function (Glide, Core) {
 	Module.prototype.hide = function (type) {
 
 		return this.items.filter('.' + Glide.options.classes['arrow' + Core.Helper.capitalise(type)])
-			.unbind('click.glide touchstart.glide')
+			.off('click.glide touchstart.glide')
 			.addClass(Glide.options.classes.disabled)
 			.siblings().removeClass(Glide.options.classes.disabled)
 			.end();
@@ -80,7 +80,7 @@ var Arrows = function (Glide, Core) {
 	 * arrows events
 	 */
 	Module.prototype.unbind = function () {
-		return this.items.unbind('click.glide touchstart.glide');
+		return this.items.off('click.glide touchstart.glide');
 	};
 
 

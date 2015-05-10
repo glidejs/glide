@@ -1,6 +1,6 @@
 /*!
  * Glide.js
- * Version: 2.0.2
+ * Version: 2.0.1
  * Simple, lightweight and fast jQuery slider
  * Author: @jedrzejchalubek
  * Site: http://http://glide.jedrzejchalubek.com/
@@ -340,7 +340,7 @@ var Arrows = function (Glide, Core) {
 	Module.prototype.hide = function (type) {
 
 		return this.items.filter('.' + Glide.options.classes['arrow' + Core.Helper.capitalise(type)])
-			.unbind('click.glide touchstart.glide')
+			.off('click.glide touchstart.glide')
 			.addClass(Glide.options.classes.disabled)
 			.siblings().removeClass(Glide.options.classes.disabled)
 			.end();
@@ -384,7 +384,7 @@ var Arrows = function (Glide, Core) {
 	 * arrows events
 	 */
 	Module.prototype.unbind = function () {
-		return this.items.unbind('click.glide touchstart.glide');
+		return this.items.off('click.glide touchstart.glide');
 	};
 
 
@@ -638,13 +638,29 @@ var Events = function (Glide, Core) {
 	 * Keyboard events
 	 */
 	Module.prototype.keyboard = function() {
+
 		if (Glide.options.keyboard) {
+
+			/**
+			 * @todo Split keyup event in keyup.glide.prev and keyup.glide.next and do things trought event binding
+			 */
 			$(window).on('keyup.glide', function(event){
-				if (event.keyCode === 39) Core.Run.make('>');
-				if (event.keyCode === 37) Core.Run.make('<');
+				if (Glide.current === 1 && Glide.options.type == 'slider') {
+					// slider is on the first item
+				} else {
+					if (event.keyCode === 37) Core.Run.make('<');
+				}
+
+				if (Glide.current === Glide.length && Glide.options.type == 'slider') {
+					// slider is on the last item
+				} else {
+					if (event.keyCode === 39) Core.Run.make('>');
+				}
 			});
+
 		}
 	};
+
 
 	/**
 	 * Hover pause event
@@ -746,23 +762,20 @@ var Events = function (Glide, Core) {
 
 
 	/*
-	 * Call function
-	 * @param {Function} func
-	 * @return {Glide.Events}
+	 * Unbind function
 	 */
 	Module.prototype.unbind = function () {
 
 		Glide.wrapper
-			.unbind('keyup.glide')
-			.unbind('mouseover.glide')
-			.unbind('mouseout.glide');
+			.off('mouseover.glide')
+			.off('mouseout.glide');
 
 		this.triggers
-			.unbind('click.glide');
+			.off('click.glide');
 
 		$(window)
-			.unbind('keyup.glide')
-			.unbind('resize.glide');
+			.off('keyup.glide')
+			.off('resize.glide');
 
 	};
 
@@ -1007,9 +1020,9 @@ var Run = function (Glide, Core) {
 	 */
 	Module.prototype.unbind = function() {
 		Glide.wrapper
-			.unbind('touchstart.glide mousedown.glide')
-			.unbind('touchmove.glide mousemove.glide')
-			.unbind('touchend.glide touchcancel.glide mouseup.glide mouseleave.glide');
+			.off('touchstart.glide mousedown.glide')
+			.off('touchmove.glide mousemove.glide')
+			.off('touchend.glide touchcancel.glide mouseup.glide mouseleave.glide');
 	};
 
 

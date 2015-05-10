@@ -20,13 +20,21 @@ Build using Grunt and Bower. The following tasks are available:
 - `script` Only compiles script into `/dist` folder
 - `test` Running tests
 
-##TODO
-- MOOOAR TESTS!!!1one
-- <del>Touch module optimizations</del> [#93](/../../issues/93)
-- Better comments
+##Roadmap
 - Vertical mode
 - Padded/center mode
 - Multiple slides per view
+- Lazyload
+
+##Todo
+- MOOOAR TESTS!!!1one
+- <del>Touch module optimizations</del> [#93](/../../issues/93)
+- Better comments
+
+##Issues
+- Stop autoplay and hoverpause on last slide (type: slider)
+- <del>Unbind keyboard on first/last item (type: slider)</del>
+- When switching from first to last item trought bullet, both arrows are unbinded and not clickable (type: slider)
 
 ##Changelog
 `2.0.1` / `29.04.2015`

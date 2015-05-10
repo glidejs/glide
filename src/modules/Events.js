@@ -25,13 +25,29 @@ var Events = function (Glide, Core) {
 	 * Keyboard events
 	 */
 	Module.prototype.keyboard = function() {
+
 		if (Glide.options.keyboard) {
+
+			/**
+			 * @todo Split keyup event in keyup.glide.prev and keyup.glide.next and do things trought event binding
+			 */
 			$(window).on('keyup.glide', function(event){
-				if (event.keyCode === 39) Core.Run.make('>');
-				if (event.keyCode === 37) Core.Run.make('<');
+				if (Glide.current === 1 && Glide.options.type == 'slider') {
+					// slider is on the first item
+				} else {
+					if (event.keyCode === 37) Core.Run.make('<');
+				}
+
+				if (Glide.current === Glide.length && Glide.options.type == 'slider') {
+					// slider is on the last item
+				} else {
+					if (event.keyCode === 39) Core.Run.make('>');
+				}
 			});
+
 		}
 	};
+
 
 	/**
 	 * Hover pause event
@@ -133,23 +149,20 @@ var Events = function (Glide, Core) {
 
 
 	/*
-	 * Call function
-	 * @param {Function} func
-	 * @return {Glide.Events}
+	 * Unbind function
 	 */
 	Module.prototype.unbind = function () {
 
 		Glide.wrapper
-			.unbind('keyup.glide')
-			.unbind('mouseover.glide')
-			.unbind('mouseout.glide');
+			.off('mouseover.glide')
+			.off('mouseout.glide');
 
 		this.triggers
-			.unbind('click.glide');
+			.off('click.glide');
 
 		$(window)
-			.unbind('keyup.glide')
-			.unbind('resize.glide');
+			.off('keyup.glide')
+			.off('resize.glide');
 
 	};
 

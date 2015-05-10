@@ -24,9 +24,9 @@ var Touch = function (Glide, Core) {
 	 */
 	Module.prototype.unbind = function() {
 		Glide.wrapper
-			.unbind('touchstart.glide mousedown.glide')
-			.unbind('touchmove.glide mousemove.glide')
-			.unbind('touchend.glide touchcancel.glide mouseup.glide mouseleave.glide');
+			.off('touchstart.glide mousedown.glide')
+			.off('touchmove.glide mousemove.glide')
+			.off('touchend.glide touchcancel.glide mouseup.glide mouseleave.glide');
 	};
 
 

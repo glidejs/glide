@@ -7,6 +7,7 @@ describe("Glide", function() {
 	var api;
 
 	beforeEach(function () {
+
 		loadFixtures('base.html');
 		loadStyleFixtures('glide.css');
 

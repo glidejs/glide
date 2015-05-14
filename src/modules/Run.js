@@ -14,7 +14,11 @@ var Run = function (Glide, Core) {
 	 * Constructor
 	 */
 	function Module() {
+		// Running flag
+		// It's in use when autoplay is disabled via options,
+		// but we want start autoplay via api
 		this.running = false;
+		// Flag for offcanvas animation to cloned slides
 		this.flag = false;
 		this.play();
 	}
@@ -110,6 +114,8 @@ var Run = function (Glide, Core) {
 
 		}
 
+		// Set slides height
+		if (Glide.options.autoheight) Core.Height.set();
 		// Set active bullet
 		Core.Bullets.active();
 

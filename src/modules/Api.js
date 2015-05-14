@@ -103,7 +103,7 @@ var Api = function (Glide, Core) {
 				Glide.slider.removeData('glide_api');
 
 				delete Glide.slider;
-				delete Glide.wrapper;
+				delete Glide.track;
 				delete Glide.slides;
 				delete Glide.width;
 				delete Glide.length;

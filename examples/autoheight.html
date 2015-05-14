@@ -41,21 +41,21 @@
 
 		<div id="Glide" class="glide">
 
-			<div class="glide__arrows">
-				<span class="glide__arrow prev" data-glide-dir="<">prev</span>
-				<span class="glide__arrow next" data-glide-dir=">">next</span>
-			</div>
+		<div class="glide__arrows">
+					<span class="glide__arrow prev" data-glide-dir="<">prev</span>
+					<span class="glide__arrow next" data-glide-dir=">">next</span>
+				</div>
 
 			<div class="glide__wrapper">
 				<ul class="glide__track">
 					<li class="glide__slide">
-						<div class="box" style="background-color: red;">1</div>
+						<div class="box" style="background-color: red; height: 300px;">1</div>
 					</li>
 					<li class="glide__slide">
-						<div class="box" style="background-color: blue;">2</div>
+						<div class="box" style="background-color: blue; height: 280px;">2</div>
 					</li>
 					<li class="glide__slide">
-						<div class="box" style="background-color: purple;">3</div>
+						<div class="box" style="background-color: purple; height: 320px;">3</div>
 					</li>
 				</ul>
 			</div>
@@ -67,7 +67,7 @@
 		<script src="../bower_components/jquery/dist/jquery.js"></script>
 		<script src="../dist/glide.js"></script>
 		<script>
-			var slider = $('#Glide').glide();
+			var slider = $('#Glide').glide({ autoheight: true });
 			var slider_api = slider.data('glide_api');
 		</script>
 

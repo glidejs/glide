@@ -1,34 +1,51 @@
 jasmine.getFixtures().fixturesPath = '../tests/fixtures';
 jasmine.getStyleFixtures().fixturesPath = '../dist/css';
+jasmine.getJSONFixtures().fixturesPath = '../tests/fixtures/json';
 
 describe("Core", function() {
 
+	var data;
+	var fixtures;
 	var slider;
 	var wrapper;
+	var track;
 	var slides;
 	var arrows;
+	var arrowsWrapper;
 	var bullets;
-	var options;
+	var bulletsWrapper;
+	var api;
 
 	beforeEach(function () {
 
 		loadFixtures('base.html');
 		loadStyleFixtures('glide.css');
 
+		data = getJSONFixture('data.json');
+		fixtures = loadJSONFixtures('data.json');
+		data = fixtures['data.json'];
+
+		slider = $(data.base);
+		wrapper = slider.find(data.wrapper);
+		track = wrapper.find(data.track);
+		slides = track.children();
+		arrowsWrapper = slider.find(data.arrows);
+		arrows = arrowsWrapper.children();
+		bulletsWrapper = slider.find(data.bullets);
+		bullets = bulletsWrapper.children();
+
 		options = {
 			startAt: 2
 		};
 
-		wrapper = $('.glide').children('.glide__wrapper');
-		slides = wrapper.children();
-		slider = $('.glide').glide(options);
-		arrows = slider.children('.glide__arrows').children();
-		bullets = slider.children('.glide__bullets').children();
+		api = slider.glide(options).data('glide_api');
 
 	});
 
-	it("Wrapper width value should be width of slide * number of slides", function() {
-		expect(wrapper.width()).toEqual($('.glide__wrapper').children().eq(0).width() * $('.glide__wrapper').children().length);
+	it("Track width value should be width of slide * number of slides", function() {
+		expect(track.width()).toEqual(
+			track.children().eq(0).width() * track.children().length
+		);
 	});
 
 	it("Slide width should be width of slider", function() {
@@ -40,7 +57,7 @@ describe("Core", function() {
 	});
 
 	it("Slider should start at second slide", function() {
-		expect(slides.index($('.active')) + 1).toEqual(options.startAt);
+		expect(slides.index($(data.active)) + 1).toEqual(options.startAt);
 	});
 
 });

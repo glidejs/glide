@@ -40,7 +40,7 @@ var Events = function (Glide, Core) {
 
 		if (Glide.options.hoverpause) {
 
-			Glide.wrapper
+			Glide.track
 				.on('mouseover.glide', function(){
 					Core.Run.pause();
 				})
@@ -139,7 +139,7 @@ var Events = function (Glide, Core) {
 	 */
 	Module.prototype.unbind = function () {
 
-		Glide.wrapper
+		Glide.track
 			.unbind('keyup.glide')
 			.unbind('mouseover.glide')
 			.unbind('mouseout.glide');

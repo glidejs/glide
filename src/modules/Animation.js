@@ -47,7 +47,7 @@ var Animation = function (Glide, Core) {
 
 		var translate = (Glide.current * Glide.width) - (Glide.width + this.offset);
 
-		Glide.wrapper.css({
+		Glide.track.css({
 			'transition': Core.Transition.get('all'),
 			'transform': Core.Translate.set('x', translate)
 		});
@@ -87,7 +87,7 @@ var Animation = function (Glide, Core) {
 			this.after(function() {
 
 				// clear transition and jump to last slide
-				Glide.wrapper.css({
+				Glide.track.css({
 					'transition': Core.Transition.clear('all'),
 					'transform': Core.Translate.set('x', Glide.length * Glide.width)
 				});
@@ -113,7 +113,7 @@ var Animation = function (Glide, Core) {
 			this.after(function() {
 
 				// Clear transition and jump to first slide
-				Glide.wrapper.css({
+				Glide.track.css({
 					'transition': Core.Transition.clear('all'),
 					'transform': Core.Translate.set('x', Glide.width)
 				});
@@ -135,7 +135,7 @@ var Animation = function (Glide, Core) {
 		 * Actual translate apply to wrapper
 		 * overwrite transition (can be pre-cleared)
 		 */
-		Glide.wrapper.css({
+		Glide.track.css({
 			'transition': Core.Transition.get('all'),
 			'transform': Core.Translate.set('x', translate)
 		});

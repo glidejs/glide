@@ -9,7 +9,7 @@ var Touch = function (Glide, Core) {
 		this.dragging = false;
 
 		if (Glide.options.touchDistance) {
-			Glide.wrapper.on({
+			Glide.track.on({
 				'touchstart.glide mousedown.glide': this.start,
 				'touchmove.glide mousemove.glide': Core.Events.throttle(this.move, Glide.options.throttle),
 				'touchend.glide touchcancel.glide mouseup.glide mouseleave.glide': this.end
@@ -23,7 +23,7 @@ var Touch = function (Glide, Core) {
 	 * Unbind touch events
 	 */
 	Module.prototype.unbind = function() {
-		Glide.wrapper
+		Glide.track
 			.unbind('touchstart.glide mousedown.glide')
 			.unbind('touchmove.glide mousemove.glide')
 			.unbind('touchend.glide touchcancel.glide mouseup.glide mouseleave.glide');
@@ -37,7 +37,7 @@ var Touch = function (Glide, Core) {
 	Module.prototype.start = function(event) {
 
 		// Escape if events disabled
-		// and event target is slider wrapper
+		// or already dragging
 		if (!Core.Events.disabled && !this.dragging) {
 
 			// Pause if autoplay
@@ -68,11 +68,12 @@ var Touch = function (Glide, Core) {
 	 */
 	Module.prototype.move = function(event) {
 
-		// Escape if events disabled
+		// Escape if events not disabled
+		// or not dragging
 		if (!Core.Events.disabled && this.dragging) {
 
 			// Add dragging class
-			Glide.wrapper.addClass(Glide.options.classes.dragging);
+			Glide.track.addClass(Glide.options.classes.dragging);
 
 			var touch;
 
@@ -95,11 +96,13 @@ var Touch = function (Glide, Core) {
 			// Calculate the sine of the angle
 			this.touchSin = Math.asin( touchCathetus/touchHypotenuse );
 
-			// While angle is lower than 45 degree, prevent scrolling
+			// While angle is lower than 45 degree
 			if ( (this.touchSin * 180 / Math.PI) < 45 ) {
+				// Prevent scrolling
 				event.preventDefault();
 			// Else escape from event, we don't want move slider
 			} else {
+				// Clear dragging flag
 				this.dragging = false;
 				return;
 			}
@@ -118,15 +121,16 @@ var Touch = function (Glide, Core) {
 	 */
 	Module.prototype.end = function(event) {
 
-		// If events not disabled and still dragging
+		// Escape if events not disabled
+		// or not dragging
 		if (!Core.Events.disabled && this.dragging) {
 
-			// Unset dragging
+			// Unset dragging flag
 			this.dragging = false;
 			// Disable other events
 			Core.Events.disable();
 			// Remove dragging class
-			Glide.wrapper.removeClass(Glide.options.classes.dragging);
+			Glide.track.removeClass(Glide.options.classes.dragging);
 			// Turn off jumping flag
 			Core.Transition.jumping = false;
 

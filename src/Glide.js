@@ -25,9 +25,11 @@ var Glide = function (element, options) {
 		animationDuration: 400,
 		animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
 		throttle: 16,
+		autoheight: false,
 		classes: {
 			base: 'glide',
 			wrapper: 'glide__wrapper',
+			track: 'glide__track',
 			slide: 'glide__slide',
 			arrows: 'glide__arrows',
 			arrow: 'glide__arrow',
@@ -35,6 +37,7 @@ var Glide = function (element, options) {
 			arrowPrev: 'prev',
 			bullets: 'glide__bullets',
 			bullet: 'glide__bullet',
+			active: 'active',
 			dragging: 'dragging',
 			disabled: 'disabled'
 		},
@@ -68,6 +71,7 @@ var Glide = function (element, options) {
 		Events: Events,
 		Arrows: Arrows,
 		Bullets: Bullets,
+		Height: Height,
 		Build: Build,
 		Run: Run,
 		Animation: Animation,
@@ -91,8 +95,9 @@ var Glide = function (element, options) {
 Glide.prototype.collect = function() {
 
 	this.slider = this.element.addClass(this.options.classes.base + '--' + this.options.type);
-	this.wrapper = this.slider.children('.' + this.options.classes.wrapper);
-	this.slides = this.wrapper.children('.' + this.options.classes.slide);
+	this.track = this.slider.find('.' + this.options.classes.track);
+	this.wrapper = this.slider.find('.' + this.options.classes.wrapper);
+	this.slides = this.wrapper.find('.' + this.options.classes.slide);
 
 	this.clones = [
 		this.slides.filter(':first-child').clone().addClass('clone'),

@@ -22,6 +22,8 @@ var Build = function (Glide, Core) {
 	 * @return {[type]} [description]
 	 */
 	Module.prototype.init = function() {
+		// Set slides height
+		Core.Height.set();
 		// Build proper slider type
 		this[Glide.options.type]();
 		// Set slide active class
@@ -36,7 +38,7 @@ var Build = function (Glide, Core) {
 	 * clones
 	 */
 	Module.prototype.removeClones = function() {
-		return Glide.wrapper.find('.clone').remove();
+		return Glide.track.find('.clone').remove();
 	};
 
 
@@ -49,7 +51,7 @@ var Build = function (Glide, Core) {
 		if (Glide.current === Glide.length) Core.Arrows.disable('next');
 		if (Glide.current === 1) Core.Arrows.disable('prev');
 
-		Glide.wrapper.css({
+		Glide.track.css({
 			'width': Glide.width * Glide.length,
 			'transform': Core.Translate.set('x', Glide.width * (Glide.current - 1)),
 		});
@@ -65,7 +67,7 @@ var Build = function (Glide, Core) {
 	 */
 	Module.prototype.carousel = function() {
 
-		Glide.wrapper
+		Glide.track
 			.append(Glide.clones[0].width(Glide.width))
 			.prepend(Glide.clones[1].width(Glide.width))
 			.css({
@@ -84,8 +86,11 @@ var Build = function (Glide, Core) {
 	 */
 	Module.prototype.slideshow = function () {
 
+		// Force height set
+		// Core.Height.set(true);
+		// Show up current slide
 		Glide.slides.eq(Glide.current - 1)
-			.css('opacity', 1 )
+			.css('opacity', 1)
 			.siblings().css('opacity', 0);
 
 	};
@@ -98,8 +103,8 @@ var Build = function (Glide, Core) {
 	Module.prototype.active = function () {
 
 		Glide.slides
-			.eq(Glide.current - 1).addClass('active')
-			.siblings().removeClass('active');
+			.eq(Glide.current - 1).addClass(Glide.options.classes.active)
+			.siblings().removeClass(Glide.options.classes.active);
 
 	};
 

@@ -2,7 +2,7 @@ jasmine.getFixtures().fixturesPath = '../tests/fixtures';
 jasmine.getStyleFixtures().fixturesPath = '../dist/css';
 jasmine.getJSONFixtures().fixturesPath = '../tests/fixtures/json';
 
-describe("Arrows", function() {
+describe("Height", function() {
 
 	var data;
 	var fixtures;
@@ -35,46 +35,41 @@ describe("Arrows", function() {
 		bullets = bulletsWrapper.children();
 
 		options = {
-			animationDuration: 10
+			autoheight: true,
+			animationDuration: 20
 		};
+
+		slides.eq(0).find('div').height(111);
+		slides.eq(1).find('div').height(222);
+		slides.eq(2).find('div').height(333);
+		slides.eq(3).find('div').height(444);
 
 		api = slider.glide(options).data('glide_api');
 
 	});
 
-	it("Arrows should have binded click event", function() {
-		var spyEvent = spyOnEvent(arrows.eq(0), 'click');
-		arrows.eq(0).click();
-		expect('click').toHaveBeenTriggeredOn(arrows.eq(0));
-		expect(spyEvent).toHaveBeenTriggered();
+
+	it("On init wrapper should have height of first slide", function(done) {
+
+		setTimeout(function(){
+			expect(wrapper.height()).toEqual(111);
+			done();
+		}, options.animationDuration*5);
+
 	});
 
-	it("Click on next arrow should change slide to next", function(done) {
 
-		var current = slides.index($(data.active)) + 1;
+	it("On slide change wrapper should have height of current slide", function(done) {
 
 		setTimeout(function(){
 			arrows.filter(data.arrowNext).click();
 			setTimeout(function(){
-				expect(slides.index($(data.active)) + 1).toBe(current + 1);
+				expect(wrapper.height()).toEqual(222);
 				done();
 			}, options.animationDuration*5);
 		}, options.animationDuration*5);
 
 	});
 
-	it("Click on prev arrow should change slide to prev", function(done) {
-
-		var current = slides.index($(data.active)) + 1;
-
-		setTimeout(function(){
-			arrows.filter(data.arrowPrev).click();
-			setTimeout(function(){
-				expect(slides.index($(data.active)) + 1).toBe(slides.length);
-				done();
-			}, options.animationDuration*5);
-		}, options.animationDuration*5);
-
-	});
 
 });

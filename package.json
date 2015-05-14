@@ -1,6 +1,6 @@
 {
   "name": "Glide.js",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Simple, lightweight and fast jQuery slider",
   "main": "Gruntfile.js",
   "author": "@jedrzejchalubek",

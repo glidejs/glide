@@ -1,6 +1,6 @@
 /*!
  * Glide.js
- * Version: 2.0.1
+ * Version: 2.0.2
  * Simple, lightweight and fast jQuery slider
  * Author: @jedrzejchalubek
  * Site: http://http://glide.jedrzejchalubek.com/
@@ -57,7 +57,7 @@ var Animation = function (Glide, Core) {
 
 		var translate = (Glide.current * Glide.width) - (Glide.width + this.offset);
 
-		Glide.wrapper.css({
+		Glide.track.css({
 			'transition': Core.Transition.get('all'),
 			'transform': Core.Translate.set('x', translate)
 		});
@@ -97,7 +97,7 @@ var Animation = function (Glide, Core) {
 			this.after(function() {
 
 				// clear transition and jump to last slide
-				Glide.wrapper.css({
+				Glide.track.css({
 					'transition': Core.Transition.clear('all'),
 					'transform': Core.Translate.set('x', Glide.length * Glide.width)
 				});
@@ -123,7 +123,7 @@ var Animation = function (Glide, Core) {
 			this.after(function() {
 
 				// Clear transition and jump to first slide
-				Glide.wrapper.css({
+				Glide.track.css({
 					'transition': Core.Transition.clear('all'),
 					'transform': Core.Translate.set('x', Glide.width)
 				});
@@ -145,7 +145,7 @@ var Animation = function (Glide, Core) {
 		 * Actual translate apply to wrapper
 		 * overwrite transition (can be pre-cleared)
 		 */
-		Glide.wrapper.css({
+		Glide.track.css({
 			'transition': Core.Transition.get('all'),
 			'transform': Core.Translate.set('x', translate)
 		});
@@ -273,7 +273,7 @@ var Api = function (Glide, Core) {
 				Glide.slider.removeData('glide_api');
 
 				delete Glide.slider;
-				delete Glide.wrapper;
+				delete Glide.track;
 				delete Glide.slides;
 				delete Glide.width;
 				delete Glide.length;
@@ -416,6 +416,8 @@ var Build = function (Glide, Core) {
 	 * @return {[type]} [description]
 	 */
 	Module.prototype.init = function() {
+		// Set slides height
+		Core.Height.set();
 		// Build proper slider type
 		this[Glide.options.type]();
 		// Set slide active class
@@ -430,7 +432,7 @@ var Build = function (Glide, Core) {
 	 * clones
 	 */
 	Module.prototype.removeClones = function() {
-		return Glide.wrapper.find('.clone').remove();
+		return Glide.track.find('.clone').remove();
 	};
 
 
@@ -443,7 +445,7 @@ var Build = function (Glide, Core) {
 		if (Glide.current === Glide.length) Core.Arrows.disable('next');
 		if (Glide.current === 1) Core.Arrows.disable('prev');
 
-		Glide.wrapper.css({
+		Glide.track.css({
 			'width': Glide.width * Glide.length,
 			'transform': Core.Translate.set('x', Glide.width * (Glide.current - 1)),
 		});
@@ -459,7 +461,7 @@ var Build = function (Glide, Core) {
 	 */
 	Module.prototype.carousel = function() {
 
-		Glide.wrapper
+		Glide.track
 			.append(Glide.clones[0].width(Glide.width))
 			.prepend(Glide.clones[1].width(Glide.width))
 			.css({
@@ -478,8 +480,11 @@ var Build = function (Glide, Core) {
 	 */
 	Module.prototype.slideshow = function () {
 
+		// Force height set
+		// Core.Height.set(true);
+		// Show up current slide
 		Glide.slides.eq(Glide.current - 1)
-			.css('opacity', 1 )
+			.css('opacity', 1)
 			.siblings().css('opacity', 0);
 
 	};
@@ -492,8 +497,8 @@ var Build = function (Glide, Core) {
 	Module.prototype.active = function () {
 
 		Glide.slides
-			.eq(Glide.current - 1).addClass('active')
-			.siblings().removeClass('active');
+			.eq(Glide.current - 1).addClass(Glide.options.classes.active)
+			.siblings().removeClass(Glide.options.classes.active);
 
 	};
 
@@ -653,7 +658,7 @@ var Events = function (Glide, Core) {
 
 		if (Glide.options.hoverpause) {
 
-			Glide.wrapper
+			Glide.track
 				.on('mouseover.glide', function(){
 					Core.Run.pause();
 				})
@@ -752,7 +757,7 @@ var Events = function (Glide, Core) {
 	 */
 	Module.prototype.unbind = function () {
 
-		Glide.wrapper
+		Glide.track
 			.unbind('keyup.glide')
 			.unbind('mouseover.glide')
 			.unbind('mouseout.glide');
@@ -820,6 +825,52 @@ var Events = function (Glide, Core) {
 };
 ;/**
  * --------------------------------
+ * Glide Height
+ * --------------------------------
+ * Height module
+ * @return {Glide.Height}
+ */
+
+var Height = function (Glide, Core) {
+
+
+	/**
+	 * Height Module Constructor
+	 */
+	function Module() {
+
+		if (Glide.options.autoheight) {
+			Glide.wrapper.css({
+				'transition': Core.Transition.get('height'),
+			});
+		}
+
+	}
+
+	/**
+	 * Get current slide height
+	 * @return {Number}
+	 */
+	Module.prototype.get = function () {
+		return Glide.slides.eq(Glide.current - 1).height();
+	};
+
+	/**
+	 * Set slider height
+	 * @return {Boolean}
+	 */
+	Module.prototype.set = function (force) {
+		return (Glide.options.autoheight || force) ? Glide.wrapper.height(this.get()) : false;
+	};
+
+
+	// @return Module
+	return new Module();
+
+
+};
+;/**
+ * --------------------------------
  * Glide Helper
  * --------------------------------
  * Helper functions
@@ -866,7 +917,11 @@ var Run = function (Glide, Core) {
 	 * Constructor
 	 */
 	function Module() {
+		// Running flag
+		// It's in use when autoplay is disabled via options,
+		// but we want start autoplay via api
 		this.running = false;
+		// Flag for offcanvas animation to cloned slides
 		this.flag = false;
 		this.play();
 	}
@@ -962,6 +1017,8 @@ var Run = function (Glide, Core) {
 
 		}
 
+		// Set slides height
+		if (Glide.options.autoheight) Core.Height.set();
 		// Set active bullet
 		Core.Bullets.active();
 
@@ -992,7 +1049,7 @@ var Run = function (Glide, Core) {
 		this.dragging = false;
 
 		if (Glide.options.touchDistance) {
-			Glide.wrapper.on({
+			Glide.track.on({
 				'touchstart.glide mousedown.glide': this.start,
 				'touchmove.glide mousemove.glide': Core.Events.throttle(this.move, Glide.options.throttle),
 				'touchend.glide touchcancel.glide mouseup.glide mouseleave.glide': this.end
@@ -1006,7 +1063,7 @@ var Run = function (Glide, Core) {
 	 * Unbind touch events
 	 */
 	Module.prototype.unbind = function() {
-		Glide.wrapper
+		Glide.track
 			.unbind('touchstart.glide mousedown.glide')
 			.unbind('touchmove.glide mousemove.glide')
 			.unbind('touchend.glide touchcancel.glide mouseup.glide mouseleave.glide');
@@ -1020,7 +1077,7 @@ var Run = function (Glide, Core) {
 	Module.prototype.start = function(event) {
 
 		// Escape if events disabled
-		// and event target is slider wrapper
+		// or already dragging
 		if (!Core.Events.disabled && !this.dragging) {
 
 			// Pause if autoplay
@@ -1051,11 +1108,12 @@ var Run = function (Glide, Core) {
 	 */
 	Module.prototype.move = function(event) {
 
-		// Escape if events disabled
+		// Escape if events not disabled
+		// or not dragging
 		if (!Core.Events.disabled && this.dragging) {
 
 			// Add dragging class
-			Glide.wrapper.addClass(Glide.options.classes.dragging);
+			Glide.track.addClass(Glide.options.classes.dragging);
 
 			var touch;
 
@@ -1078,11 +1136,13 @@ var Run = function (Glide, Core) {
 			// Calculate the sine of the angle
 			this.touchSin = Math.asin( touchCathetus/touchHypotenuse );
 
-			// While angle is lower than 45 degree, prevent scrolling
+			// While angle is lower than 45 degree
 			if ( (this.touchSin * 180 / Math.PI) < 45 ) {
+				// Prevent scrolling
 				event.preventDefault();
 			// Else escape from event, we don't want move slider
 			} else {
+				// Clear dragging flag
 				this.dragging = false;
 				return;
 			}
@@ -1101,15 +1161,16 @@ var Run = function (Glide, Core) {
 	 */
 	Module.prototype.end = function(event) {
 
-		// If events not disabled and still dragging
+		// Escape if events not disabled
+		// or not dragging
 		if (!Core.Events.disabled && this.dragging) {
 
-			// Unset dragging
+			// Unset dragging flag
 			this.dragging = false;
 			// Disable other events
 			Core.Events.disable();
 			// Remove dragging class
-			Glide.wrapper.removeClass(Glide.options.classes.dragging);
+			Glide.track.removeClass(Glide.options.classes.dragging);
 			// Turn off jumping flag
 			Core.Transition.jumping = false;
 
@@ -1226,7 +1287,7 @@ var Run = function (Glide, Core) {
 	 * @return {string}
 	 */
 	Module.prototype.get = function() {
-		var matrix = Glide.wrapper[0].styles.transform.replace(/[^0-9\-.,]/g, '').split(',');
+		var matrix = Glide.track[0].styles.transform.replace(/[^0-9\-.,]/g, '').split(',');
 		return parseInt(matrix[12] || matrix[4]);
 	};
 
@@ -1275,9 +1336,11 @@ var Glide = function (element, options) {
 		animationDuration: 400,
 		animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
 		throttle: 16,
+		autoheight: false,
 		classes: {
 			base: 'glide',
 			wrapper: 'glide__wrapper',
+			track: 'glide__track',
 			slide: 'glide__slide',
 			arrows: 'glide__arrows',
 			arrow: 'glide__arrow',
@@ -1285,6 +1348,7 @@ var Glide = function (element, options) {
 			arrowPrev: 'prev',
 			bullets: 'glide__bullets',
 			bullet: 'glide__bullet',
+			active: 'active',
 			dragging: 'dragging',
 			disabled: 'disabled'
 		},
@@ -1318,6 +1382,7 @@ var Glide = function (element, options) {
 		Events: Events,
 		Arrows: Arrows,
 		Bullets: Bullets,
+		Height: Height,
 		Build: Build,
 		Run: Run,
 		Animation: Animation,
@@ -1341,8 +1406,9 @@ var Glide = function (element, options) {
 Glide.prototype.collect = function() {
 
 	this.slider = this.element.addClass(this.options.classes.base + '--' + this.options.type);
-	this.wrapper = this.slider.children('.' + this.options.classes.wrapper);
-	this.slides = this.wrapper.children('.' + this.options.classes.slide);
+	this.track = this.slider.find('.' + this.options.classes.track);
+	this.wrapper = this.slider.find('.' + this.options.classes.wrapper);
+	this.slides = this.wrapper.find('.' + this.options.classes.slide);
 
 	this.clones = [
 		this.slides.filter(':first-child').clone().addClass('clone'),

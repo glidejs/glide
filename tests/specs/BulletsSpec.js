@@ -16,10 +16,10 @@ describe("Bullets", function() {
 			animationDuration: 10
 		};
 
-		wrapper = $('.glide').children('.glide__wrapper');
+		wrapper = $('.glide').find('.glide__track');
 		slides = wrapper.children();
 		slider = $('.glide').glide(options);
-		bulletsWrapper = slider.children('.glide__bullets');
+		bulletsWrapper = slider.find('.glide__bullets');
 		bullets = bulletsWrapper.children();
 
 	});

@@ -1,11 +1,11 @@
 {
 	"name": "glidejs",
-	"version": "2.0.1",
+	"version": "2.0.2",
 	"homepage": "http://glide.jedrzejchalubek.com",
 	"authors": [
 		"Jędrzej Chałubek <jedrzej.chalubek@gmail.com>"
 	],
-	"description": "Glide is a responsive and touch-friendly jQuery slider. Based on CSS3 transitions with fallback to older broswers. It's simple, lightweight and fast.",
+	"description": "Glide is a responsive and touch-friendly jQuery slider. Based on CSS3 transitions with fallback to older broswers. It's simple, lightweight and fast. Designed to slide, no less, no more.",
 	"main": [
 		"dist/glide.min.js",
 		"dist/css/style.css"

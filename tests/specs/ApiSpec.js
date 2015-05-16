@@ -1,29 +1,43 @@
 jasmine.getFixtures().fixturesPath = '../tests/fixtures';
 jasmine.getStyleFixtures().fixturesPath = '../dist/css';
+jasmine.getJSONFixtures().fixturesPath = '../tests/fixtures/json';
 
 describe("Api", function() {
 
+	var data;
+	var fixtures;
 	var slider;
 	var wrapper;
+	var track;
 	var slides;
+	var arrows;
+	var bullets;
 	var api;
-	var index;
-	var options;
 
 	beforeEach(function () {
+
 		loadFixtures('base.html');
 		loadStyleFixtures('glide.css');
+
+		data = getJSONFixture('data.json');
+		fixtures = loadJSONFixtures('data.json');
+		data = fixtures['data.json'];
+
+		slider = $(data.base);
+		wrapper = slider.find(data.wrapper);
+		track = wrapper.find(data.track);
+		slides = track.children();
+		arrows = slider.find(data.arrows).children();
+		bullets = slider.find(data.bullets).children();
 
 		options = {
 			animationDuration: 10,
 			autoplay: 200,
 		};
 
-		wrapper = $('.glide').children('.glide__wrapper');
-		slides = wrapper.children();
-		slider = $('.glide').glide(options);
-		api = slider.data('glide_api');
-		index = slides.index($('.active')) + 1;
+		api = slider.glide(options).data('glide_api');
+		index = slides.index($(data.active)) + 1;
+
 	});
 
 
@@ -31,7 +45,7 @@ describe("Api", function() {
 		setTimeout(function(){
 			api.go('>');
 			setTimeout(function(){
-				expect(api.current()).toEqual(slides.index($('.active')) + 1);
+				expect(api.current()).toEqual(slides.index($(data.active)) + 1);
 				done();
 			}, options.animationDuration*5);
 		}, options.animationDuration*5);
@@ -44,7 +58,7 @@ describe("Api", function() {
 			api.go('>');
 
 			setTimeout(function(){
-				expect(slides.index($('.active')) + 1).toEqual(index + 1);
+				expect(slides.index($(data.active)) + 1).toEqual(index + 1);
 				done();
 			}, options.animationDuration*5);
 
@@ -59,7 +73,7 @@ describe("Api", function() {
 			api.go('>>');
 
 			setTimeout(function(){
-				expect(slides.index($('.active')) + 1).toEqual(slides.length);
+				expect(slides.index($(data.active)) + 1).toEqual(slides.length);
 				done();
 			}, options.animationDuration*5);
 
@@ -74,7 +88,7 @@ describe("Api", function() {
 			api.go('<');
 
 			setTimeout(function(){
-				expect(slides.index($('.active')) + 1).toEqual(slides.length);
+				expect(slides.index($(data.active)) + 1).toEqual(slides.length);
 				done();
 			}, options.animationDuration*5);
 
@@ -93,7 +107,7 @@ describe("Api", function() {
 				api.go('<<');
 
 				setTimeout(function(){
-					expect(slides.index($('.active')) + 1).toEqual(1);
+					expect(slides.index($(data.active)) + 1).toEqual(1);
 					done();
 				}, options.animationDuration*5);
 
@@ -109,7 +123,7 @@ describe("Api", function() {
 			api.go('=3');
 
 			setTimeout(function(){
-				expect(slides.index($('.active')) + 1).toEqual(3);
+				expect(slides.index($(data.active)) + 1).toEqual(3);
 				done();
 			}, options.animationDuration*5);
 

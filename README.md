@@ -1,6 +1,6 @@
 #[![glide.js](http://glide.jedrzejchalubek.com/images/glidejs-logotype-black.svg)](http://glide.jedrzejchalubek.com)
 
-[Glide.js](http://glide.jedrzejchalubek.com) is a responsive and touch-friendly jQuery slider. Based on CSS3 transitions. It's simple, lightweight and fast.
+[Glide.js](http://glide.jedrzejchalubek.com) is a responsive and touch-friendly jQuery slider. Based on CSS3 transitions. It's simple, lightweight and fast. Designed to slide, no less, no more.
 
 [![Build Status](https://travis-ci.org/jedrzejchalubek/Glide.js.svg?branch=master)](https://travis-ci.org/jedrzejchalubek/Glide.js)
 
@@ -37,6 +37,9 @@ Build using Grunt and Bower. The following tasks are available:
 - When switching from first to last item trought bullet, both arrows are unbinded and not clickable (type: slider)
 
 ##Changelog
+`2.0.2` / `14.05.2015`
+- Autoheight added [#93](/../../issues/95) (Changes slider markup read docs)
+
 `2.0.1` / `29.04.2015`
 - Touch module optimizations
 

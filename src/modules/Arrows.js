@@ -33,7 +33,7 @@ var Arrows = function (Glide, Core) {
 	/**
 	 * Hide arrow
 	 */
-	Module.prototype.hide = function (type) {
+	Module.prototype.disable = function (type) {
 
 		return this.items.filter('.' + Glide.options.classes['arrow' + Core.Helper.capitalise(type)])
 			.off('click.glide touchstart.glide')
@@ -47,7 +47,7 @@ var Arrows = function (Glide, Core) {
 	/**
 	 * Show arrows
 	 */
-	Module.prototype.show = function () {
+	Module.prototype.enable = function () {
 
 		this.bind();
 		return this.items.removeClass(Glide.options.classes.disabled);

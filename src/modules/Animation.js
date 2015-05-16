@@ -47,17 +47,17 @@ var Animation = function (Glide, Core) {
 
 		var translate = (Glide.current * Glide.width) - (Glide.width + this.offset);
 
-		Glide.wrapper.css({
+		Glide.track.css({
 			'transition': Core.Transition.get('all'),
 			'transform': Core.Translate.set('x', translate)
 		});
 
 		// If on start hide prev arrow
-		if (Glide.current === 1) Core.Arrows.hide('prev');
+		if (Glide.current === 1) Core.Arrows.disable('prev');
 		// If on end hide next arrow
-		else if (Glide.current === Glide.length) Core.Arrows.hide('next');
+		else if (Glide.current === Glide.length) Core.Arrows.disable('next');
 		// Show arrows
-		else Core.Arrows.show();
+		else Core.Arrows.enable();
 
 	};
 
@@ -87,7 +87,7 @@ var Animation = function (Glide, Core) {
 			this.after(function() {
 
 				// clear transition and jump to last slide
-				Glide.wrapper.css({
+				Glide.track.css({
 					'transition': Core.Transition.clear('all'),
 					'transform': Core.Translate.set('x', Glide.length * Glide.width)
 				});
@@ -113,7 +113,7 @@ var Animation = function (Glide, Core) {
 			this.after(function() {
 
 				// Clear transition and jump to first slide
-				Glide.wrapper.css({
+				Glide.track.css({
 					'transition': Core.Transition.clear('all'),
 					'transform': Core.Translate.set('x', Glide.width)
 				});
@@ -135,7 +135,7 @@ var Animation = function (Glide, Core) {
 		 * Actual translate apply to wrapper
 		 * overwrite transition (can be pre-cleared)
 		 */
-		Glide.wrapper.css({
+		Glide.track.css({
 			'transition': Core.Transition.get('all'),
 			'transform': Core.Translate.set('x', translate)
 		});

@@ -1,6 +1,6 @@
 /*!
  * Glide.js
- * Version: 2.0.1
+ * Version: 2.0.2
  * Simple, lightweight and fast jQuery slider
  * Author: @jedrzejchalubek
  * Site: http://http://glide.jedrzejchalubek.com/
@@ -63,11 +63,24 @@ var Animation = function (Glide, Core) {
 		});
 
 		// If on start hide prev arrow
-		if (Glide.current === 1) Core.Arrows.disable('prev');
+		if (Glide.current === 1) {
+			Core.Run.play();
+			Core.Arrows.enable();
+			Core.Arrows.disable('prev');
+		}
+
 		// If on end hide next arrow
-		else if (Glide.current === Glide.length) Core.Arrows.disable('next');
+		else if (Glide.current === Glide.length) {
+			Core.Run.pause();
+			Core.Arrows.enable();
+			Core.Arrows.disable('next');
+		}
+
 		// Show arrows
-		else Core.Arrows.enable();
+		else {
+			Core.Run.play();
+			Core.Arrows.enable();
+		}
 
 	};
 
@@ -653,13 +666,25 @@ var Events = function (Glide, Core) {
 				if (Glide.current === 1 && Glide.options.type == 'slider') {
 					// slider is on the first item
 				} else {
-					if (event.keyCode === 37) Core.Run.make('<');
+					if (event.keyCode === 37) {
+						Core.Run.pause();
+						Core.Run.make('<');
+						Core.Animation.after(function () {
+							Core.Run.play();
+						});
+					}
 				}
 
 				if (Glide.current === Glide.length && Glide.options.type == 'slider') {
 					// slider is on the last item
 				} else {
-					if (event.keyCode === 39) Core.Run.make('>');
+					if (event.keyCode === 39) {
+						Core.Run.pause();
+						Core.Run.make('>');
+						Core.Animation.after(function () {
+							Core.Run.play();
+						});
+					}
 				}
 			});
 
@@ -953,7 +978,11 @@ var Run = function (Glide, Core) {
 
 			if (typeof this.interval === 'undefined') {
 				this.interval = setInterval(function() {
-					that.make('>');
+					if (Glide.current === Glide.length && Glide.options.type == "slider") {
+						// do nothing
+					} else {
+						that.make('>');
+					}
 				}, Glide.options.autoplay);
 			}
 

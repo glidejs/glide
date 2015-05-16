@@ -35,13 +35,25 @@ var Events = function (Glide, Core) {
 				if (Glide.current === 1 && Glide.options.type == 'slider') {
 					// slider is on the first item
 				} else {
-					if (event.keyCode === 37) Core.Run.make('<');
+					if (event.keyCode === 37) {
+						Core.Run.pause();
+						Core.Run.make('<');
+						Core.Animation.after(function () {
+							Core.Run.play();
+						});
+					}
 				}
 
 				if (Glide.current === Glide.length && Glide.options.type == 'slider') {
 					// slider is on the last item
 				} else {
-					if (event.keyCode === 39) Core.Run.make('>');
+					if (event.keyCode === 39) {
+						Core.Run.pause();
+						Core.Run.make('>');
+						Core.Animation.after(function () {
+							Core.Run.play();
+						});
+					}
 				}
 			});
 

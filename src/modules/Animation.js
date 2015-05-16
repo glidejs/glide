@@ -53,11 +53,24 @@ var Animation = function (Glide, Core) {
 		});
 
 		// If on start hide prev arrow
-		if (Glide.current === 1) Core.Arrows.disable('prev');
+		if (Glide.current === 1) {
+			Core.Run.play();
+			Core.Arrows.enable();
+			Core.Arrows.disable('prev');
+		}
+
 		// If on end hide next arrow
-		else if (Glide.current === Glide.length) Core.Arrows.disable('next');
+		else if (Glide.current === Glide.length) {
+			Core.Run.pause();
+			Core.Arrows.enable();
+			Core.Arrows.disable('next');
+		}
+
 		// Show arrows
-		else Core.Arrows.enable();
+		else {
+			Core.Run.play();
+			Core.Arrows.enable();
+		}
 
 	};
 

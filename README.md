@@ -31,11 +31,6 @@ Build using Grunt and Bower. The following tasks are available:
 - <del>Touch module optimizations</del> [#93](/../../issues/93)
 - Better comments
 
-##Issues
-- Stop autoplay and hoverpause on last slide (type: slider)
-- <del>Unbind keyboard on first/last item (type: slider)</del>
-- When switching from first to last item trought bullet, both arrows are unbinded and not clickable (type: slider)
-
 ##Changelog
 `2.0.2` / `14.05.2015`
 - Autoheight added [#93](/../../issues/95) (Changes slider markup read docs)

@@ -32,6 +32,7 @@ var Height = function (Glide, Core) {
 
 	/**
 	 * Set slider height
+	 * @param {Boolean} force Force height setting even if option is turn off
 	 * @return {Boolean}
 	 */
 	Module.prototype.set = function (force) {

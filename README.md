@@ -30,7 +30,7 @@ Build using Grunt and Bower. The following tasks are available:
 
 ##Changelog
 `2.0.2` / `14.05.2015`
-- Autoheight added [#93](/../../issues/95) (Changes slider markup read docs)
+- Autoheight added [#95](/../../issues/95) (Changes slider markup read docs)
 
 `2.0.1` / `29.04.2015`
 - Touch module optimizations

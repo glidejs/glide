@@ -80,7 +80,7 @@ var Arrows = function (Glide, Core) {
 	 * arrows events
 	 */
 	Module.prototype.unbind = function () {
-		return this.items.unbind('click.glide touchstart.glide');
+		return this.items.off('click.glide touchstart.glide');
 	};
 
 

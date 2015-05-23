@@ -80,21 +80,20 @@ var Events = function (Glide, Core) {
 
 		if (this.triggers.length) {
 
-			this.triggers.on('click.glide touchstart.glide', function(event) {
+			this.triggers
+				.off('click.glide touchstart.glide')
+				.on('click.glide touchstart.glide', function(event) {
 
-				event.preventDefault();
+					event.preventDefault();
 
-				if (!Core.Events.disabled) {
+					if (!Core.Events.disabled) {
+						var target = $($(this).data('glide-trigger')).data('glide_api');
+						target.pause();
+						target.go($(this).data('glide-dir'));
+						target.play();
+					}
 
-					var target = $($(this).data('glide-trigger')).data('glide_api');
-
-					target.pause();
-					target.go($(this).data('glide-dir'));
-					target.play();
-
-				}
-
-			});
+				});
 
 		}
 
@@ -140,16 +139,16 @@ var Events = function (Glide, Core) {
 	Module.prototype.unbind = function () {
 
 		Glide.track
-			.unbind('keyup.glide')
-			.unbind('mouseover.glide')
-			.unbind('mouseout.glide');
+			.off('keyup.glide')
+			.off('mouseover.glide')
+			.off('mouseout.glide');
 
 		this.triggers
-			.unbind('click.glide touchstart.glide');
+			.off('click.glide touchstart.glide');
 
 		$(window)
-			.unbind('keyup.glide')
-			.unbind('resize.glide');
+			.off('keyup.glide')
+			.off('resize.glide');
 
 	};
 

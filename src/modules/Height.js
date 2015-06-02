@@ -18,6 +18,7 @@ var Height = function (Glide, Core) {
 			Glide.wrapper.css({
 				'transition': Core.Transition.get('height'),
 			});
+			console.log('sss');
 		}
 
 	}

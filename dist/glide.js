@@ -842,6 +842,7 @@ var Height = function (Glide, Core) {
 			Glide.wrapper.css({
 				'transition': Core.Transition.get('height'),
 			});
+			console.log('sss');
 		}
 
 	}
@@ -1018,7 +1019,7 @@ var Run = function (Glide, Core) {
 		}
 
 		// Set slides height
-		if (Glide.options.autoheight) Core.Height.set();
+		Core.Height.set();
 		// Set active bullet
 		Core.Bullets.active();
 
@@ -1112,9 +1113,6 @@ var Run = function (Glide, Core) {
 		// or not dragging
 		if (!Core.Events.disabled && this.dragging) {
 
-			// Add dragging class
-			Glide.track.addClass(Glide.options.classes.dragging);
-
 			var touch;
 
 			// Cache event
@@ -1140,6 +1138,8 @@ var Run = function (Glide, Core) {
 			if ( (this.touchSin * 180 / Math.PI) < 45 ) {
 				// Prevent scrolling
 				event.preventDefault();
+				// Add dragging class
+				Glide.track.addClass(Glide.options.classes.dragging);
 			// Else escape from event, we don't want move slider
 			} else {
 				// Clear dragging flag
@@ -1164,6 +1164,8 @@ var Run = function (Glide, Core) {
 		// Escape if events not disabled
 		// or not dragging
 		if (!Core.Events.disabled && this.dragging) {
+
+			// event.preventDefault();
 
 			// Unset dragging flag
 			this.dragging = false;

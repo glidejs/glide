@@ -115,7 +115,7 @@ var Run = function (Glide, Core) {
 		}
 
 		// Set slides height
-		if (Glide.options.autoheight) Core.Height.set();
+		Core.Height.set();
 		// Set active bullet
 		Core.Bullets.active();
 

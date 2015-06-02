@@ -21,6 +21,11 @@
 .glide__track.dragging {
   cursor: -webkit-grabbing;
   cursor: grabbing;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 .glide__slide {
   -webkit-perspective: 1000;
@@ -31,6 +36,11 @@
   position: absolute;
   top: 50%;
   width: 100%;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 .glide__arrow {
   position: absolute;
@@ -54,6 +64,11 @@
   width: 100%;
   text-align: center;
   list-style: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 .glide__bullets li {
   display: inline-block;
@@ -93,6 +108,8 @@
   top: 0;
   left: 0;
   z-index: -1;
+  -webkit-transform-style: preserve-3d;
+  -webkit-transform: translate3d(0px, 0px, 0px);
 }
 .glide--slideshow .glide__slide.active {
   z-index: 1;

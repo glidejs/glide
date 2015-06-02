@@ -72,9 +72,6 @@ var Touch = function (Glide, Core) {
 		// or not dragging
 		if (!Core.Events.disabled && this.dragging) {
 
-			// Add dragging class
-			Glide.track.addClass(Glide.options.classes.dragging);
-
 			var touch;
 
 			// Cache event
@@ -100,6 +97,8 @@ var Touch = function (Glide, Core) {
 			if ( (this.touchSin * 180 / Math.PI) < 45 ) {
 				// Prevent scrolling
 				event.preventDefault();
+				// Add dragging class
+				Glide.track.addClass(Glide.options.classes.dragging);
 			// Else escape from event, we don't want move slider
 			} else {
 				// Clear dragging flag
@@ -124,6 +123,8 @@ var Touch = function (Glide, Core) {
 		// Escape if events not disabled
 		// or not dragging
 		if (!Core.Events.disabled && this.dragging) {
+
+			// event.preventDefault();
 
 			// Unset dragging flag
 			this.dragging = false;

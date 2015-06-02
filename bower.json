@@ -8,7 +8,7 @@
 	"description": "Glide is a responsive and touch-friendly jQuery slider. Based on CSS3 transitions with fallback to older broswers. It's simple, lightweight and fast.",
 	"main": [
 		"dist/glide.min.js",
-		"dist/css/style.css"
+		"dist/css/glide.css"
 	],
 	"moduleType": [
 		"node"

@@ -17,6 +17,8 @@
           backface-visibility: hidden;
   -webkit-transform-style: preserve-3d;
           transform-style: preserve-3d;
+  -ms-touch-action: pan-Y;
+      touch-action: pan-Y;
 }
 .glide__track.dragging {
   cursor: -webkit-grabbing;

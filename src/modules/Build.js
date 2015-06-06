@@ -43,13 +43,23 @@ var Build = function (Glide, Core) {
 
 
 	/**
+	 * Check if slider type is
+	 * @param  {string} name Type name to check
+	 * @return {boolean}
+	 */
+	Module.prototype.isType = function(name) {
+		return Glide.options.type === name;
+	};
+
+
+	/**
 	 * Build Slider type
 	 */
 	Module.prototype.slider = function() {
 
 		// Hide next/prev arrow when on the end/start
-		if (Glide.current === Glide.length) Core.Arrows.disable('next');
-		if (Glide.current === 1) Core.Arrows.disable('prev');
+		if (Core.Run.isStart()) Core.Arrows.disable('prev');
+		if (Core.Run.isEnd()) Core.Arrows.disable('next');
 
 		Glide.track.css({
 			'width': Glide.width * Glide.length,

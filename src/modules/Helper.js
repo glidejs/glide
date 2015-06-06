@@ -25,6 +25,15 @@ var Helper = function (Glide, Core) {
 	};
 
 
+	/**
+	 * Get time
+	 * @source http://underscorejs.org/
+	 */
+	Module.prototype.now = Date.now || function() {
+		return new Date().getTime();
+	};
+
+
 	// @return Module
 	return new Module();
 

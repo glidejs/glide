@@ -1,3 +1,11 @@
+/**
+ * --------------------------------
+ * Glide Touch
+ * --------------------------------
+ * Touch module
+ * @return {Glide.Touch}
+ */
+
 var Touch = function (Glide, Core) {
 
 
@@ -9,11 +17,11 @@ var Touch = function (Glide, Core) {
 		this.dragging = false;
 
 		if (Glide.options.touchDistance) {
-			Glide.track.on({
-				'touchstart.glide mousedown.glide': this.start,
-				'touchmove.glide mousemove.glide': Core.Events.throttle(this.move, Glide.options.throttle),
-				'touchend.glide touchcancel.glide mouseup.glide mouseleave.glide': this.end
-			});
+			Glide.slides.on({ 'touchstart.glide': $.proxy(this.start, this) });
+		}
+
+		if (Glide.options.dragDistance) {
+			Glide.slides.on({ 'mousedown.glide': $.proxy(this.start, this) });
 		}
 
 	}
@@ -24,9 +32,9 @@ var Touch = function (Glide, Core) {
 	 */
 	Module.prototype.unbind = function() {
 		Glide.track
-			.unbind('touchstart.glide mousedown.glide')
-			.unbind('touchmove.glide mousemove.glide')
-			.unbind('touchend.glide touchcancel.glide mouseup.glide mouseleave.glide');
+			.off('touchstart.glide mousedown.glide')
+			.off('touchmove.glide mousemove.glide')
+			.off('touchend.glide touchcancel.glide mouseup.glide mouseleave.glide');
 	};
 
 
@@ -36,10 +44,14 @@ var Touch = function (Glide, Core) {
 	 */
 	Module.prototype.start = function(event) {
 
+		event.preventDefault();
+
 		// Escape if events disabled
 		// or already dragging
 		if (!Core.Events.disabled && !this.dragging) {
 
+			// Detach clicks inside track
+			Core.Events.detachClicks();
 			// Pause if autoplay
 			Core.Run.pause();
 			// Turn on jumping flag
@@ -57,7 +69,14 @@ var Touch = function (Glide, Core) {
 			this.touchSin = null;
 			this.dragging = true;
 
+			Glide.track.on({
+				'touchmove.glide mousemove.glide': Core.Events.throttle($.proxy(this.move, this), Glide.options.throttle),
+				'touchend.glide touchcancel.glide mouseup.glide mouseleave.glide': $.proxy(this.end, this)
+			});
+
 		}
+
+		return false;
 
 	};
 
@@ -68,9 +87,14 @@ var Touch = function (Glide, Core) {
 	 */
 	Module.prototype.move = function(event) {
 
+		event.preventDefault();
+
 		// Escape if events not disabled
 		// or not dragging
 		if (!Core.Events.disabled && this.dragging) {
+
+			// Prevent clicks inside track
+			Core.Events.preventClicks();
 
 			var touch;
 
@@ -111,6 +135,8 @@ var Touch = function (Glide, Core) {
 
 		}
 
+		return false;
+
 	};
 
 
@@ -120,11 +146,11 @@ var Touch = function (Glide, Core) {
 	 */
 	Module.prototype.end = function(event) {
 
+		event.preventDefault();
+
 		// Escape if events not disabled
 		// or not dragging
 		if (!Core.Events.disabled && this.dragging) {
-
-			// event.preventDefault();
 
 			// Unset dragging flag
 			this.dragging = false;
@@ -147,15 +173,15 @@ var Touch = function (Glide, Core) {
 			var touchDeg = this.touchSin * 180 / Math.PI;
 
 			// If slider type is slider
-			if (Glide.options.type == 'slider') {
+			if (Core.Build.isType('slider')) {
 
 				// Prevent slide to right on first item (prev)
-				if (Glide.current === 1) {
+				if (Core.Run.isStart()) {
 					if ( touchDistance > 0 ) touchDistance = 0;
 				}
 
 				// Prevent slide to left on last item (next)
-				if (Glide.current === Glide.length) {
+				if (Core.Run.isEnd()) {
 					if ( touchDistance < 0 ) touchDistance = 0;
 				}
 
@@ -178,7 +204,13 @@ var Touch = function (Glide, Core) {
 				Core.Run.play();
 			});
 
+			Glide.track
+				.off('touchmove.glide mousemove.glide')
+				.off('touchend.glide touchcancel.glide mouseup.glide mouseleave.glide');
+
 		}
+
+		return false;
 
 	};
 

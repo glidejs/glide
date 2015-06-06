@@ -65,6 +65,31 @@ var Run = function (Glide, Core) {
 
 
 	/**
+	 * Check if we are on first slide
+	 * @return {boolean}
+	 */
+	Module.prototype.isStart = function() {
+		return Glide.current === 1;
+	};
+
+
+	/**
+	 * Check if we are on last slide
+	 * @return {boolean}
+	 */
+	Module.prototype.isEnd = function() {
+		return Glide.current === Glide.length;
+	};
+
+	/**
+	 * Check if we are making offset run
+	 * @return {boolean}
+	 */
+	Module.prototype.isOffset = function(direction) {
+		return this.flag && this.direction === direction;
+	};
+
+	/**
 	 * Run move animation
 	 * @param  {string} move Code in pattern {direction}{steps} eq. ">3"
 	 */
@@ -88,7 +113,7 @@ var Run = function (Glide, Core) {
 			case '>':
 				// When we at last slide and move forward and steps are number
 				// Set flag and current slide to first
-				if (Glide.current == Glide.length) Glide.current = 1, this.flag = true;
+				if (this.isEnd()) Glide.current = 1, this.flag = true;
 				// When steps is not number, but '>'
 				// scroll slider to end
 				else if (this.steps === '>') Glide.current = Glide.length;
@@ -99,7 +124,7 @@ var Run = function (Glide, Core) {
 			case '<':
 				// When we at first slide and move backward and steps are number
 				// Set flag and current slide to last
-				if(Glide.current == 1) Glide.current = Glide.length, this.flag = true;
+				if(this.isStart()) Glide.current = Glide.length, this.flag = true;
 				// When steps is not number, but '<'
 				// scroll slider to start
 				else if (this.steps === '<') Glide.current = 1;

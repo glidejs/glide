@@ -63,9 +63,9 @@ var Animation = function (Glide, Core) {
 		});
 
 		// If on start hide prev arrow
-		if (Glide.current === 1) Core.Arrows.disable('prev');
+		if (Core.Run.isStart()) Core.Arrows.disable('prev');
 		// If on end hide next arrow
-		else if (Glide.current === Glide.length) Core.Arrows.disable('next');
+		else if (Core.Run.isEnd()) Core.Arrows.disable('next');
 		// Show arrows
 		else Core.Arrows.enable();
 
@@ -86,7 +86,7 @@ var Animation = function (Glide, Core) {
 		 * so we're on the first slide
 		 * and need to make offset translate
 		 */
-		if (Core.Run.flag && Core.Run.direction === '<') {
+		if (Core.Run.isOffset('<')) {
 
 			// Translate is 0 (left edge of wrapper)
 			translate = 0 - this.offset;
@@ -112,7 +112,7 @@ var Animation = function (Glide, Core) {
 		 * so we're on the last slide
 		 * and need to make offset translate
 		 */
-		else if (Core.Run.flag && Core.Run.direction === '>') {
+		else if (Core.Run.isOffset('>')) {
 
 			// Translate is euqal wrapper width with offset
 			translate = (Glide.length * Glide.width) + (Glide.width - this.offset);
@@ -437,13 +437,23 @@ var Build = function (Glide, Core) {
 
 
 	/**
+	 * Check if slider type is
+	 * @param  {string} name Type name to check
+	 * @return {boolean}
+	 */
+	Module.prototype.isType = function(name) {
+		return Glide.options.type === name;
+	};
+
+
+	/**
 	 * Build Slider type
 	 */
 	Module.prototype.slider = function() {
 
 		// Hide next/prev arrow when on the end/start
-		if (Glide.current === Glide.length) Core.Arrows.disable('next');
-		if (Glide.current === 1) Core.Arrows.disable('prev');
+		if (Core.Run.isStart()) Core.Arrows.disable('prev');
+		if (Core.Run.isEnd()) Core.Arrows.disable('next');
 
 		Glide.track.css({
 			'width': Glide.width * Glide.length,
@@ -632,6 +642,7 @@ var Events = function (Glide, Core) {
 	 */
 	function Module() {
 		this.disabled = false;
+		this.anchors = Glide.track.find('a');
 		this.keyboard();
 		this.hoverpause();
 		this.resize();
@@ -738,6 +749,24 @@ var Events = function (Glide, Core) {
 	};
 
 
+	/**
+	 * Detach anchors clicks
+	 * inside slider track
+	 */
+	Module.prototype.detachClicks = function() {
+		return this.anchors.off('click');
+	};
+
+
+	/**
+	 * Prevent anchors clicks
+	 * inside slider track
+	 */
+	Module.prototype.preventClicks = function(status) {
+		return this.anchors.on('click', function(event){ event.preventDefault(); });
+	};
+
+
 	/*
 	 * Call function
 	 * @param {Function} func
@@ -782,13 +811,13 @@ var Events = function (Glide, Core) {
 		var previous = 0;
 		if (!options) options = {};
 		var later = function() {
-			previous = options.leading === false ? 0 : that.now();
+			previous = options.leading === false ? 0 : Core.Helper.now();
 			timeout = null;
 			result = func.apply(context, args);
 			if (!timeout) context = args = null;
 		};
 		return function() {
-			var now = that.now();
+			var now = Core.Helper.now();
 			if (!previous && options.leading === false) previous = now;
 			var remaining = wait - (now - previous);
 			context = this;
@@ -806,15 +835,6 @@ var Events = function (Glide, Core) {
 			}
 			return result;
 		};
-	};
-
-
-	/**
-	 * Get time
-	 * @source http://underscorejs.org/
-	 */
-	Module.prototype.now = Date.now || function() {
-		return new Date().getTime();
 	};
 
 
@@ -842,7 +862,6 @@ var Height = function (Glide, Core) {
 			Glide.wrapper.css({
 				'transition': Core.Transition.get('height'),
 			});
-			console.log('sss');
 		}
 
 	}
@@ -894,6 +913,15 @@ var Helper = function (Glide, Core) {
 	 */
 	Module.prototype.capitalise = function (s) {
 		return s.charAt(0).toUpperCase() + s.slice(1);
+	};
+
+
+	/**
+	 * Get time
+	 * @source http://underscorejs.org/
+	 */
+	Module.prototype.now = Date.now || function() {
+		return new Date().getTime();
 	};
 
 
@@ -969,6 +997,31 @@ var Run = function (Glide, Core) {
 
 
 	/**
+	 * Check if we are on first slide
+	 * @return {boolean}
+	 */
+	Module.prototype.isStart = function() {
+		return Glide.current === 1;
+	};
+
+
+	/**
+	 * Check if we are on last slide
+	 * @return {boolean}
+	 */
+	Module.prototype.isEnd = function() {
+		return Glide.current === Glide.length;
+	};
+
+	/**
+	 * Check if we are making offset run
+	 * @return {boolean}
+	 */
+	Module.prototype.isOffset = function(direction) {
+		return this.flag && this.direction === direction;
+	};
+
+	/**
 	 * Run move animation
 	 * @param  {string} move Code in pattern {direction}{steps} eq. ">3"
 	 */
@@ -992,7 +1045,7 @@ var Run = function (Glide, Core) {
 			case '>':
 				// When we at last slide and move forward and steps are number
 				// Set flag and current slide to first
-				if (Glide.current == Glide.length) Glide.current = 1, this.flag = true;
+				if (this.isEnd()) Glide.current = 1, this.flag = true;
 				// When steps is not number, but '>'
 				// scroll slider to end
 				else if (this.steps === '>') Glide.current = Glide.length;
@@ -1003,7 +1056,7 @@ var Run = function (Glide, Core) {
 			case '<':
 				// When we at first slide and move backward and steps are number
 				// Set flag and current slide to last
-				if(Glide.current == 1) Glide.current = Glide.length, this.flag = true;
+				if(this.isStart()) Glide.current = Glide.length, this.flag = true;
 				// When steps is not number, but '<'
 				// scroll slider to start
 				else if (this.steps === '<') Glide.current = 1;
@@ -1039,7 +1092,15 @@ var Run = function (Glide, Core) {
 	return new Module();
 
 };
-;var Touch = function (Glide, Core) {
+;/**
+ * --------------------------------
+ * Glide Touch
+ * --------------------------------
+ * Touch module
+ * @return {Glide.Touch}
+ */
+
+var Touch = function (Glide, Core) {
 
 
 	/**
@@ -1050,11 +1111,11 @@ var Run = function (Glide, Core) {
 		this.dragging = false;
 
 		if (Glide.options.touchDistance) {
-			Glide.track.on({
-				'touchstart.glide mousedown.glide': this.start,
-				'touchmove.glide mousemove.glide': Core.Events.throttle(this.move, Glide.options.throttle),
-				'touchend.glide touchcancel.glide mouseup.glide mouseleave.glide': this.end
-			});
+			Glide.slides.on({ 'touchstart.glide': $.proxy(this.start, this) });
+		}
+
+		if (Glide.options.dragDistance) {
+			Glide.slides.on({ 'mousedown.glide': $.proxy(this.start, this) });
 		}
 
 	}
@@ -1065,9 +1126,9 @@ var Run = function (Glide, Core) {
 	 */
 	Module.prototype.unbind = function() {
 		Glide.track
-			.unbind('touchstart.glide mousedown.glide')
-			.unbind('touchmove.glide mousemove.glide')
-			.unbind('touchend.glide touchcancel.glide mouseup.glide mouseleave.glide');
+			.off('touchstart.glide mousedown.glide')
+			.off('touchmove.glide mousemove.glide')
+			.off('touchend.glide touchcancel.glide mouseup.glide mouseleave.glide');
 	};
 
 
@@ -1077,10 +1138,14 @@ var Run = function (Glide, Core) {
 	 */
 	Module.prototype.start = function(event) {
 
+		event.preventDefault();
+
 		// Escape if events disabled
 		// or already dragging
 		if (!Core.Events.disabled && !this.dragging) {
 
+			// Detach clicks inside track
+			Core.Events.detachClicks();
 			// Pause if autoplay
 			Core.Run.pause();
 			// Turn on jumping flag
@@ -1098,7 +1163,14 @@ var Run = function (Glide, Core) {
 			this.touchSin = null;
 			this.dragging = true;
 
+			Glide.track.on({
+				'touchmove.glide mousemove.glide': Core.Events.throttle($.proxy(this.move, this), Glide.options.throttle),
+				'touchend.glide touchcancel.glide mouseup.glide mouseleave.glide': $.proxy(this.end, this)
+			});
+
 		}
+
+		return false;
 
 	};
 
@@ -1109,9 +1181,14 @@ var Run = function (Glide, Core) {
 	 */
 	Module.prototype.move = function(event) {
 
+		event.preventDefault();
+
 		// Escape if events not disabled
 		// or not dragging
 		if (!Core.Events.disabled && this.dragging) {
+
+			// Prevent clicks inside track
+			Core.Events.preventClicks();
 
 			var touch;
 
@@ -1152,6 +1229,8 @@ var Run = function (Glide, Core) {
 
 		}
 
+		return false;
+
 	};
 
 
@@ -1161,11 +1240,11 @@ var Run = function (Glide, Core) {
 	 */
 	Module.prototype.end = function(event) {
 
+		event.preventDefault();
+
 		// Escape if events not disabled
 		// or not dragging
 		if (!Core.Events.disabled && this.dragging) {
-
-			// event.preventDefault();
 
 			// Unset dragging flag
 			this.dragging = false;
@@ -1188,15 +1267,15 @@ var Run = function (Glide, Core) {
 			var touchDeg = this.touchSin * 180 / Math.PI;
 
 			// If slider type is slider
-			if (Glide.options.type == 'slider') {
+			if (Core.Build.isType('slider')) {
 
 				// Prevent slide to right on first item (prev)
-				if (Glide.current === 1) {
+				if (Core.Run.isStart()) {
 					if ( touchDistance > 0 ) touchDistance = 0;
 				}
 
 				// Prevent slide to left on last item (next)
-				if (Glide.current === Glide.length) {
+				if (Core.Run.isEnd()) {
 					if ( touchDistance < 0 ) touchDistance = 0;
 				}
 
@@ -1219,7 +1298,13 @@ var Run = function (Glide, Core) {
 				Core.Run.play();
 			});
 
+			Glide.track
+				.off('touchmove.glide mousemove.glide')
+				.off('touchend.glide touchcancel.glide mouseup.glide mouseleave.glide');
+
 		}
+
+		return false;
 
 	};
 
@@ -1335,6 +1420,7 @@ var Glide = function (element, options) {
 		hoverpause: true,
 		keyboard: true,
 		touchDistance: 80,
+		dragDistance: 120,
 		animationDuration: 400,
 		animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
 		throttle: 16,
@@ -1385,8 +1471,8 @@ var Glide = function (element, options) {
 		Arrows: Arrows,
 		Bullets: Bullets,
 		Height: Height,
-		Build: Build,
 		Run: Run,
+		Build: Build,
 		Animation: Animation,
 		Touch: Touch,
 		Api: Api

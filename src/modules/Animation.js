@@ -53,9 +53,9 @@ var Animation = function (Glide, Core) {
 		});
 
 		// If on start hide prev arrow
-		if (Glide.current === 1) Core.Arrows.disable('prev');
+		if (Core.Run.isStart()) Core.Arrows.disable('prev');
 		// If on end hide next arrow
-		else if (Glide.current === Glide.length) Core.Arrows.disable('next');
+		else if (Core.Run.isEnd()) Core.Arrows.disable('next');
 		// Show arrows
 		else Core.Arrows.enable();
 
@@ -76,7 +76,7 @@ var Animation = function (Glide, Core) {
 		 * so we're on the first slide
 		 * and need to make offset translate
 		 */
-		if (Core.Run.flag && Core.Run.direction === '<') {
+		if (Core.Run.isOffset('<')) {
 
 			// Translate is 0 (left edge of wrapper)
 			translate = 0 - this.offset;
@@ -102,7 +102,7 @@ var Animation = function (Glide, Core) {
 		 * so we're on the last slide
 		 * and need to make offset translate
 		 */
-		else if (Core.Run.flag && Core.Run.direction === '>') {
+		else if (Core.Run.isOffset('>')) {
 
 			// Translate is euqal wrapper width with offset
 			translate = (Glide.length * Glide.width) + (Glide.width - this.offset);

@@ -22,6 +22,7 @@ var Glide = function (element, options) {
 		hoverpause: true,
 		keyboard: true,
 		touchDistance: 80,
+		dragDistance: 120,
 		animationDuration: 400,
 		animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
 		throttle: 16,
@@ -72,8 +73,8 @@ var Glide = function (element, options) {
 		Arrows: Arrows,
 		Bullets: Bullets,
 		Height: Height,
-		Build: Build,
 		Run: Run,
+		Build: Build,
 		Animation: Animation,
 		Touch: Touch,
 		Api: Api

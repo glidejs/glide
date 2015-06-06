@@ -14,6 +14,7 @@ var Events = function (Glide, Core) {
 	 */
 	function Module() {
 		this.disabled = false;
+		this.anchors = Glide.track.find('a');
 		this.keyboard();
 		this.hoverpause();
 		this.resize();
@@ -120,6 +121,24 @@ var Events = function (Glide, Core) {
 	};
 
 
+	/**
+	 * Detach anchors clicks
+	 * inside slider track
+	 */
+	Module.prototype.detachClicks = function() {
+		return this.anchors.off('click');
+	};
+
+
+	/**
+	 * Prevent anchors clicks
+	 * inside slider track
+	 */
+	Module.prototype.preventClicks = function(status) {
+		return this.anchors.on('click', function(event){ event.preventDefault(); });
+	};
+
+
 	/*
 	 * Call function
 	 * @param {Function} func
@@ -164,13 +183,13 @@ var Events = function (Glide, Core) {
 		var previous = 0;
 		if (!options) options = {};
 		var later = function() {
-			previous = options.leading === false ? 0 : that.now();
+			previous = options.leading === false ? 0 : Core.Helper.now();
 			timeout = null;
 			result = func.apply(context, args);
 			if (!timeout) context = args = null;
 		};
 		return function() {
-			var now = that.now();
+			var now = Core.Helper.now();
 			if (!previous && options.leading === false) previous = now;
 			var remaining = wait - (now - previous);
 			context = this;
@@ -188,15 +207,6 @@ var Events = function (Glide, Core) {
 			}
 			return result;
 		};
-	};
-
-
-	/**
-	 * Get time
-	 * @source http://underscorejs.org/
-	 */
-	Module.prototype.now = Date.now || function() {
-		return new Date().getTime();
 	};
 
 

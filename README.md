@@ -30,6 +30,8 @@ Build using Grunt and Bower. The following tasks are available:
 
 ##Changelog
 `2.0.2` / `14.05.2015`
+- Added `dragDistance` option
+- Prevent clicks while dragging [#101](/../../issues/101)
 - Autoheight added [#95](/../../issues/95) (Changes slider markup read docs)
 
 `2.0.1` / `29.04.2015`

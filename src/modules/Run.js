@@ -143,6 +143,8 @@ var Run = function (Glide, Core) {
 		Core.Height.set();
 		// Set active bullet
 		Core.Bullets.active();
+		// Set active trigger
+		Core.Build.activeTrigger();
 
 		// Run actual translate animation
 		Core.Animation.make().after(function(){

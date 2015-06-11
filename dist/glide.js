@@ -424,6 +424,8 @@ var Build = function (Glide, Core) {
 		this.active();
 		// Set bullet active class
 		Core.Bullets.active();
+		// Set active trigger
+		this.activeTrigger();
 	};
 
 
@@ -509,6 +511,23 @@ var Build = function (Glide, Core) {
 		Glide.slides
 			.eq(Glide.current - 1).addClass(Glide.options.classes.active)
 			.siblings().removeClass(Glide.options.classes.active);
+
+	};
+
+
+	/**
+	 * Set active trigger
+	 */
+	Module.prototype.activeTrigger = function () {
+
+		this.triggers = $('[data-glide-trigger]');
+
+		if (this.triggers.length) {
+
+			$('[data-glide-trigger]').removeClass(Glide.options.classes.active);
+			$('[data-glide-dir="=' + Glide.current + '"]').addClass(Glide.options.classes.active);
+
+		}
 
 	};
 
@@ -1075,6 +1094,8 @@ var Run = function (Glide, Core) {
 		Core.Height.set();
 		// Set active bullet
 		Core.Bullets.active();
+		// Set active trigger
+		Core.Build.activeTrigger();
 
 		// Run actual translate animation
 		Core.Animation.make().after(function(){

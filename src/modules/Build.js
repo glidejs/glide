@@ -30,6 +30,8 @@ var Build = function (Glide, Core) {
 		this.active();
 		// Set bullet active class
 		Core.Bullets.active();
+		// Set active trigger
+		this.activeTrigger();
 	};
 
 
@@ -115,6 +117,28 @@ var Build = function (Glide, Core) {
 		Glide.slides
 			.eq(Glide.current - 1).addClass(Glide.options.classes.active)
 			.siblings().removeClass(Glide.options.classes.active);
+
+	};
+
+
+	/**
+	 * Set active trigger
+	 */
+	Module.prototype.activeTrigger = function () {
+
+		this.triggers = $('[data-glide-trigger]');
+
+		if (this.triggers.length) {
+
+			$('[data-glide-dir]')
+				.not('.' + Glide.options.classes.bullet)
+				.removeClass(Glide.options.classes.active);
+
+			$('[data-glide-dir="=' + Glide.current + '"]')
+				.not('.' + Glide.options.classes.bullet)
+				.addClass(Glide.options.classes.active);
+
+		}
 
 	};
 

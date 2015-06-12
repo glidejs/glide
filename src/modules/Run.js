@@ -37,7 +37,11 @@ var Run = function (Glide, Core) {
 
 			if (typeof this.interval === 'undefined') {
 				this.interval = setInterval(function() {
-					that.make('>');
+					if (Core.Run.isEnd() && Core.Build.isType('slider')) {
+						that.pause();
+					} else {
+						that.make('>');
+					}
 				}, Glide.options.autoplay);
 			}
 
@@ -143,6 +147,8 @@ var Run = function (Glide, Core) {
 		Core.Height.set();
 		// Set active bullet
 		Core.Bullets.active();
+		// Set active trigger
+		Core.Build.activeTrigger();
 
 		// Run actual translate animation
 		Core.Animation.make().after(function(){

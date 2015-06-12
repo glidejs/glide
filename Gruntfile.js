@@ -171,7 +171,7 @@ module.exports = function(grunt){
 
 	grunt.registerTask('script', [
 		'jshint',
-		'jasmine',
+		//'jasmine',
 		'concat', 'uglify',
 	]);
 

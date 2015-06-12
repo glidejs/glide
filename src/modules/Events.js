@@ -28,8 +28,25 @@ var Events = function (Glide, Core) {
 	Module.prototype.keyboard = function() {
 		if (Glide.options.keyboard) {
 			$(window).on('keyup.glide', function(event){
-				if (event.keyCode === 39) Core.Run.make('>');
-				if (event.keyCode === 37) Core.Run.make('<');
+				//if (event.keyCode === 39) Core.Run.make('>');
+				//if (event.keyCode === 37) Core.Run.make('<');
+
+				if (event.keyCode === 39) {
+					if (Core.Run.isEnd() && Core.Build.isType('slider')) {
+						this.pause();
+					} else {
+						Core.Run.make('>');
+					}
+				}
+
+				if (event.keyCode === 37) {
+					if (Core.Run.isStart() && Core.Build.isType('slider')) {
+						this.pause();
+					} else {
+						Core.Run.make('<');
+					}
+				}
+
 			});
 		}
 	};

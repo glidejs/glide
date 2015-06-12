@@ -135,7 +135,7 @@ var Events = function (Glide, Core) {
 	 * inside slider track
 	 */
 	Module.prototype.preventClicks = function(status) {
-		return this.anchors.on('click', function(event){ event.preventDefault(); });
+		return this.anchors.one('click', function(event){ event.preventDefault(); });
 	};
 
 

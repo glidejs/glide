@@ -23,7 +23,6 @@
 .glide__track.dragging {
   cursor: -webkit-grabbing;
   cursor: grabbing;
-  -webkit-touch-callout: none;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
@@ -33,6 +32,12 @@
   -webkit-perspective: 1000;
           perspective: 1000;
   width: 100%;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
 }
 .glide__arrows {
   position: absolute;

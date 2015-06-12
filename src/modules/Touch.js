@@ -45,17 +45,18 @@ var Touch = function (Glide, Core) {
 	Module.prototype.start = function(event) {
 
 		event.preventDefault();
+		event.stopPropagation();
 
 		// Escape if events disabled
 		// or already dragging
 		if (!Core.Events.disabled && !this.dragging) {
 
+			// Turn off jumping flag
+			Core.Transition.jumping = true;
 			// Detach clicks inside track
 			Core.Events.detachClicks();
 			// Pause if autoplay
 			Core.Run.pause();
-			// Turn on jumping flag
-			Core.Transition.jumping = true;
 
 			var touch;
 
@@ -76,8 +77,6 @@ var Touch = function (Glide, Core) {
 
 		}
 
-		return false;
-
 	};
 
 
@@ -86,8 +85,6 @@ var Touch = function (Glide, Core) {
 	 * @param  {Object} event
 	 */
 	Module.prototype.move = function(event) {
-
-		event.preventDefault();
 
 		// Escape if events not disabled
 		// or not dragging
@@ -119,6 +116,8 @@ var Touch = function (Glide, Core) {
 
 			// While angle is lower than 45 degree
 			if ( (this.touchSin * 180 / Math.PI) < 45 ) {
+				//event.preventDefault();
+			event.stopPropagation();
 				// Prevent scrolling
 				event.preventDefault();
 				// Add dragging class
@@ -135,8 +134,6 @@ var Touch = function (Glide, Core) {
 
 		}
 
-		return false;
-
 	};
 
 
@@ -146,20 +143,18 @@ var Touch = function (Glide, Core) {
 	 */
 	Module.prototype.end = function(event) {
 
-		event.preventDefault();
-
 		// Escape if events not disabled
 		// or not dragging
 		if (!Core.Events.disabled && this.dragging) {
 
+			// Turn off jumping flag
+			Core.Transition.jumping = false;
 			// Unset dragging flag
 			this.dragging = false;
 			// Disable other events
 			Core.Events.disable();
 			// Remove dragging class
 			Glide.track.removeClass(Glide.options.classes.dragging);
-			// Turn off jumping flag
-			Core.Transition.jumping = false;
 
 			var touch;
 
@@ -209,8 +204,6 @@ var Touch = function (Glide, Core) {
 				.off('touchend.glide touchcancel.glide mouseup.glide mouseleave.glide');
 
 		}
-
-		return false;
 
 	};
 

@@ -339,6 +339,9 @@ var Arrows = function (Glide, Core) {
 	 */
 	Module.prototype.disable = function (type) {
 
+		// Set arrows to default state
+		Core.Arrows.enable();
+
 		return this.items.filter('.' + Glide.options.classes['arrow' + Core.Helper.capitalise(type)])
 			.unbind('click.glide touchstart.glide')
 			.addClass(Glide.options.classes.disabled)
@@ -524,8 +527,13 @@ var Build = function (Glide, Core) {
 
 		if (this.triggers.length) {
 
-			$('[data-glide-trigger]').removeClass(Glide.options.classes.active);
-			$('[data-glide-dir="=' + Glide.current + '"]').addClass(Glide.options.classes.active);
+			$('[data-glide-dir]')
+				.not('.' + Glide.options.classes.bullet)
+				.removeClass(Glide.options.classes.active);
+
+			$('[data-glide-dir="=' + Glide.current + '"]')
+				.not('.' + Glide.options.classes.bullet)
+				.addClass(Glide.options.classes.active);
 
 		}
 
@@ -675,8 +683,25 @@ var Events = function (Glide, Core) {
 	Module.prototype.keyboard = function() {
 		if (Glide.options.keyboard) {
 			$(window).on('keyup.glide', function(event){
-				if (event.keyCode === 39) Core.Run.make('>');
-				if (event.keyCode === 37) Core.Run.make('<');
+				//if (event.keyCode === 39) Core.Run.make('>');
+				//if (event.keyCode === 37) Core.Run.make('<');
+
+				if (event.keyCode === 39) {
+					if (Core.Run.isEnd() && Core.Build.isType('slider')) {
+						this.pause();
+					} else {
+						Core.Run.make('>');
+					}
+				}
+
+				if (event.keyCode === 37) {
+					if (Core.Run.isStart() && Core.Build.isType('slider')) {
+						this.pause();
+					} else {
+						Core.Run.make('<');
+					}
+				}
+
 			});
 		}
 	};
@@ -988,7 +1013,11 @@ var Run = function (Glide, Core) {
 
 			if (typeof this.interval === 'undefined') {
 				this.interval = setInterval(function() {
-					that.make('>');
+					if (Core.Run.isEnd() && Core.Build.isType('slider')) {
+						that.pause();
+					} else {
+						that.make('>');
+					}
 				}, Glide.options.autoplay);
 			}
 

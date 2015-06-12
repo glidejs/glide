@@ -130,8 +130,13 @@ var Build = function (Glide, Core) {
 
 		if (this.triggers.length) {
 
-			$('[data-glide-trigger]').removeClass(Glide.options.classes.active);
-			$('[data-glide-dir="=' + Glide.current + '"]').addClass(Glide.options.classes.active);
+			$('[data-glide-dir]')
+				.not('.' + Glide.options.classes.bullet)
+				.removeClass(Glide.options.classes.active);
+
+			$('[data-glide-dir="=' + Glide.current + '"]')
+				.not('.' + Glide.options.classes.bullet)
+				.addClass(Glide.options.classes.active);
 
 		}
 

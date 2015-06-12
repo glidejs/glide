@@ -116,3 +116,6 @@
 .glide--slideshow .glide__slide.active {
   z-index: 1;
 }
+[data-glide-trigger].active {
+  opacity: .5;
+}

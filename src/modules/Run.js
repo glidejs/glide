@@ -37,7 +37,11 @@ var Run = function (Glide, Core) {
 
 			if (typeof this.interval === 'undefined') {
 				this.interval = setInterval(function() {
-					that.make('>');
+					if (Core.Run.isEnd() && Core.Build.isType('slider')) {
+						that.pause();
+					} else {
+						that.make('>');
+					}
 				}, Glide.options.autoplay);
 			}
 

@@ -35,6 +35,9 @@ var Arrows = function (Glide, Core) {
 	 */
 	Module.prototype.disable = function (type) {
 
+		// Set arrows to default state
+		Core.Arrows.enable();
+
 		return this.items.filter('.' + Glide.options.classes['arrow' + Core.Helper.capitalise(type)])
 			.unbind('click.glide touchstart.glide')
 			.addClass(Glide.options.classes.disabled)

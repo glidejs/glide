@@ -116,8 +116,8 @@ var Touch = function (Glide, Core) {
 
 			// While angle is lower than 45 degree
 			if ( (this.touchSin * 180 / Math.PI) < 45 ) {
-				//event.preventDefault();
-			event.stopPropagation();
+				// Prevent propagation
+				event.stopPropagation();
 				// Prevent scrolling
 				event.preventDefault();
 				// Add dragging class

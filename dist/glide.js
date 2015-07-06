@@ -328,7 +328,7 @@ var Arrows = function (Glide, Core) {
 	 */
 	Module.prototype.build = function () {
 
-		this.wrapper = Glide.slider.children('.' + Glide.options.classes.arrows);
+		this.wrapper = Glide.slider.find('.' + Glide.options.classes.arrows);
 		this.items = this.wrapper.children();
 
 	};
@@ -692,7 +692,7 @@ var Events = function (Glide, Core) {
 			Core.Run.pause();
 			Glide.setup();
 			Core.Build.init();
-			Core.Run.make('=' + Glide.current);
+			Core.Run.make('=' + Glide.current, false);
 			Core.Run.play();
 			Core.Transition.jumping = false;
 		}, Glide.options.throttle));
@@ -773,7 +773,8 @@ var Events = function (Glide, Core) {
 	 * @return {Glide.Events}
 	 */
 	Module.prototype.call = function (func) {
-		if ( (func !== 'undefined') && (typeof func === 'function') ) func(Glide.current, Glide.slides.eq(Glide.current - 1));
+		if ( (func !== 'undefined') && (typeof func === 'function') )
+			func(Glide.current, Glide.slides.eq(Glide.current - 1));
 		return this;
 	};
 
@@ -1037,7 +1038,9 @@ var Run = function (Glide, Core) {
 		// Stop autoplay until hoverpause is not set
 		if(!Glide.options.hoverpause) this.pause();
 		// Disable events and call before transition callback
-		Core.Events.disable().call(Glide.options.beforeTransition);
+		if(callback !== false) {
+			Core.Events.disable().call(Glide.options.beforeTransition);
+		}
 
 		// Based on direction
 		switch(this.direction) {
@@ -1081,7 +1084,11 @@ var Run = function (Glide, Core) {
 			// Set active flags
 			Core.Build.active();
 			// Enable events and call callbacks
-			Core.Events.enable().call(callback).call(Glide.options.afterTransition);
+			if(callback !== false) {
+				Core.Events.enable()
+					.call(callback)
+					.call(Glide.options.afterTransition);
+			}
 			// Start autoplay until hoverpause is not set
 			if(!Glide.options.hoverpause) that.play();
 		});
@@ -1210,8 +1217,8 @@ var Touch = function (Glide, Core) {
 
 			// While angle is lower than 45 degree
 			if ( (this.touchSin * 180 / Math.PI) < 45 ) {
-				//event.preventDefault();
-			event.stopPropagation();
+				// Prevent propagation
+				event.stopPropagation();
 				// Prevent scrolling
 				event.preventDefault();
 				// Add dragging class
@@ -1489,7 +1496,7 @@ Glide.prototype.collect = function() {
 	this.slider = this.element.addClass(this.options.classes.base + '--' + this.options.type);
 	this.track = this.slider.find('.' + this.options.classes.track);
 	this.wrapper = this.slider.find('.' + this.options.classes.wrapper);
-	this.slides = this.wrapper.find('.' + this.options.classes.slide);
+	this.slides = this.track.find('.' + this.options.classes.slide);
 
 	this.clones = [
 		this.slides.filter(':first-child').clone().addClass('clone'),

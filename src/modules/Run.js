@@ -105,7 +105,9 @@ var Run = function (Glide, Core) {
 		// Stop autoplay until hoverpause is not set
 		if(!Glide.options.hoverpause) this.pause();
 		// Disable events and call before transition callback
-		Core.Events.disable().call(Glide.options.beforeTransition);
+		if(callback !== false) {
+			Core.Events.disable().call(Glide.options.beforeTransition);
+		}
 
 		// Based on direction
 		switch(this.direction) {
@@ -149,7 +151,11 @@ var Run = function (Glide, Core) {
 			// Set active flags
 			Core.Build.active();
 			// Enable events and call callbacks
-			Core.Events.enable().call(callback).call(Glide.options.afterTransition);
+			if(callback !== false) {
+				Core.Events.enable()
+					.call(callback)
+					.call(Glide.options.afterTransition);
+			}
 			// Start autoplay until hoverpause is not set
 			if(!Glide.options.hoverpause) that.play();
 		});

@@ -98,7 +98,7 @@ Glide.prototype.collect = function() {
 	this.slider = this.element.addClass(this.options.classes.base + '--' + this.options.type);
 	this.track = this.slider.find('.' + this.options.classes.track);
 	this.wrapper = this.slider.find('.' + this.options.classes.wrapper);
-	this.slides = this.wrapper.find('.' + this.options.classes.slide);
+	this.slides = this.track.find('.' + this.options.classes.slide);
 
 	this.clones = [
 		this.slides.filter(':first-child').clone().addClass('clone'),

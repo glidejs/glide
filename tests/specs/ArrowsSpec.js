@@ -58,8 +58,8 @@ describe("Arrows", function() {
 			setTimeout(function(){
 				expect(slides.index($(data.active)) + 1).toBe(current + 1);
 				done();
-			}, options.animationDuration*5);
-		}, options.animationDuration*5);
+			}, options.animationDuration*10);
+		}, options.animationDuration*10);
 
 	});
 
@@ -72,8 +72,8 @@ describe("Arrows", function() {
 			setTimeout(function(){
 				expect(slides.index($(data.active)) + 1).toBe(slides.length);
 				done();
-			}, options.animationDuration*5);
-		}, options.animationDuration*5);
+			}, options.animationDuration*10);
+		}, options.animationDuration*10);
 
 	});
 

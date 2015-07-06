@@ -64,7 +64,7 @@ var Events = function (Glide, Core) {
 			Core.Run.pause();
 			Glide.setup();
 			Core.Build.init();
-			Core.Run.make('=' + Glide.current);
+			Core.Run.make('=' + Glide.current, false);
 			Core.Run.play();
 			Core.Transition.jumping = false;
 		}, Glide.options.throttle));
@@ -145,7 +145,8 @@ var Events = function (Glide, Core) {
 	 * @return {Glide.Events}
 	 */
 	Module.prototype.call = function (func) {
-		if ( (func !== 'undefined') && (typeof func === 'function') ) func(Glide.current, Glide.slides.eq(Glide.current - 1));
+		if ( (func !== 'undefined') && (typeof func === 'function') )
+			func(Glide.current, Glide.slides.eq(Glide.current - 1));
 		return this;
 	};
 

@@ -12,6 +12,7 @@ describe("Api", function() {
 	var slides;
 	var arrows;
 	var bullets;
+	var glide;
 	var api;
 
 	beforeEach(function () {
@@ -35,7 +36,8 @@ describe("Api", function() {
 			autoplay: 200,
 		};
 
-		api = slider.glide(options).data('glide_api');
+		glide = slider.glide(options);
+		api = glide.data('glide_api');
 		index = slides.index($(data.active)) + 1;
 
 	});
@@ -146,5 +148,9 @@ describe("Api", function() {
 		}, options.autoplay + 10);
 	});
 
+	it("Api.destroy should clear object and unbind events", function() {
+		api.destroy();
+		expect(glide.data('glide_api')).toBeUndefined();
+	});
 
 });

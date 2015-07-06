@@ -24,7 +24,7 @@ var Arrows = function (Glide, Core) {
 	 */
 	Module.prototype.build = function () {
 
-		this.wrapper = Glide.slider.children('.' + Glide.options.classes.arrows);
+		this.wrapper = Glide.slider.find('.' + Glide.options.classes.arrows);
 		this.items = this.wrapper.children();
 
 	};

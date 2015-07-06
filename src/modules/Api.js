@@ -96,6 +96,7 @@ var Api = function (Glide, Core) {
 			 */
 			destroy: function() {
 
+				Core.Run.pause();
 				Core.Events.unbind();
 				Core.Touch.unbind();
 				Core.Arrows.unbind();

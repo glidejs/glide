@@ -266,6 +266,7 @@ var Api = function (Glide, Core) {
 			 */
 			destroy: function() {
 
+				Core.Run.pause();
 				Core.Events.unbind();
 				Core.Touch.unbind();
 				Core.Arrows.unbind();
@@ -1118,11 +1119,11 @@ var Touch = function (Glide, Core) {
 		this.dragging = false;
 
 		if (Glide.options.touchDistance) {
-			Glide.slides.on({ 'touchstart.glide': $.proxy(this.start, this) });
+			Glide.track.on({ 'touchstart.glide': $.proxy(this.start, this) });
 		}
 
 		if (Glide.options.dragDistance) {
-			Glide.slides.on({ 'mousedown.glide': $.proxy(this.start, this) });
+			Glide.track.on({ 'mousedown.glide': $.proxy(this.start, this) });
 		}
 
 	}

@@ -758,7 +758,8 @@ var Events = function (Glide, Core) {
 	 * inside slider track
 	 */
 	Module.prototype.detachClicks = function() {
-		return this.anchors.off('click');
+		this.anchors.off('click');
+		return this;
 	};
 
 
@@ -767,7 +768,8 @@ var Events = function (Glide, Core) {
 	 * inside slider track
 	 */
 	Module.prototype.preventClicks = function(status) {
-		return this.anchors.one('click', function(event){ event.preventDefault(); });
+		this.anchors.one('click', function(event){ event.preventDefault(); });
+		return this;
 	};
 
 
@@ -1159,7 +1161,7 @@ var Touch = function (Glide, Core) {
 			// Turn off jumping flag
 			Core.Transition.jumping = true;
 			// Detach clicks inside track
-			Core.Events.detachClicks();
+			Core.Events.detachClicks().call(Glide.options.swipeStart);
 			// Pause if autoplay
 			Core.Run.pause();
 
@@ -1257,7 +1259,7 @@ var Touch = function (Glide, Core) {
 			// Unset dragging flag
 			this.dragging = false;
 			// Disable other events
-			Core.Events.disable();
+			Core.Events.disable().call(Glide.options.swipeEnd);
 			// Remove dragging class
 			Glide.track.removeClass(Glide.options.classes.dragging);
 
@@ -1448,6 +1450,8 @@ var Glide = function (element, options) {
 		afterInit: function(el) {},
 		beforeTransition: function(i, el) {},
 		afterTransition: function(i, el) {},
+		swipeStart: function(i, el) {},
+		swipeEnd: function(i, el) {},
 	};
 
 	// Extend options

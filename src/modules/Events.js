@@ -129,7 +129,8 @@ var Events = function (Glide, Core) {
 	 * inside slider track
 	 */
 	Module.prototype.detachClicks = function() {
-		return this.anchors.off('click');
+		this.anchors.off('click');
+		return this;
 	};
 
 
@@ -138,7 +139,8 @@ var Events = function (Glide, Core) {
 	 * inside slider track
 	 */
 	Module.prototype.preventClicks = function(status) {
-		return this.anchors.one('click', function(event){ event.preventDefault(); });
+		this.anchors.one('click', function(event){ event.preventDefault(); });
+		return this;
 	};
 
 

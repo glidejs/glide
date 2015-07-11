@@ -54,7 +54,7 @@ var Touch = function (Glide, Core) {
 			// Turn off jumping flag
 			Core.Transition.jumping = true;
 			// Detach clicks inside track
-			Core.Events.detachClicks();
+			Core.Events.detachClicks().call(Glide.options.swipeStart);
 			// Pause if autoplay
 			Core.Run.pause();
 
@@ -152,7 +152,7 @@ var Touch = function (Glide, Core) {
 			// Unset dragging flag
 			this.dragging = false;
 			// Disable other events
-			Core.Events.disable();
+			Core.Events.disable().call(Glide.options.swipeEnd);
 			// Remove dragging class
 			Glide.track.removeClass(Glide.options.classes.dragging);
 

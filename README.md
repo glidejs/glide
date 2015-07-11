@@ -22,23 +22,11 @@ Build using Grunt and Bower. The following tasks are available:
 
 ##TODO
 - MOOOAR TESTS!!!1one
-- <del>Touch module optimizations</del> [#93](/../../issues/93)
+- <del>Touch module optimizations</del>
 - Better comments
 - Vertical mode
 - Padded/center mode
 - Multiple slides per view
-
-##Changelog
-`2.0.2` / `14.05.2015`
-- Added `dragDistance` option
-- Prevent clicks while dragging [#101](/../../issues/101)
-- Autoheight added [#95](/../../issues/95) (Changes slider markup read docs)
-
-`2.0.1` / `29.04.2015`
-- Touch module optimizations
-
-`2.0.0` / `10.04.2015`
-- Plugin v2 release
 
 ##License
 Glide is Copyright © [Jędrzej Chałubek](http://jedrzejchalubek.com) and is licensed under the terms of the [MIT License](http://opensource.org/licenses/MIT).

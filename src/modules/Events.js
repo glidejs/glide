@@ -86,12 +86,15 @@ var Events = function (Glide, Core) {
 				.on('click.glide touchstart.glide', function(event) {
 
 					event.preventDefault();
+					var targets = $(this).data('glide-trigger').split(" ");
 
 					if (!Core.Events.disabled) {
-						var target = $($(this).data('glide-trigger')).data('glide_api');
-						target.pause();
-						target.go($(this).data('glide-dir'));
-						target.play();
+						for (var el in targets) {
+							var target = $(targets[el]).data('glide_api');
+							target.pause();
+							target.go($(this).data('glide-dir'));
+							target.play();
+						}
 					}
 
 				});

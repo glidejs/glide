@@ -1,0 +1,117 @@
+<!doctype html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Basic</title>
+		<link rel="stylesheet" href="../dist/css/glide.css">
+
+		<!-- Demo stylesheet -->
+		<style>
+
+			body {
+				overflow-y: scroll;
+			}
+
+			* {
+				-webkit-box-sizing: border-box;
+				-moz-box-sizing: border-box;
+				box-sizing: border-box;
+				padding: 0;
+				margin: 0;
+				border: 0;
+			}
+			.module {
+				width: 50%;
+				height: 320px;
+				float: left;
+				clear: none;
+			}
+			.box {
+				width: 100%;
+				height: 100%;
+				text-align: center;
+				color: #fff;
+				font-size: 3vw;
+				line-height: 320px;
+			}
+		</style>
+	</head>
+	<body>
+
+		<div class="module">
+
+			<div id="Slider1" class="glide">
+
+				<div class="glide__wrapper">
+					<ul class="glide__track">
+						<li class="glide__slide">
+							<div class="box" style="background-color: yellow;">1</div>
+						</li>
+						<li class="glide__slide">
+							<div class="box" style="background-color: green;">2</div>
+						</li>
+						<li class="glide__slide">
+							<div class="box" style="background-color: gray;">3</div>
+						</li>
+					</ul>
+				</div>
+
+			</div>
+
+		</div>
+
+		<div class="module">
+
+			<div id="Slider2" class="glide">
+
+				<div class="glide__wrapper">
+					<ul class="glide__track">
+						<li class="glide__slide">
+							<div class="box" style="background-color: red;">1</div>
+						</li>
+						<li class="glide__slide">
+							<div class="box" style="background-color: blue;">2</div>
+						</li>
+						<li class="glide__slide">
+							<div class="box" style="background-color: purple;">3</div>
+						</li>
+					</ul>
+				</div>
+
+			</div>
+
+		</div>
+
+		<div class="triggers">
+			<span class="trigger prev" data-glide-trigger="#Slider1 #Slider2" data-glide-dir="<">
+				prev
+			</span>
+			<span class="trigger next" data-glide-trigger="#Slider1 #Slider2" data-glide-dir=">">
+				next
+			</span>
+		</div>
+
+		<div class="triggers">
+			<span class="trigger-1" data-glide-trigger="#Slider1 #Slider2" data-glide-dir="=1">
+				1
+			</span>
+			<span class="trigger-2" data-glide-trigger="#Slider1 #Slider2" data-glide-dir="=2">
+				2
+			</span>
+			<span class="trigger-3" data-glide-trigger="#Slider1 #Slider2" data-glide-dir="=3">
+				3
+			</span>
+		</div>
+
+		<script src="../bower_components/jquery/dist/jquery.js"></script>
+		<script src="../dist/glide.js"></script>
+		<script>
+			var slider1 = $('#Slider1').glide();
+			var slider2 = $('#Slider2').glide();
+		</script>
+
+	</body>
+</html>

@@ -28,8 +28,6 @@ describe("Api", function() {
 		wrapper = slider.find(data.wrapper);
 		track = wrapper.find(data.track);
 		slides = track.children();
-		arrows = slider.find(data.arrows).children();
-		bullets = slider.find(data.bullets).children();
 
 		options = {
 			animationDuration: 10,
@@ -38,6 +36,9 @@ describe("Api", function() {
 
 		glide = slider.glide(options);
 		api = glide.data('glide_api');
+
+		arrows = slider.find(data.arrows).children();
+		bullets = slider.find(data.bullets).children();
 		index = slides.index($(data.active)) + 1;
 
 	});
@@ -148,9 +149,13 @@ describe("Api", function() {
 		}, options.autoplay + 10);
 	});
 
+
 	it("Api.destroy should clear object and unbind events", function() {
 		api.destroy();
 		expect(glide.data('glide_api')).toBeUndefined();
+		expect(typeof $._data(arrows[0], "events")).toBe('undefined');
+		expect(typeof $._data(bullets[0], "events")).toBe('undefined');
+		expect(typeof $._data(track[0], "events")).toBe('undefined');
 	});
 
 });

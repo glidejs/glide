@@ -12,7 +12,7 @@
 		<style>
 
 			body {
-				overflow-y: scroll;
+				/*overflow-y: scroll;*/
 			}
 
 			* {
@@ -39,36 +39,103 @@
 	</head>
 	<body>
 
-		<div id="Glide" class="glide">
+		<div class="module">
+			<div id="Carousel" class="glide">
 
-			<div class="glide__arrows">
-				<span class="glide__arrow prev" data-glide-dir="<">prev</span>
-				<span class="glide__arrow next" data-glide-dir=">">next</span>
+				<div class="glide__arrows">
+					<span class="glide__arrow prev" data-glide-dir="<">prev</span>
+					<span class="glide__arrow next" data-glide-dir=">">next</span>
+				</div>
+
+				<div class="glide__wrapper">
+					<ul class="glide__track">
+						<li class="glide__slide">
+							<div class="box" style="background-color: red;">1</div>
+						</li>
+						<li class="glide__slide">
+							<div class="box" style="background-color: blue;">2</div>
+						</li>
+						<li class="glide__slide">
+							<div class="box" style="background-color: purple;">3</div>
+						</li>
+					</ul>
+				</div>
+
+				<ul class="glide__bullets"></div>
+
 			</div>
+		</div>
 
-			<div class="glide__wrapper">
-				<ul class="glide__track">
-					<li class="glide__slide">
-						<div class="box" style="background-color: red;">1</div>
-					</li>
-					<li class="glide__slide">
-						<div class="box" style="background-color: blue;">2</div>
-					</li>
-					<li class="glide__slide">
-						<div class="box" style="background-color: purple;">3</div>
-					</li>
-				</ul>
+		<div class="module">
+			<div id="Slider" class="glide">
+
+				<div class="glide__arrows">
+					<span class="glide__arrow prev" data-glide-dir="<">prev</span>
+					<span class="glide__arrow next" data-glide-dir=">">next</span>
+				</div>
+
+				<div class="glide__wrapper">
+					<ul class="glide__track">
+						<li class="glide__slide">
+							<div class="box" style="background-color: red;">1</div>
+						</li>
+						<li class="glide__slide">
+							<div class="box" style="background-color: blue;">2</div>
+						</li>
+						<li class="glide__slide">
+							<div class="box" style="background-color: purple;">3</div>
+						</li>
+					</ul>
+				</div>
+
+				<ul class="glide__bullets"></div>
+
 			</div>
+		</div>
 
-			<ul class="glide__bullets"></ul>
+		<div class="module">
+			<div id="Slideshow" class="glide">
 
+				<div class="glide__arrows">
+					<span class="glide__arrow prev" data-glide-dir="<">prev</span>
+					<span class="glide__arrow next" data-glide-dir=">">next</span>
+				</div>
+
+				<div class="glide__wrapper">
+					<ul class="glide__track">
+						<li class="glide__slide">
+							<div class="box" style="background-color: red;">1</div>
+						</li>
+						<li class="glide__slide">
+							<div class="box" style="background-color: blue;">2</div>
+						</li>
+						<li class="glide__slide">
+							<div class="box" style="background-color: purple;">3</div>
+						</li>
+					</ul>
+				</div>
+
+				<ul class="glide__bullets"></ul>
+
+			</div>
 		</div>
 
 		<script src="../bower_components/jquery/dist/jquery.js"></script>
 		<script src="../dist/glide.js"></script>
 		<script>
-			var slider = $('#Glide').glide();
-			var slider_api = slider.data('glide_api');
+
+			var carousel = $('#Carousel').glide({
+				type: 'carousel'
+			});
+
+			var slider = $('#Slider').glide({
+				type: 'slider'
+			});
+
+			var slideshow = $('#Slideshow').glide({
+				type: 'slideshow'
+			});
+
 		</script>
 
 	</body>

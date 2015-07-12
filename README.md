@@ -25,7 +25,7 @@ Build using Grunt and Bower. The following tasks are available:
 - <del>Touch module optimizations</del>
 - Better comments
 - Vertical mode
-- Padded/center mode
+- <del>Padded/center mode</del>
 - Multiple slides per view
 
 ##License

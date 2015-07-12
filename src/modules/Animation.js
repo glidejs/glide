@@ -45,19 +45,37 @@ var Animation = function (Glide, Core) {
 	 */
 	Module.prototype.slider = function () {
 
-		var translate = (Glide.current * Glide.width) - (Glide.width + this.offset);
+		var translate;
+		var shift = (Glide.current * Glide.width) - (Glide.width + this.offset);
 
+		// If on start
+		// Set translate to shift
+		// Hide prev arrow
+		if (Core.Run.isStart()) {
+			translate = shift;
+			Core.Arrows.disable('prev');
+
+		}
+		// If on end
+		// Set translate to shift reduced by double paddings
+		// Hide next arrow
+		else if (Core.Run.isEnd()) {
+			translate = shift - Glide.options.paddings * 2;
+			Core.Arrows.disable('next');
+		}
+		// Otherwise
+		// Set translate to shift reduced by paddings
+		// Show arrows
+		else {
+			translate = shift - Glide.options.paddings;
+			Core.Arrows.enable();
+		}
+
+		// Apply translate
 		Glide.track.css({
 			'transition': Core.Transition.get('all'),
 			'transform': Core.Translate.set('x', translate)
 		});
-
-		// If on start hide prev arrow
-		if (Core.Run.isStart()) Core.Arrows.disable('prev');
-		// If on end hide next arrow
-		else if (Core.Run.isEnd()) Core.Arrows.disable('next');
-		// Show arrows
-		else Core.Arrows.enable();
 
 	};
 
@@ -69,7 +87,11 @@ var Animation = function (Glide, Core) {
 	Module.prototype.carousel = function () {
 
 		// Translate container
-		var translate;
+		var translate = 0;
+		// Displacement container
+		var displacement = 0;
+		// Calculate addtional shift
+		var shift = (Core.Build.shift - Glide.options.paddings);
 
 		/**
 		 * The flag is set and direction is prev,
@@ -79,7 +101,9 @@ var Animation = function (Glide, Core) {
 		if (Core.Run.isOffset('<')) {
 
 			// Translate is 0 (left edge of wrapper)
-			translate = 0 - this.offset;
+			translate = 0;
+			// Displacement is shift reduced by local offset
+			displacement = shift - this.offset;
 			// Reset flag
 			Core.Run.flag = false;
 
@@ -89,7 +113,7 @@ var Animation = function (Glide, Core) {
 				// clear transition and jump to last slide
 				Glide.track.css({
 					'transition': Core.Transition.clear('all'),
-					'transform': Core.Translate.set('x', Glide.length * Glide.width)
+					'transform': Core.Translate.set('x', Glide.width * Glide.length + shift)
 				});
 
 			});
@@ -104,8 +128,10 @@ var Animation = function (Glide, Core) {
 		 */
 		else if (Core.Run.isOffset('>')) {
 
-			// Translate is euqal wrapper width with offset
-			translate = (Glide.length * Glide.width) + (Glide.width - this.offset);
+			// Translate is euqal slide width * slides length
+			translate = Glide.width * Glide.length;
+			// Displacement is shift and slider width reduced by local offset
+			displacement = (shift + Glide.width) - this.offset;
 			// Reset flag
 			Core.Run.flag = false;
 
@@ -115,7 +141,7 @@ var Animation = function (Glide, Core) {
 				// Clear transition and jump to first slide
 				Glide.track.css({
 					'transition': Core.Transition.clear('all'),
-					'transform': Core.Translate.set('x', Glide.width)
+					'transform': Core.Translate.set('x', Glide.width + shift)
 				});
 
 			});
@@ -128,7 +154,10 @@ var Animation = function (Glide, Core) {
 		 * make normal translate
 		 */
 		else {
-			translate = (Glide.current * Glide.width) - this.offset;
+			// Translate is slide width * current slide
+			translate = (Glide.width * Glide.current);
+			// Displacement is shift reduced by local offset
+			displacement = shift - this.offset;
 		}
 
 		/**
@@ -137,7 +166,7 @@ var Animation = function (Glide, Core) {
 		 */
 		Glide.track.css({
 			'transition': Core.Transition.get('all'),
-			'transform': Core.Translate.set('x', translate)
+			'transform': Core.Translate.set('x', translate + displacement)
 		});
 
 	};

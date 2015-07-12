@@ -68,12 +68,24 @@
 		<script src="../dist/glide.js"></script>
 		<script>
 			var slider = $('#Glide').glide({
+				beforeInit: function(){
+					console.log('beforeInit');
+				},
+				afterInit: function(){
+					console.log('afterInit');
+				},
 				beforeTransition: function(){
-					console.log('before')
+					console.log('beforeTransition');
 				},
 				afterTransition: function(){
-					console.log('after')
-				}
+					console.log('afterTransition');
+				},
+				swipeStart: function(){
+					console.log('swipeStart');
+				},
+				swipeEnd: function(){
+					console.log('swipeEnd');
+				},
 			});
 		</script>
 

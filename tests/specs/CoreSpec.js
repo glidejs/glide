@@ -35,7 +35,8 @@ describe("Core", function() {
 		bullets = bulletsWrapper.children();
 
 		options = {
-			startAt: 2
+			startAt: 2,
+			padding: 0
 		};
 
 		api = slider.glide(options).data('glide_api');

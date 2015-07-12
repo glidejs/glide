@@ -27,6 +27,7 @@ var Glide = function (element, options) {
 		animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
 		throttle: 16,
 		autoheight: false,
+		paddings: 0,
 		classes: {
 			base: 'glide',
 			wrapper: 'glide__wrapper',
@@ -103,8 +104,10 @@ Glide.prototype.collect = function() {
 	this.slides = this.track.find('.' + this.options.classes.slide);
 
 	this.clones = [
-		this.slides.filter(':first-child').clone().addClass('clone'),
-		this.slides.filter(':last-child').clone().addClass('clone')
+		this.slides.eq(0).clone().addClass('clone'),
+		this.slides.eq(1).clone().addClass('clone'),
+		this.slides.eq(-1).clone().addClass('clone'),
+		this.slides.eq(-2).clone().addClass('clone')
 	];
 
 };
@@ -115,6 +118,6 @@ Glide.prototype.collect = function() {
  * properties
  */
 Glide.prototype.setup = function() {
-	this.width = this.slider.width();
+	this.width = this.slider.width() - this.options.paddings * 2;
 	this.length = this.slides.length;
 };

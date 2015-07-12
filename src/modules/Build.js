@@ -13,6 +13,8 @@ var Build = function (Glide, Core) {
 
 	// Build Module Constructor
 	function Module() {
+		this.growth = 0;
+		this.shift = 0;
 		this.init();
 	}
 
@@ -22,14 +24,20 @@ var Build = function (Glide, Core) {
 	 * @return {[type]} [description]
 	 */
 	Module.prototype.init = function() {
-		// Set slides height
-		Core.Height.set();
+
+		// Calculate width grow with clones
+		this.growth = Glide.width * Glide.clones.length;
+
 		// Build proper slider type
 		this[Glide.options.type]();
 		// Set slide active class
 		this.active();
+
+		// Set slides height
+		Core.Height.set();
 		// Set bullet active class
 		Core.Bullets.active();
+
 	};
 
 
@@ -61,12 +69,14 @@ var Build = function (Glide, Core) {
 		if (Core.Run.isStart()) Core.Arrows.disable('prev');
 		if (Core.Run.isEnd()) Core.Arrows.disable('next');
 
+		// Apply slides width
+		Glide.slides.width(Glide.width);
+
+		// Apply translate
 		Glide.track.css({
 			'width': Glide.width * Glide.length,
 			'transform': Core.Translate.set('x', Glide.width * (Glide.current - 1)),
 		});
-
-		Glide.slides.width(Glide.width);
 
 	};
 
@@ -77,15 +87,22 @@ var Build = function (Glide, Core) {
 	 */
 	Module.prototype.carousel = function() {
 
-		Glide.track
-			.append(Glide.clones[0].width(Glide.width))
-			.prepend(Glide.clones[1].width(Glide.width))
-			.css({
-				'width': (Glide.width * Glide.length) + (Glide.width * 2),
-				'transform': Core.Translate.set('x', Glide.width * Glide.current),
-			});
+		// Update shift for carusel type
+		this.shift = (Glide.width * Glide.clones.length/2) - Glide.width;
 
+		// Append clones
+		this.appendClones();
+
+		// Apply slides width
 		Glide.slides.width(Glide.width);
+
+		// Apply translate
+		Glide.track.css({
+			'width': (Glide.width * Glide.length) + this.growth,
+			'transform': Core.Translate.set('x',
+				(Glide.width * Glide.current) - (Glide.options.paddings - this.shift)
+			),
+		});
 
 	};
 
@@ -96,8 +113,6 @@ var Build = function (Glide, Core) {
 	 */
 	Module.prototype.slideshow = function () {
 
-		// Force height set
-		// Core.Height.set(true);
 		// Show up current slide
 		Glide.slides.eq(Glide.current - 1)
 			.css('opacity', 1)
@@ -115,6 +130,28 @@ var Build = function (Glide, Core) {
 		Glide.slides
 			.eq(Glide.current - 1).addClass(Glide.options.classes.active)
 			.siblings().removeClass(Glide.options.classes.active);
+
+	};
+
+
+	Module.prototype.appendClones = function() {
+
+		var clone;
+		var pointer = Glide.clones.length / 2;
+		var appendClones = Glide.clones.slice(0, pointer);
+		var prependClones = Glide.clones.slice(pointer);
+
+		for(clone in appendClones) {
+			appendClones[clone]
+				.width(Glide.width)
+				.appendTo(Glide.track);
+		}
+
+		for(clone in prependClones) {
+			prependClones[clone]
+				.width(Glide.width)
+				.prependTo(Glide.track);
+		}
 
 	};
 

@@ -189,7 +189,7 @@ var Animation = function (Glide, Core) {
 	Module.prototype.slideshow = function (direction) {
 
 		Glide.slides.css('transition', Core.Transition.get('opacity'))
-			.eq(Glide.current - 1).css('opacity', '1')
+			.eq(Glide.current - 1).css('opacity', 1)
 			.siblings().css('opacity', 0);
 
 	};

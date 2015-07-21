@@ -91,7 +91,7 @@ var Animation = function (Glide, Core) {
 		// Displacement container
 		var displacement = 0;
 		// Calculate addtional shift
-		var shift = (Core.Build.shift - Glide.options.paddings);
+		var shift = (Core.Clones.shift - Glide.options.paddings);
 
 		/**
 		 * The flag is set and direction is prev,

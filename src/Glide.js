@@ -39,6 +39,7 @@ var Glide = function (element, options) {
 			arrowPrev: 'prev',
 			bullets: 'glide__bullets',
 			bullet: 'glide__bullet',
+			clone: 'clone',
 			active: 'active',
 			dragging: 'dragging',
 			disabled: 'disabled'
@@ -73,6 +74,7 @@ var Glide = function (element, options) {
 		Translate: Translate,
 		Transition: Transition,
 		Events: Events,
+		Clones: Clones,
 		Arrows: Arrows,
 		Bullets: Bullets,
 		Height: Height,
@@ -104,10 +106,10 @@ Glide.prototype.collect = function() {
 	this.slides = this.track.find('.' + this.options.classes.slide);
 
 	this.clones = [
-		this.slides.eq(0).clone().addClass('clone'),
-		this.slides.eq(1).clone().addClass('clone'),
-		this.slides.eq(-1).clone().addClass('clone'),
-		this.slides.eq(-2).clone().addClass('clone')
+		this.slides.eq(0).clone().addClass('.' + this.options.classes.clone),
+		this.slides.eq(1).clone().addClass('.' + this.options.classes.clone),
+		this.slides.eq(-1).clone().addClass('.' + this.options.classes.clone),
+		this.slides.eq(-2).clone().addClass('.' + this.options.classes.clone)
 	];
 
 };

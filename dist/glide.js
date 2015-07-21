@@ -101,7 +101,7 @@ var Animation = function (Glide, Core) {
 		// Displacement container
 		var displacement = 0;
 		// Calculate addtional shift
-		var shift = (Core.Build.shift - Glide.options.paddings);
+		var shift = (Core.Clones.shift - Glide.options.paddings);
 
 		/**
 		 * The flag is set and direction is prev,
@@ -437,8 +437,6 @@ var Build = function (Glide, Core) {
 
 	// Build Module Constructor
 	function Module() {
-		this.growth = 0;
-		this.shift = 0;
 		this.init();
 	}
 
@@ -448,9 +446,6 @@ var Build = function (Glide, Core) {
 	 * @return {[type]} [description]
 	 */
 	Module.prototype.init = function() {
-
-		// Calculate width grow with clones
-		this.growth = Glide.width * Glide.clones.length;
 
 		// Build proper slider type
 		this[Glide.options.type]();
@@ -462,15 +457,6 @@ var Build = function (Glide, Core) {
 		// Set bullet active class
 		Core.Bullets.active();
 
-	};
-
-
-	/**
-	 * Remove slides
-	 * clones
-	 */
-	Module.prototype.removeClones = function() {
-		return Glide.track.find('.clone').remove();
 	};
 
 
@@ -512,19 +498,19 @@ var Build = function (Glide, Core) {
 	Module.prototype.carousel = function() {
 
 		// Update shift for carusel type
-		this.shift = (Glide.width * Glide.clones.length/2) - Glide.width;
+		Core.Clones.shift = (Glide.width * Glide.clones.length/2) - Glide.width;
 
 		// Append clones
-		this.appendClones();
+		Core.Clones.append();
 
 		// Apply slides width
 		Glide.slides.width(Glide.width);
 
 		// Apply translate
 		Glide.track.css({
-			'width': (Glide.width * Glide.length) + this.growth,
+			'width': (Glide.width * Glide.length) + Core.Clones.growth,
 			'transform': Core.Translate.set('x',
-				(Glide.width * Glide.current) - (Glide.options.paddings - this.shift)
+				(Glide.width * Glide.current) - (Glide.options.paddings - Core.Clones.shift)
 			),
 		});
 
@@ -556,29 +542,6 @@ var Build = function (Glide, Core) {
 			.siblings().removeClass(Glide.options.classes.active);
 
 	};
-
-
-	Module.prototype.appendClones = function() {
-
-		var clone;
-		var pointer = Glide.clones.length / 2;
-		var appendClones = Glide.clones.slice(0, pointer);
-		var prependClones = Glide.clones.slice(pointer);
-
-		for(clone in appendClones) {
-			appendClones[clone]
-				.width(Glide.width)
-				.appendTo(Glide.track);
-		}
-
-		for(clone in prependClones) {
-			prependClones[clone]
-				.width(Glide.width)
-				.prependTo(Glide.track);
-		}
-
-	};
-
 
 	// @return Module
 	return new Module();
@@ -664,6 +627,68 @@ var Bullets = function (Glide, Core) {
 
 	// @return Module
 	return new Module();
+
+};
+;/**
+ * --------------------------------
+ * Glide Clones
+ * --------------------------------
+ * Clones module
+ * @return {Glide.Clones}
+ */
+
+var Clones = function (Glide, Core) {
+
+
+	/**
+	 * Clones Module Constructor
+	 */
+	function Module() {
+
+		this.shift = 0;
+		this.growth = Glide.width * Glide.clones.length;
+
+		this.pointer = Glide.clones.length / 2;
+		this.appendClones = Glide.clones.slice(0, this.pointer);
+		this.prependClones = Glide.clones.slice(this.pointer);
+
+	}
+
+
+	/**
+	 * Append cloned slides before
+	 * and after real slides
+	 */
+	Module.prototype.append = function() {
+
+		var clone;
+
+		for(clone in this.appendClones) {
+			this.appendClones[clone]
+				.width(Glide.width)
+				.appendTo(Glide.track);
+		}
+
+		for(clone in this.prependClones) {
+			this.prependClones[clone]
+				.width(Glide.width)
+				.prependTo(Glide.track);
+		}
+
+	};
+
+
+	/**
+	 * Remove cloned slides
+	 */
+	Module.prototype.remove = function() {
+		return Glide.track.find('.' + Glide.options.classes.clone).remove();
+	};
+
+
+	// @return Module
+	return new Module();
+
 
 };
 ;/**
@@ -1509,6 +1534,7 @@ var Glide = function (element, options) {
 			arrowPrev: 'prev',
 			bullets: 'glide__bullets',
 			bullet: 'glide__bullet',
+			clone: 'clone',
 			active: 'active',
 			dragging: 'dragging',
 			disabled: 'disabled'
@@ -1543,6 +1569,7 @@ var Glide = function (element, options) {
 		Translate: Translate,
 		Transition: Transition,
 		Events: Events,
+		Clones: Clones,
 		Arrows: Arrows,
 		Bullets: Bullets,
 		Height: Height,
@@ -1574,10 +1601,10 @@ Glide.prototype.collect = function() {
 	this.slides = this.track.find('.' + this.options.classes.slide);
 
 	this.clones = [
-		this.slides.eq(0).clone().addClass('clone'),
-		this.slides.eq(1).clone().addClass('clone'),
-		this.slides.eq(-1).clone().addClass('clone'),
-		this.slides.eq(-2).clone().addClass('clone')
+		this.slides.eq(0).clone().addClass('.' + this.options.classes.clone),
+		this.slides.eq(1).clone().addClass('.' + this.options.classes.clone),
+		this.slides.eq(-1).clone().addClass('.' + this.options.classes.clone),
+		this.slides.eq(-2).clone().addClass('.' + this.options.classes.clone)
 	];
 
 };

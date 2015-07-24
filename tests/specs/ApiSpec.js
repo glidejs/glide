@@ -18,7 +18,8 @@ describe("Api", function() {
 	beforeEach(function () {
 
 		loadFixtures('base.html');
-		loadStyleFixtures('glide.css');
+		loadStyleFixtures('glide.core.css');
+		loadStyleFixtures('glide.theme.css');
 
 		data = getJSONFixture('data.json');
 		fixtures = loadJSONFixtures('data.json');

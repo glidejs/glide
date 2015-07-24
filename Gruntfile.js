@@ -108,9 +108,8 @@ module.exports = function(grunt){
 			},
 			normal: {
 				files: {
-					"<%= paths.dist %>/css/glide.css": [
-						'<%= paths.src %>/less/*.less'
-					]
+					"<%= paths.dist %>/css/glide.core.css": '<%= paths.src %>/less/glide.core.less',
+					"<%= paths.dist %>/css/glide.theme.css": '<%= paths.src %>/less/glide.theme.less',
 				}
 			},
 			min: {
@@ -119,9 +118,8 @@ module.exports = function(grunt){
 					report: 'min'
 				},
 				files: {
-					"<%= paths.dist %>/css/glide.min.css": [
-						'<%= paths.src %>/less/*.less'
-					]
+					"<%= paths.dist %>/css/glide.core.min.css": '<%= paths.src %>/less/glide.core.less',
+					"<%= paths.dist %>/css/glide.theme.min.css": '<%= paths.src %>/less/glide.theme.less',
 				}
 			}
 		},
@@ -131,11 +129,12 @@ module.exports = function(grunt){
 		 * autoprefix CSS3
 		 */
 		autoprefixer: {
-			// prefix all files
-			dist: { // Target
+			dist: {
 				files: {
-					'<%= paths.dist %>/css/glide.css': '<%= paths.dist %>/css/glide.css',
-					'<%= paths.dist %>/css/glide.min.css': '<%= paths.dist %>/css/glide.min.css'
+					'<%= paths.dist %>/css/glide.core.css': '<%= paths.dist %>/css/glide.core.css',
+					'<%= paths.dist %>/css/glide.core.min.css': '<%= paths.dist %>/css/glide.core.min.css',
+					'<%= paths.dist %>/css/glide.theme.css': '<%= paths.dist %>/css/glide.theme.css',
+					'<%= paths.dist %>/css/glide.theme.min.css': '<%= paths.dist %>/css/glide.theme.min.css'
 				}
 			 }
 		},

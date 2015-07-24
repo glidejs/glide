@@ -10,7 +10,8 @@ describe("Bullets", function() {
 	beforeEach(function () {
 
 		loadFixtures('base.html');
-		loadStyleFixtures('glide.css');
+		loadStyleFixtures('glide.core.css');
+		loadStyleFixtures('glide.theme.css');
 
 		options = {
 			animationDuration: 10

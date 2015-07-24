@@ -40,9 +40,6 @@
   -webkit-tap-highlight-color: transparent;
 }
 .glide__arrows {
-  position: absolute;
-  top: 50%;
-  width: 100%;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -50,27 +47,9 @@
           user-select: none;
 }
 .glide__arrow {
-  position: absolute;
-  z-index: 2;
-  padding: 18px;
-  background: gray;
   cursor: pointer;
-  -webkit-transform: translateY(-50%);
-      -ms-transform: translateY(-50%);
-          transform: translateY(-50%);
-}
-.glide__arrow.prev {
-  left: 0;
-}
-.glide__arrow.next {
-  right: 0;
 }
 .glide__bullets {
-  position: absolute;
-  bottom: 18px;
-  width: 100%;
-  text-align: center;
-  list-style: none;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -78,29 +57,11 @@
           user-select: none;
 }
 .glide__bullets li {
-  display: inline-block;
-  background-color: gray;
-  width: 10px;
-  height: 10px;
-  margin: 0 5px;
   cursor: pointer;
-}
-.glide__bullets li.active {
-  background-color: white;
 }
 .glide--slider .glide__slide {
   float: left;
   clear: none;
-}
-.glide--slider .glide__arrow {
-  opacity: 1;
-  -webkit-transition: visibility 0 ease 150ms,
-						opacity 150ms ease;
-          transition: visibility 0 ease 150ms,
-						opacity 150ms ease;
-}
-.glide--slider .glide__arrow.disabled {
-  opacity: 0.5;
 }
 .glide--carousel .glide__slide {
   float: left;

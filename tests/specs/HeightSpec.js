@@ -19,7 +19,8 @@ describe("Height", function() {
 	beforeEach(function () {
 
 		loadFixtures('base.html');
-		loadStyleFixtures('glide.css');
+		loadStyleFixtures('glide.theme.css');
+		loadStyleFixtures('glide.core.css');
 
 		data = getJSONFixture('data.json');
 		fixtures = loadJSONFixtures('data.json');

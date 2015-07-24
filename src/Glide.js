@@ -106,10 +106,10 @@ Glide.prototype.collect = function() {
 	this.slides = this.track.find('.' + this.options.classes.slide);
 
 	this.clones = [
-		this.slides.eq(0).clone().addClass('.' + this.options.classes.clone),
-		this.slides.eq(1).clone().addClass('.' + this.options.classes.clone),
-		this.slides.eq(-1).clone().addClass('.' + this.options.classes.clone),
-		this.slides.eq(-2).clone().addClass('.' + this.options.classes.clone)
+		this.slides.eq(0).clone().addClass(this.options.classes.clone),
+		this.slides.eq(1).clone().addClass(this.options.classes.clone),
+		this.slides.eq(-1).clone().addClass(this.options.classes.clone),
+		this.slides.eq(-2).clone().addClass(this.options.classes.clone)
 	];
 
 };

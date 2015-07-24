@@ -6,7 +6,7 @@
  * @return {Glide.Animation}
  */
 
-var Animation = function (Glide, Core) {
+var Animation = function(Glide, Core) {
 
 
 	function Module() {}
@@ -43,7 +43,7 @@ var Animation = function (Glide, Core) {
 	 * Animation slider animation type
 	 * @param {string} direction
 	 */
-	Module.prototype.slider = function () {
+	Module.prototype.slider = function() {
 
 		var translate;
 		var shift = (Glide.current * Glide.width) - (Glide.width + this.offset);
@@ -84,7 +84,7 @@ var Animation = function (Glide, Core) {
 	 * Animation carousel animation type
 	 * @param {string} direction
 	 */
-	Module.prototype.carousel = function () {
+	Module.prototype.carousel = function() {
 
 		// Translate container
 		var translate = 0;
@@ -176,7 +176,7 @@ var Animation = function (Glide, Core) {
 	 * Animation slideshow animation type
 	 * @param {string} direction
 	 */
-	Module.prototype.slideshow = function (direction) {
+	Module.prototype.slideshow = function() {
 
 		Glide.slides.css('transition', Core.Transition.get('opacity'))
 			.eq(Glide.current - 1).css('opacity', 1)

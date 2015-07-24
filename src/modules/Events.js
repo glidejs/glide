@@ -6,7 +6,7 @@
  * @return {Glide.Events}
  */
 
-var Events = function (Glide, Core) {
+var Events = function(Glide, Core) {
 
 
 	/**
@@ -108,7 +108,7 @@ var Events = function (Glide, Core) {
 	 * Disable all events
 	 * @return {Glide.Events}
 	 */
-	Module.prototype.disable = function () {
+	Module.prototype.disable = function() {
 		this.disabled = true;
 		return this;
 	};
@@ -118,7 +118,7 @@ var Events = function (Glide, Core) {
 	 * Enable all events
 	 * @return {Glide.Events}
 	 */
-	Module.prototype.enable = function () {
+	Module.prototype.enable = function() {
 		this.disabled = false;
 		return this;
 	};
@@ -161,7 +161,7 @@ var Events = function (Glide, Core) {
 	 * @param {Function} func
 	 * @return {Glide.Events}
 	 */
-	Module.prototype.unbind = function () {
+	Module.prototype.unbind = function() {
 
 		Glide.track
 			.off('keyup.glide')

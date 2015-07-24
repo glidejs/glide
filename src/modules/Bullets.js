@@ -6,7 +6,7 @@
  * @return {Glide.Bullets}
  */
 
-var Bullets = function (Glide, Core) {
+var Bullets = function(Glide, Core) {
 
 
 	/**
@@ -22,7 +22,7 @@ var Bullets = function (Glide, Core) {
 	 * Build
 	 * bullets DOM
 	 */
-	Module.prototype.build = function () {
+	Module.prototype.build = function() {
 
 		this.wrapper = Glide.slider.children('.' + Glide.options.classes.bullets);
 
@@ -38,7 +38,7 @@ var Bullets = function (Glide, Core) {
 	};
 
 
-	Module.prototype.active = function () {
+	Module.prototype.active = function() {
 
 		Core.Bullets.items
 			.eq(Glide.current - 1).addClass('active')
@@ -51,14 +51,14 @@ var Bullets = function (Glide, Core) {
 	 * Bind
 	 * bullets events
 	 */
-	Module.prototype.bind = function () {
+	Module.prototype.bind = function() {
 
 		this.items.on('click.glide touchstart.glide', function(event){
 			event.preventDefault();
 			if (!Core.Events.disabled) {
 				Core.Run.pause();
 				Core.Run.make($(this).data('glide-dir'));
-				Core.Animation.after(function () {
+				Core.Animation.after(function() {
 					Core.Run.play();
 				});
 			}
@@ -71,7 +71,7 @@ var Bullets = function (Glide, Core) {
 	 * Unbind
 	 * bullets events
 	 */
-	Module.prototype.unbind = function () {
+	Module.prototype.unbind = function() {
 		this.items.off('click.glide touchstart.glide');
 	};
 

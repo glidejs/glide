@@ -1,4 +1,4 @@
-var Translate = function (Glide, Core) {
+var Translate = function(Glide, Core) {
 
 
 	/**

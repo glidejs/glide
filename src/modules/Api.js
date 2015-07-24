@@ -6,7 +6,7 @@
  * @return {Glide.Api}
  */
 
-var Api = function (Glide, Core) {
+var Api = function(Glide, Core) {
 
 
 	/**
@@ -19,7 +19,7 @@ var Api = function (Glide, Core) {
 	 * Api instance
 	 * @return {object}
 	 */
-	Module.prototype.instance = function () {
+	Module.prototype.instance = function() {
 
 		return {
 
@@ -52,7 +52,7 @@ var Api = function (Glide, Core) {
 			jump: function(distance, callback) {
 				// Let know that we want jumping
 				Core.Transition.jumping = true;
-				Core.Animation.after(function () {
+				Core.Animation.after(function() {
 					// Jumping done, take down flag
 					Core.Transition.jumping = false;
 				});

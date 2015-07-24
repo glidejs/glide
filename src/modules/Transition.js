@@ -1,4 +1,4 @@
-var Transition = function (Glide, Core) {
+var Transition = function(Glide, Core) {
 
 
 	/**

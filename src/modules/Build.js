@@ -8,7 +8,7 @@
  * @return {Module}
  */
 
-var Build = function (Glide, Core) {
+var Build = function(Glide, Core) {
 
 
 	// Build Module Constructor
@@ -97,7 +97,7 @@ var Build = function (Glide, Core) {
 	 * Build Slideshow type
 	 * @return {[type]} [description]
 	 */
-	Module.prototype.slideshow = function () {
+	Module.prototype.slideshow = function() {
 
 		// Show up current slide
 		Glide.slides.eq(Glide.current - 1)
@@ -111,7 +111,7 @@ var Build = function (Glide, Core) {
 	 * Set active class
 	 * to current slide
 	 */
-	Module.prototype.active = function () {
+	Module.prototype.active = function() {
 
 		Glide.slides
 			.eq(Glide.current - 1).addClass(Glide.options.classes.active)

@@ -6,7 +6,7 @@
  * @return {Glide.Height}
  */
 
-var Height = function (Glide, Core) {
+var Height = function(Glide, Core) {
 
 
 	/**
@@ -26,7 +26,7 @@ var Height = function (Glide, Core) {
 	 * Get current slide height
 	 * @return {Number}
 	 */
-	Module.prototype.get = function () {
+	Module.prototype.get = function() {
 		return Glide.slides.eq(Glide.current - 1).height();
 	};
 

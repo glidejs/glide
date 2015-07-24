@@ -6,7 +6,7 @@
  * @return {Glide.Helper}
  */
 
-var Helper = function (Glide, Core) {
+var Helper = function(Glide, Core) {
 
 
 	/**

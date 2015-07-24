@@ -6,7 +6,7 @@
  * @return {Glide.Touch}
  */
 
-var Touch = function (Glide, Core) {
+var Touch = function(Glide, Core) {
 
 
 	/**

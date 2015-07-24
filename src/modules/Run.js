@@ -6,7 +6,7 @@
  * @return {Module}
  */
 
-var Run = function (Glide, Core) {
+var Run = function(Glide, Core) {
 
 
 	/**

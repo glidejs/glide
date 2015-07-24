@@ -6,7 +6,7 @@
  * @return {Glide.Clones}
  */
 
-var Clones = function (Glide, Core) {
+var Clones = function(Glide, Core) {
 
 
 	/**

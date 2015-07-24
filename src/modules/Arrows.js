@@ -6,7 +6,7 @@
  * @return {Glide.Arrows}
  */
 
-var Arrows = function (Glide, Core) {
+var Arrows = function(Glide, Core) {
 
 
 	/**
@@ -22,7 +22,7 @@ var Arrows = function (Glide, Core) {
 	 * Build
 	 * arrows DOM
 	 */
-	Module.prototype.build = function () {
+	Module.prototype.build = function() {
 
 		this.wrapper = Glide.slider.find('.' + Glide.options.classes.arrows);
 		this.items = this.wrapper.children();
@@ -47,7 +47,7 @@ var Arrows = function (Glide, Core) {
 	/**
 	 * Show arrows
 	 */
-	Module.prototype.enable = function () {
+	Module.prototype.enable = function() {
 
 		this.bind();
 		return this.items.removeClass(Glide.options.classes.disabled);
@@ -59,14 +59,14 @@ var Arrows = function (Glide, Core) {
 	 * Bind
 	 * arrows events
 	 */
-	Module.prototype.bind = function () {
+	Module.prototype.bind = function() {
 
 		return this.items.on('click.glide touchstart.glide', function(event){
 			event.preventDefault();
 			if (!Core.Events.disabled) {
 				Core.Run.pause();
 				Core.Run.make($(this).data('glide-dir'));
-				Core.Animation.after(function () {
+				Core.Animation.after(function() {
 					Core.Run.play();
 				});
 			}
@@ -79,7 +79,7 @@ var Arrows = function (Glide, Core) {
 	 * Unbind
 	 * arrows events
 	 */
-	Module.prototype.unbind = function () {
+	Module.prototype.unbind = function() {
 		return this.items.off('click.glide touchstart.glide');
 	};
 

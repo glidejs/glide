@@ -16,7 +16,7 @@
  * @return {Glide.Animation}
  */
 
-var Animation = function (Glide, Core) {
+var Animation = function(Glide, Core) {
 
 
 	function Module() {}
@@ -53,7 +53,7 @@ var Animation = function (Glide, Core) {
 	 * Animation slider animation type
 	 * @param {string} direction
 	 */
-	Module.prototype.slider = function () {
+	Module.prototype.slider = function() {
 
 		var translate;
 		var shift = (Glide.current * Glide.width) - (Glide.width + this.offset);
@@ -94,7 +94,7 @@ var Animation = function (Glide, Core) {
 	 * Animation carousel animation type
 	 * @param {string} direction
 	 */
-	Module.prototype.carousel = function () {
+	Module.prototype.carousel = function() {
 
 		// Translate container
 		var translate = 0;
@@ -186,7 +186,7 @@ var Animation = function (Glide, Core) {
 	 * Animation slideshow animation type
 	 * @param {string} direction
 	 */
-	Module.prototype.slideshow = function (direction) {
+	Module.prototype.slideshow = function() {
 
 		Glide.slides.css('transition', Core.Transition.get('opacity'))
 			.eq(Glide.current - 1).css('opacity', 1)
@@ -205,7 +205,7 @@ var Animation = function (Glide, Core) {
  * @return {Glide.Api}
  */
 
-var Api = function (Glide, Core) {
+var Api = function(Glide, Core) {
 
 
 	/**
@@ -218,7 +218,7 @@ var Api = function (Glide, Core) {
 	 * Api instance
 	 * @return {object}
 	 */
-	Module.prototype.instance = function () {
+	Module.prototype.instance = function() {
 
 		return {
 
@@ -251,7 +251,7 @@ var Api = function (Glide, Core) {
 			jump: function(distance, callback) {
 				// Let know that we want jumping
 				Core.Transition.jumping = true;
-				Core.Animation.after(function () {
+				Core.Animation.after(function() {
 					// Jumping done, take down flag
 					Core.Transition.jumping = false;
 				});
@@ -340,7 +340,7 @@ var Api = function (Glide, Core) {
  * @return {Glide.Arrows}
  */
 
-var Arrows = function (Glide, Core) {
+var Arrows = function(Glide, Core) {
 
 
 	/**
@@ -356,7 +356,7 @@ var Arrows = function (Glide, Core) {
 	 * Build
 	 * arrows DOM
 	 */
-	Module.prototype.build = function () {
+	Module.prototype.build = function() {
 
 		this.wrapper = Glide.slider.find('.' + Glide.options.classes.arrows);
 		this.items = this.wrapper.children();
@@ -381,7 +381,7 @@ var Arrows = function (Glide, Core) {
 	/**
 	 * Show arrows
 	 */
-	Module.prototype.enable = function () {
+	Module.prototype.enable = function() {
 
 		this.bind();
 		return this.items.removeClass(Glide.options.classes.disabled);
@@ -393,14 +393,14 @@ var Arrows = function (Glide, Core) {
 	 * Bind
 	 * arrows events
 	 */
-	Module.prototype.bind = function () {
+	Module.prototype.bind = function() {
 
 		return this.items.on('click.glide touchstart.glide', function(event){
 			event.preventDefault();
 			if (!Core.Events.disabled) {
 				Core.Run.pause();
 				Core.Run.make($(this).data('glide-dir'));
-				Core.Animation.after(function () {
+				Core.Animation.after(function() {
 					Core.Run.play();
 				});
 			}
@@ -413,7 +413,7 @@ var Arrows = function (Glide, Core) {
 	 * Unbind
 	 * arrows events
 	 */
-	Module.prototype.unbind = function () {
+	Module.prototype.unbind = function() {
 		return this.items.off('click.glide touchstart.glide');
 	};
 
@@ -432,7 +432,7 @@ var Arrows = function (Glide, Core) {
  * @return {Module}
  */
 
-var Build = function (Glide, Core) {
+var Build = function(Glide, Core) {
 
 
 	// Build Module Constructor
@@ -521,7 +521,7 @@ var Build = function (Glide, Core) {
 	 * Build Slideshow type
 	 * @return {[type]} [description]
 	 */
-	Module.prototype.slideshow = function () {
+	Module.prototype.slideshow = function() {
 
 		// Show up current slide
 		Glide.slides.eq(Glide.current - 1)
@@ -535,7 +535,7 @@ var Build = function (Glide, Core) {
 	 * Set active class
 	 * to current slide
 	 */
-	Module.prototype.active = function () {
+	Module.prototype.active = function() {
 
 		Glide.slides
 			.eq(Glide.current - 1).addClass(Glide.options.classes.active)
@@ -555,7 +555,7 @@ var Build = function (Glide, Core) {
  * @return {Glide.Bullets}
  */
 
-var Bullets = function (Glide, Core) {
+var Bullets = function(Glide, Core) {
 
 
 	/**
@@ -571,7 +571,7 @@ var Bullets = function (Glide, Core) {
 	 * Build
 	 * bullets DOM
 	 */
-	Module.prototype.build = function () {
+	Module.prototype.build = function() {
 
 		this.wrapper = Glide.slider.children('.' + Glide.options.classes.bullets);
 
@@ -587,7 +587,7 @@ var Bullets = function (Glide, Core) {
 	};
 
 
-	Module.prototype.active = function () {
+	Module.prototype.active = function() {
 
 		Core.Bullets.items
 			.eq(Glide.current - 1).addClass('active')
@@ -600,14 +600,14 @@ var Bullets = function (Glide, Core) {
 	 * Bind
 	 * bullets events
 	 */
-	Module.prototype.bind = function () {
+	Module.prototype.bind = function() {
 
 		this.items.on('click.glide touchstart.glide', function(event){
 			event.preventDefault();
 			if (!Core.Events.disabled) {
 				Core.Run.pause();
 				Core.Run.make($(this).data('glide-dir'));
-				Core.Animation.after(function () {
+				Core.Animation.after(function() {
 					Core.Run.play();
 				});
 			}
@@ -620,7 +620,7 @@ var Bullets = function (Glide, Core) {
 	 * Unbind
 	 * bullets events
 	 */
-	Module.prototype.unbind = function () {
+	Module.prototype.unbind = function() {
 		this.items.off('click.glide touchstart.glide');
 	};
 
@@ -637,7 +637,7 @@ var Bullets = function (Glide, Core) {
  * @return {Glide.Clones}
  */
 
-var Clones = function (Glide, Core) {
+var Clones = function(Glide, Core) {
 
 
 	/**
@@ -726,7 +726,7 @@ var Core = function (Glide, Modules) {
  * @return {Glide.Events}
  */
 
-var Events = function (Glide, Core) {
+var Events = function(Glide, Core) {
 
 
 	/**
@@ -828,7 +828,7 @@ var Events = function (Glide, Core) {
 	 * Disable all events
 	 * @return {Glide.Events}
 	 */
-	Module.prototype.disable = function () {
+	Module.prototype.disable = function() {
 		this.disabled = true;
 		return this;
 	};
@@ -838,7 +838,7 @@ var Events = function (Glide, Core) {
 	 * Enable all events
 	 * @return {Glide.Events}
 	 */
-	Module.prototype.enable = function () {
+	Module.prototype.enable = function() {
 		this.disabled = false;
 		return this;
 	};
@@ -881,7 +881,7 @@ var Events = function (Glide, Core) {
 	 * @param {Function} func
 	 * @return {Glide.Events}
 	 */
-	Module.prototype.unbind = function () {
+	Module.prototype.unbind = function() {
 
 		Glide.track
 			.off('keyup.glide')
@@ -948,7 +948,7 @@ var Events = function (Glide, Core) {
  * @return {Glide.Height}
  */
 
-var Height = function (Glide, Core) {
+var Height = function(Glide, Core) {
 
 
 	/**
@@ -968,7 +968,7 @@ var Height = function (Glide, Core) {
 	 * Get current slide height
 	 * @return {Number}
 	 */
-	Module.prototype.get = function () {
+	Module.prototype.get = function() {
 		return Glide.slides.eq(Glide.current - 1).height();
 	};
 
@@ -995,7 +995,7 @@ var Height = function (Glide, Core) {
  * @return {Glide.Helper}
  */
 
-var Helper = function (Glide, Core) {
+var Helper = function(Glide, Core) {
 
 
 	/**
@@ -1036,7 +1036,7 @@ var Helper = function (Glide, Core) {
  * @return {Module}
  */
 
-var Run = function (Glide, Core) {
+var Run = function(Glide, Core) {
 
 
 	/**
@@ -1204,7 +1204,7 @@ var Run = function (Glide, Core) {
  * @return {Glide.Touch}
  */
 
-var Touch = function (Glide, Core) {
+var Touch = function(Glide, Core) {
 
 
 	/**
@@ -1410,7 +1410,7 @@ var Touch = function (Glide, Core) {
 	return new Module();
 
 };
-;var Transition = function (Glide, Core) {
+;var Transition = function(Glide, Core) {
 
 
 	/**
@@ -1449,7 +1449,7 @@ var Touch = function (Glide, Core) {
 
 
 };
-;var Translate = function (Glide, Core) {
+;var Translate = function(Glide, Core) {
 
 
 	/**

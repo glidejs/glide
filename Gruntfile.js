@@ -114,7 +114,7 @@ module.exports = function(grunt){
 			},
 			min: {
 				options: {
-					cleancss: true,
+					compress: true,
 					report: 'min'
 				},
 				files: {

@@ -51,9 +51,25 @@ var Build = function(Glide, Core) {
 	 */
 	Module.prototype.slider = function() {
 
-		// Hide next/prev arrow when on the end/start
-		if (Core.Run.isStart()) Core.Arrows.disable('prev');
-		if (Core.Run.isEnd()) Core.Arrows.disable('next');
+		var translate = Glide.width * (Glide.current - 1);
+		var shift = Core.Clones.shift - Glide.options.paddings;
+
+		// If we on first slide
+		if (Core.Run.isStart()) {
+			// Hide prev arrow
+			Core.Arrows.disable('prev');
+		}
+		// If we on last slide
+		else if (Core.Run.isEnd()) {
+			// Double and absolute shift
+			shift = Math.abs(shift * 2);
+			Core.Arrows.disable('next');
+		}
+		// Otherwise we on the one of inner slides
+		else {
+			// Absolute shift
+			shift = Math.abs(shift);
+		}
 
 		// Apply slides width
 		Glide.slides.width(Glide.width);
@@ -61,7 +77,7 @@ var Build = function(Glide, Core) {
 		// Apply translate
 		Glide.track.css({
 			'width': Glide.width * Glide.length,
-			'transform': Core.Translate.set('x', Glide.width * (Glide.current - 1)),
+			'transform': Core.Translate.set('x', translate - shift),
 		});
 
 	};

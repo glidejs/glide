@@ -73,14 +73,14 @@ var Glide = function (element, options) {
 		Helper: Helper,
 		Translate: Translate,
 		Transition: Transition,
-		Events: Events,
 		Clones: Clones,
 		Arrows: Arrows,
 		Bullets: Bullets,
 		Height: Height,
 		Run: Run,
-		Build: Build,
 		Animation: Animation,
+		Build: Build,
+		Events: Events,
 		Touch: Touch,
 		Api: Api
 	});

@@ -51,34 +51,16 @@ var Build = function(Glide, Core) {
 	 */
 	Module.prototype.slider = function() {
 
-		var translate = Glide.width * (Glide.current - 1);
-		var shift = Core.Clones.shift - Glide.options.paddings;
-
-		// If we on first slide
-		if (Core.Run.isStart()) {
-			// Hide prev arrow
-			Core.Arrows.disable('prev');
-		}
-		// If we on last slide
-		else if (Core.Run.isEnd()) {
-			// Double and absolute shift
-			shift = Math.abs(shift * 2);
-			Core.Arrows.disable('next');
-		}
-		// Otherwise we on the one of inner slides
-		else {
-			// Absolute shift
-			shift = Math.abs(shift);
-		}
-
+		// Turn on jumping flag
+		Core.Transition.jumping = true;
+		// Go to startup position
+		Core.Animation.make();
 		// Apply slides width
 		Glide.slides.width(Glide.width);
-
 		// Apply translate
-		Glide.track.css({
-			'width': Glide.width * Glide.length,
-			'transform': Core.Translate.set('x', translate - shift),
-		});
+		Glide.track.css('width', Glide.width * Glide.length);
+		// Turn off jumping flag
+		Core.Transition.jumping = false;
 
 	};
 
@@ -89,22 +71,20 @@ var Build = function(Glide, Core) {
 	 */
 	Module.prototype.carousel = function() {
 
-		// Update shift for carusel type
-		Core.Clones.shift = (Glide.width * Glide.clones.length/2) - Glide.width;
-
+		// Turn on jumping flag
+		Core.Transition.jumping = true;
 		// Append clones
 		Core.Clones.append();
-
+		// Update shift for carusel type
+		Core.Clones.shift = (Glide.width * Glide.clones.length/2) - Glide.width;
+		// Go to startup position
+		Core.Animation.make();
 		// Apply slides width
 		Glide.slides.width(Glide.width);
-
 		// Apply translate
-		Glide.track.css({
-			'width': (Glide.width * Glide.length) + Core.Clones.growth,
-			'transform': Core.Translate.set('x',
-				(Glide.width * Glide.current) - (Glide.options.paddings - Core.Clones.shift)
-			),
-		});
+		Glide.track.css('width', (Glide.width * Glide.length) + Core.Clones.growth);
+		// Turn off jumping flag
+		Core.Transition.jumping = false;
 
 	};
 
@@ -115,10 +95,12 @@ var Build = function(Glide, Core) {
 	 */
 	Module.prototype.slideshow = function() {
 
-		// Show up current slide
-		Glide.slides.eq(Glide.current - 1)
-			.css('opacity', 1)
-			.siblings().css('opacity', 0);
+		// Turn on jumping flag
+		Core.Transition.jumping = true;
+		// Go to startup position
+		Core.Animation.make();
+		// Turn off jumping flag
+		Core.Transition.jumping = false;
 
 	};
 

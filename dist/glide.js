@@ -1508,8 +1508,8 @@ var Glide = function (element, options) {
 			dragging: 'dragging',
 			disabled: 'disabled'
 		},
-		beforeInit: function(el) {},
-		afterInit: function(el) {},
+		beforeInit: function(slider) {},
+		afterInit: function(i, el) {},
 		beforeTransition: function(i, el) {},
 		afterTransition: function(i, el) {},
 		swipeStart: function(i, el) {},
@@ -1550,7 +1550,7 @@ var Glide = function (element, options) {
 	});
 
 	// Call after init callback
-	this.options.afterInit(this.slider);
+	this.options.afterInit(this.current, this.slides.eq(this.current - 1));
 
 	// api return
 	return Engine.Api.instance();

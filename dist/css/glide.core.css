@@ -11,8 +11,6 @@
   width: 100%;
   height: 100%;
   list-style: none;
-  -webkit-perspective: 1000;
-          perspective: 1000;
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
   -webkit-transform-style: preserve-3d;

@@ -74,12 +74,12 @@ var Glide = function (element, options) {
 		Helper: Helper,
 		Translate: Translate,
 		Transition: Transition,
+		Run: Run,
+		Animation: Animation,
 		Clones: Clones,
 		Arrows: Arrows,
 		Bullets: Bullets,
 		Height: Height,
-		Run: Run,
-		Animation: Animation,
 		Build: Build,
 		Events: Events,
 		Touch: Touch,
@@ -117,10 +117,43 @@ Glide.prototype.collect = function() {
 
 
 /**
- * Setup
- * properties
+ * Setup properties and values
  */
 Glide.prototype.setup = function() {
-	this.width = this.slider.width() - this.options.paddings * 2;
+	this.paddings = this.getPaddings();
+	this.width = this.getWidth();
 	this.length = this.slides.length;
+};
+
+
+/**
+ * Normalize paddings option value
+ * Parsing string (%, px) and numbers
+ * @return {Number} normalized value
+ */
+Glide.prototype.getPaddings = function() {
+
+	var option = this.options.paddings;
+
+	if(typeof option === 'string') {
+
+		var normalized = parseInt(option, 10);
+		var isPercentage = option.indexOf('%') >= 0;
+
+		if (isPercentage) return parseInt(this.slider.width() * (normalized/100));
+		else return normalized;
+
+	}
+
+	return option;
+
+};
+
+
+/**
+ * Get slider width updated by addtional options
+ * @return {Number} width value
+ */
+Glide.prototype.getWidth = function() {
+	return this.slider.width() - (this.paddings * 2);
 };

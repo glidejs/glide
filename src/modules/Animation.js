@@ -46,7 +46,7 @@ var Animation = function(Glide, Core) {
 	Module.prototype.slider = function() {
 
 		var translate = Glide.width * (Glide.current - 1);
-		var shift = Core.Clones.shift - Glide.options.paddings;
+		var shift = Core.Clones.shift - Glide.paddings;
 
 		// If on first slide
 		if (Core.Run.isStart()) {
@@ -92,7 +92,7 @@ var Animation = function(Glide, Core) {
 		// Calculate addtional shift
 		var shift;
 
-		if (Glide.options.centered) shift = Core.Clones.shift - Glide.options.paddings;
+		if (Glide.options.centered) shift = Core.Clones.shift - Glide.paddings;
 		else shift = Core.Clones.shift;
 
 		/**

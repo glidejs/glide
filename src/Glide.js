@@ -28,6 +28,7 @@ var Glide = function (element, options) {
 		throttle: 16,
 		autoheight: false,
 		paddings: 0,
+		centered: true,
 		classes: {
 			base: 'glide',
 			wrapper: 'glide__wrapper',

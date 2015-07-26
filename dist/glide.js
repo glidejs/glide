@@ -60,15 +60,17 @@ var Animation = function(Glide, Core) {
 
 		// If on first slide
 		if (Core.Run.isStart()) {
+			if (Glide.options.centered) shift = Math.abs(shift);
 			// Shift is zero
-			shift = 0;
+			else shift = 0;
 			// Hide prev arrow
 			Core.Arrows.disable('prev');
 		}
 		// If on last slide
 		else if (Core.Run.isEnd()) {
+			if (Glide.options.centered) shift = Math.abs(shift);
 			// Double and absolute shift
-			shift = Math.abs(shift * 2);
+			else shift = Math.abs(shift * 2);
 			// Hide next arrow
 			Core.Arrows.disable('next');
 		}
@@ -98,7 +100,10 @@ var Animation = function(Glide, Core) {
 		// Translate container
 		var translate = Glide.width * Glide.current;
 		// Calculate addtional shift
-		var shift = Core.Clones.shift - Glide.options.paddings;
+		var shift;
+
+		if (Glide.options.centered) shift = Core.Clones.shift - Glide.options.paddings;
+		else shift = Core.Clones.shift;
 
 		/**
 		 * The flag is set and direction is prev,
@@ -1492,6 +1497,7 @@ var Glide = function (element, options) {
 		throttle: 16,
 		autoheight: false,
 		paddings: 0,
+		centered: true,
 		classes: {
 			base: 'glide',
 			wrapper: 'glide__wrapper',

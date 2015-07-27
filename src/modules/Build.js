@@ -53,12 +53,12 @@ var Build = function(Glide, Core) {
 
 		// Turn on jumping flag
 		Core.Transition.jumping = true;
-		// Go to startup position
-		Core.Animation.make();
 		// Apply slides width
 		Glide.slides.width(Glide.width);
 		// Apply translate
 		Glide.track.css('width', Glide.width * Glide.length);
+		// Go to startup position
+		Core.Animation.make();
 		// Turn off jumping flag
 		Core.Transition.jumping = false;
 
@@ -73,16 +73,16 @@ var Build = function(Glide, Core) {
 
 		// Turn on jumping flag
 		Core.Transition.jumping = true;
-		// Append clones
-		Core.Clones.append();
 		// Update shift for carusel type
 		Core.Clones.shift = (Glide.width * Glide.clones.length/2) - Glide.width;
-		// Go to startup position
-		Core.Animation.make();
 		// Apply slides width
 		Glide.slides.width(Glide.width);
 		// Apply translate
 		Glide.track.css('width', (Glide.width * Glide.length) + Core.Clones.growth);
+		// Go to startup position
+		Core.Animation.make();
+		// Append clones
+		Core.Clones.append();
 		// Turn off jumping flag
 		Core.Transition.jumping = false;
 

@@ -8,22 +8,20 @@
 
 var Animation = function(Glide, Core) {
 
+	var offset;
 
 	function Module() {}
-
 
 	/**
 	 * Make specifed animation type
 	 * @param {Number} offset Offset from current position
 	 * @return {Module}
 	 */
-	Module.prototype.make = function(offset) {
-
-		this.offset = (typeof offset !== 'undefined') ? offset : 0;
+	Module.prototype.make = function(displacement) {
+		offset = (typeof displacement !== 'undefined') ? parseInt(displacement) : 0;
 		// Animation actual translate animation
 		this[Glide.options.type]();
 		return this;
-
 	};
 
 
@@ -75,7 +73,7 @@ var Animation = function(Glide, Core) {
 		// Apply translate
 		Glide.track.css({
 			'transition': Core.Transition.get('all'),
-			'transform': Core.Translate.set('x', translate - shift - this.offset)
+			'transform': Core.Translate.set('x', translate - shift - offset)
 		});
 
 	};
@@ -142,7 +140,7 @@ var Animation = function(Glide, Core) {
 		 */
 		Glide.track.css({
 			'transition': Core.Transition.get('all'),
-			'transform': Core.Translate.set('x', translate + shift - this.offset)
+			'transform': Core.Translate.set('x', translate + shift - offset)
 		});
 
 	};

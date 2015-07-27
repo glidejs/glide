@@ -8,6 +8,7 @@
 
 var Touch = function(Glide, Core) {
 
+	var touch;
 
 	/**
 	 * Touch Module Constructor
@@ -44,25 +45,16 @@ var Touch = function(Glide, Core) {
 	 */
 	Module.prototype.start = function(event) {
 
-		event.preventDefault();
-		event.stopPropagation();
-
 		// Escape if events disabled
 		// or already dragging
 		if (!Core.Events.disabled && !this.dragging) {
 
-			// Turn off jumping flag
-			Core.Transition.jumping = true;
-			// Detach clicks inside track
-			Core.Events.detachClicks().call(Glide.options.swipeStart);
-			// Pause if autoplay
-			Core.Run.pause();
-
-			var touch;
-
 			// Cache event
 			if (event.type === 'mousedown') touch = event.originalEvent;
 			else touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+
+			// Turn off jumping flag
+			Core.Transition.jumping = true;
 
 			// Get touch start points
 			this.touchStartX = parseInt(touch.pageX);
@@ -74,6 +66,11 @@ var Touch = function(Glide, Core) {
 				'touchmove.glide mousemove.glide': Core.Events.throttle($.proxy(this.move, this), Glide.options.throttle),
 				'touchend.glide touchcancel.glide mouseup.glide mouseleave.glide': $.proxy(this.end, this)
 			});
+
+			// Detach clicks inside track
+			Core.Events.detachClicks().call(Glide.options.swipeStart);
+			// Pause if autoplay
+			Core.Run.pause();
 
 		}
 
@@ -89,11 +86,6 @@ var Touch = function(Glide, Core) {
 		// Escape if events not disabled
 		// or not dragging
 		if (!Core.Events.disabled && this.dragging) {
-
-			// Prevent clicks inside track
-			Core.Events.preventClicks();
-
-			var touch;
 
 			// Cache event
 			if (event.type === 'mousemove') touch = event.originalEvent;
@@ -124,13 +116,14 @@ var Touch = function(Glide, Core) {
 				Glide.track.addClass(Glide.options.classes.dragging);
 			// Else escape from event, we don't want move slider
 			} else {
-				// Clear dragging flag
-				this.dragging = false;
 				return;
 			}
 
 			// Make offset animation
 			Core.Animation.make(subExSx);
+
+			// Prevent clicks inside track
+			Core.Events.preventClicks();
 
 		}
 
@@ -147,17 +140,6 @@ var Touch = function(Glide, Core) {
 		// or not dragging
 		if (!Core.Events.disabled && this.dragging) {
 
-			// Turn off jumping flag
-			Core.Transition.jumping = false;
-			// Unset dragging flag
-			this.dragging = false;
-			// Disable other events
-			Core.Events.disable().call(Glide.options.swipeEnd);
-			// Remove dragging class
-			Glide.track.removeClass(Glide.options.classes.dragging);
-
-			var touch;
-
 			// Cache event
 			if (event.type === 'mouseup' || event.type === 'mouseleave') touch = event.originalEvent;
 			else touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
@@ -166,6 +148,9 @@ var Touch = function(Glide, Core) {
 			var touchDistance = touch.pageX - this.touchStartX;
 			// Calculate degree
 			var touchDeg = this.touchSin * 180 / Math.PI;
+
+			// Turn off jumping flag
+			Core.Transition.jumping = false;
 
 			// If slider type is slider
 			if (Core.Build.isType('slider')) {
@@ -199,7 +184,14 @@ var Touch = function(Glide, Core) {
 				Core.Run.play();
 			});
 
+			// Unset dragging flag
+			this.dragging = false;
+			// Disable other events
+			Core.Events.disable().call(Glide.options.swipeEnd);
+			// Remove dragging class
+			// Unbind events
 			Glide.track
+				.removeClass(Glide.options.classes.dragging)
 				.off('touchmove.glide mousemove.glide')
 				.off('touchend.glide touchcancel.glide mouseup.glide mouseleave.glide');
 

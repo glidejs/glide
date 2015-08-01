@@ -13,6 +13,7 @@
     "grunt": "~0.4.2",
     "grunt-autoprefixer": "*",
     "grunt-contrib-less": "*",
+    "grunt-less-to-sass": "*",
     "grunt-contrib-coffee": "*",
     "grunt-contrib-concat": "*",
     "grunt-contrib-jasmine": "*",

@@ -132,6 +132,7 @@ var Touch = function(Glide, Core) {
 
 	/**
 	 * Touch end event
+	 * @todo Check edge cases for slider type
 	 * @param  {Onject} event
 	 */
 	Module.prototype.end = function(event) {

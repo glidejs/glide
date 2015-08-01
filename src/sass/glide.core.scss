@@ -1,6 +1,6 @@
 .glide {
 
-	@that: .glide;
+	$that: .glide !default;
 
 	position: relative;
 	width: 100%;
@@ -58,19 +58,19 @@
 
 	&--slider {
 
-		@{that}__slide {
+		#{$that}__slide {
 			float: left;
 			clear: none;
 		}
 
-		@{that}__arrow {}
+		#{$that}__arrow {}
 
 	}
 
 
 	&--carousel {
 
-		@{that}__slide {
+		#{$that}__slide {
 			float: left;
 			clear: none;
 		}
@@ -80,11 +80,11 @@
 
 	&--slideshow {
 
-		@{that}__wrapper {
+		#{$that}__wrapper {
 			height: 100%;
 		}
 
-		@{that}__slide {
+		#{$that}__slide {
 			height: 100%;
 			position: absolute;
 			top: 0; left: 0;

@@ -49,8 +49,8 @@ module.exports = function(grunt){
 					outfile: '<%= paths.tests %>/_SpecRunner.html',
 					vendor: [
 						'<%= paths.bower %>/jquery/dist/jquery.js',
-	        			'<%= paths.bower %>/jasmine-jquery/lib/jasmine-jquery.js',
-	        			'<%= paths.dist %>/glide.js'
+						'<%= paths.bower %>/jasmine-jquery/lib/jasmine-jquery.js',
+						'<%= paths.dist %>/glide.js'
 					]
 				},
 
@@ -125,6 +125,18 @@ module.exports = function(grunt){
 		},
 
 		/**
+		 * Conver LESS to SASS
+		 */
+		lessToSass: {
+			convert: {
+				files: {
+					"<%= paths.src %>/sass/glide.core.scss": '<%= paths.src %>/less/glide.core.less',
+					"<%= paths.src %>/sass/glide.theme.scss": '<%= paths.src %>/less/glide.theme.less',
+				}
+			}
+		},
+
+		/**
 		 * Autoprefixer
 		 * autoprefix CSS3
 		 */
@@ -165,7 +177,7 @@ module.exports = function(grunt){
 	]);
 
 	grunt.registerTask('style', [
-		'less', 'autoprefixer'
+		'less', 'lessToSass', 'autoprefixer'
 	]);
 
 	grunt.registerTask('script', [

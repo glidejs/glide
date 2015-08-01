@@ -27,8 +27,6 @@
           user-select: none;
 }
 .glide__slide {
-  -webkit-perspective: 1000;
-          perspective: 1000;
   width: 100%;
   -webkit-user-select: none;
      -moz-user-select: none;

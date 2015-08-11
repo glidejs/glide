@@ -751,7 +751,7 @@ var Events = function(Glide, Core) {
 	 */
 	Module.prototype.resize = function() {
 
-		$(window).on('resize', this.throttle(function() {
+		$(window).on('resize.glide', this.throttle(function() {
 			Core.Transition.jumping = true;
 			Core.Run.pause();
 			Glide.setup();

@@ -177,7 +177,7 @@ module.exports = function(grunt){
 	]);
 
 	grunt.registerTask('style', [
-		'less', 'lessToSass', 'autoprefixer'
+		'less', 'autoprefixer'
 	]);
 
 	grunt.registerTask('script', [

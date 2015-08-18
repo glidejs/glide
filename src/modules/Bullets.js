@@ -14,11 +14,11 @@ var Bullets = function(Glide, Core) {
 	 */
 	function Module() {
 		this.init();
+		this.bind();
 	}
 
 	Module.prototype.init = function() {
 		this.build();
-		this.bind();
 		this.active();
 
 		return this;

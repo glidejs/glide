@@ -122,12 +122,11 @@ var Api = function(Glide, Core) {
 			 */
 			refresh: function() {
 				Core.Run.pause();
-				Core.Clones.remove();
 				Glide.collect();
 				Glide.setup();
-				Core.Clones.init();
-				Core.Build.init();
+				Core.Clones.remove().init();
 				Core.Bullets.remove().init();
+				Core.Build.init();
 				Core.Run.make('=' + parseInt(Glide.options.startAt), Core.Run.play());
 			},
 

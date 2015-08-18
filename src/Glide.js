@@ -100,19 +100,10 @@ var Glide = function (element, options) {
  * and set classes
  */
 Glide.prototype.collect = function() {
-
 	this.slider = this.element.addClass(this.options.classes.base + '--' + this.options.type);
 	this.track = this.slider.find('.' + this.options.classes.track);
 	this.wrapper = this.slider.find('.' + this.options.classes.wrapper);
 	this.slides = this.track.find('.' + this.options.classes.slide).not('.' + this.options.classes.clone);
-
-	this.clones = [
-		this.slides.eq(0).clone().addClass(this.options.classes.clone),
-		this.slides.eq(1).clone().addClass(this.options.classes.clone),
-		this.slides.eq(-1).clone().addClass(this.options.classes.clone),
-		this.slides.eq(-2).clone().addClass(this.options.classes.clone)
-	];
-
 };
 
 

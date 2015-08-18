@@ -70,7 +70,7 @@ var Build = function(Glide, Core) {
 		// Turn on jumping flag
 		Core.Transition.jumping = true;
 		// Update shift for carusel type
-		Core.Clones.shift = (Glide.width * Glide.clones.length/2) - Glide.width;
+		Core.Clones.shift = (Glide.width * Core.Clones.items.length/2) - Glide.width;
 		// Apply slides width
 		Glide.slides.width(Glide.width);
 		// Apply translate

@@ -3,14 +3,15 @@
  * Glide Clones
  * --------------------------------
  * Clones module
- * @return {Glide.Clones}
+ * @return {Core.Clones}
  */
 
 var Clones = function(Glide, Core) {
 
-	var pointer;
-	var appendClones;
-	var prependClones;
+
+	var map = [0,1];
+	var pattern;
+
 
 	/**
 	 * Clones Module Constructor
@@ -21,14 +22,42 @@ var Clones = function(Glide, Core) {
 
 
 	Module.prototype.init = function() {
-		this.shift = 0;
-		this.growth = Glide.width * Glide.clones.length;
+		this.items = [];
 
-		pointer = Glide.clones.length / 2;
-		appendClones = Glide.clones.slice(0, pointer);
-		prependClones = Glide.clones.slice(pointer);
+		this.map();
+		this.collect();
+
+		this.shift = 0;
+		this.growth = Glide.width * this.items.length;
 
 		return this;
+	};
+
+	/**
+	 * Map clones length
+	 * to pattern
+	 */
+	Module.prototype.map = function() {
+		pattern = [];
+
+		for(var i in map) {
+			pattern.push(-1-i, i);
+		}
+	};
+
+	/**
+	 * Collect clones
+	 * with maped pattern
+	 */
+	Module.prototype.collect = function() {
+		var item;
+
+		for(var i in pattern) {
+			item = Glide.slides.eq(pattern[i])
+					.clone().addClass(Glide.options.classes.clone);
+
+			this.items.push(item);
+		}
 	};
 
 
@@ -37,21 +66,14 @@ var Clones = function(Glide, Core) {
 	 * and after real slides
 	 */
 	Module.prototype.append = function() {
+		var item;
 
-		var clone;
+		for (var i in this.items) {
+			item = this.items[i].width(Glide.width);
 
-		for(clone in appendClones) {
-			appendClones[clone]
-				.width(Glide.width)
-				.appendTo(Glide.track);
+			if (pattern[i] >= 0) item.appendTo(Glide.track);
+			else item.prependTo(Glide.track);
 		}
-
-		for(clone in prependClones) {
-			prependClones[clone]
-				.width(Glide.width)
-				.prependTo(Glide.track);
-		}
-
 	};
 
 
@@ -59,7 +81,11 @@ var Clones = function(Glide, Core) {
 	 * Remove cloned slides
 	 */
 	Module.prototype.remove = function() {
-		return Glide.track.find('.' + Glide.options.classes.clone).remove();
+		for (var i in this.items) {
+			this.items[i].remove();
+		}
+
+		return this;
 	};
 
 

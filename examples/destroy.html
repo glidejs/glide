@@ -104,7 +104,7 @@
 
 			$('button#add').on('click', function (e) {
 				e.preventDefault();
-				$('<div/>', {
+				$('<li/>', {
 					'class': 'glide__slide',
 					'html': '<div class="box" style="background-color: #95a5a6;">' + (i++) + '</div>'
 				}).appendTo($('#Glide').find('.glide__track'));

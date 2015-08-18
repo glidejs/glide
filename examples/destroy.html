@@ -66,18 +66,60 @@
 		</div>
 
 		<br>
-		<button>Destroy</button>
+		<button id="destroy">Destroy</button>
+		<button id="refresh">Refresh</button>
+		<button id="reinit">Reinit</button>
+		<button id="add">Add</button>
+		<button id="remove">Remove</button>
 
 		<script src="../bower_components/jquery/dist/jquery.js"></script>
 		<script src="../dist/glide.js"></script>
 		<script>
-			var slider = $('#Glide').glide();
-			var slider_api = slider.data('glide_api');
 
-			$('button').on('click', function (e) {
+			var slider;
+			var slider_api;
+			var i = 4;
+
+			function init() {
+				slider = $('#Glide').glide();
+				slider_api = slider.data('glide_api');
+			}
+
+			init();
+
+			$('button#destroy').on('click', function (e) {
 				e.preventDefault();
 				slider_api.destroy();
 			});
+
+			$('button#refresh').on('click', function (e) {
+				e.preventDefault();
+				slider_api.refresh();
+			});
+
+			$('button#reinit').on('click', function (e) {
+				e.preventDefault();
+				init();
+			});
+
+			$('button#add').on('click', function (e) {
+				e.preventDefault();
+				$('<div/>', {
+					'class': 'glide__slide',
+					'html': '<div class="box" style="background-color: #95a5a6;">' + (i++) + '</div>'
+				}).appendTo($('#Glide').find('.glide__track'));
+				slider_api.refresh();
+			});
+
+			$('button#remove').on('click', function (e) {
+				e.preventDefault();
+				var slides = $('#Glide').find('.glide__slide').not('.clone');
+				if (slides.length > 2) {
+					slides.eq(-1).remove();
+				};
+				slider_api.refresh();
+			});
+
 		</script>
 
 	</body>

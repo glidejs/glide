@@ -8,20 +8,28 @@
 
 var Clones = function(Glide, Core) {
 
+	var pointer;
+	var appendClones;
+	var prependClones;
 
 	/**
 	 * Clones Module Constructor
 	 */
 	function Module() {
+		this.init();
+	}
 
+
+	Module.prototype.init = function() {
 		this.shift = 0;
 		this.growth = Glide.width * Glide.clones.length;
 
-		this.pointer = Glide.clones.length / 2;
-		this.appendClones = Glide.clones.slice(0, this.pointer);
-		this.prependClones = Glide.clones.slice(this.pointer);
+		pointer = Glide.clones.length / 2;
+		appendClones = Glide.clones.slice(0, pointer);
+		prependClones = Glide.clones.slice(pointer);
 
-	}
+		return this;
+	};
 
 
 	/**
@@ -32,14 +40,14 @@ var Clones = function(Glide, Core) {
 
 		var clone;
 
-		for(clone in this.appendClones) {
-			this.appendClones[clone]
+		for(clone in appendClones) {
+			appendClones[clone]
 				.width(Glide.width)
 				.appendTo(Glide.track);
 		}
 
-		for(clone in this.prependClones) {
-			this.prependClones[clone]
+		for(clone in prependClones) {
+			prependClones[clone]
 				.width(Glide.width)
 				.prependTo(Glide.track);
 		}

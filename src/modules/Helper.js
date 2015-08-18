@@ -34,6 +34,18 @@ var Helper = function(Glide, Core) {
 	};
 
 
+	/**
+	 * Remove transition
+	 */
+	Module.prototype.removeStyles = function(elements) {
+
+		for (var el in elements) {
+			elements[el].removeAttr('style');
+		}
+
+	};
+
+
 	// @return Module
 	return new Module();
 

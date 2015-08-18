@@ -13,10 +13,15 @@ var Bullets = function(Glide, Core) {
 	 * Bullets Module Constructor
 	 */
 	function Module() {
-		this.build();
-		this.bind();
+		this.init();
 	}
 
+	Module.prototype.init = function() {
+		this.build();
+		this.bind();
+		this.active();
+		return this;
+	};
 
 	/**
 	 * Build
@@ -35,15 +40,28 @@ var Bullets = function(Glide, Core) {
 
 		this.items = this.wrapper.children();
 
+		return this;
+
 	};
 
 
+	/**
+	 * Handle active class
+	 * Adding and removing active class
+	 */
 	Module.prototype.active = function() {
-
-		Core.Bullets.items
+		return this.items
 			.eq(Glide.current - 1).addClass('active')
 			.siblings().removeClass('active');
+	};
 
+
+	/**
+	 * Delete all bullets
+	 */
+	Module.prototype.remove = function() {
+		this.items.remove();
+		return this;
 	};
 
 

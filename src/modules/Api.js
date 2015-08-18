@@ -97,11 +97,15 @@ var Api = function(Glide, Core) {
 			destroy: function() {
 
 				Core.Run.pause();
+				Core.Clones.remove();
+				Core.Helper.removeStyles([Glide.track, Glide.slides]);
+				Core.Bullets.remove();
+				Glide.slider.removeData('glide_api');
+
 				Core.Events.unbind();
 				Core.Touch.unbind();
 				Core.Arrows.unbind();
 				Core.Bullets.unbind();
-				Glide.slider.removeData('glide_api');
 
 				delete Glide.slider;
 				delete Glide.track;
@@ -117,10 +121,14 @@ var Api = function(Glide, Core) {
 			 * @return {Core.Run}
 			 */
 			refresh: function() {
-				Core.Build.removeClones();
+				Core.Run.pause();
+				Core.Clones.remove();
 				Glide.collect();
 				Glide.setup();
+				Core.Clones.init();
 				Core.Build.init();
+				Core.Bullets.remove().init();
+				Core.Run.make('=' + parseInt(Glide.options.startAt), Core.Run.play());
 			},
 
 		};

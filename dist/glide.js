@@ -270,11 +270,15 @@ var Api = function(Glide, Core) {
 			destroy: function() {
 
 				Core.Run.pause();
+				Core.Clones.remove();
+				Core.Helper.removeStyles([Glide.track, Glide.slides]);
+				Core.Bullets.remove();
+				Glide.slider.removeData('glide_api');
+
 				Core.Events.unbind();
 				Core.Touch.unbind();
 				Core.Arrows.unbind();
 				Core.Bullets.unbind();
-				Glide.slider.removeData('glide_api');
 
 				delete Glide.slider;
 				delete Glide.track;
@@ -290,10 +294,14 @@ var Api = function(Glide, Core) {
 			 * @return {Core.Run}
 			 */
 			refresh: function() {
-				Core.Build.removeClones();
+				Core.Run.pause();
+				Core.Clones.remove();
 				Glide.collect();
 				Glide.setup();
+				Core.Clones.init();
 				Core.Build.init();
+				Core.Bullets.remove().init();
+				Core.Run.make('=' + parseInt(Glide.options.startAt), Core.Run.play());
 			},
 
 		};
@@ -534,10 +542,15 @@ var Bullets = function(Glide, Core) {
 	 * Bullets Module Constructor
 	 */
 	function Module() {
-		this.build();
-		this.bind();
+		this.init();
 	}
 
+	Module.prototype.init = function() {
+		this.build();
+		this.bind();
+		this.active();
+		return this;
+	};
 
 	/**
 	 * Build
@@ -556,15 +569,28 @@ var Bullets = function(Glide, Core) {
 
 		this.items = this.wrapper.children();
 
+		return this;
+
 	};
 
 
+	/**
+	 * Handle active class
+	 * Adding and removing active class
+	 */
 	Module.prototype.active = function() {
-
-		Core.Bullets.items
+		return this.items
 			.eq(Glide.current - 1).addClass('active')
 			.siblings().removeClass('active');
+	};
 
+
+	/**
+	 * Delete all bullets
+	 */
+	Module.prototype.remove = function() {
+		this.items.remove();
+		return this;
 	};
 
 
@@ -611,20 +637,28 @@ var Bullets = function(Glide, Core) {
 
 var Clones = function(Glide, Core) {
 
+	var pointer;
+	var appendClones;
+	var prependClones;
 
 	/**
 	 * Clones Module Constructor
 	 */
 	function Module() {
+		this.init();
+	}
 
+
+	Module.prototype.init = function() {
 		this.shift = 0;
 		this.growth = Glide.width * Glide.clones.length;
 
-		this.pointer = Glide.clones.length / 2;
-		this.appendClones = Glide.clones.slice(0, this.pointer);
-		this.prependClones = Glide.clones.slice(this.pointer);
+		pointer = Glide.clones.length / 2;
+		appendClones = Glide.clones.slice(0, pointer);
+		prependClones = Glide.clones.slice(pointer);
 
-	}
+		return this;
+	};
 
 
 	/**
@@ -635,14 +669,14 @@ var Clones = function(Glide, Core) {
 
 		var clone;
 
-		for(clone in this.appendClones) {
-			this.appendClones[clone]
+		for(clone in appendClones) {
+			appendClones[clone]
 				.width(Glide.width)
 				.appendTo(Glide.track);
 		}
 
-		for(clone in this.prependClones) {
-			this.prependClones[clone]
+		for(clone in prependClones) {
+			prependClones[clone]
 				.width(Glide.width)
 				.prependTo(Glide.track);
 		}
@@ -992,6 +1026,18 @@ var Helper = function(Glide, Core) {
 	 */
 	Module.prototype.now = Date.now || function() {
 		return new Date().getTime();
+	};
+
+
+	/**
+	 * Remove transition
+	 */
+	Module.prototype.removeStyles = function(elements) {
+
+		for (var el in elements) {
+			elements[el].removeAttr('style');
+		}
+
 	};
 
 
@@ -1564,7 +1610,7 @@ Glide.prototype.collect = function() {
 	this.slider = this.element.addClass(this.options.classes.base + '--' + this.options.type);
 	this.track = this.slider.find('.' + this.options.classes.track);
 	this.wrapper = this.slider.find('.' + this.options.classes.wrapper);
-	this.slides = this.track.find('.' + this.options.classes.slide);
+	this.slides = this.track.find('.' + this.options.classes.slide).not('.' + this.options.classes.clone);
 
 	this.clones = [
 		this.slides.eq(0).clone().addClass(this.options.classes.clone),

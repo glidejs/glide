@@ -8,13 +8,13 @@
 
 var Events = function(Glide, Core) {
 
+	var triggers = $('[data-glide-trigger]');
 
 	/**
 	 * Events Module Constructor
 	 */
 	function Module() {
 		this.disabled = false;
-		this.anchors = Glide.track.find('a');
 		this.keyboard();
 		this.hoverpause();
 		this.resize();
@@ -77,11 +77,9 @@ var Events = function(Glide, Core) {
 	 */
 	Module.prototype.triggers = function() {
 
-		this.triggers = $('[data-glide-trigger]');
+		if (triggers.length) {
 
-		if (this.triggers.length) {
-
-			this.triggers
+			triggers
 				.off('click.glide touchstart.glide')
 				.on('click.glide touchstart.glide', function(event) {
 
@@ -129,7 +127,7 @@ var Events = function(Glide, Core) {
 	 * inside slider track
 	 */
 	Module.prototype.detachClicks = function() {
-		this.anchors.off('click');
+		Glide.track.off('click', 'a');
 		return this;
 	};
 
@@ -139,7 +137,7 @@ var Events = function(Glide, Core) {
 	 * inside slider track
 	 */
 	Module.prototype.preventClicks = function(status) {
-		this.anchors.one('click', function(event){ event.preventDefault(); });
+		Glide.track.one('click', 'a', function(event){ event.preventDefault(); });
 		return this;
 	};
 
@@ -168,7 +166,7 @@ var Events = function(Glide, Core) {
 			.off('mouseover.glide')
 			.off('mouseout.glide');
 
-		this.triggers
+		triggers
 			.off('click.glide touchstart.glide');
 
 		$(window)

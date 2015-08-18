@@ -428,7 +428,6 @@ var Build = function(Glide, Core) {
 	 * @return {[type]} [description]
 	 */
 	Module.prototype.init = function() {
-
 		// Build proper slider type
 		this[Glide.options.type]();
 		// Set slide active class
@@ -436,9 +435,6 @@ var Build = function(Glide, Core) {
 
 		// Set slides height
 		Core.Height.set();
-		// Set bullet active class
-		Core.Bullets.active();
-
 	};
 
 
@@ -549,6 +545,7 @@ var Bullets = function(Glide, Core) {
 		this.build();
 		this.bind();
 		this.active();
+
 		return this;
 	};
 
@@ -568,8 +565,6 @@ var Bullets = function(Glide, Core) {
 		}
 
 		this.items = this.wrapper.children();
-
-		return this;
 
 	};
 
@@ -619,7 +614,7 @@ var Bullets = function(Glide, Core) {
 	 * bullets events
 	 */
 	Module.prototype.unbind = function() {
-		this.items.off('click.glide touchstart.glide');
+		return this.items.off('click.glide touchstart.glide');
 	};
 
 
@@ -734,13 +729,13 @@ var Core = function (Glide, Modules) {
 
 var Events = function(Glide, Core) {
 
+	var triggers = $('[data-glide-trigger]');
 
 	/**
 	 * Events Module Constructor
 	 */
 	function Module() {
 		this.disabled = false;
-		this.anchors = Glide.track.find('a');
 		this.keyboard();
 		this.hoverpause();
 		this.resize();
@@ -803,11 +798,9 @@ var Events = function(Glide, Core) {
 	 */
 	Module.prototype.triggers = function() {
 
-		this.triggers = $('[data-glide-trigger]');
+		if (triggers.length) {
 
-		if (this.triggers.length) {
-
-			this.triggers
+			triggers
 				.off('click.glide touchstart.glide')
 				.on('click.glide touchstart.glide', function(event) {
 
@@ -855,7 +848,7 @@ var Events = function(Glide, Core) {
 	 * inside slider track
 	 */
 	Module.prototype.detachClicks = function() {
-		this.anchors.off('click');
+		Glide.track.off('click', 'a');
 		return this;
 	};
 
@@ -865,7 +858,7 @@ var Events = function(Glide, Core) {
 	 * inside slider track
 	 */
 	Module.prototype.preventClicks = function(status) {
-		this.anchors.one('click', function(event){ event.preventDefault(); });
+		Glide.track.one('click', 'a', function(event){ event.preventDefault(); });
 		return this;
 	};
 
@@ -894,7 +887,7 @@ var Events = function(Glide, Core) {
 			.off('mouseover.glide')
 			.off('mouseout.glide');
 
-		this.triggers
+		triggers
 			.off('click.glide touchstart.glide');
 
 		$(window)
@@ -1462,19 +1455,16 @@ var Touch = function(Glide, Core) {
 };
 ;var Translate = function(Glide, Core) {
 
+	var axes = {
+		x: 0,
+		y: 0,
+		z: 0
+	};
 
 	/**
 	 * Translate Module Constructor
 	 */
-	function Module() {
-
-		this.axes = {
-			x: 0,
-			y: 0,
-			z: 0
-		};
-
-	}
+	function Module() {}
 
 
 	/**
@@ -1494,8 +1484,8 @@ var Touch = function(Glide, Core) {
 	 * @return {string}
 	 */
 	Module.prototype.set = function(axis, value) {
-		this.axes[axis] = parseInt(value);
-		return 'translate3d(' + -1 * this.axes.x + 'px, ' + this.axes.y + 'px, ' + this.axes.z + 'px)';
+		axes[axis] = parseInt(value);
+		return 'translate3d(' + -1 * axes.x + 'px, ' + axes.y + 'px, ' + axes.z + 'px)';
 	};
 
 

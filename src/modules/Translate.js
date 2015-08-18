@@ -1,18 +1,15 @@
 var Translate = function(Glide, Core) {
 
+	var axes = {
+		x: 0,
+		y: 0,
+		z: 0
+	};
 
 	/**
 	 * Translate Module Constructor
 	 */
-	function Module() {
-
-		this.axes = {
-			x: 0,
-			y: 0,
-			z: 0
-		};
-
-	}
+	function Module() {}
 
 
 	/**
@@ -32,8 +29,8 @@ var Translate = function(Glide, Core) {
 	 * @return {string}
 	 */
 	Module.prototype.set = function(axis, value) {
-		this.axes[axis] = parseInt(value);
-		return 'translate3d(' + -1 * this.axes.x + 'px, ' + this.axes.y + 'px, ' + this.axes.z + 'px)';
+		axes[axis] = parseInt(value);
+		return 'translate3d(' + -1 * axes.x + 'px, ' + axes.y + 'px, ' + axes.z + 'px)';
 	};
 
 

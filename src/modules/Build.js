@@ -22,7 +22,6 @@ var Build = function(Glide, Core) {
 	 * @return {[type]} [description]
 	 */
 	Module.prototype.init = function() {
-
 		// Build proper slider type
 		this[Glide.options.type]();
 		// Set slide active class
@@ -30,9 +29,6 @@ var Build = function(Glide, Core) {
 
 		// Set slides height
 		Core.Height.set();
-		// Set bullet active class
-		Core.Bullets.active();
-
 	};
 
 

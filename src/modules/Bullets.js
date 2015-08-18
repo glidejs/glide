@@ -20,6 +20,7 @@ var Bullets = function(Glide, Core) {
 		this.build();
 		this.bind();
 		this.active();
+
 		return this;
 	};
 
@@ -39,8 +40,6 @@ var Bullets = function(Glide, Core) {
 		}
 
 		this.items = this.wrapper.children();
-
-		return this;
 
 	};
 
@@ -90,7 +89,7 @@ var Bullets = function(Glide, Core) {
 	 * bullets events
 	 */
 	Module.prototype.unbind = function() {
-		this.items.off('click.glide touchstart.glide');
+		return this.items.off('click.glide touchstart.glide');
 	};
 
 

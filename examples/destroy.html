@@ -116,6 +116,7 @@
 				var slides = $('#Glide').find('.glide__slide').not('.clone');
 				if (slides.length > 2) {
 					slides.eq(-1).remove();
+					i--;
 				};
 				slider_api.refresh();
 			});

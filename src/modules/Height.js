@@ -3,7 +3,7 @@
  * Glide Height
  * --------------------------------
  * Height module
- * @return {Glide.Height}
+ * @return {Height}
  */
 
 var Height = function(Glide, Core) {

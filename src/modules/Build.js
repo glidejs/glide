@@ -3,9 +3,7 @@
  * Glide Build
  * --------------------------------
  * Build slider DOM
- * @param {Glide} Glide
- * @param {Core} Core
- * @return {Module}
+ * @return {Build}
  */
 
 var Build = function(Glide, Core) {

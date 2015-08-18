@@ -4,7 +4,7 @@
  * --------------------------------
  * @param {Glide} Glide	Slider Class
  * @param {array} Modules	Modules list to construct
- * @return {Module}
+ * @return {Core}
  */
 
 var Core = function (Glide, Modules) {

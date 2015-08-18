@@ -3,7 +3,7 @@
  * Glide Events
  * --------------------------------
  * Events functions
- * @return {Glide.Events}
+ * @return {Events}
  */
 
 var Events = function(Glide, Core) {

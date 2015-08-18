@@ -3,7 +3,7 @@
  * Glide Bullets
  * --------------------------------
  * Bullets navigation module
- * @return {Glide.Bullets}
+ * @return {Bullets}
  */
 
 var Bullets = function(Glide, Core) {

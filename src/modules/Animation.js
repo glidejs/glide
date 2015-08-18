@@ -3,7 +3,7 @@
  * Glide Animation
  * --------------------------------
  * Animation functions
- * @return {Glide.Animation}
+ * @return {Animation}
  */
 
 var Animation = function(Glide, Core) {

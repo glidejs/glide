@@ -3,7 +3,7 @@
  * Glide Api
  * --------------------------------
  * Plugin api module
- * @return {Glide.Api}
+ * @return {Api}
  */
 
 var Api = function(Glide, Core) {

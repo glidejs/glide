@@ -13,7 +13,7 @@
  * Glide Animation
  * --------------------------------
  * Animation functions
- * @return {Glide.Animation}
+ * @return {Animation}
  */
 
 var Animation = function(Glide, Core) {
@@ -176,7 +176,7 @@ var Animation = function(Glide, Core) {
  * Glide Api
  * --------------------------------
  * Plugin api module
- * @return {Glide.Api}
+ * @return {Api}
  */
 
 var Api = function(Glide, Core) {
@@ -318,7 +318,7 @@ var Api = function(Glide, Core) {
  * Glide Arrows
  * --------------------------------
  * Arrows navigation module
- * @return {Glide.Arrows}
+ * @return {Arrows}
  */
 
 var Arrows = function(Glide, Core) {
@@ -408,9 +408,7 @@ var Arrows = function(Glide, Core) {
  * Glide Build
  * --------------------------------
  * Build slider DOM
- * @param {Glide} Glide
- * @param {Core} Core
- * @return {Module}
+ * @return {Build}
  */
 
 var Build = function(Glide, Core) {
@@ -527,7 +525,7 @@ var Build = function(Glide, Core) {
  * Glide Bullets
  * --------------------------------
  * Bullets navigation module
- * @return {Glide.Bullets}
+ * @return {Bullets}
  */
 
 var Bullets = function(Glide, Core) {
@@ -626,7 +624,7 @@ var Bullets = function(Glide, Core) {
  * Glide Clones
  * --------------------------------
  * Clones module
- * @return {Core.Clones}
+ * @return {Clones}
  */
 
 var Clones = function(Glide, Core) {
@@ -723,7 +721,7 @@ var Clones = function(Glide, Core) {
  * --------------------------------
  * @param {Glide} Glide	Slider Class
  * @param {array} Modules	Modules list to construct
- * @return {Module}
+ * @return {Core}
  */
 
 var Core = function (Glide, Modules) {
@@ -749,7 +747,7 @@ var Core = function (Glide, Modules) {
  * Glide Events
  * --------------------------------
  * Events functions
- * @return {Glide.Events}
+ * @return {Events}
  */
 
 var Events = function(Glide, Core) {
@@ -969,7 +967,7 @@ var Events = function(Glide, Core) {
  * Glide Height
  * --------------------------------
  * Height module
- * @return {Glide.Height}
+ * @return {Height}
  */
 
 var Height = function(Glide, Core) {
@@ -1016,7 +1014,7 @@ var Height = function(Glide, Core) {
  * Glide Helper
  * --------------------------------
  * Helper functions
- * @return {Glide.Helper}
+ * @return {Helper}
  */
 
 var Helper = function(Glide, Core) {
@@ -1069,7 +1067,7 @@ var Helper = function(Glide, Core) {
  * Glide Run
  * --------------------------------
  * Run logic module
- * @return {Module}
+ * @return {Run}
  */
 
 var Run = function(Glide, Core) {
@@ -1237,7 +1235,7 @@ var Run = function(Glide, Core) {
  * Glide Touch
  * --------------------------------
  * Touch module
- * @return {Glide.Touch}
+ * @return {Touch}
  */
 
 var Touch = function(Glide, Core) {
@@ -1439,7 +1437,15 @@ var Touch = function(Glide, Core) {
 	return new Module();
 
 };
-;var Transition = function(Glide, Core) {
+;/**
+ * --------------------------------
+ * Glide Transition
+ * --------------------------------
+ * Transition module
+ * @return {Transition}
+ */
+
+var Transition = function(Glide, Core) {
 
 
 	/**
@@ -1478,7 +1484,15 @@ var Touch = function(Glide, Core) {
 
 
 };
-;var Translate = function(Glide, Core) {
+;/**
+ * --------------------------------
+ * Glide Translate
+ * --------------------------------
+ * Translate module
+ * @return {Translate}
+ */
+
+var Translate = function(Glide, Core) {
 
 	var axes = {
 		x: 0,

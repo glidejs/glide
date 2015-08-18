@@ -3,7 +3,7 @@
  * Glide Clones
  * --------------------------------
  * Clones module
- * @return {Core.Clones}
+ * @return {Clones}
  */
 
 var Clones = function(Glide, Core) {

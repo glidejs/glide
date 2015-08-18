@@ -3,7 +3,7 @@
  * Glide Helper
  * --------------------------------
  * Helper functions
- * @return {Glide.Helper}
+ * @return {Helper}
  */
 
 var Helper = function(Glide, Core) {

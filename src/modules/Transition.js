@@ -1,3 +1,11 @@
+/**
+ * --------------------------------
+ * Glide Transition
+ * --------------------------------
+ * Transition module
+ * @return {Transition}
+ */
+
 var Transition = function(Glide, Core) {
 
 

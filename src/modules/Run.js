@@ -3,7 +3,7 @@
  * Glide Run
  * --------------------------------
  * Run logic module
- * @return {Module}
+ * @return {Run}
  */
 
 var Run = function(Glide, Core) {

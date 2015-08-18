@@ -1,3 +1,11 @@
+/**
+ * --------------------------------
+ * Glide Translate
+ * --------------------------------
+ * Translate module
+ * @return {Translate}
+ */
+
 var Translate = function(Glide, Core) {
 
 	var axes = {

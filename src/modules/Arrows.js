@@ -3,7 +3,7 @@
  * Glide Arrows
  * --------------------------------
  * Arrows navigation module
- * @return {Glide.Arrows}
+ * @return {Arrows}
  */
 
 var Arrows = function(Glide, Core) {

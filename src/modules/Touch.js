@@ -3,7 +3,7 @@
  * Glide Touch
  * --------------------------------
  * Touch module
- * @return {Glide.Touch}
+ * @return {Touch}
  */
 
 var Touch = function(Glide, Core) {

@@ -300,7 +300,7 @@ var Api = function(Glide, Core) {
 				Core.Clones.remove().init();
 				Core.Bullets.remove().init();
 				Core.Build.init();
-				Core.Run.make('=' + parseInt(Glide.options.startAt), Core.Run.play());
+				Core.Run.make('=' + parseInt(Glide.length), Core.Run.play());
 			},
 
 		};
@@ -592,7 +592,7 @@ var Bullets = function(Glide, Core) {
 	 */
 	Module.prototype.bind = function() {
 
-		this.items.on('click.glide touchstart.glide', function(event){
+		this.wrapper.on('click.glide touchstart.glide', 'li', function(event){
 			event.preventDefault();
 			if (!Core.Events.disabled) {
 				Core.Run.pause();
@@ -611,7 +611,7 @@ var Bullets = function(Glide, Core) {
 	 * bullets events
 	 */
 	Module.prototype.unbind = function() {
-		return this.items.off('click.glide touchstart.glide');
+		return this.wrapper.on('click.glide touchstart.glide', 'li');
 	};
 
 

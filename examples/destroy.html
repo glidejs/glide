@@ -90,6 +90,7 @@
 			$('button#destroy').on('click', function (e) {
 				e.preventDefault();
 				slider_api.destroy();
+				$('button#refresh').attr('disabled', 'disabled');
 			});
 
 			$('button#refresh').on('click', function (e) {
@@ -100,6 +101,7 @@
 			$('button#reinit').on('click', function (e) {
 				e.preventDefault();
 				init();
+				$('button#refresh').attr('disabled', false);
 			});
 
 			$('button#add').on('click', function (e) {

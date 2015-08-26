@@ -13,6 +13,9 @@ Available at: http://glide.jedrzejchalubek.com/docs.html
 ##Contributing
 The issue channel is especially for improvement proposals and bug reporting. If you have implementing problems, please write on StackOverflow with [glidejs](http://stackoverflow.com/questions/tagged/glidejs) tag.
 
+##Showcase
+Have you created something amazing with Glide.js? Send a link so I can put it here :)
+
 ##Building
 Build using Grunt and Bower. The following tasks are available:
 - `default` Compiles script and styles into `/dist` folder
@@ -24,7 +27,7 @@ Build using Grunt and Bower. The following tasks are available:
 - MOOOAR TESTS!!!1one
 - <del>Touch module optimizations</del>
 - Better comments
-- Vertical mode
+- <del>Vertical mode</del>
 - <del>Padded/center mode</del>
 - Multiple slides per view
 

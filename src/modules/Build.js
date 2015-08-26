@@ -8,7 +8,6 @@
 
 var Build = function(Glide, Core) {
 
-
 	// Build Module Constructor
 	function Module() {
 		this.init();
@@ -48,9 +47,10 @@ var Build = function(Glide, Core) {
 		// Turn on jumping flag
 		Core.Transition.jumping = true;
 		// Apply slides width
-		Glide.slides.width(Glide.width);
+		Glide.slides[Glide.size](Glide[Glide.size]);
+		Core.Height.set(true);
 		// Apply translate
-		Glide.track.css('width', Glide.width * Glide.length);
+		Glide.track.css(Glide.size, Glide[Glide.size] * Glide.length);
 		// Go to startup position
 		Core.Animation.make();
 		// Turn off jumping flag
@@ -68,11 +68,16 @@ var Build = function(Glide, Core) {
 		// Turn on jumping flag
 		Core.Transition.jumping = true;
 		// Update shift for carusel type
-		Core.Clones.shift = (Glide.width * Core.Clones.items.length/2) - Glide.width;
+		Core.Clones.shift = (Glide[Glide.size] * Core.Clones.items.length/2) - Glide[Glide.size];
 		// Apply slides width
-		Glide.slides.width(Glide.width);
+		Glide.slides[Glide.size](Glide[Glide.size]);
 		// Apply translate
+<<<<<<< HEAD
 		Glide.track.css('width', (Glide.width * Glide.length) + Core.Clones.getGrowth());
+=======
+		Glide.track.css(Glide.size, (Glide[Glide.size] * Glide.length) + Core.Clones.growth);
+		Core.Height.set(true);
+>>>>>>> Vertical mode origin
 		// Go to startup position
 		Core.Animation.make();
 		// Append clones

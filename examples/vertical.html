@@ -25,8 +25,10 @@
 				border: 0;
 			}
 			.module {
-				width: 100%;
-				height: 320px;
+				height: 100vh;
+				width: 33%;
+				float: left;
+				clear: none;
 			}
 			.box {
 				width: 100%;
@@ -34,7 +36,7 @@
 				text-align: center;
 				color: #fff;
 				font-size: 3vw;
-				line-height: 320px;
+				line-height: 100vh;
 			}
 		</style>
 	</head>
@@ -127,16 +129,19 @@
 
 			var carousel = $('#Carousel').glide({
 				type: 'carousel',
+				orientation: 'vertical',
 				startAt: 1
 			});
 
 			var slider = $('#Slider').glide({
 				type: 'slider',
+				orientation: 'vertical',
 				startAt: 2
 			});
 
 			var slideshow = $('#Slideshow').glide({
-				type: 'slideshow'
+				type: 'slideshow',
+				orientation: 'vertical',
 				startAt: 3
 			});
 

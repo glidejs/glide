@@ -53,7 +53,7 @@ var Animation = function(Glide, Core) {
 	 */
 	Module.prototype.slider = function() {
 
-		var translate = Glide.width * (Glide.current - 1);
+		var translate = Glide[Glide.size] * (Glide.current - 1);
 		var shift = Core.Clones.shift - Glide.paddings;
 
 		// If on first slide
@@ -83,7 +83,7 @@ var Animation = function(Glide, Core) {
 		// Apply translate
 		Glide.track.css({
 			'transition': Core.Transition.get('all'),
-			'transform': Core.Translate.set('x', translate - shift - offset)
+			'transform': Core.Translate.set(Glide.axis, translate - shift - offset)
 		});
 
 	};
@@ -96,7 +96,7 @@ var Animation = function(Glide, Core) {
 	Module.prototype.carousel = function() {
 
 		// Translate container
-		var translate = Glide.width * Glide.current;
+		var translate = Glide[Glide.size] * Glide.current;
 		// Calculate addtional shift
 		var shift;
 
@@ -118,7 +118,7 @@ var Animation = function(Glide, Core) {
 				// clear transition and jump to last slide
 				Glide.track.css({
 					'transition': Core.Transition.clear('all'),
-					'transform': Core.Translate.set('x', Glide.width * Glide.length + shift)
+					'transform': Core.Translate.set(Glide.axis, Glide[Glide.size] * Glide.length + shift)
 				});
 			});
 		}
@@ -131,7 +131,7 @@ var Animation = function(Glide, Core) {
 		 */
 		if (Core.Run.isOffset('>')) {
 			// Translate is slides width * length with addtional offset (right edge of wrapper)
-			translate = (Glide.width * Glide.length) + Glide.width;
+			translate = (Glide[Glide.size] * Glide.length) + Glide[Glide.size];
 			// Reset flag
 			Core.Run.flag = false;
 			// After offset animation is done
@@ -139,7 +139,7 @@ var Animation = function(Glide, Core) {
 				// Clear transition and jump to first slide
 				Glide.track.css({
 					'transition': Core.Transition.clear('all'),
-					'transform': Core.Translate.set('x', Glide.width + shift)
+					'transform': Core.Translate.set(Glide.axis, Glide[Glide.size] + shift)
 				});
 			});
 		}
@@ -150,7 +150,7 @@ var Animation = function(Glide, Core) {
 		 */
 		Glide.track.css({
 			'transition': Core.Transition.get('all'),
-			'transform': Core.Translate.set('x', translate + shift - offset)
+			'transform': Core.Translate.set(Glide.axis, translate + shift - offset)
 		});
 
 	};
@@ -413,7 +413,6 @@ var Arrows = function(Glide, Core) {
 
 var Build = function(Glide, Core) {
 
-
 	// Build Module Constructor
 	function Module() {
 		this.init();
@@ -453,9 +452,10 @@ var Build = function(Glide, Core) {
 		// Turn on jumping flag
 		Core.Transition.jumping = true;
 		// Apply slides width
-		Glide.slides.width(Glide.width);
+		Glide.slides[Glide.size](Glide[Glide.size]);
+		Core.Height.set(true);
 		// Apply translate
-		Glide.track.css('width', Glide.width * Glide.length);
+		Glide.track.css(Glide.size, Glide[Glide.size] * Glide.length);
 		// Go to startup position
 		Core.Animation.make();
 		// Turn off jumping flag
@@ -473,11 +473,16 @@ var Build = function(Glide, Core) {
 		// Turn on jumping flag
 		Core.Transition.jumping = true;
 		// Update shift for carusel type
-		Core.Clones.shift = (Glide.width * Core.Clones.items.length/2) - Glide.width;
+		Core.Clones.shift = (Glide[Glide.size] * Core.Clones.items.length/2) - Glide[Glide.size];
 		// Apply slides width
-		Glide.slides.width(Glide.width);
+		Glide.slides[Glide.size](Glide[Glide.size]);
 		// Apply translate
+<<<<<<< HEAD
 		Glide.track.css('width', (Glide.width * Glide.length) + Core.Clones.getGrowth());
+=======
+		Glide.track.css(Glide.size, (Glide[Glide.size] * Glide.length) + Core.Clones.growth);
+		Core.Height.set(true);
+>>>>>>> Vertical mode origin
 		// Go to startup position
 		Core.Animation.make();
 		// Append clones
@@ -649,6 +654,10 @@ var Clones = function(Glide, Core) {
 		this.collect();
 
 		this.shift = 0;
+<<<<<<< HEAD
+=======
+		this.growth = Glide[Glide.size] * this.items.length;
+>>>>>>> Vertical mode origin
 
 		return this;
 	};
@@ -689,7 +698,7 @@ var Clones = function(Glide, Core) {
 		var item;
 
 		for (var i in this.items) {
-			item = this.items[i].width(Glide.width);
+			item = this.items[i][Glide.size](Glide[Glide.size]);
 
 			if (pattern[i] >= 0) item.appendTo(Glide.track);
 			else item.prependTo(Glide.track);
@@ -998,7 +1007,9 @@ var Height = function(Glide, Core) {
 	 * @return {Number}
 	 */
 	Module.prototype.get = function() {
-		return Glide.slides.eq(Glide.current - 1).height();
+		var offset = 0;
+		if (Glide.axis === 'y') offset = Glide.paddings * 2;
+		return Glide.slides.eq(Glide.current - 1).height() + offset;
 	};
 
 	/**
@@ -1340,13 +1351,16 @@ var Touch = function(Glide, Core) {
 			// Calculate the length of the hypotenuse segment
 			var touchHypotenuse = Math.sqrt( powEX + powEY );
 			// Calculate the length of the cathetus segment
-			var touchCathetus = Math.sqrt( powEY );
+			var touchCathetus = Math.sqrt( this.byAxis(powEY, powEX) );
 
 			// Calculate the sine of the angle
 			this.touchSin = Math.asin( touchCathetus/touchHypotenuse );
 
+			var lower45 = (this.touchSin * 180 / Math.PI) < 45;
+			var upper45 = (this.touchSin * 180 / Math.PI) < 45;
+
 			// While angle is lower than 45 degree
-			if ( (this.touchSin * 180 / Math.PI) < 45 ) {
+			if ( this.byAxis(lower45, upper45) ) {
 				// Prevent propagation
 				event.stopPropagation();
 				// Prevent scrolling
@@ -1359,7 +1373,7 @@ var Touch = function(Glide, Core) {
 			}
 
 			// Make offset animation
-			Core.Animation.make(subExSx);
+			Core.Animation.make( this.byAxis(subExSx, subEySy) );
 
 			// Prevent clicks inside track
 			Core.Events.preventClicks();
@@ -1384,8 +1398,12 @@ var Touch = function(Glide, Core) {
 			if (event.type === 'mouseup' || event.type === 'mouseleave') touch = event.originalEvent;
 			else touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
 
+
 			// Calculate touch distance
-			var touchDistance = touch.pageX - this.touchStartX;
+			var touchDistance = this.byAxis(
+				(touch.pageX - this.touchStartX),
+				(touch.pageY - this.touchStartY)
+			);
 			// Calculate degree
 			var touchDeg = this.touchSin * 180 / Math.PI;
 
@@ -1407,6 +1425,9 @@ var Touch = function(Glide, Core) {
 
 			}
 
+			var lower45 = touchDeg < 45;
+			var upper45 = touchDeg < 45;
+			console.log(this.byAxis(upper45, lower45));
 			// While touch is positive and greater than distance set in options
 			// move backward
 			if (touchDistance > Glide.options.touchDistance && touchDeg < 45) Core.Run.make('<');
@@ -1437,6 +1458,12 @@ var Touch = function(Glide, Core) {
 
 		}
 
+	};
+
+
+	Module.prototype.byAxis = function(xValue, yValue) {
+		if (Glide.axis === 'y') return yValue;
+		else return	xValue;
 	};
 
 
@@ -1531,7 +1558,7 @@ var Translate = function(Glide, Core) {
 	 */
 	Module.prototype.set = function(axis, value) {
 		axes[axis] = parseInt(value);
-		return 'translate3d(' + -1 * axes.x + 'px, ' + axes.y + 'px, ' + axes.z + 'px)';
+		return 'translate3d(' + (-1 * axes.x) + 'px, ' + (-1 * axes.y) + 'px, ' + axes.z + 'px)';
 	};
 
 
@@ -1560,6 +1587,7 @@ var Glide = function (element, options) {
 	var defaults = {
 		autoplay: 4000,
 		type: 'carousel',
+		mode: 'horizontal',
 		startAt: 1,
 		hoverpause: true,
 		keyboard: true,
@@ -1642,7 +1670,7 @@ var Glide = function (element, options) {
  * and set classes
  */
 Glide.prototype.collect = function() {
-	this.slider = this.element.addClass(this.options.classes.base + '--' + this.options.type);
+	this.slider = this.element.addClass(this.options.classes.base + '--' + this.options.type).addClass(this.options.classes.base + '--' + this.options.orientation);
 	this.track = this.slider.find('.' + this.options.classes.track);
 	this.wrapper = this.slider.find('.' + this.options.classes.wrapper);
 	this.slides = this.track.find('.' + this.options.classes.slide).not('.' + this.options.classes.clone);
@@ -1653,9 +1681,18 @@ Glide.prototype.collect = function() {
  * Setup properties and values
  */
 Glide.prototype.setup = function() {
-	this.paddings = this.getPaddings();
-	this.width = this.getWidth();
+
+	var dimensions = {
+		horizontal: ['width', 'x'],
+		vertical: ['height', 'y'],
+	};
+
+	this.size = dimensions[this.options.mode][0];
+	this.axis = dimensions[this.options.mode][1];
 	this.length = this.slides.length;
+	this.paddings = this.getPaddings();
+	this[this.size] = this.getSize();
+
 };
 
 
@@ -1673,7 +1710,7 @@ Glide.prototype.getPaddings = function() {
 		var normalized = parseInt(option, 10);
 		var isPercentage = option.indexOf('%') >= 0;
 
-		if (isPercentage) return parseInt(this.slider.width() * (normalized/100));
+		if (isPercentage) return parseInt(this.slider[this.size]() * (normalized/100));
 		else return normalized;
 
 	}
@@ -1687,8 +1724,8 @@ Glide.prototype.getPaddings = function() {
  * Get slider width updated by addtional options
  * @return {Number} width value
  */
-Glide.prototype.getWidth = function() {
-	return this.slider.width() - (this.paddings * 2);
+Glide.prototype.getSize = function() {
+	return this.slider[this.size]() - (this.paddings * 2);
 };;/**
  * Wire Glide to jQuery
  * @param  {object} options Plugin options

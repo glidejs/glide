@@ -101,13 +101,16 @@ var Touch = function(Glide, Core) {
 			// Calculate the length of the hypotenuse segment
 			var touchHypotenuse = Math.sqrt( powEX + powEY );
 			// Calculate the length of the cathetus segment
-			var touchCathetus = Math.sqrt( powEY );
+			var touchCathetus = Math.sqrt( this.byAxis(powEY, powEX) );
 
 			// Calculate the sine of the angle
 			this.touchSin = Math.asin( touchCathetus/touchHypotenuse );
 
+			var lower45 = (this.touchSin * 180 / Math.PI) < 45;
+			var upper45 = (this.touchSin * 180 / Math.PI) < 45;
+
 			// While angle is lower than 45 degree
-			if ( (this.touchSin * 180 / Math.PI) < 45 ) {
+			if ( this.byAxis(lower45, upper45) ) {
 				// Prevent propagation
 				event.stopPropagation();
 				// Prevent scrolling
@@ -120,7 +123,7 @@ var Touch = function(Glide, Core) {
 			}
 
 			// Make offset animation
-			Core.Animation.make(subExSx);
+			Core.Animation.make( this.byAxis(subExSx, subEySy) );
 
 			// Prevent clicks inside track
 			Core.Events.preventClicks();
@@ -145,8 +148,12 @@ var Touch = function(Glide, Core) {
 			if (event.type === 'mouseup' || event.type === 'mouseleave') touch = event.originalEvent;
 			else touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
 
+
 			// Calculate touch distance
-			var touchDistance = touch.pageX - this.touchStartX;
+			var touchDistance = this.byAxis(
+				(touch.pageX - this.touchStartX),
+				(touch.pageY - this.touchStartY)
+			);
 			// Calculate degree
 			var touchDeg = this.touchSin * 180 / Math.PI;
 
@@ -168,6 +175,9 @@ var Touch = function(Glide, Core) {
 
 			}
 
+			var lower45 = touchDeg < 45;
+			var upper45 = touchDeg < 45;
+			console.log(this.byAxis(upper45, lower45));
 			// While touch is positive and greater than distance set in options
 			// move backward
 			if (touchDistance > Glide.options.touchDistance && touchDeg < 45) Core.Run.make('<');
@@ -198,6 +208,12 @@ var Touch = function(Glide, Core) {
 
 		}
 
+	};
+
+
+	Module.prototype.byAxis = function(xValue, yValue) {
+		if (Glide.axis === 'y') return yValue;
+		else return	xValue;
 	};
 
 

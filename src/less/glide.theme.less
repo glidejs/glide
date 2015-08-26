@@ -10,46 +10,84 @@
 
 	&__arrows {
 		position: absolute;
-		top: 50%;
-		width: 92%;
-		margin-left: 4%;
+
+		@{that}--horizontal & {
+			top: 50%;
+			width: 92%;
+			margin-left: 4%;
+		}
+
+		@{that}--vertical & {
+			left: 50%;
+			height: 92%;
+			margin-top: 4%;
+		}
 	}
 
 	&__arrow {
 		position: absolute;
 		z-index: 2;
-		transform: translateY(-50%);
 		color: white;
 		text-transform: uppercase;
 		font: 11px Arial, sans-serif;
 		padding: 9px 12px;
 		border: 2px solid rgba(255, 255, 255, 0.5);
 		border-radius: 4px;
-		transition: all 300ms ease-in-out;
+		transition: border 300ms ease-in-out;
 
 		&:hover { border-color: white; }
 
-		&.prev { left: 0; }
-		&.next { right: 0; }
+		@{that}--horizontal & {
+			transform: translateY(-50%);
+
+			&.prev { left: 0; }
+			&.next { right: 0; }
+		}
+
+		@{that}--vertical & {
+			transform: translateX(-50%);
+
+			&.prev { top: 0; }
+			&.next { bottom: 0; }
+		}
 	}
 
 	&__bullets {
 		position: absolute;
-		bottom: 8%;
-		width: 100%;
-		text-align: center;
 		list-style: none;
+
+		@{that}--horizontal & {
+			bottom: 8%; left: 0;
+			width: 100%;
+			height: 12px;
+			text-align: center;
+		}
+
+		@{that}--vertical & {
+			top: 50%; right: 8%;
+			width: 12px;
+			height: auto;
+			transform: translateY(-50%);
+		}
 
 		li {
 			display: inline-block;
 			background-color: rgba(255, 255, 255, 0.5);
 			width: 12px;
 			height: 12px;
-			margin: 0 5px;
 			cursor: pointer;
 			border-radius: 50%;
 			border: 2px solid transparent;
 			transition: all 300ms ease-in-out;
+
+			@{that}--horizontal & {
+				margin: 0 5px;
+			}
+
+			@{that}--vertical & {
+				vertical-align: middle;
+			}
+
 
 			&:hover {
 				// background-color: transparent;

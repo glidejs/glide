@@ -18,6 +18,7 @@ var Glide = function (element, options) {
 	var defaults = {
 		autoplay: 4000,
 		type: 'carousel',
+		mode: 'horizontal',
 		startAt: 1,
 		hoverpause: true,
 		keyboard: true,
@@ -100,7 +101,7 @@ var Glide = function (element, options) {
  * and set classes
  */
 Glide.prototype.collect = function() {
-	this.slider = this.element.addClass(this.options.classes.base + '--' + this.options.type);
+	this.slider = this.element.addClass(this.options.classes.base + '--' + this.options.type).addClass(this.options.classes.base + '--' + this.options.orientation);
 	this.track = this.slider.find('.' + this.options.classes.track);
 	this.wrapper = this.slider.find('.' + this.options.classes.wrapper);
 	this.slides = this.track.find('.' + this.options.classes.slide).not('.' + this.options.classes.clone);
@@ -111,9 +112,18 @@ Glide.prototype.collect = function() {
  * Setup properties and values
  */
 Glide.prototype.setup = function() {
-	this.paddings = this.getPaddings();
-	this.width = this.getWidth();
+
+	var dimensions = {
+		horizontal: ['width', 'x'],
+		vertical: ['height', 'y'],
+	};
+
+	this.size = dimensions[this.options.mode][0];
+	this.axis = dimensions[this.options.mode][1];
 	this.length = this.slides.length;
+	this.paddings = this.getPaddings();
+	this[this.size] = this.getSize();
+
 };
 
 
@@ -131,7 +141,7 @@ Glide.prototype.getPaddings = function() {
 		var normalized = parseInt(option, 10);
 		var isPercentage = option.indexOf('%') >= 0;
 
-		if (isPercentage) return parseInt(this.slider.width() * (normalized/100));
+		if (isPercentage) return parseInt(this.slider[this.size]() * (normalized/100));
 		else return normalized;
 
 	}
@@ -145,6 +155,6 @@ Glide.prototype.getPaddings = function() {
  * Get slider width updated by addtional options
  * @return {Number} width value
  */
-Glide.prototype.getWidth = function() {
-	return this.slider.width() - (this.paddings * 2);
+Glide.prototype.getSize = function() {
+	return this.slider[this.size]() - (this.paddings * 2);
 };

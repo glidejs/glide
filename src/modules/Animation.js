@@ -43,7 +43,7 @@ var Animation = function(Glide, Core) {
 	 */
 	Module.prototype.slider = function() {
 
-		var translate = Glide.width * (Glide.current - 1);
+		var translate = Glide[Glide.size] * (Glide.current - 1);
 		var shift = Core.Clones.shift - Glide.paddings;
 
 		// If on first slide
@@ -73,7 +73,7 @@ var Animation = function(Glide, Core) {
 		// Apply translate
 		Glide.track.css({
 			'transition': Core.Transition.get('all'),
-			'transform': Core.Translate.set('x', translate - shift - offset)
+			'transform': Core.Translate.set(Glide.axis, translate - shift - offset)
 		});
 
 	};
@@ -86,7 +86,7 @@ var Animation = function(Glide, Core) {
 	Module.prototype.carousel = function() {
 
 		// Translate container
-		var translate = Glide.width * Glide.current;
+		var translate = Glide[Glide.size] * Glide.current;
 		// Calculate addtional shift
 		var shift;
 
@@ -108,7 +108,7 @@ var Animation = function(Glide, Core) {
 				// clear transition and jump to last slide
 				Glide.track.css({
 					'transition': Core.Transition.clear('all'),
-					'transform': Core.Translate.set('x', Glide.width * Glide.length + shift)
+					'transform': Core.Translate.set(Glide.axis, Glide[Glide.size] * Glide.length + shift)
 				});
 			});
 		}
@@ -121,7 +121,7 @@ var Animation = function(Glide, Core) {
 		 */
 		if (Core.Run.isOffset('>')) {
 			// Translate is slides width * length with addtional offset (right edge of wrapper)
-			translate = (Glide.width * Glide.length) + Glide.width;
+			translate = (Glide[Glide.size] * Glide.length) + Glide[Glide.size];
 			// Reset flag
 			Core.Run.flag = false;
 			// After offset animation is done
@@ -129,7 +129,7 @@ var Animation = function(Glide, Core) {
 				// Clear transition and jump to first slide
 				Glide.track.css({
 					'transition': Core.Transition.clear('all'),
-					'transform': Core.Translate.set('x', Glide.width + shift)
+					'transform': Core.Translate.set(Glide.axis, Glide[Glide.size] + shift)
 				});
 			});
 		}
@@ -140,7 +140,7 @@ var Animation = function(Glide, Core) {
 		 */
 		Glide.track.css({
 			'transition': Core.Transition.get('all'),
-			'transform': Core.Translate.set('x', translate + shift - offset)
+			'transform': Core.Translate.set(Glide.axis, translate + shift - offset)
 		});
 
 	};

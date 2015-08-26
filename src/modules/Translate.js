@@ -38,7 +38,7 @@ var Translate = function(Glide, Core) {
 	 */
 	Module.prototype.set = function(axis, value) {
 		axes[axis] = parseInt(value);
-		return 'translate3d(' + -1 * axes.x + 'px, ' + axes.y + 'px, ' + axes.z + 'px)';
+		return 'translate3d(' + (-1 * axes.x) + 'px, ' + (-1 * axes.y) + 'px, ' + axes.z + 'px)';
 	};
 
 

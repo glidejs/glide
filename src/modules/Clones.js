@@ -28,6 +28,10 @@ var Clones = function(Glide, Core) {
 		this.collect();
 
 		this.shift = 0;
+<<<<<<< HEAD
+=======
+		this.growth = Glide[Glide.size] * this.items.length;
+>>>>>>> Vertical mode origin
 
 		return this;
 	};
@@ -68,7 +72,7 @@ var Clones = function(Glide, Core) {
 		var item;
 
 		for (var i in this.items) {
-			item = this.items[i].width(Glide.width);
+			item = this.items[i][Glide.size](Glide[Glide.size]);
 
 			if (pattern[i] >= 0) item.appendTo(Glide.track);
 			else item.prependTo(Glide.track);

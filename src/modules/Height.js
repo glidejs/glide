@@ -27,8 +27,7 @@ var Height = function(Glide, Core) {
 	 * @return {Number}
 	 */
 	Module.prototype.get = function() {
-		var offset = 0;
-		if (Glide.axis === 'y') offset = Glide.paddings * 2;
+		var offset = (Glide.axis === 'y') ? Glide.paddings * 2 : 0;
 		return Glide.slides.eq(Glide.current - 1).height() + offset;
 	};
 

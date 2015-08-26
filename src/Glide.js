@@ -112,18 +112,17 @@ Glide.prototype.collect = function() {
  * Setup properties and values
  */
 Glide.prototype.setup = function() {
-
-	var dimensions = {
+	var modeMap = {
 		horizontal: ['width', 'x'],
 		vertical: ['height', 'y'],
 	};
 
-	this.size = dimensions[this.options.mode][0];
-	this.axis = dimensions[this.options.mode][1];
+	this.size = modeMap[this.options.mode][0];
+	this.axis = modeMap[this.options.mode][1];
 	this.length = this.slides.length;
+
 	this.paddings = this.getPaddings();
 	this[this.size] = this.getSize();
-
 };
 
 

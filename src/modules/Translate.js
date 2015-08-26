@@ -8,26 +8,18 @@
 
 var Translate = function(Glide, Core) {
 
+	// Translate axes map
 	var axes = {
 		x: 0,
 		y: 0,
 		z: 0
 	};
 
+
 	/**
 	 * Translate Module Constructor
 	 */
 	function Module() {}
-
-
-	/**
-	 * Get translate
-	 * @return {string}
-	 */
-	Module.prototype.get = function() {
-		var matrix = Glide.track[0].styles.transform.replace(/[^0-9\-.,]/g, '').split(',');
-		return parseInt(matrix[12] || matrix[4]);
-	};
 
 
 	/**
@@ -38,7 +30,7 @@ var Translate = function(Glide, Core) {
 	 */
 	Module.prototype.set = function(axis, value) {
 		axes[axis] = parseInt(value);
-		return 'translate3d(' + (-1 * axes.x) + 'px, ' + (-1 * axes.y) + 'px, ' + axes.z + 'px)';
+		return 'translate3d(' + (-1 * axes.x) + 'px, ' + (-1 * axes.y) + 'px, ' + (-1 * axes.z) + 'px)';
 	};
 
 

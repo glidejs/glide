@@ -445,6 +445,16 @@ var Build = function(Glide, Core) {
 
 
 	/**
+	 * Check if slider type is
+	 * @param  {string} name Type name to check
+	 * @return {boolean}
+	 */
+	Module.prototype.isMode = function(name) {
+		return Glide.options.mode === name;
+	};
+
+
+	/**
 	 * Build Slider type
 	 */
 	Module.prototype.slider = function() {
@@ -453,9 +463,10 @@ var Build = function(Glide, Core) {
 		Core.Transition.jumping = true;
 		// Apply slides width
 		Glide.slides[Glide.size](Glide[Glide.size]);
-		Core.Height.set(true);
 		// Apply translate
 		Glide.track.css(Glide.size, Glide[Glide.size] * Glide.length);
+		// If mode is vertical apply height
+		if(this.isMode('vertical')) Core.Height.set(true);
 		// Go to startup position
 		Core.Animation.make();
 		// Turn off jumping flag
@@ -481,8 +492,13 @@ var Build = function(Glide, Core) {
 		Glide.track.css('width', (Glide.width * Glide.length) + Core.Clones.getGrowth());
 =======
 		Glide.track.css(Glide.size, (Glide[Glide.size] * Glide.length) + Core.Clones.growth);
+<<<<<<< HEAD
 		Core.Height.set(true);
 >>>>>>> Vertical mode origin
+=======
+		// If mode is vertical apply height
+		if(this.isMode('vertical')) Core.Height.set(true);
+>>>>>>> Allow page touch scroll when on first or last slide
 		// Go to startup position
 		Core.Animation.make();
 		// Append clones
@@ -1007,8 +1023,7 @@ var Height = function(Glide, Core) {
 	 * @return {Number}
 	 */
 	Module.prototype.get = function() {
-		var offset = 0;
-		if (Glide.axis === 'y') offset = Glide.paddings * 2;
+		var offset = (Glide.axis === 'y') ? Glide.paddings * 2 : 0;
 		return Glide.slides.eq(Glide.current - 1).height() + offset;
 	};
 
@@ -1356,6 +1371,14 @@ var Touch = function(Glide, Core) {
 			// Calculate the sine of the angle
 			this.touchSin = Math.asin( touchCathetus/touchHypotenuse );
 
+			// Make offset animation
+			Core.Animation.make( this.byAxis(subExSx, subEySy) );
+
+			if (Core.Build.isMode('vertical')) {
+				if (Core.Run.isStart() && subEySy > 0) return;
+				if (Core.Run.isEnd() && subEySy < 0) return;
+			}
+
 			var lower45 = (this.touchSin * 180 / Math.PI) < 45;
 			var upper45 = (this.touchSin * 180 / Math.PI) < 45;
 
@@ -1371,9 +1394,6 @@ var Touch = function(Glide, Core) {
 			} else {
 				return;
 			}
-
-			// Make offset animation
-			Core.Animation.make( this.byAxis(subExSx, subEySy) );
 
 			// Prevent clicks inside track
 			Core.Events.preventClicks();
@@ -1427,7 +1447,7 @@ var Touch = function(Glide, Core) {
 
 			var lower45 = touchDeg < 45;
 			var upper45 = touchDeg < 45;
-			console.log(this.byAxis(upper45, lower45));
+
 			// While touch is positive and greater than distance set in options
 			// move backward
 			if (touchDistance > Glide.options.touchDistance && touchDeg < 45) Core.Run.make('<');
@@ -1528,26 +1548,18 @@ var Transition = function(Glide, Core) {
 
 var Translate = function(Glide, Core) {
 
+	// Translate axes map
 	var axes = {
 		x: 0,
 		y: 0,
 		z: 0
 	};
 
+
 	/**
 	 * Translate Module Constructor
 	 */
 	function Module() {}
-
-
-	/**
-	 * Get translate
-	 * @return {string}
-	 */
-	Module.prototype.get = function() {
-		var matrix = Glide.track[0].styles.transform.replace(/[^0-9\-.,]/g, '').split(',');
-		return parseInt(matrix[12] || matrix[4]);
-	};
 
 
 	/**
@@ -1558,7 +1570,7 @@ var Translate = function(Glide, Core) {
 	 */
 	Module.prototype.set = function(axis, value) {
 		axes[axis] = parseInt(value);
-		return 'translate3d(' + (-1 * axes.x) + 'px, ' + (-1 * axes.y) + 'px, ' + axes.z + 'px)';
+		return 'translate3d(' + (-1 * axes.x) + 'px, ' + (-1 * axes.y) + 'px, ' + (-1 * axes.z) + 'px)';
 	};
 
 
@@ -1681,18 +1693,17 @@ Glide.prototype.collect = function() {
  * Setup properties and values
  */
 Glide.prototype.setup = function() {
-
-	var dimensions = {
+	var modeMap = {
 		horizontal: ['width', 'x'],
 		vertical: ['height', 'y'],
 	};
 
-	this.size = dimensions[this.options.mode][0];
-	this.axis = dimensions[this.options.mode][1];
+	this.size = modeMap[this.options.mode][0];
+	this.axis = modeMap[this.options.mode][1];
 	this.length = this.slides.length;
+
 	this.paddings = this.getPaddings();
 	this[this.size] = this.getSize();
-
 };
 
 

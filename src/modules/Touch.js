@@ -106,6 +106,14 @@ var Touch = function(Glide, Core) {
 			// Calculate the sine of the angle
 			this.touchSin = Math.asin( touchCathetus/touchHypotenuse );
 
+			// Make offset animation
+			Core.Animation.make( this.byAxis(subExSx, subEySy) );
+
+			if (Core.Build.isMode('vertical')) {
+				if (Core.Run.isStart() && subEySy > 0) return;
+				if (Core.Run.isEnd() && subEySy < 0) return;
+			}
+
 			var lower45 = (this.touchSin * 180 / Math.PI) < 45;
 			var upper45 = (this.touchSin * 180 / Math.PI) < 45;
 
@@ -121,9 +129,6 @@ var Touch = function(Glide, Core) {
 			} else {
 				return;
 			}
-
-			// Make offset animation
-			Core.Animation.make( this.byAxis(subExSx, subEySy) );
 
 			// Prevent clicks inside track
 			Core.Events.preventClicks();
@@ -177,7 +182,7 @@ var Touch = function(Glide, Core) {
 
 			var lower45 = touchDeg < 45;
 			var upper45 = touchDeg < 45;
-			console.log(this.byAxis(upper45, lower45));
+
 			// While touch is positive and greater than distance set in options
 			// move backward
 			if (touchDistance > Glide.options.touchDistance && touchDeg < 45) Core.Run.make('<');

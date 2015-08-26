@@ -40,6 +40,16 @@ var Build = function(Glide, Core) {
 
 
 	/**
+	 * Check if slider type is
+	 * @param  {string} name Type name to check
+	 * @return {boolean}
+	 */
+	Module.prototype.isMode = function(name) {
+		return Glide.options.mode === name;
+	};
+
+
+	/**
 	 * Build Slider type
 	 */
 	Module.prototype.slider = function() {
@@ -48,9 +58,10 @@ var Build = function(Glide, Core) {
 		Core.Transition.jumping = true;
 		// Apply slides width
 		Glide.slides[Glide.size](Glide[Glide.size]);
-		Core.Height.set(true);
 		// Apply translate
 		Glide.track.css(Glide.size, Glide[Glide.size] * Glide.length);
+		// If mode is vertical apply height
+		if(this.isMode('vertical')) Core.Height.set(true);
 		// Go to startup position
 		Core.Animation.make();
 		// Turn off jumping flag
@@ -73,7 +84,8 @@ var Build = function(Glide, Core) {
 		Glide.slides[Glide.size](Glide[Glide.size]);
 		// Apply translate
 		Glide.track.css(Glide.size, (Glide[Glide.size] * Glide.length) + Core.Clones.getGrowth());
-		Core.Height.set(true);
+		// If mode is vertical apply height
+		if(this.isMode('vertical')) Core.Height.set(true);
 		// Go to startup position
 		Core.Animation.make();
 		// Append clones

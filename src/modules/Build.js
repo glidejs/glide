@@ -72,12 +72,8 @@ var Build = function(Glide, Core) {
 		// Apply slides width
 		Glide.slides[Glide.size](Glide[Glide.size]);
 		// Apply translate
-<<<<<<< HEAD
-		Glide.track.css('width', (Glide.width * Glide.length) + Core.Clones.getGrowth());
-=======
-		Glide.track.css(Glide.size, (Glide[Glide.size] * Glide.length) + Core.Clones.growth);
+		Glide.track.css(Glide.size, (Glide[Glide.size] * Glide.length) + Core.Clones.getGrowth());
 		Core.Height.set(true);
->>>>>>> Vertical mode origin
 		// Go to startup position
 		Core.Animation.make();
 		// Append clones

@@ -1,6 +1,6 @@
 /*!
  * Glide.js
- * Version: 2.0.3
+ * Version: 2.0.4
  * Simple, lightweight and fast jQuery slider
  * Author: @jedrzejchalubek
  * Site: http://http://glide.jedrzejchalubek.com/
@@ -1670,7 +1670,7 @@ var Glide = function (element, options) {
  * and set classes
  */
 Glide.prototype.collect = function() {
-	this.slider = this.element.addClass(this.options.classes.base + '--' + this.options.type).addClass(this.options.classes.base + '--' + this.options.orientation);
+	this.slider = this.element.addClass(this.options.classes.base + '--' + this.options.type).addClass(this.options.classes.base + '--' + this.options.mode);
 	this.track = this.slider.find('.' + this.options.classes.track);
 	this.wrapper = this.slider.find('.' + this.options.classes.wrapper);
 	this.slides = this.track.find('.' + this.options.classes.slide).not('.' + this.options.classes.clone);

@@ -338,24 +338,23 @@ var Arrows = function(Glide, Core) {
 	 * arrows DOM
 	 */
 	Module.prototype.build = function() {
-
 		this.wrapper = Glide.slider.find('.' + Glide.options.classes.arrows);
 		this.items = this.wrapper.children();
-
 	};
 
 
 	/**
-	 * Hide arrow
+	 * Disable arrow
 	 */
-	Module.prototype.disable = function (type) {
+	Module.prototype.disable = function(type) {
+		var classes = Glide.options.classes;
 
-		return this.items.filter('.' + Glide.options.classes['arrow' + Core.Helper.capitalise(type)])
+		return this.items.filter('.' + classes['arrow' + Core.Helper.capitalise(type)])
 			.unbind('click.glide touchstart.glide')
-			.addClass(Glide.options.classes.disabled)
-			.siblings().removeClass(Glide.options.classes.disabled)
-			.end();
-
+			.addClass(classes.disabled)
+			.siblings()
+			.bind('click.glide touchstart.glide', this.click)
+			.removeClass(classes.disabled);
 	};
 
 
@@ -363,10 +362,24 @@ var Arrows = function(Glide, Core) {
 	 * Show arrows
 	 */
 	Module.prototype.enable = function() {
-
 		this.bind();
 		return this.items.removeClass(Glide.options.classes.disabled);
+	};
 
+	/**
+	 * Click arrow method
+	 * @param  {Object} event
+	 */
+	Module.prototype.click = function(event) {
+		event.preventDefault();
+
+		if (!Core.Events.disabled) {
+			Core.Run.pause();
+			Core.Run.make($(this).data('glide-dir'));
+			Core.Animation.after(function() {
+				Core.Run.play();
+			});
+		}
 	};
 
 
@@ -375,18 +388,7 @@ var Arrows = function(Glide, Core) {
 	 * arrows events
 	 */
 	Module.prototype.bind = function() {
-
-		return this.items.on('click.glide touchstart.glide', function(event){
-			event.preventDefault();
-			if (!Core.Events.disabled) {
-				Core.Run.pause();
-				Core.Run.make($(this).data('glide-dir'));
-				Core.Animation.after(function() {
-					Core.Run.play();
-				});
-			}
-		});
-
+		return this.items.on('click.glide touchstart.glide', this.click);
 	};
 
 

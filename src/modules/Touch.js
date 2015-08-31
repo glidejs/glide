@@ -114,11 +114,8 @@ var Touch = function(Glide, Core) {
 				if (Core.Run.isEnd() && subEySy < 0) return;
 			}
 
-			var lower45 = (this.touchSin * 180 / Math.PI) < 45;
-			var upper45 = (this.touchSin * 180 / Math.PI) < 45;
-
 			// While angle is lower than 45 degree
-			if ( this.byAxis(lower45, upper45) ) {
+			if ( (this.touchSin * 180 / Math.PI) < 45 ) {
 				// Prevent propagation
 				event.stopPropagation();
 				// Prevent scrolling
@@ -179,9 +176,6 @@ var Touch = function(Glide, Core) {
 				}
 
 			}
-
-			var lower45 = touchDeg < 45;
-			var upper45 = touchDeg < 45;
 
 			// While touch is positive and greater than distance set in options
 			// move backward

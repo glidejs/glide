@@ -8,8 +8,8 @@
 }
 .glide--vertical .glide__arrows {
   left: 50%;
-  height: 92%;
-  margin-top: 4%;
+  height: 88%;
+  margin-top: 6%;
 }
 .glide__arrow {
   position: absolute;
@@ -18,6 +18,7 @@
   text-transform: uppercase;
   font: 11px Arial, sans-serif;
   padding: 9px 12px;
+  background-color: transparent;
   border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 4px;
   -webkit-transition: border 300ms ease-in-out;
@@ -68,7 +69,7 @@
       -ms-transform: translateY(-50%);
           transform: translateY(-50%);
 }
-.glide__bullets li {
+.glide__bullets button {
   display: inline-block;
   background-color: rgba(255, 255, 255, 0.5);
   width: 12px;
@@ -79,25 +80,23 @@
   -webkit-transition: all 300ms ease-in-out;
           transition: all 300ms ease-in-out;
 }
-.glide--horizontal .glide__bullets li {
+.glide--horizontal .glide__bullets button {
   margin: 0 5px;
 }
-.glide--vertical .glide__bullets li {
+.glide--vertical .glide__bullets button {
   vertical-align: middle;
 }
-.glide__bullets li:hover {
-  border: 2px solid white;
-}
-.glide__bullets li.active {
+.glide__bullets button.active {
   background-color: white;
+}
+.glide__bullets button:hover {
+  border: 2px solid white;
 }
 .glide--slider .glide__arrow {
   opacity: 1;
-  -webkit-transition: visibility 0 ease 150ms,
-						opacity 150ms ease;
-          transition: visibility 0 ease 150ms,
-						opacity 150ms ease;
+  -webkit-transition: opacity 150ms ease;
+          transition: opacity 150ms ease;
 }
 .glide--slider .glide__arrow.disabled {
-  opacity: 0.5;
+  opacity: 0.33;
 }

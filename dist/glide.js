@@ -570,7 +570,7 @@ var Bullets = function(Glide, Core) {
 		this.wrapper = Glide.slider.children('.' + Glide.options.classes.bullets);
 
 		for(var i = 1; i <= Glide.length; i++) {
-			$('<li>', {
+			$('<button>', {
 				'class': Glide.options.classes.bullet,
 				'data-glide-dir': '=' + i
 			}).appendTo(this.wrapper);
@@ -623,7 +623,7 @@ var Bullets = function(Glide, Core) {
 	 * bullets events
 	 */
 	Module.prototype.bind = function() {
-		return this.wrapper.on('click.glide touchstart.glide', 'li', this.click);
+		return this.wrapper.on('click.glide touchstart.glide', 'button', this.click);
 	};
 
 
@@ -632,7 +632,7 @@ var Bullets = function(Glide, Core) {
 	 * bullets events
 	 */
 	Module.prototype.unbind = function() {
-		return this.wrapper.on('click.glide touchstart.glide', 'li');
+		return this.wrapper.on('click.glide touchstart.glide', 'button');
 	};
 
 
@@ -1375,11 +1375,8 @@ var Touch = function(Glide, Core) {
 				if (Core.Run.isEnd() && subEySy < 0) return;
 			}
 
-			var lower45 = (this.touchSin * 180 / Math.PI) < 45;
-			var upper45 = (this.touchSin * 180 / Math.PI) < 45;
-
 			// While angle is lower than 45 degree
-			if ( this.byAxis(lower45, upper45) ) {
+			if ( (this.touchSin * 180 / Math.PI) < 45 ) {
 				// Prevent propagation
 				event.stopPropagation();
 				// Prevent scrolling
@@ -1440,9 +1437,6 @@ var Touch = function(Glide, Core) {
 				}
 
 			}
-
-			var lower45 = touchDeg < 45;
-			var upper45 = touchDeg < 45;
 
 			// While touch is positive and greater than distance set in options
 			// move backward

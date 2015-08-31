@@ -33,7 +33,7 @@ var Bullets = function(Glide, Core) {
 		this.wrapper = Glide.slider.children('.' + Glide.options.classes.bullets);
 
 		for(var i = 1; i <= Glide.length; i++) {
-			$('<li>', {
+			$('<button>', {
 				'class': Glide.options.classes.bullet,
 				'data-glide-dir': '=' + i
 			}).appendTo(this.wrapper);
@@ -86,7 +86,7 @@ var Bullets = function(Glide, Core) {
 	 * bullets events
 	 */
 	Module.prototype.bind = function() {
-		return this.wrapper.on('click.glide touchstart.glide', 'li', this.click);
+		return this.wrapper.on('click.glide touchstart.glide', 'button', this.click);
 	};
 
 
@@ -95,7 +95,7 @@ var Bullets = function(Glide, Core) {
 	 * bullets events
 	 */
 	Module.prototype.unbind = function() {
-		return this.wrapper.on('click.glide touchstart.glide', 'li');
+		return this.wrapper.on('click.glide touchstart.glide', 'button');
 	};
 
 

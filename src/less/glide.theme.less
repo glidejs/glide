@@ -1,12 +1,15 @@
 .glide {
-
 	@that: .glide;
+
 
 	&__wrapper {}
 
+
 	&__track {}
 
+
 	&__slide {}
+
 
 	&__arrows {
 		position: absolute;
@@ -19,10 +22,11 @@
 
 		@{that}--vertical & {
 			left: 50%;
-			height: 92%;
-			margin-top: 4%;
+			height: 88%;
+			margin-top: 6%;
 		}
 	}
+
 
 	&__arrow {
 		position: absolute;
@@ -31,10 +35,12 @@
 		text-transform: uppercase;
 		font: 11px Arial, sans-serif;
 		padding: 9px 12px;
+		background-color: transparent;
 		border: 2px solid rgba(255, 255, 255, 0.5);
 		border-radius: 4px;
 		transition: border 300ms ease-in-out;
 
+		// &:focus { outline: none; }
 		&:hover { border-color: white; }
 
 		@{that}--horizontal & {
@@ -51,6 +57,7 @@
 			&.next { bottom: 0; }
 		}
 	}
+
 
 	&__bullets {
 		position: absolute;
@@ -70,7 +77,7 @@
 			transform: translateY(-50%);
 		}
 
-		li {
+		button {
 			display: inline-block;
 			background-color: rgba(255, 255, 255, 0.5);
 			width: 12px;
@@ -88,49 +95,30 @@
 				vertical-align: middle;
 			}
 
-
-			&:hover {
-				// background-color: transparent;
-				border: 2px solid white;
-			}
-
 			&.active { background-color: white; }
+
+			// &:focus { outline: none; }
+			&:hover { border: 2px solid white; }
 		}
 	}
 
 
 	&--slider {
 
-		@{that}__slide {}
-
 		@{that}__arrow {
 			opacity: 1;
-			transition: visibility 0 ease 150ms,
-						opacity 150ms ease;
+			transition: opacity 150ms ease;
 
 			&.disabled {
-				opacity: 0.5;
+				opacity: 0.33;
 			}
 		}
 
 	}
 
 
-	&--carousel {
-
-		@{that}__slide {}
-
-	}
+	&--carousel {}
 
 
-	&--slideshow {
-
-		@{that}__wrapper {}
-
-		@{that}__slide {
-			&.active {}
-		}
-
-	}
-
+	&--slideshow {}
 }

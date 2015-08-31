@@ -69,7 +69,7 @@
       -ms-transform: translateY(-50%);
           transform: translateY(-50%);
 }
-.glide__bullets button {
+.glide__bullets > * {
   display: inline-block;
   background-color: rgba(255, 255, 255, 0.5);
   width: 12px;
@@ -80,16 +80,16 @@
   -webkit-transition: all 300ms ease-in-out;
           transition: all 300ms ease-in-out;
 }
-.glide--horizontal .glide__bullets button {
+.glide--horizontal .glide__bullets > * {
   margin: 0 5px;
 }
-.glide--vertical .glide__bullets button {
+.glide--vertical .glide__bullets > * {
   vertical-align: middle;
 }
-.glide__bullets button.active {
+.glide__bullets > *.active {
   background-color: white;
 }
-.glide__bullets button:hover {
+.glide__bullets > *:hover {
   border: 2px solid white;
 }
 .glide--slider .glide__arrow {

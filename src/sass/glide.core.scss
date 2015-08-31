@@ -47,14 +47,7 @@
 	&__bullets {
 		-webkit-touch-callout: none;
 		user-select: none;
-
-		li {
-			cursor: pointer;
-
-			&.active {}
-		}
 	}
-
 
 	&--slider {
 

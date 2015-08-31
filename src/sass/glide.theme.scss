@@ -1,98 +1,124 @@
 .glide {
-
 	$that: '.glide' !default;
+
 
 	&__wrapper {}
 
+
 	&__track {}
+
 
 	&__slide {}
 
+
 	&__arrows {
 		position: absolute;
-		top: 50%;
-		width: 92%;
-		margin-left: 4%;
+
+		#{$that}--horizontal & {
+			top: 50%;
+			width: 92%;
+			margin-left: 4%;
+		}
+
+		#{$that}--vertical & {
+			left: 50%;
+			height: 88%;
+			margin-top: 6%;
+		}
 	}
+
 
 	&__arrow {
 		position: absolute;
 		z-index: 2;
-		transform: translateY(-50%);
 		color: white;
 		text-transform: uppercase;
 		font: 11px Arial, sans-serif;
 		padding: 9px 12px;
+		background-color: transparent;
 		border: 2px solid rgba(255, 255, 255, 0.5);
 		border-radius: 4px;
-		transition: all 300ms ease-in-out;
+		transition: border 300ms ease-in-out;
 
+		// &:focus { outline: none; }
 		&:hover { border-color: white; }
 
-		&.prev { left: 0; }
-		&.next { right: 0; }
+		#{$that}--horizontal & {
+			transform: translateY(-50%);
+
+			&.prev { left: 0; }
+			&.next { right: 0; }
+		}
+
+		#{$that}--vertical & {
+			transform: translateX(-50%);
+
+			&.prev { top: 0; }
+			&.next { bottom: 0; }
+		}
 	}
+
 
 	&__bullets {
 		position: absolute;
-		bottom: 8%;
-		width: 100%;
-		text-align: center;
 		list-style: none;
 
-		li {
+		#{$that}--horizontal & {
+			bottom: 8%; left: 0;
+			width: 100%;
+			height: 12px;
+			text-align: center;
+		}
+
+		#{$that}--vertical & {
+			top: 50%; right: 8%;
+			width: 12px;
+			height: auto;
+			transform: translateY(-50%);
+		}
+
+		& > * {
 			display: inline-block;
 			background-color: rgba(255, 255, 255, 0.5);
 			width: 12px;
 			height: 12px;
-			margin: 0 5px;
 			cursor: pointer;
 			border-radius: 50%;
 			border: 2px solid transparent;
 			transition: all 300ms ease-in-out;
 
-			&:hover {
-				// background-color: transparent;
-				border: 2px solid white;
+			#{$that}--horizontal & {
+				margin: 0 5px;
+			}
+
+			#{$that}--vertical & {
+				vertical-align: middle;
 			}
 
 			&.active { background-color: white; }
+
+			// &:focus { outline: none; }
+			&:hover { border: 2px solid white; }
 		}
 	}
 
 
 	&--slider {
 
-		#{$that}__slide {}
-
 		#{$that}__arrow {
 			opacity: 1;
-			transition: visibility 0 ease 150ms,
-						opacity 150ms ease;
+			transition: opacity 150ms ease;
 
 			&.disabled {
-				opacity: 0.5;
+				opacity: 0.33;
 			}
 		}
 
 	}
 
 
-	&--carousel {
-
-		#{$that}__slide {}
-
-	}
+	&--carousel {}
 
 
-	&--slideshow {
-
-		#{$that}__wrapper {}
-
-		#{$that}__slide {
-			&.active {}
-		}
-
-	}
-
+	&--slideshow {}
 }

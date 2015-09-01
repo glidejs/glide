@@ -10,38 +10,11 @@
 		<link rel="stylesheet" href="../dist/css/glide.theme.css">
 
 		<!-- Demo stylesheet -->
-		<style>
-
-			body {
-				overflow-y: scroll;
-			}
-
-			* {
-				-webkit-box-sizing: border-box;
-				-moz-box-sizing: border-box;
-				box-sizing: border-box;
-				padding: 0;
-				margin: 0;
-				border: 0;
-			}
-			.module {
-				width: 100%;
-				height: 320px;
-			}
-			.box {
-				display: block;
-				width: 100%;
-				height: 100%;
-				text-align: center;
-				color: #fff;
-				font-size: 3vw;
-				line-height: 320px;
-			}
-		</style>
+		<link rel="stylesheet" href="css/demo.css">
 	</head>
 	<body>
 
-		<div class="module">
+		<div class="module--horizontal">
 			<div id="Carousel" class="glide">
 
 				<div class="glide__arrows">
@@ -69,11 +42,11 @@
 		</div>
 
 		<div class="custom-triggers">
-			<div data-glide-trigger="#Carousel" data-glide-dir="<">Carousel prev</div>
-			<div data-glide-trigger="#Carousel" data-glide-dir=">">Carousel next</div>
+			<button data-glide-trigger="#Carousel" data-glide-dir="<">Carousel prev</button>
+			<button data-glide-trigger="#Carousel" data-glide-dir=">">Carousel next</button>
 		</div>
 
-		<div class="module">
+		<div class="module--horizontal">
 			<div id="Slider" class="glide">
 
 				<div class="glide__arrows">
@@ -101,11 +74,11 @@
 		</div>
 
 		<div class="custom-triggers">
-			<div data-glide-trigger="#Slider" data-glide-dir="<">Slider prev</div>
-			<div data-glide-trigger="#Slider" data-glide-dir=">">Slider next</div>
+			<button data-glide-trigger="#Slider" data-glide-dir="<">Slider prev</button>
+			<button data-glide-trigger="#Slider" data-glide-dir=">">Slider next</button>
 		</div>
 
-		<div class="module">
+		<div class="module--horizontal">
 			<div id="Slideshow" class="glide">
 
 				<div class="glide__arrows">
@@ -133,8 +106,8 @@
 		</div>
 
 		<div class="custom-triggers">
-			<div data-glide-trigger="#Slideshow" data-glide-dir="<">Slideshow prev</div>
-			<div data-glide-trigger="#Slideshow" data-glide-dir=">">Slideshow next</div>
+			<button data-glide-trigger="#Slideshow" data-glide-dir="<">Slideshow prev</button>
+			<button data-glide-trigger="#Slideshow" data-glide-dir=">">Slideshow next</button>
 		</div>
 
 		<script src="../bower_components/jquery/dist/jquery.js"></script>

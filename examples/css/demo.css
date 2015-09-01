@@ -1,0 +1,42 @@
+body {
+	overflow-y: scroll;
+}
+
+* {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+.box {
+	color: #fff;
+	font-size: 3vw;
+	display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.module--horizontal {
+	width: 100%;
+	height: 320px;
+}
+
+.module--horizontal .box {
+	width: 100%;
+	height: 320px;
+}
+
+.module--vertical {
+	width: 33.333%;
+	height: 100vh;
+	float: left;
+	clear: none;
+}
+
+.module--vertical .box {
+	width: 100%;
+	height: 100%;
+}

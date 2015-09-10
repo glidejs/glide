@@ -9,6 +9,18 @@
     "type": "git",
     "url": "https://github.com/jedrzejchalubek/Glide.js.git"
   },
+  "license": "MIT",
+  "keywords": [
+    "simple",
+    "lightweight",
+    "fast",
+    "slider",
+    "jQuery",
+    "CSS3",
+    "transitions",
+    "touch",
+    "responsive"
+  ],
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-autoprefixer": "*",

@@ -300,7 +300,7 @@ var Api = function(Glide, Core) {
 				Core.Clones.remove().init();
 				Core.Bullets.remove().init();
 				Core.Build.init();
-				Core.Run.make('=' + parseInt(Glide.length), Core.Run.play());
+				Core.Run.make('=' + parseInt(Glide.options.startAt), Core.Run.play());
 			},
 
 		};
@@ -477,7 +477,7 @@ var Build = function(Glide, Core) {
 		// Apply slides width
 		Glide.slides.width(Glide.width);
 		// Apply translate
-		Glide.track.css('width', (Glide.width * Glide.length) + Core.Clones.growth);
+		Glide.track.css('width', (Glide.width * Glide.length) + Core.Clones.getGrowth());
 		// Go to startup position
 		Core.Animation.make();
 		// Append clones
@@ -649,7 +649,6 @@ var Clones = function(Glide, Core) {
 		this.collect();
 
 		this.shift = 0;
-		this.growth = Glide.width * this.items.length;
 
 		return this;
 	};
@@ -707,6 +706,14 @@ var Clones = function(Glide, Core) {
 		}
 
 		return this;
+	};
+
+
+	/**
+	 * Get width width of all the clones
+	 */
+	Module.prototype.getGrowth = function () {
+		return Glide.width * this.items.length;
 	};
 
 

@@ -28,7 +28,6 @@ var Clones = function(Glide, Core) {
 		this.collect();
 
 		this.shift = 0;
-		this.growth = Glide.width * this.items.length;
 
 		return this;
 	};
@@ -86,6 +85,14 @@ var Clones = function(Glide, Core) {
 		}
 
 		return this;
+	};
+
+
+	/**
+	 * Get width width of all the clones
+	 */
+	Module.prototype.getGrowth = function () {
+		return Glide.width * this.items.length;
 	};
 
 

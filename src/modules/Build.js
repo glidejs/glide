@@ -72,7 +72,7 @@ var Build = function(Glide, Core) {
 		// Apply slides width
 		Glide.slides.width(Glide.width);
 		// Apply translate
-		Glide.track.css('width', (Glide.width * Glide.length) + Core.Clones.growth);
+		Glide.track.css('width', (Glide.width * Glide.length) + Core.Clones.getGrowth());
 		// Go to startup position
 		Core.Animation.make();
 		// Append clones

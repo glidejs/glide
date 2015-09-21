@@ -82,6 +82,7 @@
 			background-color: rgba(255, 255, 255, 0.5);
 			width: 12px;
 			height: 12px;
+			padding: 0;
 			cursor: pointer;
 			border-radius: 50%;
 			border: 2px solid transparent;
@@ -98,7 +99,12 @@
 			&.active { background-color: white; }
 
 			&:focus { outline: none; }
-			&:hover { border: 2px solid white; }
+
+			&:hover,
+			&:focus {
+				border: 2px solid white;
+				background-color: rgba(255, 255, 255, 0.5);
+			}
 		}
 	}
 

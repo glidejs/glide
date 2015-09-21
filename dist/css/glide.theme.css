@@ -24,6 +24,9 @@
   -webkit-transition: border 300ms ease-in-out;
           transition: border 300ms ease-in-out;
 }
+.glide__arrow:focus {
+  outline: none;
+}
 .glide__arrow:hover {
   border-color: white;
 }
@@ -88,6 +91,9 @@
 }
 .glide__bullets > *.active {
   background-color: white;
+}
+.glide__bullets > *:focus {
+  outline: none;
 }
 .glide__bullets > *:hover {
   border: 2px solid white;

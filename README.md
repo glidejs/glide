@@ -1,4 +1,4 @@
-#[![glide.js](http://glide.jedrzejchalubek.com/images/glidejs-logotype-black.svg)](http://glide.jedrzejchalubek.com)
+#[![glide.js](http://glide.jedrzejchalubek.com/images/glide-logotype.png)](http://glide.jedrzejchalubek.com)
 
 [Glide.js](http://glide.jedrzejchalubek.com) is a responsive and touch-friendly jQuery slider. Based on CSS3 transitions. It's simple, lightweight and fast. It’s designed to slide. No less, no more.
 

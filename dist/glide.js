@@ -920,8 +920,15 @@ var Events = function(Glide, Core) {
 	 * @return {Glide.Events}
 	 */
 	Module.prototype.call = function (func) {
+
 		if ( (func !== 'undefined') && (typeof func === 'function') )
-			func(Glide.current, Glide.slides.eq(Glide.current - 1));
+			func({
+				index: Glide.current,
+				current: Glide.slides.eq(Glide.current - 1),
+				swipe: {
+					distance: Core.Touch.distance
+				}
+			});
 		return this;
 	};
 
@@ -1053,6 +1060,19 @@ var Helper = function(Glide, Core) {
 	 * Helper Module Constructor
 	 */
 	function Module() {}
+
+
+	/**
+	 * If slider axis is vertical (y axis) return vertical value
+	 * else axis is horizontal (x axis) so return horizontal value
+	 * @param  {Mixed} hValue
+	 * @param  {Mixed} vValue
+	 * @return {Mixed}
+	 */
+	Module.prototype.byAxis = function(hValue, vValue) {
+		if (Glide.axis === 'y') return vValue;
+		else return	hValue;
+	};
 
 
 	/**
@@ -1362,14 +1382,23 @@ var Touch = function(Glide, Core) {
 			// Calculate the length of the hypotenuse segment
 			var touchHypotenuse = Math.sqrt( powEX + powEY );
 			// Calculate the length of the cathetus segment
-			var touchCathetus = Math.sqrt( this.byAxis(powEY, powEX) );
+			var touchCathetus = Math.sqrt( Core.Helper.byAxis(powEY, powEX) );
 
 			// Calculate the sine of the angle
 			this.touchSin = Math.asin( touchCathetus/touchHypotenuse );
+			// Save distance
+			this.distance = Core.Helper.byAxis(
+				(touch.pageX - this.touchStartX),
+				(touch.pageY - this.touchStartY)
+			);
 
 			// Make offset animation
-			Core.Animation.make( this.byAxis(subExSx, subEySy) );
+			Core.Animation.make( Core.Helper.byAxis(subExSx, subEySy) );
+			// Prevent clicks inside track
+			Core.Events.preventClicks().call(Glide.options.swipeMove);
 
+			// While mode is vertical, we don't want to block scroll when we reach start or end of slider
+			// In that case we need to escape before preventing default event
 			if (Core.Build.isMode('vertical')) {
 				if (Core.Run.isStart() && subEySy > 0) return;
 				if (Core.Run.isEnd() && subEySy < 0) return;
@@ -1387,9 +1416,6 @@ var Touch = function(Glide, Core) {
 			} else {
 				return;
 			}
-
-			// Prevent clicks inside track
-			Core.Events.preventClicks();
 
 		}
 
@@ -1413,7 +1439,7 @@ var Touch = function(Glide, Core) {
 
 
 			// Calculate touch distance
-			var touchDistance = this.byAxis(
+			var touchDistance = Core.Helper.byAxis(
 				(touch.pageX - this.touchStartX),
 				(touch.pageY - this.touchStartY)
 			);
@@ -1468,12 +1494,6 @@ var Touch = function(Glide, Core) {
 
 		}
 
-	};
-
-
-	Module.prototype.byAxis = function(xValue, yValue) {
-		if (Glide.axis === 'y') return yValue;
-		else return	xValue;
 	};
 
 
@@ -1623,6 +1643,7 @@ var Glide = function (element, options) {
 		afterTransition: function(i, el) {},
 		swipeStart: function(i, el) {},
 		swipeEnd: function(i, el) {},
+		swipeMove: function(i, el) {},
 	};
 
 	// Extend options

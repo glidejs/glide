@@ -52,6 +52,7 @@ var Glide = function (element, options) {
 		afterTransition: function(i, el) {},
 		swipeStart: function(i, el) {},
 		swipeEnd: function(i, el) {},
+		swipeMove: function(i, el) {},
 	};
 
 	// Extend options

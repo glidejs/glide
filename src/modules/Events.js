@@ -148,8 +148,15 @@ var Events = function(Glide, Core) {
 	 * @return {Glide.Events}
 	 */
 	Module.prototype.call = function (func) {
+
 		if ( (func !== 'undefined') && (typeof func === 'function') )
-			func(Glide.current, Glide.slides.eq(Glide.current - 1));
+			func({
+				index: Glide.current,
+				current: Glide.slides.eq(Glide.current - 1),
+				swipe: {
+					distance: Core.Touch.distance
+				}
+			});
 		return this;
 	};
 

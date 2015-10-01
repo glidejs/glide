@@ -16,6 +16,19 @@ var Helper = function(Glide, Core) {
 
 
 	/**
+	 * If slider axis is vertical (y axis) return vertical value
+	 * else axis is horizontal (x axis) so return horizontal value
+	 * @param  {Mixed} hValue
+	 * @param  {Mixed} vValue
+	 * @return {Mixed}
+	 */
+	Module.prototype.byAxis = function(hValue, vValue) {
+		if (Glide.axis === 'y') return vValue;
+		else return	hValue;
+	};
+
+
+	/**
 	 * Capitalise string
 	 * @param  {string} s
 	 * @return {string}

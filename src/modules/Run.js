@@ -91,7 +91,7 @@ var Run = function(Glide, Core) {
 
 	/**
 	 * Run move animation
-	 * @param  {string} move Code in pattern {direction}{steps} eq. ">3"
+	 * @param  {string} move Code in pattern {direction}{steps} eq. "=3"
 	 */
 	Module.prototype.make = function (move, callback) {
 

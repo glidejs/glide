@@ -920,16 +920,26 @@ var Events = function(Glide, Core) {
 	 * @return {Glide.Events}
 	 */
 	Module.prototype.call = function (func) {
+		if ( (func !== 'undefined') && (typeof func === 'function') ) func(this.getParams());
 
-		if ( (func !== 'undefined') && (typeof func === 'function') )
-			func({
-				index: Glide.current,
-				current: Glide.slides.eq(Glide.current - 1),
-				swipe: {
-					distance: Core.Touch.distance
-				}
-			});
 		return this;
+	};
+
+
+	/**
+	 * Get events params
+	 * @return {Object}
+	 */
+	Module.prototype.getParams = function() {
+		return {
+			index: Glide.current,
+			length: Glide.slides.length,
+			current: Glide.slides.eq(Glide.current - 1),
+			slider: Glide.slider,
+			swipe: {
+				distance: (Core.Touch.distance || 0)
+			}
+		};
 	};
 
 
@@ -1204,7 +1214,7 @@ var Run = function(Glide, Core) {
 
 	/**
 	 * Run move animation
-	 * @param  {string} move Code in pattern {direction}{steps} eq. ">3"
+	 * @param  {string} move Code in pattern {direction}{steps} eq. "=3"
 	 */
 	Module.prototype.make = function (move, callback) {
 
@@ -1657,7 +1667,12 @@ var Glide = function (element, options) {
 	this.setup();
 
 	// Call before init callback
-	this.options.beforeInit(this.slider);
+	this.options.beforeInit({
+		index: this.current,
+		length: this.slides.length,
+		current: this.slides.eq(this.current - 1),
+		slider: this.slider
+	});
 
 	/**
 	 * Construct Core with modules
@@ -1680,7 +1695,7 @@ var Glide = function (element, options) {
 	});
 
 	// Call after init callback
-	this.options.afterInit(this.current, this.slides.eq(this.current - 1));
+	Engine.Events.call(this.options.afterInit);
 
 	// api return
 	return Engine.Api.instance();

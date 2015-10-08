@@ -66,7 +66,12 @@ var Glide = function (element, options) {
 	this.setup();
 
 	// Call before init callback
-	this.options.beforeInit(this.slider);
+	this.options.beforeInit({
+		index: this.current,
+		length: this.slides.length,
+		current: this.slides.eq(this.current - 1),
+		slider: this.slider
+	});
 
 	/**
 	 * Construct Core with modules
@@ -89,7 +94,7 @@ var Glide = function (element, options) {
 	});
 
 	// Call after init callback
-	this.options.afterInit(this.current, this.slides.eq(this.current - 1));
+	Engine.Events.call(this.options.afterInit);
 
 	// api return
 	return Engine.Api.instance();

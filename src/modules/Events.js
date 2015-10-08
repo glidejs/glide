@@ -148,16 +148,26 @@ var Events = function(Glide, Core) {
 	 * @return {Glide.Events}
 	 */
 	Module.prototype.call = function (func) {
+		if ( (func !== 'undefined') && (typeof func === 'function') ) func(this.getParams());
 
-		if ( (func !== 'undefined') && (typeof func === 'function') )
-			func({
-				index: Glide.current,
-				current: Glide.slides.eq(Glide.current - 1),
-				swipe: {
-					distance: Core.Touch.distance
-				}
-			});
 		return this;
+	};
+
+
+	/**
+	 * Get events params
+	 * @return {Object}
+	 */
+	Module.prototype.getParams = function() {
+		return {
+			index: Glide.current,
+			length: Glide.slides.length,
+			current: Glide.slides.eq(Glide.current - 1),
+			slider: Glide.slider,
+			swipe: {
+				distance: (Core.Touch.distance || 0)
+			}
+		};
 	};
 
 

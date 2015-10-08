@@ -45,26 +45,26 @@
 		<script src="../dist/glide.js"></script>
 		<script>
 			var slider = $('#Glide').glide({
-				beforeInit: function(){
-					console.log('beforeInit');
+				beforeInit: function(event){
+					console.log('beforeInit', event);
 				},
-				afterInit: function(){
-					console.log('afterInit');
+				afterInit: function(event){
+					console.log('afterInit', event);
 				},
-				beforeTransition: function(){
-					console.log('beforeTransition');
+				beforeTransition: function(event){
+					console.log('beforeTransition', event);
 				},
-				afterTransition: function(){
-					console.log('afterTransition');
+				afterTransition: function(event){
+					console.log('afterTransition', event);
 				},
-				swipeStart: function(){
-					console.log('swipeStart');
+				swipeStart: function(event){
+					console.log('swipeStart', event);
 				},
-				swipeEnd: function(){
-					console.log('swipeEnd');
+				swipeEnd: function(event){
+					console.log('swipeEnd', event);
 				},
 				swipeMove: function(event){
-					console.log(event.swipe.distance);
+					console.log('swipeMove', event);
 				},
 			});
 		</script>

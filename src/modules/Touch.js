@@ -17,13 +17,8 @@ var Touch = function(Glide, Core) {
 
 		this.dragging = false;
 
-		if (Glide.options.touchDistance) {
-			Glide.track.on({ 'touchstart.glide': $.proxy(this.start, this) });
-		}
-
-		if (Glide.options.dragDistance) {
-			Glide.track.on({ 'mousedown.glide': $.proxy(this.start, this) });
-		}
+		if (Glide.options.touchDistance) Glide.track.on({ 'touchstart.glide': $.proxy(this.start, this) });
+		if (Glide.options.dragDistance) Glide.track.on({ 'mousedown.glide': $.proxy(this.start, this) });
 
 	}
 
@@ -63,7 +58,7 @@ var Touch = function(Glide, Core) {
 			this.dragging = true;
 
 			Glide.track.on({
-				'touchmove.glide mousemove.glide': Core.Events.throttle($.proxy(this.move, this), Glide.options.throttle),
+				'touchmove.glide mousemove.glide': Core.Helper.throttle($.proxy(this.move, this), Glide.options.throttle),
 				'touchend.glide touchcancel.glide mouseup.glide mouseleave.glide': $.proxy(this.end, this)
 			});
 

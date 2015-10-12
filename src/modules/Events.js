@@ -18,7 +18,7 @@ var Events = function(Glide, Core) {
 		this.keyboard();
 		this.hoverpause();
 		this.resize();
-		this.triggers();
+		this.bindTriggers();
 		this.activeTrigger();
 	}
 
@@ -43,12 +43,8 @@ var Events = function(Glide, Core) {
 		if (Glide.options.hoverpause) {
 
 			Glide.track
-				.on('mouseover.glide', function(){
-					Core.Run.pause();
-				})
-				.on('mouseout.glide', function(){
-					Core.Run.play();
-				});
+				.on('mouseover.glide', function() { Core.Run.pause(); })
+				.on('mouseout.glide', function() { Core.Run.play(); });
 
 		}
 
@@ -60,9 +56,8 @@ var Events = function(Glide, Core) {
 	 */
 	Module.prototype.resize = function() {
 
-		$(window).on('resize.glide', this.throttle(function() {
+		$(window).on('resize.glide', Core.Helper.throttle(function() {
 			Core.Transition.jumping = true;
-			Core.Run.pause();
 			Glide.setup();
 			Core.Build.init();
 			Core.Run.make('=' + Glide.current, false);
@@ -74,34 +69,14 @@ var Events = function(Glide, Core) {
 
 
 	/**
-	 * Triggers event
+	 * Bind triggers events
 	 */
-	Module.prototype.triggers = function() {
-
-		var that = this;
-
+	Module.prototype.bindTriggers = function() {
 		if (triggers.length) {
-
 			triggers
 				.off('click.glide touchstart.glide')
-				.on('click.glide touchstart.glide', function(event) {
-
-					event.preventDefault();
-					var targets = $(this).data('glide-trigger').split(" ");
-
-					if (!Core.Events.disabled) {
-						for (var el in targets) {
-							var target = $(targets[el]).data('glide_api');
-							target.pause();
-							target.go($(this).data('glide-dir'), that.activeTrigger);
-							target.play();
-						}
-					}
-
-				});
-
+				.on('click.glide touchstart.glide', this.handleTrigger);
 		}
-
 	};
 
 
@@ -117,11 +92,32 @@ var Events = function(Glide, Core) {
 
 
 	/**
+	 * Hande trigger event
+	 * @param  {Object} event
+	 */
+	Module.prototype.handleTrigger = function(event) {
+		event.preventDefault();
+
+		var targets = $(this).data('glide-trigger').split(" ");
+
+		if (!Core.Events.disabled) {
+			for (var el in targets) {
+				var target = $(targets[el]).data('glide_api');
+				target.pause();
+				target.go($(this).data('glide-dir'), this.activeTrigger);
+				target.play();
+			}
+		}
+	};
+
+
+	/**
 	 * Disable all events
 	 * @return {Glide.Events}
 	 */
 	Module.prototype.disable = function() {
 		this.disabled = true;
+
 		return this;
 	};
 
@@ -132,6 +128,7 @@ var Events = function(Glide, Core) {
 	 */
 	Module.prototype.enable = function() {
 		this.disabled = false;
+
 		return this;
 	};
 
@@ -142,6 +139,7 @@ var Events = function(Glide, Core) {
 	 */
 	Module.prototype.detachClicks = function() {
 		Glide.track.off('click', 'a');
+
 		return this;
 	};
 
@@ -152,6 +150,7 @@ var Events = function(Glide, Core) {
 	 */
 	Module.prototype.preventClicks = function(status) {
 		Glide.track.one('click', 'a', function(event){ event.preventDefault(); });
+
 		return this;
 	};
 
@@ -204,44 +203,6 @@ var Events = function(Glide, Core) {
 			.off('keyup.glide')
 			.off('resize.glide');
 
-	};
-
-
-	/**
-	 * Throttle
-	 * @source http://underscorejs.org/
-	 */
-	Module.prototype.throttle = function(func, wait, options) {
-		var that = this;
-		var context, args, result;
-		var timeout = null;
-		var previous = 0;
-		if (!options) options = {};
-		var later = function() {
-			previous = options.leading === false ? 0 : Core.Helper.now();
-			timeout = null;
-			result = func.apply(context, args);
-			if (!timeout) context = args = null;
-		};
-		return function() {
-			var now = Core.Helper.now();
-			if (!previous && options.leading === false) previous = now;
-			var remaining = wait - (now - previous);
-			context = this;
-			args = arguments;
-			if (remaining <= 0 || remaining > wait) {
-				if (timeout) {
-					clearTimeout(timeout);
-					timeout = null;
-				}
-				previous = now;
-				result = func.apply(context, args);
-				if (!timeout) context = args = null;
-			} else if (!timeout && options.trailing !== false) {
-				timeout = setTimeout(later, remaining);
-			}
-			return result;
-		};
 	};
 
 

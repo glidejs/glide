@@ -60,6 +60,11 @@ var Api = function(Glide, Core) {
 			},
 
 
+			animate: function(offset) {
+				return Core.Animation.make(offset);
+			},
+
+
 			/**
 			 * Start autoplay
 			 * @return {Core.Run}

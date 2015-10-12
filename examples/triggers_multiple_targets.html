@@ -84,6 +84,11 @@
 		<script>
 			var slider1 = $('#Slider1').glide();
 			var slider2 = $('#Slider2').glide();
+			var api2 = slider2.data('glide_api');
+
+			slider2.on('swipeMove.glide', function(event) {
+				api2.animate(event.swipe.distance);
+			});
 		</script>
 
 	</body>

@@ -233,6 +233,11 @@ var Api = function(Glide, Core) {
 			},
 
 
+			animate: function(offset) {
+				return Core.Animation.make(offset);
+			},
+
+
 			/**
 			 * Start autoplay
 			 * @return {Core.Run}
@@ -938,6 +943,12 @@ var Events = function(Glide, Core) {
 		return this;
 	};
 
+	Module.prototype.trigger = function(name) {
+		Glide.slider.trigger(name + ".glide", [this.getParams()]);
+
+		return this;
+	};
+
 
 	/**
 	 * Get events params
@@ -1121,6 +1132,13 @@ var Helper = function(Glide, Core) {
 	};
 
 
+	Module.prototype.getFnName = function(fn) {
+		var f = typeof fn == 'function';
+		var s = f && ((fn.name && ['', fn.name]) || fn.toString().match(/function ([^\(]+)/));
+		return (!f && 'not a function') || (s && s[1] || 'anonymous');
+	};
+
+
 	/**
 	 * Remove transition
 	 */
@@ -1246,7 +1264,9 @@ var Run = function(Glide, Core) {
 		if(!Glide.options.hoverpause) this.pause();
 		// Disable events and call before transition callback
 		if(callback !== false) {
-			Core.Events.disable().call(Glide.options.beforeTransition);
+			Core.Events.disable()
+				.call(Glide.options.beforeTransition)
+				.trigger('beforeTransition');
 		}
 
 		// Based on direction
@@ -1294,7 +1314,8 @@ var Run = function(Glide, Core) {
 			if(callback !== false) {
 				Core.Events.enable()
 					.call(callback)
-					.call(Glide.options.afterTransition);
+					.call(Glide.options.afterTransition)
+					.trigger('afterTransition');
 			}
 			// Start autoplay until hoverpause is not set
 			if(!Glide.options.hoverpause) that.play();
@@ -1371,7 +1392,9 @@ var Touch = function(Glide, Core) {
 			});
 
 			// Detach clicks inside track
-			Core.Events.detachClicks().call(Glide.options.swipeStart);
+			Core.Events.detachClicks()
+				.call(Glide.options.swipeStart)
+				.trigger('swipeStart');
 			// Pause if autoplay
 			Core.Run.pause();
 
@@ -1417,7 +1440,9 @@ var Touch = function(Glide, Core) {
 			// Make offset animation
 			Core.Animation.make( Core.Helper.byAxis(subExSx, subEySy) );
 			// Prevent clicks inside track
-			Core.Events.preventClicks().call(Glide.options.swipeMove);
+			Core.Events.preventClicks()
+				.call(Glide.options.swipeMove)
+				.trigger('swipeMove');
 
 			// While mode is vertical, we don't want to block scroll when we reach start or end of slider
 			// In that case we need to escape before preventing default event
@@ -1506,7 +1531,9 @@ var Touch = function(Glide, Core) {
 			// Unset dragging flag
 			this.dragging = false;
 			// Disable other events
-			Core.Events.disable().call(Glide.options.swipeEnd);
+			Core.Events.disable()
+				.call(Glide.options.swipeEnd)
+				.trigger('swipeEnd');
 			// Remove dragging class
 			// Unbind events
 			Glide.track

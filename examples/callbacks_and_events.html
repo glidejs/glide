@@ -45,27 +45,47 @@
 		<script src="../dist/glide.js"></script>
 		<script>
 			var slider = $('#Glide').glide({
-				beforeInit: function(event){
-					console.log('beforeInit', event);
+				beforeInit: function(data){
+					console.log('callback: beforeInit', data);
 				},
-				afterInit: function(event){
-					console.log('afterInit', event);
+				afterInit: function(data){
+					console.log('callback: afterInit', data);
 				},
-				beforeTransition: function(event){
-					console.log('beforeTransition', event);
+				beforeTransition: function(data){
+					console.log('callback: beforeTransition', data);
 				},
-				afterTransition: function(event){
-					console.log('afterTransition', event);
+				afterTransition: function(data){
+					console.log('callback: afterTransition', data);
 				},
-				swipeStart: function(event){
-					console.log('swipeStart', event);
+				swipeStart: function(data){
+					console.log('callback: swipeStart', data);
 				},
-				swipeEnd: function(event){
-					console.log('swipeEnd', event);
+				swipeEnd: function(data){
+					console.log('callback: swipeEnd', data);
 				},
-				swipeMove: function(event){
-					console.log('swipeMove', event);
+				swipeMove: function(data){
+					console.log('callback: swipeMove', data);
 				},
+			});
+
+			slider.on("beforeTransition.glide", function(event, data) {
+				console.log('event: beforeTransition', data);
+			});
+
+			slider.on("afterTransition.glide", function(event, data) {
+				console.log('event: afterTransition', data);
+			});
+
+			slider.on("swipeStart.glide", function(event, data) {
+				console.log('event: swipeStart', data);
+			});
+
+			slider.on("swipeMove.glide", function(event, data) {
+				console.log('event: swipeMove', data);
+			});
+
+			slider.on("swipeEnd.glide", function(event, data) {
+				console.log('event: swipeEnd', data);
 			});
 		</script>
 

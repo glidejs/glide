@@ -166,6 +166,12 @@ var Events = function(Glide, Core) {
 		return this;
 	};
 
+	Module.prototype.trigger = function(name) {
+		Glide.slider.trigger(name + ".glide", [this.getParams()]);
+
+		return this;
+	};
+
 
 	/**
 	 * Get events params

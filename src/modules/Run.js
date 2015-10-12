@@ -163,6 +163,10 @@ var Run = function(Glide, Core) {
 			if(!Glide.options.hoverpause) that.play();
 		});
 
+		Core.Events
+			.call(Glide.options.duringTransition)
+			.trigger('duringTransition');
+
 	};
 
 

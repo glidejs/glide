@@ -234,7 +234,9 @@ var Api = function(Glide, Core) {
 
 
 			animate: function(offset) {
+				Core.Transition.jumping = true;
 				Core.Animation.make(offset);
+				Core.Transition.jumping = false;
 			},
 
 
@@ -820,8 +822,14 @@ var Events = function(Glide, Core) {
 		if (Glide.options.hoverpause) {
 
 			Glide.track
-				.on('mouseover.glide', function() { Core.Run.pause(); })
-				.on('mouseout.glide', function() { Core.Run.play(); });
+				.on('mouseover.glide', function() {
+					Core.Run.pause();
+					Core.Events.trigger('mouseOver');
+				})
+				.on('mouseout.glide', function() {
+					Core.Run.play();
+					Core.Events.trigger('mouseOut');
+				});
 
 		}
 
@@ -1314,6 +1322,10 @@ var Run = function(Glide, Core) {
 			if(!Glide.options.hoverpause) that.play();
 		});
 
+		Core.Events
+			.call(Glide.options.duringTransition)
+			.trigger('duringTransition');
+
 	};
 
 
@@ -1682,6 +1694,7 @@ var Glide = function (element, options) {
 		beforeInit: function(event) {},
 		afterInit: function(event) {},
 		beforeTransition: function(event) {},
+		duringTransition: function(event) {},
 		afterTransition: function(event) {},
 		swipeStart: function(event) {},
 		swipeEnd: function(event) {},

@@ -87,6 +87,14 @@
 			slider.on("swipeEnd.glide", function(event, data) {
 				console.log('event: swipeEnd', data);
 			});
+
+			slider.on("over.glide", function(event, data) {
+				console.log('event: over', data);
+			});
+
+			slider.on("out.glide", function(event, data) {
+				console.log('event: out', data);
+			});
 		</script>
 
 	</body>

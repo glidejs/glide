@@ -43,8 +43,14 @@ var Events = function(Glide, Core) {
 		if (Glide.options.hoverpause) {
 
 			Glide.track
-				.on('mouseover.glide', function() { Core.Run.pause(); })
-				.on('mouseout.glide', function() { Core.Run.play(); });
+				.on('mouseover.glide', function() {
+					Core.Run.pause();
+					Core.Events.trigger('mouseOver');
+				})
+				.on('mouseout.glide', function() {
+					Core.Run.play();
+					Core.Events.trigger('mouseOut');
+				});
 
 		}
 

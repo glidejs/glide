@@ -11,6 +11,14 @@
 
 		<!-- Demo stylesheet -->
 		<link rel="stylesheet" href="css/demo.css">
+
+		<style>
+			.module {
+				width: 50%;
+				float: left;
+				clear: none;
+			}
+		</style>
 	</head>
 	<body>
 
@@ -21,13 +29,13 @@
 				<div class="glide__wrapper">
 					<ul class="glide__track">
 						<li class="glide__slide">
-							<div class="box" style="background-color: purple;">1</div>
+							<div class="box" style="background-color: #ccc;">1</div>
 						</li>
 						<li class="glide__slide">
-							<div class="box" style="background-color: green;">2</div>
+							<div class="box" style="background-color: #e9e9e9;">2</div>
 						</li>
 						<li class="glide__slide">
-							<div class="box" style="background-color: gray;">3</div>
+							<div class="box" style="background-color: #ddd;">3</div>
 						</li>
 					</ul>
 				</div>
@@ -85,9 +93,9 @@
 
 			var synced = $('#Slider1').glide({
 				type: 'slider',
-				throttle: 8,
 				touchDistance: false,
 				dragDistance: false,
+				hoverpause: false,
 				autoplay: false
 			}).data('glide_api');
 
@@ -95,8 +103,12 @@
 				type: 'slider',
 				swipeEnd: function(data) {
 					synced.go('=' + data.index);
-				}
-			}).on('swipeMove.glide', function(event, data) {
+				},
+				duringTransition: function(data) {
+					synced.go('=' + data.index);
+				},
+			})
+			.on('swipeMove.glide', function(event, data) {
 				synced.animate(data.swipe.distance);
 			});
 

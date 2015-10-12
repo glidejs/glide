@@ -49,6 +49,7 @@ var Glide = function (element, options) {
 		beforeInit: function(event) {},
 		afterInit: function(event) {},
 		beforeTransition: function(event) {},
+		duringTransition: function(event) {},
 		afterTransition: function(event) {},
 		swipeStart: function(event) {},
 		swipeEnd: function(event) {},

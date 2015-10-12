@@ -82,14 +82,24 @@
 		<script src="../bower_components/jquery/dist/jquery.js"></script>
 		<script src="../dist/glide.js"></script>
 		<script>
-			var slider1 = $('#Slider1').glide();
-			var slider2 = $('#Slider2').glide();
-			var api2 = slider2.data('glide_api');
 
-			slider2.on('swipeMove.glide', function(event) {
-				api2.animate(event.swipe.distance);
+			var synced = $('#Slider1').glide({
+				type: 'slider',
+				throttle: 8,
+				touchDistance: false,
+				dragDistance: false,
+				autoplay: false
+			}).data('glide_api');
+
+			var main = $('#Slider2').glide({
+				type: 'slider',
+				swipeEnd: function(data) {
+					synced.go('=' + data.index);
+				}
+			}).on('swipeMove.glide', function(event, data) {
+				synced.animate(data.swipe.distance);
 			});
-		</script>
 
+		</script>
 	</body>
 </html>

@@ -61,7 +61,7 @@ var Api = function(Glide, Core) {
 
 
 			animate: function(offset) {
-				return Core.Animation.make(offset);
+				Core.Animation.make(offset);
 			},
 
 

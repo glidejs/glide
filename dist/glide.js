@@ -791,6 +791,7 @@ var Events = function(Glide, Core) {
 		this.hoverpause();
 		this.resize();
 		this.triggers();
+		this.activeTrigger();
 	}
 
 
@@ -849,6 +850,8 @@ var Events = function(Glide, Core) {
 	 */
 	Module.prototype.triggers = function() {
 
+		var that = this;
+
 		if (triggers.length) {
 
 			triggers
@@ -862,7 +865,7 @@ var Events = function(Glide, Core) {
 						for (var el in targets) {
 							var target = $(targets[el]).data('glide_api');
 							target.pause();
-							target.go($(this).data('glide-dir'));
+							target.go($(this).data('glide-dir'), that.activeTrigger);
 							target.play();
 						}
 					}
@@ -871,6 +874,17 @@ var Events = function(Glide, Core) {
 
 		}
 
+	};
+
+
+	/**
+	 * Set active trigger
+	 */
+	Module.prototype.activeTrigger = function () {
+		return triggers
+			.removeClass(Glide.options.classes.active)
+			.filter('[data-glide-dir="=' + Glide.current + '"]')
+			.addClass(Glide.options.classes.active);
 	};
 
 
@@ -1647,13 +1661,13 @@ var Glide = function (element, options) {
 			dragging: 'dragging',
 			disabled: 'disabled'
 		},
-		beforeInit: function(slider) {},
-		afterInit: function(i, el) {},
-		beforeTransition: function(i, el) {},
-		afterTransition: function(i, el) {},
-		swipeStart: function(i, el) {},
-		swipeEnd: function(i, el) {},
-		swipeMove: function(i, el) {},
+		beforeInit: function(event) {},
+		afterInit: function(event) {},
+		beforeTransition: function(event) {},
+		afterTransition: function(event) {},
+		swipeStart: function(event) {},
+		swipeEnd: function(event) {},
+		swipeMove: function(event) {},
 	};
 
 	// Extend options

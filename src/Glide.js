@@ -46,13 +46,13 @@ var Glide = function (element, options) {
 			dragging: 'dragging',
 			disabled: 'disabled'
 		},
-		beforeInit: function(slider) {},
-		afterInit: function(i, el) {},
-		beforeTransition: function(i, el) {},
-		afterTransition: function(i, el) {},
-		swipeStart: function(i, el) {},
-		swipeEnd: function(i, el) {},
-		swipeMove: function(i, el) {},
+		beforeInit: function(event) {},
+		afterInit: function(event) {},
+		beforeTransition: function(event) {},
+		afterTransition: function(event) {},
+		swipeStart: function(event) {},
+		swipeEnd: function(event) {},
+		swipeMove: function(event) {},
 	};
 
 	// Extend options

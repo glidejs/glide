@@ -29,13 +29,13 @@
 				<div class="glide__wrapper">
 					<ul class="glide__track">
 						<li class="glide__slide">
-							<div class="box" style="background-color: #ccc;">1</div>
+							<div class="box" style="background-color: #C8C9C4;">1</div>
 						</li>
 						<li class="glide__slide">
-							<div class="box" style="background-color: #e9e9e9;">2</div>
+							<div class="box" style="background-color: #B9BAB5;">2</div>
 						</li>
 						<li class="glide__slide">
-							<div class="box" style="background-color: #ddd;">3</div>
+							<div class="box" style="background-color: #B0B0B0;">3</div>
 						</li>
 					</ul>
 				</div>
@@ -47,6 +47,11 @@
 		<div class="module module--horizontal">
 
 			<div id="Slider2" class="glide">
+
+				<div class="glide__arrows">
+					<button class="glide__arrow prev" data-glide-dir="<">prev</button>
+					<button class="glide__arrow next" data-glide-dir=">">next</button>
+				</div>
 
 				<div class="glide__wrapper">
 					<ul class="glide__track">
@@ -61,6 +66,8 @@
 						</li>
 					</ul>
 				</div>
+
+				<div class="glide__bullets"></div>
 
 			</div>
 
@@ -90,28 +97,23 @@
 		<script src="../bower_components/jquery/dist/jquery.js"></script>
 		<script src="../dist/glide.js"></script>
 		<script>
-
-			var synced = $('#Slider1').glide({
+			var dependent = $('#Slider1').glide({
 				type: 'slider',
+				mode: 'vertical',
 				touchDistance: false,
 				dragDistance: false,
 				hoverpause: false,
 				autoplay: false
 			}).data('glide_api');
 
-			var main = $('#Slider2').glide({
-				type: 'slider',
-				swipeEnd: function(data) {
-					synced.go('=' + data.index);
-				},
-				duringTransition: function(data) {
-					synced.go('=' + data.index);
-				},
-			})
-			.on('swipeMove.glide', function(event, data) {
-				synced.animate(data.swipe.distance);
-			});
-
+			$('#Slider2').glide({ type: 'slider' })
+				.on('swipeEnd.glide', function(event, data) {
+					dependent.go('=' + data.index);
+				}).on('duringTransition.glide', function(event, data) {
+					dependent.go('=' + data.index);
+				}).on('swipeMove.glide', function(event, data) {
+					dependent.animate(data.swipe.distance);
+				});
 		</script>
 	</body>
 </html>

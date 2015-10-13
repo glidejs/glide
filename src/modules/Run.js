@@ -37,8 +37,10 @@ var Run = function(Glide, Core) {
 
 			if (typeof this.interval === 'undefined') {
 				this.interval = setInterval(function() {
+					that.pause();
 					that.make('>');
-				}, Glide.options.autoplay);
+					that.play();
+				}, this.getInterval());
 			}
 
 		}
@@ -47,6 +49,9 @@ var Run = function(Glide, Core) {
 
 	};
 
+	Module.prototype.getInterval = function() {
+		return Glide.slides.eq(Glide.current - 1).data('glide-autoplay') || Glide.options.autoplay;
+	};
 
 	/**
 	 * Pasue autoplay animation

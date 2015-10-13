@@ -19,7 +19,6 @@ var Events = function(Glide, Core) {
 		this.hoverpause();
 		this.resize();
 		this.bindTriggers();
-		this.activeTrigger();
 	}
 
 
@@ -83,17 +82,6 @@ var Events = function(Glide, Core) {
 				.off('click.glide touchstart.glide')
 				.on('click.glide touchstart.glide', this.handleTrigger);
 		}
-	};
-
-
-	/**
-	 * Set active trigger
-	 */
-	Module.prototype.activeTrigger = function () {
-		return triggers
-			.removeClass(Glide.options.classes.active)
-			.filter('[data-glide-dir="=' + Glide.current + '"]')
-			.addClass(Glide.options.classes.active);
 	};
 
 

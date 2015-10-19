@@ -807,8 +807,10 @@ var Events = function(Glide, Core) {
 	Module.prototype.keyboard = function() {
 		if (Glide.options.keyboard) {
 			$(window).on('keyup.glide', function(event){
-				if (event.keyCode === 39) Core.Run.make('>');
-				if (event.keyCode === 37) Core.Run.make('<');
+				if (!this.disabled && !this.dragging) {
+					if (event.keyCode === 39) Core.Run.make('>');
+					if (event.keyCode === 37) Core.Run.make('<');
+				}
 			});
 		}
 	};

@@ -94,7 +94,7 @@ var Events = function(Glide, Core) {
 
 		var targets = $(this).data('glide-trigger').split(" ");
 
-		if (!Core.Events.disabled) {
+		if (!this.disabled) {
 			for (var el in targets) {
 				var target = $(targets[el]).data('glide_api');
 				target.pause();

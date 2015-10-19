@@ -1206,9 +1206,12 @@ var Run = function(Glide, Core) {
 		switch(this.direction) {
 
 			case '>':
+				// When we at last slide and in type slider
+				// Don't loop to first slide
+				if (this.isEnd() && Glide.options.type === 'slider') this.flag = true;
 				// When we at last slide and move forward and steps are number
 				// Set flag and current slide to first
-				if (this.isEnd()) Glide.current = 1, this.flag = true;
+				else if (this.isEnd()) Glide.current = 1, this.flag = true;
 				// When steps is not number, but '>'
 				// scroll slider to end
 				else if (this.steps === '>') Glide.current = Glide.length;
@@ -1217,9 +1220,12 @@ var Run = function(Glide, Core) {
 				break;
 
 			case '<':
+				// When we at first slide and in type slider
+				// Don't loop to last slide
+				if (this.isStart() && Glide.options.type === 'slider') this.flag = true, this.pause(), this.play();
 				// When we at first slide and move backward and steps are number
 				// Set flag and current slide to last
-				if(this.isStart()) Glide.current = Glide.length, this.flag = true;
+				else if(this.isStart()) Glide.current = Glide.length, this.flag = true;
 				// When steps is not number, but '<'
 				// scroll slider to start
 				else if (this.steps === '<') Glide.current = 1;

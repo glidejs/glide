@@ -233,6 +233,13 @@ var Api = function(Glide, Core) {
 			},
 
 
+			animate: function(offset) {
+				Core.Transition.jumping = true;
+				Core.Animation.make(offset);
+				Core.Transition.jumping = false;
+			},
+
+
 			/**
 			 * Start autoplay
 			 * @return {Core.Run}
@@ -790,7 +797,7 @@ var Events = function(Glide, Core) {
 		this.keyboard();
 		this.hoverpause();
 		this.resize();
-		this.triggers();
+		this.bindTriggers();
 	}
 
 
@@ -800,8 +807,10 @@ var Events = function(Glide, Core) {
 	Module.prototype.keyboard = function() {
 		if (Glide.options.keyboard) {
 			$(window).on('keyup.glide', function(event){
-				if (event.keyCode === 39) Core.Run.make('>');
-				if (event.keyCode === 37) Core.Run.make('<');
+				if (!this.disabled && !this.dragging) {
+					if (event.keyCode === 39) Core.Run.make('>');
+					if (event.keyCode === 37) Core.Run.make('<');
+				}
 			});
 		}
 	};
@@ -814,11 +823,13 @@ var Events = function(Glide, Core) {
 		if (Glide.options.hoverpause) {
 
 			Glide.track
-				.on('mouseover.glide', function(){
+				.on('mouseover.glide', function() {
 					Core.Run.pause();
+					Core.Events.trigger('mouseOver');
 				})
-				.on('mouseout.glide', function(){
+				.on('mouseout.glide', function() {
 					Core.Run.play();
+					Core.Events.trigger('mouseOut');
 				});
 
 		}
@@ -831,9 +842,8 @@ var Events = function(Glide, Core) {
 	 */
 	Module.prototype.resize = function() {
 
-		$(window).on('resize.glide', this.throttle(function() {
+		$(window).on('resize.glide', Core.Helper.throttle(function() {
 			Core.Transition.jumping = true;
-			Core.Run.pause();
 			Glide.setup();
 			Core.Build.init();
 			Core.Run.make('=' + Glide.current, false);
@@ -845,32 +855,34 @@ var Events = function(Glide, Core) {
 
 
 	/**
-	 * Triggers event
+	 * Bind triggers events
 	 */
-	Module.prototype.triggers = function() {
-
+	Module.prototype.bindTriggers = function() {
 		if (triggers.length) {
-
 			triggers
 				.off('click.glide touchstart.glide')
-				.on('click.glide touchstart.glide', function(event) {
-
-					event.preventDefault();
-					var targets = $(this).data('glide-trigger').split(" ");
-
-					if (!Core.Events.disabled) {
-						for (var el in targets) {
-							var target = $(targets[el]).data('glide_api');
-							target.pause();
-							target.go($(this).data('glide-dir'));
-							target.play();
-						}
-					}
-
-				});
-
+				.on('click.glide touchstart.glide', this.handleTrigger);
 		}
+	};
 
+
+	/**
+	 * Hande trigger event
+	 * @param  {Object} event
+	 */
+	Module.prototype.handleTrigger = function(event) {
+		event.preventDefault();
+
+		var targets = $(this).data('glide-trigger').split(" ");
+
+		if (!Core.Events.disabled) {
+			for (var el in targets) {
+				var target = $(targets[el]).data('glide_api');
+				target.pause();
+				target.go($(this).data('glide-dir'), this.activeTrigger);
+				target.play();
+			}
+		}
 	};
 
 
@@ -880,6 +892,7 @@ var Events = function(Glide, Core) {
 	 */
 	Module.prototype.disable = function() {
 		this.disabled = true;
+
 		return this;
 	};
 
@@ -890,6 +903,7 @@ var Events = function(Glide, Core) {
 	 */
 	Module.prototype.enable = function() {
 		this.disabled = false;
+
 		return this;
 	};
 
@@ -900,6 +914,7 @@ var Events = function(Glide, Core) {
 	 */
 	Module.prototype.detachClicks = function() {
 		Glide.track.off('click', 'a');
+
 		return this;
 	};
 
@@ -910,6 +925,7 @@ var Events = function(Glide, Core) {
 	 */
 	Module.prototype.preventClicks = function(status) {
 		Glide.track.one('click', 'a', function(event){ event.preventDefault(); });
+
 		return this;
 	};
 
@@ -920,9 +936,32 @@ var Events = function(Glide, Core) {
 	 * @return {Glide.Events}
 	 */
 	Module.prototype.call = function (func) {
-		if ( (func !== 'undefined') && (typeof func === 'function') )
-			func(Glide.current, Glide.slides.eq(Glide.current - 1));
+		if ( (func !== 'undefined') && (typeof func === 'function') ) func(this.getParams());
+
 		return this;
+	};
+
+	Module.prototype.trigger = function(name) {
+		Glide.slider.trigger(name + ".glide", [this.getParams()]);
+
+		return this;
+	};
+
+
+	/**
+	 * Get events params
+	 * @return {Object}
+	 */
+	Module.prototype.getParams = function() {
+		return {
+			index: Glide.current,
+			length: Glide.slides.length,
+			current: Glide.slides.eq(Glide.current - 1),
+			slider: Glide.slider,
+			swipe: {
+				distance: (Core.Touch.distance || 0)
+			}
+		};
 	};
 
 
@@ -945,44 +984,6 @@ var Events = function(Glide, Core) {
 			.off('keyup.glide')
 			.off('resize.glide');
 
-	};
-
-
-	/**
-	 * Throttle
-	 * @source http://underscorejs.org/
-	 */
-	Module.prototype.throttle = function(func, wait, options) {
-		var that = this;
-		var context, args, result;
-		var timeout = null;
-		var previous = 0;
-		if (!options) options = {};
-		var later = function() {
-			previous = options.leading === false ? 0 : Core.Helper.now();
-			timeout = null;
-			result = func.apply(context, args);
-			if (!timeout) context = args = null;
-		};
-		return function() {
-			var now = Core.Helper.now();
-			if (!previous && options.leading === false) previous = now;
-			var remaining = wait - (now - previous);
-			context = this;
-			args = arguments;
-			if (remaining <= 0 || remaining > wait) {
-				if (timeout) {
-					clearTimeout(timeout);
-					timeout = null;
-				}
-				previous = now;
-				result = func.apply(context, args);
-				if (!timeout) context = args = null;
-			} else if (!timeout && options.trailing !== false) {
-				timeout = setTimeout(later, remaining);
-			}
-			return result;
-		};
 	};
 
 
@@ -1056,6 +1057,19 @@ var Helper = function(Glide, Core) {
 
 
 	/**
+	 * If slider axis is vertical (y axis) return vertical value
+	 * else axis is horizontal (x axis) so return horizontal value
+	 * @param  {Mixed} hValue
+	 * @param  {Mixed} vValue
+	 * @return {Mixed}
+	 */
+	Module.prototype.byAxis = function(hValue, vValue) {
+		if (Glide.axis === 'y') return vValue;
+		else return	hValue;
+	};
+
+
+	/**
 	 * Capitalise string
 	 * @param  {string} s
 	 * @return {string}
@@ -1067,10 +1081,52 @@ var Helper = function(Glide, Core) {
 
 	/**
 	 * Get time
+	 * @version Underscore.js 1.8.3
 	 * @source http://underscorejs.org/
+	 * @copyright (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors. Underscore may be freely distributed under the MIT license.
 	 */
 	Module.prototype.now = Date.now || function() {
 		return new Date().getTime();
+	};
+
+
+	/**
+	 * Throttle
+	 * @version Underscore.js 1.8.3
+	 * @source http://underscorejs.org/
+	 * @copyright (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors. Underscore may be freely distributed under the MIT license.
+	 */
+	Module.prototype.throttle = function(func, wait, options) {
+		var that = this;
+		var context, args, result;
+		var timeout = null;
+		var previous = 0;
+		if (!options) options = {};
+		var later = function() {
+			previous = options.leading === false ? 0 : that.now();
+			timeout = null;
+			result = func.apply(context, args);
+			if (!timeout) context = args = null;
+		};
+		return function() {
+			var now = that.now();
+			if (!previous && options.leading === false) previous = now;
+			var remaining = wait - (now - previous);
+			context = this;
+			args = arguments;
+			if (remaining <= 0 || remaining > wait) {
+				if (timeout) {
+					clearTimeout(timeout);
+					timeout = null;
+				}
+				previous = now;
+				result = func.apply(context, args);
+				if (!timeout) context = args = null;
+			} else if (!timeout && options.trailing !== false) {
+				timeout = setTimeout(later, remaining);
+			}
+			return result;
+		};
 	};
 
 
@@ -1130,8 +1186,10 @@ var Run = function(Glide, Core) {
 
 			if (typeof this.interval === 'undefined') {
 				this.interval = setInterval(function() {
+					that.pause();
 					that.make('>');
-				}, Glide.options.autoplay);
+					that.play();
+				}, this.getInterval());
 			}
 
 		}
@@ -1140,6 +1198,9 @@ var Run = function(Glide, Core) {
 
 	};
 
+	Module.prototype.getInterval = function() {
+		return Glide.slides.eq(Glide.current - 1).data('glide-autoplay') || Glide.options.autoplay;
+	};
 
 	/**
 	 * Pasue autoplay animation
@@ -1184,7 +1245,7 @@ var Run = function(Glide, Core) {
 
 	/**
 	 * Run move animation
-	 * @param  {string} move Code in pattern {direction}{steps} eq. ">3"
+	 * @param  {string} move Code in pattern {direction}{steps} eq. "=3"
 	 */
 	Module.prototype.make = function (move, callback) {
 
@@ -1199,7 +1260,9 @@ var Run = function(Glide, Core) {
 		if(!Glide.options.hoverpause) this.pause();
 		// Disable events and call before transition callback
 		if(callback !== false) {
-			Core.Events.disable().call(Glide.options.beforeTransition);
+			Core.Events.disable()
+				.call(Glide.options.beforeTransition)
+				.trigger('beforeTransition');
 		}
 
 		// Based on direction
@@ -1247,11 +1310,16 @@ var Run = function(Glide, Core) {
 			if(callback !== false) {
 				Core.Events.enable()
 					.call(callback)
-					.call(Glide.options.afterTransition);
+					.call(Glide.options.afterTransition)
+					.trigger('afterTransition');
 			}
 			// Start autoplay until hoverpause is not set
 			if(!Glide.options.hoverpause) that.play();
 		});
+
+		Core.Events
+			.call(Glide.options.duringTransition)
+			.trigger('duringTransition');
 
 	};
 
@@ -1278,13 +1346,8 @@ var Touch = function(Glide, Core) {
 
 		this.dragging = false;
 
-		if (Glide.options.touchDistance) {
-			Glide.track.on({ 'touchstart.glide': $.proxy(this.start, this) });
-		}
-
-		if (Glide.options.dragDistance) {
-			Glide.track.on({ 'mousedown.glide': $.proxy(this.start, this) });
-		}
+		if (Glide.options.touchDistance) Glide.track.on({ 'touchstart.glide': $.proxy(this.start, this) });
+		if (Glide.options.dragDistance) Glide.track.on({ 'mousedown.glide': $.proxy(this.start, this) });
 
 	}
 
@@ -1324,12 +1387,14 @@ var Touch = function(Glide, Core) {
 			this.dragging = true;
 
 			Glide.track.on({
-				'touchmove.glide mousemove.glide': Core.Events.throttle($.proxy(this.move, this), Glide.options.throttle),
+				'touchmove.glide mousemove.glide': Core.Helper.throttle($.proxy(this.move, this), Glide.options.throttle),
 				'touchend.glide touchcancel.glide mouseup.glide mouseleave.glide': $.proxy(this.end, this)
 			});
 
 			// Detach clicks inside track
-			Core.Events.detachClicks().call(Glide.options.swipeStart);
+			Core.Events.detachClicks()
+				.call(Glide.options.swipeStart)
+				.trigger('swipeStart');
 			// Pause if autoplay
 			Core.Run.pause();
 
@@ -1362,14 +1427,25 @@ var Touch = function(Glide, Core) {
 			// Calculate the length of the hypotenuse segment
 			var touchHypotenuse = Math.sqrt( powEX + powEY );
 			// Calculate the length of the cathetus segment
-			var touchCathetus = Math.sqrt( this.byAxis(powEY, powEX) );
+			var touchCathetus = Math.sqrt( Core.Helper.byAxis(powEY, powEX) );
 
 			// Calculate the sine of the angle
 			this.touchSin = Math.asin( touchCathetus/touchHypotenuse );
+			// Save distance
+			this.distance = Core.Helper.byAxis(
+				(touch.pageX - this.touchStartX),
+				(touch.pageY - this.touchStartY)
+			);
 
 			// Make offset animation
-			Core.Animation.make( this.byAxis(subExSx, subEySy) );
+			Core.Animation.make( Core.Helper.byAxis(subExSx, subEySy) );
+			// Prevent clicks inside track
+			Core.Events.preventClicks()
+				.call(Glide.options.swipeMove)
+				.trigger('swipeMove');
 
+			// While mode is vertical, we don't want to block scroll when we reach start or end of slider
+			// In that case we need to escape before preventing default event
 			if (Core.Build.isMode('vertical')) {
 				if (Core.Run.isStart() && subEySy > 0) return;
 				if (Core.Run.isEnd() && subEySy < 0) return;
@@ -1387,9 +1463,6 @@ var Touch = function(Glide, Core) {
 			} else {
 				return;
 			}
-
-			// Prevent clicks inside track
-			Core.Events.preventClicks();
 
 		}
 
@@ -1413,7 +1486,7 @@ var Touch = function(Glide, Core) {
 
 
 			// Calculate touch distance
-			var touchDistance = this.byAxis(
+			var touchDistance = Core.Helper.byAxis(
 				(touch.pageX - this.touchStartX),
 				(touch.pageY - this.touchStartY)
 			);
@@ -1458,7 +1531,9 @@ var Touch = function(Glide, Core) {
 			// Unset dragging flag
 			this.dragging = false;
 			// Disable other events
-			Core.Events.disable().call(Glide.options.swipeEnd);
+			Core.Events.disable()
+				.call(Glide.options.swipeEnd)
+				.trigger('swipeEnd');
 			// Remove dragging class
 			// Unbind events
 			Glide.track
@@ -1468,12 +1543,6 @@ var Touch = function(Glide, Core) {
 
 		}
 
-	};
-
-
-	Module.prototype.byAxis = function(xValue, yValue) {
-		if (Glide.axis === 'y') return yValue;
-		else return	xValue;
 	};
 
 
@@ -1617,12 +1686,14 @@ var Glide = function (element, options) {
 			dragging: 'dragging',
 			disabled: 'disabled'
 		},
-		beforeInit: function(slider) {},
-		afterInit: function(i, el) {},
-		beforeTransition: function(i, el) {},
-		afterTransition: function(i, el) {},
-		swipeStart: function(i, el) {},
-		swipeEnd: function(i, el) {},
+		beforeInit: function(event) {},
+		afterInit: function(event) {},
+		beforeTransition: function(event) {},
+		duringTransition: function(event) {},
+		afterTransition: function(event) {},
+		swipeStart: function(event) {},
+		swipeEnd: function(event) {},
+		swipeMove: function(event) {},
 	};
 
 	// Extend options
@@ -1636,7 +1707,12 @@ var Glide = function (element, options) {
 	this.setup();
 
 	// Call before init callback
-	this.options.beforeInit(this.slider);
+	this.options.beforeInit({
+		index: this.current,
+		length: this.slides.length,
+		current: this.slides.eq(this.current - 1),
+		slider: this.slider
+	});
 
 	/**
 	 * Construct Core with modules
@@ -1659,7 +1735,7 @@ var Glide = function (element, options) {
 	});
 
 	// Call after init callback
-	this.options.afterInit(this.current, this.slides.eq(this.current - 1));
+	Engine.Events.call(this.options.afterInit);
 
 	// api return
 	return Engine.Api.instance();

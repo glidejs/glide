@@ -60,6 +60,13 @@ var Api = function(Glide, Core) {
 			},
 
 
+			animate: function(offset) {
+				Core.Transition.jumping = true;
+				Core.Animation.make(offset);
+				Core.Transition.jumping = false;
+			},
+
+
 			/**
 			 * Start autoplay
 			 * @return {Core.Run}

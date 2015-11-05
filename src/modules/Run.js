@@ -37,8 +37,10 @@ var Run = function(Glide, Core) {
 
 			if (typeof this.interval === 'undefined') {
 				this.interval = setInterval(function() {
+					that.pause();
 					that.make('>');
-				}, Glide.options.autoplay);
+					that.play();
+				}, this.getInterval());
 			}
 
 		}
@@ -47,6 +49,9 @@ var Run = function(Glide, Core) {
 
 	};
 
+	Module.prototype.getInterval = function() {
+		return Glide.slides.eq(Glide.current - 1).data('glide-autoplay') || Glide.options.autoplay;
+	};
 
 	/**
 	 * Pasue autoplay animation
@@ -91,7 +96,7 @@ var Run = function(Glide, Core) {
 
 	/**
 	 * Run move animation
-	 * @param  {string} move Code in pattern {direction}{steps} eq. ">3"
+	 * @param  {string} move Code in pattern {direction}{steps} eq. "=3"
 	 */
 	Module.prototype.make = function (move, callback) {
 
@@ -106,7 +111,9 @@ var Run = function(Glide, Core) {
 		if(!Glide.options.hoverpause) this.pause();
 		// Disable events and call before transition callback
 		if(callback !== false) {
-			Core.Events.disable().call(Glide.options.beforeTransition);
+			Core.Events.disable()
+				.call(Glide.options.beforeTransition)
+				.trigger('beforeTransition');
 		}
 
 		// Based on direction
@@ -154,11 +161,16 @@ var Run = function(Glide, Core) {
 			if(callback !== false) {
 				Core.Events.enable()
 					.call(callback)
-					.call(Glide.options.afterTransition);
+					.call(Glide.options.afterTransition)
+					.trigger('afterTransition');
 			}
 			// Start autoplay until hoverpause is not set
 			if(!Glide.options.hoverpause) that.play();
 		});
+
+		Core.Events
+			.call(Glide.options.duringTransition)
+			.trigger('duringTransition');
 
 	};
 

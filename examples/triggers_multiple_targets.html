@@ -11,6 +11,14 @@
 
 		<!-- Demo stylesheet -->
 		<link rel="stylesheet" href="css/demo.css">
+
+		<style>
+			.module {
+				width: 50%;
+				float: left;
+				clear: none;
+			}
+		</style>
 	</head>
 	<body>
 
@@ -21,13 +29,13 @@
 				<div class="glide__wrapper">
 					<ul class="glide__track">
 						<li class="glide__slide">
-							<div class="box" style="background-color: purple;">1</div>
+							<div class="box" style="background-color: #C8C9C4;">1</div>
 						</li>
 						<li class="glide__slide">
-							<div class="box" style="background-color: green;">2</div>
+							<div class="box" style="background-color: #B9BAB5;">2</div>
 						</li>
 						<li class="glide__slide">
-							<div class="box" style="background-color: gray;">3</div>
+							<div class="box" style="background-color: #B0B0B0;">3</div>
 						</li>
 					</ul>
 				</div>
@@ -39,6 +47,11 @@
 		<div class="module module--horizontal">
 
 			<div id="Slider2" class="glide">
+
+				<div class="glide__arrows">
+					<button class="glide__arrow prev" data-glide-dir="<">prev</button>
+					<button class="glide__arrow next" data-glide-dir=">">next</button>
+				</div>
 
 				<div class="glide__wrapper">
 					<ul class="glide__track">
@@ -53,6 +66,8 @@
 						</li>
 					</ul>
 				</div>
+
+				<div class="glide__bullets"></div>
 
 			</div>
 
@@ -82,9 +97,23 @@
 		<script src="../bower_components/jquery/dist/jquery.js"></script>
 		<script src="../dist/glide.js"></script>
 		<script>
-			var slider1 = $('#Slider1').glide();
-			var slider2 = $('#Slider2').glide();
-		</script>
+			var dependent = $('#Slider1').glide({
+				type: 'slideshow',
+				mode: 'vertical',
+				touchDistance: false,
+				dragDistance: false,
+				hoverpause: false,
+				autoplay: false
+			}).data('glide_api');
 
+			$('#Slider2').glide({ type: 'slider' })
+				.on('swipeEnd.glide', function(event, data) {
+					dependent.go('=' + data.index);
+				}).on('duringTransition.glide', function(event, data) {
+					dependent.go('=' + data.index);
+				}).on('swipeMove.glide', function(event, data) {
+					dependent.animate(data.swipe.distance);
+				});
+		</script>
 	</body>
 </html>

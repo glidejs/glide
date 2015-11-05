@@ -46,12 +46,14 @@ var Glide = function (element, options) {
 			dragging: 'dragging',
 			disabled: 'disabled'
 		},
-		beforeInit: function(slider) {},
-		afterInit: function(i, el) {},
-		beforeTransition: function(i, el) {},
-		afterTransition: function(i, el) {},
-		swipeStart: function(i, el) {},
-		swipeEnd: function(i, el) {},
+		beforeInit: function(event) {},
+		afterInit: function(event) {},
+		beforeTransition: function(event) {},
+		duringTransition: function(event) {},
+		afterTransition: function(event) {},
+		swipeStart: function(event) {},
+		swipeEnd: function(event) {},
+		swipeMove: function(event) {},
 	};
 
 	// Extend options
@@ -65,7 +67,12 @@ var Glide = function (element, options) {
 	this.setup();
 
 	// Call before init callback
-	this.options.beforeInit(this.slider);
+	this.options.beforeInit({
+		index: this.current,
+		length: this.slides.length,
+		current: this.slides.eq(this.current - 1),
+		slider: this.slider
+	});
 
 	/**
 	 * Construct Core with modules
@@ -88,7 +95,7 @@ var Glide = function (element, options) {
 	});
 
 	// Call after init callback
-	this.options.afterInit(this.current, this.slides.eq(this.current - 1));
+	Engine.Events.call(this.options.afterInit);
 
 	// api return
 	return Engine.Api.instance();

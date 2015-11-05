@@ -1,6 +1,6 @@
 /*!
  * Glide.js
- * Version: 2.0.4
+ * Version: 2.0.5
  * Simple, lightweight and fast jQuery slider
  * Author: @jedrzejchalubek
  * Site: http://http://glide.jedrzejchalubek.com/
@@ -807,10 +807,8 @@ var Events = function(Glide, Core) {
 	Module.prototype.keyboard = function() {
 		if (Glide.options.keyboard) {
 			$(window).on('keyup.glide', function(event){
-				if (!this.disabled && !this.dragging) {
-					if (event.keyCode === 39) Core.Run.make('>');
-					if (event.keyCode === 37) Core.Run.make('<');
-				}
+				if (event.keyCode === 39) Core.Run.make('>');
+				if (event.keyCode === 37) Core.Run.make('<');
 			});
 		}
 	};
@@ -875,7 +873,7 @@ var Events = function(Glide, Core) {
 
 		var targets = $(this).data('glide-trigger').split(" ");
 
-		if (!Core.Events.disabled) {
+		if (!this.disabled) {
 			for (var el in targets) {
 				var target = $(targets[el]).data('glide_api');
 				target.pause();

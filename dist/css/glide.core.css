@@ -17,6 +17,7 @@
           transform-style: preserve-3d;
   -ms-touch-action: pan-Y;
       touch-action: pan-Y;
+  overflow: hidden;
 }
 .glide__track.dragging {
   cursor: -webkit-grabbing;
@@ -55,6 +56,9 @@
 .glide--slider .glide__slide {
   float: left;
   clear: none;
+}
+.glide--carousel.glide--vertical .glide__track {
+  overflow: visible;
 }
 .glide--carousel .glide__slide {
   float: left;

@@ -18,6 +18,7 @@
 		backface-visibility: hidden;
 		transform-style: preserve-3d;
 		touch-action: pan-Y;
+		overflow: hidden;
 
 		&.dragging {
 			cursor: grabbing;
@@ -62,6 +63,14 @@
 
 
 	&--carousel {
+
+		&#{$that}--vertical {
+
+			#{$that}__track {
+				overflow: visible;
+			}
+
+		}
 
 		#{$that}__slide {
 			float: left;

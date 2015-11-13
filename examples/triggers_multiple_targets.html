@@ -74,32 +74,21 @@
 		</div>
 
 		<div class="triggers">
-			<button class="trigger prev" data-glide-trigger="#Slider1 #Slider2" data-glide-dir="<">
-				prev
-			</button>
-			<button class="trigger next" data-glide-trigger="#Slider1 #Slider2" data-glide-dir=">">
-				next
-			</button>
+			<button class="trigger prev" data-glide-trigger="#Slider1 #Slider2" data-glide-dir="<">prev</button>
+			<button class="trigger next" data-glide-trigger="#Slider1 #Slider2" data-glide-dir=">">next</button>
 		</div>
 
 		<div class="triggers">
-			<button class="trigger-1" data-glide-trigger="#Slider1 #Slider2" data-glide-dir="=1">
-				1
-			</button>
-			<button class="trigger-2" data-glide-trigger="#Slider1 #Slider2" data-glide-dir="=2">
-				2
-			</button>
-			<button class="trigger-3" data-glide-trigger="#Slider1 #Slider2" data-glide-dir="=3">
-				3
-			</button>
+			<button class="trigger-1" data-glide-trigger="#Slider1 #Slider2" data-glide-dir="=1">1</button>
+			<button class="trigger-2" data-glide-trigger="#Slider1 #Slider2" data-glide-dir="=2">2</button>
+			<button class="trigger-3" data-glide-trigger="#Slider1 #Slider2" data-glide-dir="=3">3</button>
 		</div>
 
 		<script src="../bower_components/jquery/dist/jquery.js"></script>
 		<script src="../dist/glide.js"></script>
 		<script>
 			var dependent = $('#Slider1').glide({
-				type: 'slideshow',
-				mode: 'vertical',
+				type: 'slider',
 				touchDistance: false,
 				dragDistance: false,
 				hoverpause: false,

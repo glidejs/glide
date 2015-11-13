@@ -22,6 +22,7 @@ body {
 .module--horizontal {
 	width: 100%;
 	height: 320px;
+	overflow: hidden;
 }
 
 .module--horizontal .box {
@@ -34,6 +35,7 @@ body {
 	height: 100vh;
 	float: left;
 	clear: none;
+	overflow: hidden;
 }
 
 .module--vertical .box {

@@ -686,9 +686,10 @@ var Clones = function(Glide, Core) {
 	 * to pattern
 	 */
 	Module.prototype.map = function() {
+		var i;
 		pattern = [];
 
-		for(var i in map) {
+		for (i = 0; i < map.length; i++) {
 			pattern.push(-1-i, i);
 		}
 	};
@@ -699,8 +700,9 @@ var Clones = function(Glide, Core) {
 	 */
 	Module.prototype.collect = function() {
 		var item;
+		var i;
 
-		for(var i in pattern) {
+		for(i = 0; i < pattern.length; i++) {
 			item = Glide.slides.eq(pattern[i])
 					.clone().addClass(Glide.options.classes.clone);
 
@@ -715,8 +717,9 @@ var Clones = function(Glide, Core) {
 	 */
 	Module.prototype.append = function() {
 		var item;
+		var i;
 
-		for (var i in this.items) {
+		for (i = 0; i < this.items.length; i++) {
 			item = this.items[i][Glide.size](Glide[Glide.size]);
 
 			if (pattern[i] >= 0) item.appendTo(Glide.track);
@@ -729,7 +732,9 @@ var Clones = function(Glide, Core) {
 	 * Remove cloned slides
 	 */
 	Module.prototype.remove = function() {
-		for (var i in this.items) {
+		var i;
+
+		for (i = 0; i < this.items.length; i++) {
 			this.items[i].remove();
 		}
 

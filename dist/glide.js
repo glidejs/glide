@@ -1137,9 +1137,8 @@ var Helper = function(Glide, Core) {
 	 * Remove transition
 	 */
 	Module.prototype.removeStyles = function(elements) {
-
-		for (var el in elements) {
-			elements[el].removeAttr('style');
+		for (var i = 0; i < elements.length; i++) {
+			elements[i].removeAttr('style');
 		}
 
 	};

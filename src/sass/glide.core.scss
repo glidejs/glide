@@ -32,6 +32,13 @@
 		user-select: none;
 		-webkit-touch-callout: none;
 		-webkit-tap-highlight-color: transparent;
+
+		a {
+			user-select: none;
+			-webkit-user-drag: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+		}
 	}
 
 

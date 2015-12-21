@@ -36,6 +36,15 @@
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
 }
+.glide__slide a {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  -webkit-user-drag: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
 .glide__arrows {
   -webkit-touch-callout: none;
   -webkit-user-select: none;

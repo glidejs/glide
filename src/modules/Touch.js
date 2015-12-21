@@ -62,6 +62,7 @@ var Touch = function(Glide, Core) {
 				'touchend.glide touchcancel.glide mouseup.glide mouseleave.glide': $.proxy(this.end, this)
 			});
 
+
 			// Detach clicks inside track
 			Core.Events.detachClicks()
 				.call(Glide.options.swipeStart)
@@ -107,6 +108,7 @@ var Touch = function(Glide, Core) {
 				(touch.pageX - this.touchStartX),
 				(touch.pageY - this.touchStartY)
 			);
+
 
 			// Make offset animation
 			Core.Animation.make( Core.Helper.byAxis(subExSx, subEySy) );
@@ -199,10 +201,12 @@ var Touch = function(Glide, Core) {
 				Core.Run.play();
 			});
 
+
 			// Unset dragging flag
 			this.dragging = false;
 			// Disable other events
-			Core.Events.disable()
+			Core.Events.attachClicks()
+				.disable()
 				.call(Glide.options.swipeEnd)
 				.trigger('swipeEnd');
 			// Remove dragging class

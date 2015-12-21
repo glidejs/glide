@@ -139,11 +139,22 @@ var Events = function(Glide, Core) {
 
 
 	/**
+	 * Attach anchors clicks
+	 * inside slider track
+	 */
+	Module.prototype.attachClicks = function() {
+		Glide.track.on('click', 'a', function () { return true; });
+
+		return this;
+	};
+
+
+	/**
 	 * Prevent anchors clicks
 	 * inside slider track
 	 */
 	Module.prototype.preventClicks = function(status) {
-		Glide.track.one('click', 'a', function(event){ event.preventDefault(); });
+		Glide.track.one('click', 'a', function(){ return false; });
 
 		return this;
 	};

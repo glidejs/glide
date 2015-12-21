@@ -61,6 +61,7 @@
 
 	&__bullets {
 		position: absolute;
+		z-index: 2;
 		list-style: none;
 
 		#{$that}--horizontal & {

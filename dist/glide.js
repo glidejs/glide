@@ -1,6 +1,6 @@
 /*!
  * Glide.js
- * Version: 2.0.5
+ * Version: 2.0.6
  * Simple, lightweight and fast jQuery slider
  * Author: @jedrzejchalubek
  * Site: http://http://glide.jedrzejchalubek.com/

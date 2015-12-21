@@ -113,7 +113,7 @@ var Touch = function(Glide, Core) {
 			// Make offset animation
 			Core.Animation.make( Core.Helper.byAxis(subExSx, subEySy) );
 			// Prevent clicks inside track
-			Core.Events.preventClicks()
+			Core.Events.preventClicks(event)
 				.call(Glide.options.swipeMove)
 				.trigger('swipeMove');
 

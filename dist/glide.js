@@ -916,7 +916,9 @@ var Events = function(Glide, Core) {
 	 * inside slider track
 	 */
 	Module.prototype.detachClicks = function() {
-		Glide.track.off('click', 'a');
+		Glide.track.find('a').each(function(i, a) {
+			$(a).attr('data-href', $(a).attr('href')).removeAttr('href');
+		});
 
 		return this;
 	};
@@ -927,7 +929,9 @@ var Events = function(Glide, Core) {
 	 * inside slider track
 	 */
 	Module.prototype.attachClicks = function() {
-		Glide.track.on('click', 'a', function () { return true; });
+		Glide.track.find('a').each(function(i, a) {
+			$(a).attr('href', $(a).attr('data-href'));
+		});
 
 		return this;
 	};
@@ -937,8 +941,12 @@ var Events = function(Glide, Core) {
 	 * Prevent anchors clicks
 	 * inside slider track
 	 */
-	Module.prototype.preventClicks = function(status) {
-		Glide.track.one('click', 'a', function(){ return false; });
+	Module.prototype.preventClicks = function(event) {
+		if (event.type === 'mousemove') {
+			Glide.track.one('click', 'a', function(e) {
+				e.preventDefault();
+			});
+		}
 
 		return this;
 	};
@@ -1455,7 +1463,7 @@ var Touch = function(Glide, Core) {
 			// Make offset animation
 			Core.Animation.make( Core.Helper.byAxis(subExSx, subEySy) );
 			// Prevent clicks inside track
-			Core.Events.preventClicks()
+			Core.Events.preventClicks(event)
 				.call(Glide.options.swipeMove)
 				.trigger('swipeMove');
 

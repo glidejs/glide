@@ -1459,9 +1459,10 @@ var Touch = function(Glide, Core) {
 				(touch.pageY - this.touchStartY)
 			);
 
-
 			// Make offset animation
-			Core.Animation.make( Core.Helper.byAxis(subExSx, subEySy) );
+			// While angle is lower than 45 degree
+			if ( (this.touchSin * 180 / Math.PI) < 45 ) Core.Animation.make( Core.Helper.byAxis(subExSx, subEySy) );
+
 			// Prevent clicks inside track
 			Core.Events.preventClicks(event)
 				.call(Glide.options.swipeMove)

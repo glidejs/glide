@@ -184,12 +184,16 @@ var Touch = function(Glide, Core) {
 
 			}
 
+			// Switch distance limit base on event type
+			if (event.type === 'mouseup' || event.type === 'mouseleave') distanceLimiter = Glide.options.dragDistance;
+			else distanceLimiter = Glide.options.touchDistance;
+
 			// While touch is positive and greater than distance set in options
 			// move backward
-			if (touchDistance > Glide.options.touchDistance && touchDeg < 45) Core.Run.make('<');
+			if (touchDistance > distanceLimiter && touchDeg < 45) Core.Run.make('<');
 			// While touch is negative and lower than negative distance set in options
 			// move forward
-			else if (touchDistance < -Glide.options.touchDistance && touchDeg < 45) Core.Run.make('>');
+			else if (touchDistance < -distanceLimiter && touchDeg < 45) Core.Run.make('>');
 			// While swipe don't reach distance apply previous transform
 			else Core.Animation.make();
 

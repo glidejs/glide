@@ -95,7 +95,7 @@ var Bullets = function(Glide, Core) {
 	 * bullets events
 	 */
 	Module.prototype.unbind = function() {
-		return this.wrapper.on('click.glide touchstart.glide', 'button');
+		return this.wrapper.off('click.glide touchstart.glide', 'button');
 	};
 
 

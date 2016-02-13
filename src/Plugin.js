@@ -4,14 +4,14 @@
  * @return {object}
  */
 
-$.fn.glide = function (options) {
+$.fn.glide = function(options) {
 
-	return this.each(function () {
-		if ( !$.data(this, 'glide_api') ) {
-			$.data(this, 'glide_api',
-				new Glide($(this), options)
-			);
-		}
-	});
+    return this.each(function() {
+        if (!$.data(this, 'glide_api')) {
+            $.data(this, 'glide_api',
+                new Glide($(this), options)
+            );
+        }
+    });
 
 };

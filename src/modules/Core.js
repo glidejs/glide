@@ -7,21 +7,21 @@
  * @return {Core}
  */
 
-var Core = function (Glide, Modules) {
+var Core = function(Glide, Modules) {
 
-	/**
-	 * Core Module Constructor
-	 * Construct modules and inject Glide and Core as dependency
-	 */
-	function Module() {
+    /**
+     * Core Module Constructor
+     * Construct modules and inject Glide and Core as dependency
+     */
+    function Module() {
 
-		for(var module in Modules) {
-			this[module] = new Modules[module](Glide, this);
-		}
+        for (var module in Modules) {
+            this[module] = new Modules[module](Glide, this);
+        }
 
-	}
+    }
 
-	// @return Module
-	return new Module();
+    // @return Module
+    return new Module();
 
 };

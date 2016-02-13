@@ -9,96 +9,96 @@
  * @return {Glide}
  */
 
-var Glide = function (element, options) {
+var Glide = function(element, options) {
 
-	/**
-	 * Default options
-	 * @type {Object}
-	 */
-	var defaults = {
-		autoplay: 4000,
-		type: 'carousel',
-		mode: 'horizontal',
-		startAt: 1,
-		hoverpause: true,
-		keyboard: true,
-		touchDistance: 80,
-		dragDistance: 120,
-		animationDuration: 400,
-		animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
-		throttle: 16,
-		autoheight: false,
-		paddings: 0,
-		centered: true,
-		classes: {
-			base: 'glide',
-			wrapper: 'glide__wrapper',
-			track: 'glide__track',
-			slide: 'glide__slide',
-			arrows: 'glide__arrows',
-			arrow: 'glide__arrow',
-			arrowNext: 'next',
-			arrowPrev: 'prev',
-			bullets: 'glide__bullets',
-			bullet: 'glide__bullet',
-			clone: 'clone',
-			active: 'active',
-			dragging: 'dragging',
-			disabled: 'disabled'
-		},
-		beforeInit: function(event) {},
-		afterInit: function(event) {},
-		beforeTransition: function(event) {},
-		duringTransition: function(event) {},
-		afterTransition: function(event) {},
-		swipeStart: function(event) {},
-		swipeEnd: function(event) {},
-		swipeMove: function(event) {},
-	};
+    /**
+     * Default options
+     * @type {Object}
+     */
+    var defaults = {
+        autoplay: 4000,
+        type: 'carousel',
+        mode: 'horizontal',
+        startAt: 1,
+        hoverpause: true,
+        keyboard: true,
+        touchDistance: 80,
+        dragDistance: 120,
+        animationDuration: 400,
+        animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
+        throttle: 16,
+        autoheight: false,
+        paddings: 0,
+        centered: true,
+        classes: {
+            base: 'glide',
+            wrapper: 'glide__wrapper',
+            track: 'glide__track',
+            slide: 'glide__slide',
+            arrows: 'glide__arrows',
+            arrow: 'glide__arrow',
+            arrowNext: 'next',
+            arrowPrev: 'prev',
+            bullets: 'glide__bullets',
+            bullet: 'glide__bullet',
+            clone: 'clone',
+            active: 'active',
+            dragging: 'dragging',
+            disabled: 'disabled'
+        },
+        beforeInit: function(event) {},
+        afterInit: function(event) {},
+        beforeTransition: function(event) {},
+        duringTransition: function(event) {},
+        afterTransition: function(event) {},
+        swipeStart: function(event) {},
+        swipeEnd: function(event) {},
+        swipeMove: function(event) {},
+    };
 
-	// Extend options
-	this.options = $.extend({}, defaults, options);
-	this.current = parseInt(this.options.startAt);
-	this.element = element;
+    // Extend options
+    this.options = $.extend({}, defaults, options);
+    this.current = parseInt(this.options.startAt);
+    this.element = element;
 
-	// Collect DOM
-	this.collect();
-	// Init values
-	this.setup();
+    // Collect DOM
+    this.collect();
+    // Init values
+    this.setup();
 
-	// Call before init callback
-	this.options.beforeInit({
-		index: this.current,
-		length: this.slides.length,
-		current: this.slides.eq(this.current - 1),
-		slider: this.slider
-	});
+    // Call before init callback
+    this.options.beforeInit({
+        index: this.current,
+        length: this.slides.length,
+        current: this.slides.eq(this.current - 1),
+        slider: this.slider
+    });
 
-	/**
-	 * Construct Core with modules
-	 * @type {Core}
-	 */
-	var Engine = new Core(this, {
-		Helper: Helper,
-		Translate: Translate,
-		Transition: Transition,
-		Run: Run,
-		Animation: Animation,
-		Clones: Clones,
-		Arrows: Arrows,
-		Bullets: Bullets,
-		Height: Height,
-		Build: Build,
-		Events: Events,
-		Touch: Touch,
-		Api: Api
-	});
+    /**
+     * Construct Core with modules
+     * @type {Core}
+     */
+    var Engine = new Core(this, {
+        Helper: Helper,
+        Translate: Translate,
+        Transition: Transition,
+        Run: Run,
+        Animation: Animation,
+        Clones: Clones,
+        Arrows: Arrows,
+        Bullets: Bullets,
+        Height: Height,
+        Build: Build,
+        Events: Events,
+        Touch: Touch,
+        Api: Api
+    });
 
-	// Call after init callback
-	Engine.Events.call(this.options.afterInit);
+    // Call after init callback
+    Engine.Events.call(this.options.afterInit);
 
-	// api return
-	return Engine.Api.instance();
+    // api return
+    return Engine.Api.instance();
 
 };
 
@@ -108,13 +108,13 @@ var Glide = function (element, options) {
  * and set classes
  */
 Glide.prototype.collect = function() {
-	var options = this.options;
-	var classes = options.classes;
+    var options = this.options;
+    var classes = options.classes;
 
-	this.slider = this.element.addClass(classes.base + '--' + options.type).addClass(classes.base + '--' + options.mode);
-	this.track = this.slider.find('.' + classes.track);
-	this.wrapper = this.slider.find('.' + classes.wrapper);
-	this.slides = this.track.find('.' + classes.slide).not('.' + classes.clone);
+    this.slider = this.element.addClass(classes.base + '--' + options.type).addClass(classes.base + '--' + options.mode);
+    this.track = this.slider.find('.' + classes.track);
+    this.wrapper = this.slider.find('.' + classes.wrapper);
+    this.slides = this.track.find('.' + classes.slide).not('.' + classes.clone);
 };
 
 
@@ -122,17 +122,17 @@ Glide.prototype.collect = function() {
  * Setup properties and values
  */
 Glide.prototype.setup = function() {
-	var modeMap = {
-		horizontal: ['width', 'x'],
-		vertical: ['height', 'y'],
-	};
+    var modeMap = {
+        horizontal: ['width', 'x'],
+        vertical: ['height', 'y'],
+    };
 
-	this.size = modeMap[this.options.mode][0];
-	this.axis = modeMap[this.options.mode][1];
-	this.length = this.slides.length;
+    this.size = modeMap[this.options.mode][0];
+    this.axis = modeMap[this.options.mode][1];
+    this.length = this.slides.length;
 
-	this.paddings = this.getPaddings();
-	this[this.size] = this.getSize();
+    this.paddings = this.getPaddings();
+    this[this.size] = this.getSize();
 };
 
 
@@ -143,19 +143,22 @@ Glide.prototype.setup = function() {
  */
 Glide.prototype.getPaddings = function() {
 
-	var option = this.options.paddings;
+    var option = this.options.paddings;
 
-	if(typeof option === 'string') {
+    if (typeof option === 'string') {
 
-		var normalized = parseInt(option, 10);
-		var isPercentage = option.indexOf('%') >= 0;
+        var normalized = parseInt(option, 10);
+        var isPercentage = option.indexOf('%') >= 0;
 
-		if (isPercentage) return parseInt(this.slider[this.size]() * (normalized/100));
-		else return normalized;
+        if (isPercentage) {
+            return parseInt(this.slider[this.size]() * (normalized / 100));
+        } else {
+            return normalized;
+        }
 
-	}
+    }
 
-	return option;
+    return option;
 
 };
 
@@ -165,5 +168,5 @@ Glide.prototype.getPaddings = function() {
  * @return {Number} width value
  */
 Glide.prototype.getSize = function() {
-	return this.slider[this.size]() - (this.paddings * 2);
+    return this.slider[this.size]() - (this.paddings * 2);
 };

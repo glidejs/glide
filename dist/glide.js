@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*!
  * Glide.js
  * Version: 2.0.6
@@ -791,6 +792,784 @@ var Clones = function(Glide, Core) {
 
 
 };
+=======
+/*!
+ * Glide.js
+ * Version: 2.0.6
+ * Simple, lightweight and fast jQuery slider
+ * Author: @jedrzejchalubek
+ * Site: http://http://glide.jedrzejchalubek.com/
+ * Licensed under the MIT license
+ */
+
+;(function($, window, document, undefined){
+/**
+ * --------------------------------
+ * Glide Animation
+ * --------------------------------
+ * Animation functions
+ * @return {Animation}
+ */
+
+var Animation = function(Glide, Core) {
+
+    var offset;
+
+    function Module() {
+    }
+
+    /**
+     * Make specifed animation type
+     * @param {Number} offset Offset from current position
+     * @return {Module}
+     */
+    Module.prototype.make = function(displacement) {
+        offset = (typeof displacement !== 'undefined') ? parseInt(displacement) : 0;
+        // Animation actual translate animation
+        this[Glide.options.type]();
+        return this;
+    };
+
+
+    /**
+     * After transition callback
+     * @param  {Function} callback
+     * @return {Int}
+     */
+    Module.prototype.after = function(callback) {
+        return setTimeout(function() {
+            callback();
+        }, Glide.options.animationDuration + 20);
+    };
+
+
+    /**
+     * Animation slider animation type
+     * @param {string} direction
+     */
+    Module.prototype.slider = function() {
+
+        var translate = Glide[Glide.size] * (Glide.current - 1);
+        var shift = Core.Clones.shift - Glide.paddings;
+
+        // If on first slide
+        if (Core.Run.isStart()) {
+            if (Glide.options.centered) {
+                shift = Math.abs(shift);
+            }
+            // Shift is zero
+            else {
+                shift = 0;
+            }
+            // Hide prev arrow
+            Core.Arrows.disable('prev');
+        }
+        // If on last slide
+        else if (Core.Run.isEnd()) {
+            if (Glide.options.centered) {
+                shift = Math.abs(shift);
+            }
+            // Double and absolute shift
+            else {
+                shift = Math.abs(shift * 2);
+            }
+            // Hide next arrow
+            Core.Arrows.disable('next');
+        }
+        // Otherwise
+        else {
+            // Absolute shift
+            shift = Math.abs(shift);
+            // Show arrows
+            Core.Arrows.enable();
+        }
+
+        // Apply translate
+        Glide.track.css({
+            'transition': Core.Transition.get('all'),
+            'transform': Core.Translate.set(Glide.axis, translate - shift - offset)
+        });
+
+    };
+
+
+    /**
+     * Animation carousel animation type
+     * @param {string} direction
+     */
+    Module.prototype.carousel = function() {
+
+        // Translate container
+        var translate = Glide[Glide.size] * Glide.current;
+        // Calculate addtional shift
+        var shift;
+
+        if (Glide.options.centered) {
+            shift = Core.Clones.shift - Glide.paddings;
+        } else {
+            shift = Core.Clones.shift;
+        }
+
+        /**
+         * The flag is set and direction is prev,
+         * so we're on the first slide
+         * and need to make offset translate
+         */
+        if (Core.Run.isOffset('<')) {
+            // Translate is 0 (left edge of wrapper)
+            translate = 0;
+            // Reset flag
+            Core.Run.flag = false;
+            // After offset animation is done
+            this.after(function() {
+                // clear transition and jump to last slide
+                Glide.track.css({
+                    'transition': Core.Transition.clear('all'),
+                    'transform': Core.Translate.set(Glide.axis, Glide[Glide.size] * Glide.length + shift)
+                });
+            });
+        }
+
+
+        /**
+         * The flag is set and direction is next,
+         * so we're on the last slide
+         * and need to make offset translate
+         */
+        if (Core.Run.isOffset('>')) {
+            // Translate is slides width * length with addtional offset (right edge of wrapper)
+            translate = (Glide[Glide.size] * Glide.length) + Glide[Glide.size];
+            // Reset flag
+            Core.Run.flag = false;
+            // After offset animation is done
+            this.after(function() {
+                // Clear transition and jump to first slide
+                Glide.track.css({
+                    'transition': Core.Transition.clear('all'),
+                    'transform': Core.Translate.set(Glide.axis, Glide[Glide.size] + shift)
+                });
+            });
+        }
+
+        /**
+         * Actual translate apply to wrapper
+         * overwrite transition (can be pre-cleared)
+         */
+        Glide.track.css({
+            'transition': Core.Transition.get('all'),
+            'transform': Core.Translate.set(Glide.axis, translate + shift - offset)
+        });
+
+    };
+
+
+    /**
+     * Animation slideshow animation type
+     * @param {string} direction
+     */
+    Module.prototype.slideshow = function() {
+
+        Glide.slides.css('transition', Core.Transition.get('opacity'))
+            .eq(Glide.current - 1).css('opacity', 1)
+            .siblings().css('opacity', 0);
+
+    };
+
+    return new Module();
+
+};
+;/**
+ * --------------------------------
+ * Glide Api
+ * --------------------------------
+ * Plugin api module
+ * @return {Api}
+ */
+
+var Api = function(Glide, Core) {
+
+
+    /**
+     * Api Module Constructor
+     */
+    function Module() {
+    }
+
+
+    /**
+     * Api instance
+     * @return {object}
+     */
+    Module.prototype.instance = function() {
+
+        return {
+
+            /**
+             * Get current slide index
+             * @return {int}
+             */
+            current: function() {
+                return Glide.current;
+            },
+
+
+            /**
+             * Go to specifed slide
+             * @param  {String}   distance
+             * @param  {Function} callback
+             * @return {Core.Run}
+             */
+            go: function(distance, callback) {
+                return Core.Run.make(distance, callback);
+            },
+
+
+            /**
+             * Jump without animation to specifed slide
+             * @param  {String}   distance
+             * @param  {Function} callback
+             * @return {Core.Run}
+             */
+            jump: function(distance, callback) {
+                // Let know that we want jumping
+                Core.Transition.jumping = true;
+                Core.Animation.after(function() {
+                    // Jumping done, take down flag
+                    Core.Transition.jumping = false;
+                });
+                return Core.Run.make(distance, callback);
+            },
+
+
+            animate: function(offset) {
+                Core.Transition.jumping = true;
+                Core.Animation.make(offset);
+                Core.Transition.jumping = false;
+            },
+
+
+            /**
+             * Start autoplay
+             * @return {Core.Run}
+             */
+            start: function(interval) {
+                // We want running
+                Core.Run.running = true;
+                Glide.options.autoplay = parseInt(interval);
+                return Core.Run.play();
+            },
+
+
+            /**
+             * Play autoplay
+             * @return {Core.Run}
+             */
+            play: function() {
+                return Core.Run.play();
+            },
+
+
+            /**
+             * Pause autoplay
+             * @return {Core.Run}
+             */
+            pause: function() {
+                return Core.Run.pause();
+            },
+
+
+            /**
+             * Destroy
+             * @return {Glide.slider}
+             */
+            destroy: function() {
+
+                Core.Run.pause();
+                Core.Clones.remove();
+                Core.Helper.removeStyles([Glide.track, Glide.slides]);
+                Core.Bullets.remove();
+                Glide.slider.removeData('glide_api');
+
+                Core.Events.unbind();
+                Core.Touch.unbind();
+                Core.Arrows.unbind();
+                Core.Bullets.unbind();
+
+                delete Glide.slider;
+                delete Glide.track;
+                delete Glide.slides;
+                delete Glide.width;
+                delete Glide.length;
+
+            },
+
+
+            /**
+             * Refresh slider
+             * @return {Core.Run}
+             */
+            refresh: function() {
+                Core.Run.pause();
+                Glide.collect();
+                Glide.setup();
+                Core.Clones.remove().init();
+                Core.Bullets.remove().init();
+                Core.Build.init();
+                Core.Run.make('=' + parseInt(Glide.options.startAt), Core.Run.play());
+            },
+
+        };
+
+    };
+
+
+    // @return Module
+    return new Module();
+
+
+};
+;/**
+ * --------------------------------
+ * Glide Arrows
+ * --------------------------------
+ * Arrows navigation module
+ * @return {Arrows}
+ */
+
+var Arrows = function(Glide, Core) {
+
+
+    /**
+     * Arrows Module Constructor
+     */
+    function Module() {
+        this.build();
+        this.bind();
+    }
+
+
+    /**
+     * Build
+     * arrows DOM
+     */
+    Module.prototype.build = function() {
+        this.wrapper = Glide.slider.find('.' + Glide.options.classes.arrows);
+        this.items = this.wrapper.children();
+    };
+
+
+    /**
+     * Disable arrow
+     */
+    Module.prototype.disable = function(type) {
+        var classes = Glide.options.classes;
+
+        return this.items.filter('.' + classes['arrow' + Core.Helper.capitalise(type)])
+            .unbind('click.glide touchstart.glide')
+            .addClass(classes.disabled)
+            .siblings()
+            .bind('click.glide touchstart.glide', this.click)
+            .removeClass(classes.disabled);
+    };
+
+
+    /**
+     * Show arrows
+     */
+    Module.prototype.enable = function() {
+        this.bind();
+        return this.items.removeClass(Glide.options.classes.disabled);
+    };
+
+    /**
+     * Click arrow method
+     * @param  {Object} event
+     */
+    Module.prototype.click = function(event) {
+        event.preventDefault();
+
+        if (!Core.Events.disabled) {
+            Core.Run.pause();
+            Core.Run.make($(this).data('glide-dir'));
+            Core.Animation.after(function() {
+                Core.Run.play();
+            });
+        }
+    };
+
+
+    /**
+     * Bind
+     * arrows events
+     */
+    Module.prototype.bind = function() {
+        return this.items.on('click.glide touchstart.glide', this.click);
+    };
+
+
+    /**
+     * Unbind
+     * arrows events
+     */
+    Module.prototype.unbind = function() {
+        return this.items.off('click.glide touchstart.glide');
+    };
+
+
+    // @return Module
+    return new Module();
+
+};
+;/**
+ * --------------------------------
+ * Glide Build
+ * --------------------------------
+ * Build slider DOM
+ * @return {Build}
+ */
+
+var Build = function(Glide, Core) {
+
+    // Build Module Constructor
+    function Module() {
+        this.init();
+    }
+
+
+    /**
+     * Init slider build
+     * @return {[type]} [description]
+     */
+    Module.prototype.init = function() {
+        // Build proper slider type
+        this[Glide.options.type]();
+        // Set slide active class
+        this.active();
+
+        // Set slides height
+        Core.Height.set();
+    };
+
+
+    /**
+     * Check if slider type is
+     * @param  {string} name Type name to check
+     * @return {boolean}
+     */
+    Module.prototype.isType = function(name) {
+        return Glide.options.type === name;
+    };
+
+
+    /**
+     * Check if slider type is
+     * @param  {string} name Type name to check
+     * @return {boolean}
+     */
+    Module.prototype.isMode = function(name) {
+        return Glide.options.mode === name;
+    };
+
+
+    /**
+     * Build Slider type
+     */
+    Module.prototype.slider = function() {
+
+        // Turn on jumping flag
+        Core.Transition.jumping = true;
+        // Apply slides width
+        Glide.slides[Glide.size](Glide[Glide.size]);
+        // Apply translate
+        Glide.track.css(Glide.size, Glide[Glide.size] * Glide.length);
+        // If mode is vertical apply height
+        if (this.isMode('vertical')) {
+            Core.Height.set(true);
+        }
+        // Go to startup position
+        Core.Animation.make();
+        // Turn off jumping flag
+        Core.Transition.jumping = false;
+
+    };
+
+
+    /**
+     * Build Carousel type
+     * @return {[type]} [description]
+     */
+    Module.prototype.carousel = function() {
+
+        // Turn on jumping flag
+        Core.Transition.jumping = true;
+        // Update shift for carusel type
+        Core.Clones.shift = (Glide[Glide.size] * Core.Clones.items.length / 2) - Glide[Glide.size];
+        // Apply slides width
+        Glide.slides[Glide.size](Glide[Glide.size]);
+        // Apply translate
+        Glide.track.css(Glide.size, (Glide[Glide.size] * Glide.length) + Core.Clones.getGrowth());
+        // If mode is vertical apply height
+        if (this.isMode('vertical')) {
+            Core.Height.set(true);
+        }
+        // Go to startup position
+        Core.Animation.make();
+        // Append clones
+        Core.Clones.append();
+        // Turn off jumping flag
+        Core.Transition.jumping = false;
+
+    };
+
+
+    /**
+     * Build Slideshow type
+     * @return {[type]} [description]
+     */
+    Module.prototype.slideshow = function() {
+
+        // Turn on jumping flag
+        Core.Transition.jumping = true;
+        // Go to startup position
+        Core.Animation.make();
+        // Turn off jumping flag
+        Core.Transition.jumping = false;
+
+    };
+
+
+    /**
+     * Set active class
+     * to current slide
+     */
+    Module.prototype.active = function() {
+
+        Glide.slides
+            .eq(Glide.current - 1).addClass(Glide.options.classes.active)
+            .siblings().removeClass(Glide.options.classes.active);
+
+    };
+
+    // @return Module
+    return new Module();
+
+};
+;/**
+ * --------------------------------
+ * Glide Bullets
+ * --------------------------------
+ * Bullets navigation module
+ * @return {Bullets}
+ */
+
+var Bullets = function(Glide, Core) {
+
+
+    /**
+     * Bullets Module Constructor
+     */
+    function Module() {
+        this.init();
+        this.bind();
+    }
+
+    Module.prototype.init = function() {
+        this.build();
+        this.active();
+
+        return this;
+    };
+
+    /**
+     * Build
+     * bullets DOM
+     */
+    Module.prototype.build = function() {
+
+        this.wrapper = Glide.slider.children('.' + Glide.options.classes.bullets);
+
+        for (var i = 1; i <= Glide.length; i++) {
+            $('<button>', {
+                'class': Glide.options.classes.bullet,
+                'data-glide-dir': '=' + i
+            }).appendTo(this.wrapper);
+        }
+
+        this.items = this.wrapper.children();
+
+    };
+
+
+    /**
+     * Handle active class
+     * Adding and removing active class
+     */
+    Module.prototype.active = function() {
+        return this.items
+            .eq(Glide.current - 1).addClass('active')
+            .siblings().removeClass('active');
+    };
+
+
+    /**
+     * Delete all bullets
+     */
+    Module.prototype.remove = function() {
+        this.items.remove();
+        return this;
+    };
+
+
+    /**
+     * Bullet click
+     * @param  {Object} event
+     */
+    Module.prototype.click = function(event) {
+        event.preventDefault();
+
+        if (!Core.Events.disabled) {
+            Core.Run.pause();
+            Core.Run.make($(this).data('glide-dir'));
+            Core.Animation.after(function() {
+                Core.Run.play();
+            });
+        }
+    };
+
+
+    /**
+     * Bind
+     * bullets events
+     */
+    Module.prototype.bind = function() {
+        return this.wrapper.on('click.glide touchstart.glide', 'button', this.click);
+    };
+
+
+    /**
+     * Unbind
+     * bullets events
+     */
+    Module.prototype.unbind = function() {
+        return this.wrapper.off('click.glide touchstart.glide', 'button');
+    };
+
+
+    // @return Module
+    return new Module();
+
+};
+;/**
+ * --------------------------------
+ * Glide Clones
+ * --------------------------------
+ * Clones module
+ * @return {Clones}
+ */
+
+var Clones = function(Glide, Core) {
+
+
+    var map = [0, 1];
+    var pattern;
+
+
+    /**
+     * Clones Module Constructor
+     */
+    function Module() {
+        this.init();
+    }
+
+
+    Module.prototype.init = function() {
+        this.items = [];
+
+        this.map();
+        this.collect();
+
+        this.shift = 0;
+
+        return this;
+    };
+
+    /**
+     * Map clones length
+     * to pattern
+     */
+    Module.prototype.map = function() {
+        var i;
+        pattern = [];
+
+        for (i = 0; i < map.length; i++) {
+            pattern.push(-1 - i, i);
+        }
+    };
+
+    /**
+     * Collect clones
+     * with maped pattern
+     */
+    Module.prototype.collect = function() {
+        var item;
+        var i;
+
+        for (i = 0; i < pattern.length; i++) {
+            item = Glide.slides.eq(pattern[i])
+                .clone().addClass(Glide.options.classes.clone);
+
+            this.items.push(item);
+        }
+    };
+
+
+    /**
+     * Append cloned slides before
+     * and after real slides
+     */
+    Module.prototype.append = function() {
+        var item;
+        var i;
+
+        for (i = 0; i < this.items.length; i++) {
+            item = this.items[i][Glide.size](Glide[Glide.size]);
+
+            if (pattern[i] >= 0) {
+                item.appendTo(Glide.track);
+            } else {
+                item.prependTo(Glide.track);
+            }
+        }
+    };
+
+
+    /**
+     * Remove cloned slides
+     */
+    Module.prototype.remove = function() {
+        var i;
+
+        for (i = 0; i < this.items.length; i++) {
+            this.items[i].remove();
+        }
+
+        return this;
+    };
+
+
+    /**
+     * Get width width of all the clones
+     */
+    Module.prototype.getGrowth = function() {
+        return Glide.width * this.items.length;
+    };
+
+
+    // @return Module
+    return new Module();
+
+
+};
 ;/**
  * --------------------------------
  * Glide Core
@@ -885,7 +1664,7 @@ var Events = function(Glide, Core) {
      */
     Module.prototype.resize = function() {
 
-        $(window).on('resize.glide', Core.Helper.throttle(function() {
+        $(window).on('resize.glide' + Glide.uniqueID, Core.Helper.throttle(function() {
             Core.Transition.jumping = true;
             Glide.setup();
             Core.Build.init();
@@ -1046,7 +1825,7 @@ var Events = function(Glide, Core) {
 
         $(window)
             .off('keyup.glide')
-            .off('resize.glide');
+            .off('resize.glide' + Glide.uniqueID);
 
     };
 
@@ -1103,6 +1882,7 @@ var Height = function(Glide, Core) {
 
 
 };
+>>>>>>> 57d0cc8... build
 ;/**
  * --------------------------------
  * Glide Helper
@@ -1844,6 +2624,7 @@ var Glide = function(element, options) {
 
     // Extend options
     this.options = $.extend({}, defaults, options);
+    this.uniqueID = parseInt(Math.random() * 1000);
     this.current = parseInt(this.options.startAt);
     this.element = element;
 

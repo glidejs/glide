@@ -869,7 +869,7 @@ var Events = function(Glide, Core) {
      */
     Module.prototype.resize = function() {
 
-        $(window).on('resize.glide', Core.Helper.throttle(function() {
+        $(window).on('resize.glide' + Glide.uniqueID, Core.Helper.throttle(function() {
             Core.Transition.jumping = true;
             Glide.setup();
             Core.Build.init();
@@ -1030,7 +1030,7 @@ var Events = function(Glide, Core) {
 
         $(window)
             .off('keyup.glide')
-            .off('resize.glide');
+            .off('resize.glide' + Glide.uniqueID);
 
     };
 
@@ -1828,6 +1828,7 @@ var Glide = function(element, options) {
 
     // Extend options
     this.options = $.extend({}, defaults, options);
+    this.uniqueID = parseInt(Math.random() * 1000);
     this.current = parseInt(this.options.startAt);
     this.element = element;
 

@@ -14,22 +14,14 @@ Available at: http://glide.jedrzejchalubek.com/docs.html
 The issue channel is especially for improvement proposals and bug reporting. If you have implementing problems, please write on StackOverflow with [glidejs](http://stackoverflow.com/questions/tagged/glidejs) tag.
 
 ##Showcase
-Have you created something amazing with Glide.js? Send a link so I can put it here :)
+Have you created something amazing with Glide.js? Send a link so I can put it in here :)
 
 ##Building
 Build using Grunt and Bower. The following tasks are available:
 - `default` Compiles script and styles into `/dist` folder
-- `style` Only compiles styles into `/dist` folder
-- `script` Only compiles script into `/dist` folder
+- `style` Compiles styles into `/dist` folder
+- `script` Compiles script into `/dist` folder
 - `test` Running tests
-
-##TODO
-- MOOOAR TESTS!!!1one
-- <del>Touch module optimizations</del>
-- Better comments
-- <del>Vertical mode</del>
-- <del>Padded/center mode</del>
-- Multiple slides per view
 
 ##License
 Glide is Copyright © [Jędrzej Chałubek](http://jedrzejchalubek.com) and is licensed under the terms of the [MIT License](http://opensource.org/licenses/MIT).

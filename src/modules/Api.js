@@ -26,6 +26,7 @@ var Api = function(Glide, Core) {
 
             /**
              * Get current slide index
+             *
              * @return {int}
              */
             current: function() {
@@ -35,17 +36,21 @@ var Api = function(Glide, Core) {
 
             /**
              * Go to specifed slide
+             *
              * @param  {String}   distance
              * @param  {Function} callback
-             * @return {Core.Run}
+             * @return void
              */
             go: function(distance, callback) {
-                return Core.Run.make(distance, callback);
+                Core.Run.pause();
+                Core.Run.make(distance, callback);
+                Core.Run.play();
             },
 
 
             /**
              * Jump without animation to specifed slide
+             *
              * @param  {String}   distance
              * @param  {Function} callback
              * @return {Core.Run}
@@ -61,15 +66,22 @@ var Api = function(Glide, Core) {
             },
 
 
-            animate: function(offset) {
+            /**
+             * Animate/move slider with passed distance
+             *
+             * @param  {int} distance
+             * @return {void}
+             */
+            animate: function(distance) {
                 Core.Transition.jumping = true;
-                Core.Animation.make(offset);
+                Core.Animation.make(distance);
                 Core.Transition.jumping = false;
             },
 
 
             /**
              * Start autoplay
+             *
              * @return {Core.Run}
              */
             start: function(interval) {
@@ -82,6 +94,7 @@ var Api = function(Glide, Core) {
 
             /**
              * Play autoplay
+             *
              * @return {Core.Run}
              */
             play: function() {
@@ -91,6 +104,7 @@ var Api = function(Glide, Core) {
 
             /**
              * Pause autoplay
+             *
              * @return {Core.Run}
              */
             pause: function() {
@@ -100,7 +114,8 @@ var Api = function(Glide, Core) {
 
             /**
              * Destroy
-             * @return {Glide.slider}
+             *
+             * @return {void}
              */
             destroy: function() {
 
@@ -126,7 +141,8 @@ var Api = function(Glide, Core) {
 
             /**
              * Refresh slider
-             * @return {Core.Run}
+             *
+             * @return {void}
              */
             refresh: function() {
                 Core.Run.pause();

@@ -65,7 +65,7 @@ var Events = function(Glide, Core) {
      */
     Module.prototype.resize = function() {
 
-        $(window).on('resize.glide' + Glide.uniqueID, Core.Helper.throttle(function() {
+        $(window).on('resize.glide.' + Glide._uid, Core.Helper.throttle(function() {
             Core.Transition.jumping = true;
             Glide.setup();
             Core.Build.init();
@@ -226,7 +226,7 @@ var Events = function(Glide, Core) {
 
         $(window)
             .off('keyup.glide')
-            .off('resize.glide' + Glide.uniqueID);
+            .off('resize.glide.' + Glide._uid);
 
     };
 

@@ -58,7 +58,7 @@ var Glide = function(element, options) {
 
     // Extend options
     this.options = $.extend({}, defaults, options);
-    this.uniqueID = parseInt(Math.random() * 1000);
+    this._uid = Math.floor(Math.random() * 1000);
     this.current = parseInt(this.options.startAt);
     this.element = element;
 

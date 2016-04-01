@@ -213,6 +213,7 @@ var Touch = function(Glide, Core) {
             }
 
             // Switch distance limit base on event type
+            var distanceLimiter;
             if (event.type === 'mouseup' || event.type === 'mouseleave') {
                 distanceLimiter = Glide.options.dragDistance;
             } else {

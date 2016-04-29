@@ -90,12 +90,38 @@ var Bullets = function(Glide, Core) {
     };
 
     /**
+     * Bullets hover event.
+     *
+     * @param {Object} event
+     * @return {Void}
+     */
+    Bullets.prototype.hover = function(event) {
+        if (!Core.Events.disabled) {
+
+            switch (event.type) {
+                // Start autoplay on mouse leave.
+                case 'mouseleave':
+                    Core.Run.play();
+                    break;
+                // Pause autoplay on mouse enter.
+                case 'mouseenter':
+                    Core.Run.pause();
+                    break;
+            }
+
+        }
+    };
+
+    /**
      * Bind bullets events.
      *
      * @return {Void}
      */
     Bullets.prototype.bind = function() {
-        this.wrapper.on('click.glide touchstart.glide', 'button', this.click);
+        this.wrapper
+            .on('click.glide touchstart.glide', 'button', this.click)
+            .on('mouseenter.glide', 'button', this.hover)
+            .on('mouseleave.glide', 'button', this.hover);
     };
 
     /**
@@ -104,7 +130,10 @@ var Bullets = function(Glide, Core) {
      * @return {Void}
      */
     Bullets.prototype.unbind = function() {
-        this.wrapper.off('click.glide touchstart.glide', 'button');
+        this.wrapper
+            .off('click.glide touchstart.glide', 'button')
+            .off('mouseenter.glide', 'button')
+            .off('mouseleave.glide', 'button');
     };
 
     // Return class.

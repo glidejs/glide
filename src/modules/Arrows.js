@@ -42,6 +42,8 @@ var Arrows = function(Glide, Core) {
             .addClass(classes.disabled)
             .siblings()
             .bind('click.glide touchstart.glide', this.click)
+            .bind('mouseenter.glide', this.hover)
+            .bind('mouseleave.glide', this.hover)
             .removeClass(classes.disabled);
     };
 
@@ -75,6 +77,28 @@ var Arrows = function(Glide, Core) {
         }
     };
 
+    /**
+     * Arrows hover event.
+     *
+     * @param {Object} event
+     * @return {Void}
+     */
+    Arrows.prototype.hover = function(event) {
+        if (!Core.Events.disabled) {
+
+            switch (event.type) {
+                // Start autoplay on mouse leave.
+                case 'mouseleave':
+                    Core.Run.play();
+                    break;
+                // Pause autoplay on mouse enter.
+                case 'mouseenter':
+                    Core.Run.pause();
+                    break;
+            }
+
+        }
+    };
 
     /**
      * Bind arrows events.
@@ -82,7 +106,10 @@ var Arrows = function(Glide, Core) {
      * @return {Void}
      */
     Arrows.prototype.bind = function() {
-        this.items.on('click.glide touchstart.glide', this.click);
+        this.items
+            .on('click.glide touchstart.glide', this.click)
+            .on('mouseenter.glide', this.hover)
+            .on('mouseleave.glide', this.hover);
     };
 
 
@@ -92,7 +119,10 @@ var Arrows = function(Glide, Core) {
      * @return {Void}
      */
     Arrows.prototype.unbind = function() {
-        this.items.off('click.glide touchstart.glide');
+        this.items
+            .off('click.glide touchstart.glide')
+            .off('mouseenter.glide')
+            .off('mouseleave.glide');
     };
 
 

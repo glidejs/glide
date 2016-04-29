@@ -1,50 +1,44 @@
 /**
- * --------------------------------
- * Glide Transition
- * --------------------------------
- * Transition module
+ * Transition module.
+ *
+ * @param {Object} Glide
+ * @param {Object} Core
  * @return {Transition}
  */
-
 var Transition = function(Glide, Core) {
 
-
     /**
-     * Transition Module Constructor
+     * Transition constructor.
      */
-    function Module() {
+    function Transition() {
         this.jumping = false;
     }
 
-
     /**
-     * Get transition settings
-     * @param  {string} property
-     * @return {string}
+     * Get transition settings.
+     *
+     * @param {String} property
+     * @return {String}
      */
-    Module.prototype.get = function(property) {
-
+    Transition.prototype.get = function(property) {
         if (!this.jumping) {
             return property + ' ' + Glide.options.animationDuration + 'ms ' + Glide.options.animationTimingFunc;
-        } else {
-            return this.clear('all');
         }
 
+        return this.clear('all');
     };
 
-
     /**
-     * Clear transition settings
-     * @param  {string} property
-     * @return {string}
+     * Clear transition settings.
+     *
+     * @param {String} property
+     * @return {String}
      */
-    Module.prototype.clear = function(property) {
+    Transition.prototype.clear = function(property) {
         return property + ' 0ms ' + Glide.options.animationTimingFunc;
     };
 
-
-    // @return Module
-    return new Module();
-
+    // Return class.
+    return new Transition();
 
 };

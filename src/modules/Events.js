@@ -1,31 +1,37 @@
 /**
- * --------------------------------
- * Glide Events
- * --------------------------------
- * Events functions
+ * Events module.
+ *
+ * @param {Object} Glide
+ * @param {Object} Core
  * @return {Events}
  */
-
 var Events = function(Glide, Core) {
 
+    /**
+     * Collection of triggers.
+     *
+     * @type {Object}
+     */
     var triggers = $('[data-glide-trigger]');
 
     /**
-     * Events Module Constructor
+     * Events constructor.
      */
-    function Module() {
+    function Events() {
         this.disabled = false;
+
         this.keyboard();
         this.hoverpause();
         this.resize();
         this.bindTriggers();
     }
 
-
     /**
-     * Keyboard events
+     * Bind keyboard events.
+     *
+     * @return {Void}
      */
-    Module.prototype.keyboard = function() {
+    Events.prototype.keyboard = function() {
         if (Glide.options.keyboard) {
             $(window).on('keyup.glide', function(event) {
                 if (event.keyCode === 39) {
@@ -39,9 +45,11 @@ var Events = function(Glide, Core) {
     };
 
     /**
-     * Hover pause event
+     * Bind hoverpause event.
+     *
+     * @return {Void}
      */
-    Module.prototype.hoverpause = function() {
+    Events.prototype.hoverpause = function() {
 
         if (Glide.options.hoverpause) {
 
@@ -59,13 +67,14 @@ var Events = function(Glide, Core) {
 
     };
 
-
     /**
-     * Resize window event
+     * Bind resize window event.
+     *
+     * @return {Void}
      */
-    Module.prototype.resize = function() {
+    Events.prototype.resize = function() {
 
-        $(window).on('resize.glide.' + Glide._uid, Core.Helper.throttle(function() {
+        $(window).on('resize.glide.' + Glide.uuid, Core.Helper.throttle(function() {
             Core.Transition.jumping = true;
             Glide.setup();
             Core.Build.init();
@@ -76,11 +85,12 @@ var Events = function(Glide, Core) {
 
     };
 
-
     /**
-     * Bind triggers events
+     * Bind triggers events.
+     *
+     * @return {Void}
      */
-    Module.prototype.bindTriggers = function() {
+    Events.prototype.bindTriggers = function() {
         if (triggers.length) {
             triggers
                 .off('click.glide touchstart.glide')
@@ -88,12 +98,13 @@ var Events = function(Glide, Core) {
         }
     };
 
-
     /**
-     * Hande trigger event
-     * @param  {Object} event
+     * Hande trigger event.
+     *
+     * @param {Object} event
+     * @return {Void}
      */
-    Module.prototype.handleTrigger = function(event) {
+    Events.prototype.handleTrigger = function(event) {
         event.preventDefault();
 
         var targets = $(this).data('glide-trigger').split(" ");
@@ -108,34 +119,34 @@ var Events = function(Glide, Core) {
         }
     };
 
-
     /**
-     * Disable all events
-     * @return {Glide.Events}
+     * Disable all events.
+     *
+     * @return {self}
      */
-    Module.prototype.disable = function() {
+    Events.prototype.disable = function() {
         this.disabled = true;
 
         return this;
     };
 
-
     /**
-     * Enable all events
-     * @return {Glide.Events}
+     * Enable all events.
+     *
+     * @return {self}
      */
-    Module.prototype.enable = function() {
+    Events.prototype.enable = function() {
         this.disabled = false;
 
         return this;
     };
 
-
     /**
-     * Detach anchors clicks
-     * inside slider track
+     * Detach anchors clicks inside track.
+     *
+     * @return {self}
      */
-    Module.prototype.detachClicks = function() {
+    Events.prototype.detachClicks = function() {
         Glide.track.find('a').each(function(i, a) {
             $(a).attr('data-href', $(a).attr('href')).removeAttr('href');
         });
@@ -143,12 +154,12 @@ var Events = function(Glide, Core) {
         return this;
     };
 
-
     /**
-     * Attach anchors clicks
-     * inside slider track
+     * Attach anchors clicks inside track.
+     *
+     * @return {self}
      */
-    Module.prototype.attachClicks = function() {
+    Events.prototype.attachClicks = function() {
         Glide.track.find('a').each(function(i, a) {
             $(a).attr('href', $(a).attr('data-href'));
         });
@@ -156,12 +167,12 @@ var Events = function(Glide, Core) {
         return this;
     };
 
-
     /**
-     * Prevent anchors clicks
-     * inside slider track
+     * Prevent anchors clicks inside track.
+     *
+     * @return {self}
      */
-    Module.prototype.preventClicks = function(event) {
+    Events.prototype.preventClicks = function(event) {
         if (event.type === 'mousemove') {
             Glide.track.one('click', 'a', function(e) {
                 e.preventDefault();
@@ -171,13 +182,13 @@ var Events = function(Glide, Core) {
         return this;
     };
 
-
     /*
-     * Call function
+     * Call event function with parameters.
+     *
      * @param {Function} func
-     * @return {Glide.Events}
+     * @return {self}
      */
-    Module.prototype.call = function(func) {
+    Events.prototype.call = function(func) {
         if ((func !== 'undefined') && (typeof func === 'function')) {
             func(this.getParams());
         }
@@ -185,18 +196,24 @@ var Events = function(Glide, Core) {
         return this;
     };
 
-    Module.prototype.trigger = function(name) {
+    /**
+     * Trigger event.
+     *
+     * @param  {String} name
+     * @return {self}
+     */
+    Events.prototype.trigger = function(name) {
         Glide.slider.trigger(name + ".glide", [this.getParams()]);
 
         return this;
     };
 
-
     /**
-     * Get events params
+     * Get parameters for events callback.
+     *
      * @return {Object}
      */
-    Module.prototype.getParams = function() {
+    Events.prototype.getParams = function() {
         return {
             index: Glide.current,
             length: Glide.slides.length,
@@ -208,13 +225,12 @@ var Events = function(Glide, Core) {
         };
     };
 
-
     /*
-     * Call function
-     * @param {Function} func
-     * @return {Glide.Events}
+     * Unbind all events.
+     *
+     * @return {Void}
      */
-    Module.prototype.unbind = function() {
+    Events.prototype.unbind = function() {
 
         Glide.track
             .off('keyup.glide')
@@ -230,8 +246,7 @@ var Events = function(Glide, Core) {
 
     };
 
-
-    // @return Module
-    return new Module();
+    // Return class.
+    return new Events();
 
 };

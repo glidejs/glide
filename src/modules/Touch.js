@@ -1,27 +1,34 @@
 /**
- * --------------------------------
- * Glide Touch
- * --------------------------------
- * Touch module
+ * Touch module.
+ *
+ * @param {Object} Glide
+ * @param {Object} Core
  * @return {Touch}
  */
-
 var Touch = function(Glide, Core) {
 
+    /**
+     * Touch event object.
+     *
+     * @var {Object}
+     */
     var touch;
 
     /**
-     * Touch Module Constructor
+     * Touch constructor.
      */
-    function Module() {
+    function Touch() {
 
         this.dragging = false;
 
+        // Bind touch event.
         if (Glide.options.touchDistance) {
             Glide.track.on({
                 'touchstart.glide': $.proxy(this.start, this)
             });
         }
+
+        // Bind mouse drag event.
         if (Glide.options.dragDistance) {
             Glide.track.on({
                 'mousedown.glide': $.proxy(this.start, this)
@@ -30,39 +37,41 @@ var Touch = function(Glide, Core) {
 
     }
 
-
     /**
-     * Unbind touch events
+     * Unbind touch events.
+     *
+     * @return {Void}
      */
-    Module.prototype.unbind = function() {
+    Touch.prototype.unbind = function() {
         Glide.track
             .off('touchstart.glide mousedown.glide')
             .off('touchmove.glide mousemove.glide')
             .off('touchend.glide touchcancel.glide mouseup.glide mouseleave.glide');
     };
 
-
     /**
-     * Start touch event
-     * @param  {Object} event
+     * Start touch event.
+     *
+     * @param {Object} event
+     * @return {Void}
      */
-    Module.prototype.start = function(event) {
+    Touch.prototype.start = function(event) {
 
         // Escape if events disabled
-        // or already dragging
+        // or already dragging.
         if (!Core.Events.disabled && !this.dragging) {
 
-            // Cache event
+            // Store event.
             if (event.type === 'mousedown') {
                 touch = event.originalEvent;
             } else {
                 touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
             }
 
-            // Turn off jumping flag
+            // Turn off jumping flag.
             Core.Transition.jumping = true;
 
-            // Get touch start points
+            // Get touch start points.
             this.touchStartX = parseInt(touch.pageX);
             this.touchStartY = parseInt(touch.pageY);
             this.touchSin = null;
@@ -73,69 +82,69 @@ var Touch = function(Glide, Core) {
                 'touchend.glide touchcancel.glide mouseup.glide mouseleave.glide': $.proxy(this.end, this)
             });
 
-
-            // Detach clicks inside track
+            // Detach clicks inside track.
             Core.Events.detachClicks()
                 .call(Glide.options.swipeStart)
                 .trigger('swipeStart');
-            // Pause if autoplay
+            // Pause if autoplay.
             Core.Run.pause();
 
         }
 
     };
 
-
     /**
-     * Touch move event
+     * Touch move event.
+     *
      * @param  {Object} event
+     * @return {Void}
      */
-    Module.prototype.move = function(event) {
+    Touch.prototype.move = function(event) {
 
         // Escape if events not disabled
-        // or not dragging
+        // or not dragging.
         if (!Core.Events.disabled && this.dragging) {
 
-            // Cache event
+            // Store event.
             if (event.type === 'mousemove') {
                 touch = event.originalEvent;
             } else {
                 touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
             }
 
-            // Calculate start, end points
+            // Calculate start, end points.
             var subExSx = parseInt(touch.pageX) - this.touchStartX;
             var subEySy = parseInt(touch.pageY) - this.touchStartY;
-            // Bitwise subExSx pow
+            // Bitwise subExSx pow.
             var powEX = Math.abs(subExSx << 2);
-            // Bitwise subEySy pow
+            // Bitwise subEySy pow.
             var powEY = Math.abs(subEySy << 2);
-            // Calculate the length of the hypotenuse segment
+            // Calculate the length of the hypotenuse segment.
             var touchHypotenuse = Math.sqrt(powEX + powEY);
-            // Calculate the length of the cathetus segment
+            // Calculate the length of the cathetus segment.
             var touchCathetus = Math.sqrt(Core.Helper.byAxis(powEY, powEX));
 
-            // Calculate the sine of the angle
+            // Calculate the sine of the angle.
             this.touchSin = Math.asin(touchCathetus / touchHypotenuse);
-            // Save distance
+            // Save distance.
             this.distance = Core.Helper.byAxis(
                 (touch.pageX - this.touchStartX),
                 (touch.pageY - this.touchStartY)
             );
 
-            // Make offset animation
-            // While angle is lower than 45 degree
+            // Make offset animation.
+            // While angle is lower than 45 degree.
             if ((this.touchSin * 180 / Math.PI) < 45) {
                 Core.Animation.make(Core.Helper.byAxis(subExSx, subEySy));
             }
 
-            // Prevent clicks inside track
+            // Prevent clicks inside track.
             Core.Events.preventClicks(event)
                 .call(Glide.options.swipeMove)
                 .trigger('swipeMove');
 
             // While mode is vertical, we don't want to block scroll when we reach start or end of slider
-            // In that case we need to escape before preventing default event
+            // In that case we need to escape before preventing default event.
             if (Core.Build.isMode('vertical')) {
                 if (Core.Run.isStart() && subEySy > 0) {
                     return;
@@ -145,15 +154,15 @@ var Touch = function(Glide, Core) {
                 }
             }
 
-            // While angle is lower than 45 degree
+            // While angle is lower than 45 degree.
             if ((this.touchSin * 180 / Math.PI) < 45) {
-                // Prevent propagation
+                // Prevent propagation.
                 event.stopPropagation();
-                // Prevent scrolling
+                // Prevent scrolling.
                 event.preventDefault();
-                // Add dragging class
+                // Add dragging class.
                 Glide.track.addClass(Glide.options.classes.dragging);
-            // Else escape from event, we don't want move slider
+            // Else escape from event, we don't want move slider.
             } else {
                 return;
             }
@@ -162,48 +171,51 @@ var Touch = function(Glide, Core) {
 
     };
 
-
     /**
-     * Touch end event
+     * Touch end event.
+     *
      * @todo Check edge cases for slider type
-     * @param  {Onject} event
+     * @param {Onject} event
      */
-    Module.prototype.end = function(event) {
+    Touch.prototype.end = function(event) {
 
         // Escape if events not disabled
-        // or not dragging
+        // or not dragging.
         if (!Core.Events.disabled && this.dragging) {
 
-            // Cache event
+            // Set distance limiter.
+            var distanceLimiter;
+
+            // Store event.
             if (event.type === 'mouseup' || event.type === 'mouseleave') {
                 touch = event.originalEvent;
             } else {
                 touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
             }
 
-
-            // Calculate touch distance
+            // Calculate touch distance.
             var touchDistance = Core.Helper.byAxis(
                 (touch.pageX - this.touchStartX),
                 (touch.pageY - this.touchStartY)
             );
-            // Calculate degree
+
+            // Calculate degree.
             var touchDeg = this.touchSin * 180 / Math.PI;
 
-            // Turn off jumping flag
+            // Turn off jumping flag.
             Core.Transition.jumping = false;
 
-            // If slider type is slider
+            // If slider type is slider.
             if (Core.Build.isType('slider')) {
 
-                // Prevent slide to right on first item (prev)
+                // Prevent slide to right on first item (prev).
                 if (Core.Run.isStart()) {
                     if (touchDistance > 0) {
                         touchDistance = 0;
                     }
                 }
 
-                // Prevent slide to left on last item (next)
+                // Prevent slide to left on last item (next).
                 if (Core.Run.isEnd()) {
                     if (touchDistance < 0) {
                         touchDistance = 0;
@@ -212,47 +224,46 @@ var Touch = function(Glide, Core) {
 
             }
 
-            // Switch distance limit base on event type
-            var distanceLimiter;
+            // Switch distance limit base on event type.
             if (event.type === 'mouseup' || event.type === 'mouseleave') {
                 distanceLimiter = Glide.options.dragDistance;
             } else {
                 distanceLimiter = Glide.options.touchDistance;
             }
 
-            // While touch is positive and greater than distance set in options
-            // move backward
+            // While touch is positive and greater than
+            // distance set in options move backward.
             if (touchDistance > distanceLimiter && touchDeg < 45) {
                 Core.Run.make('<');
             }
-            // While touch is negative and lower than negative distance set in options
-            // move forward
+            // While touch is negative and lower than negative
+            // distance set in options move forward.
             else if (touchDistance < -distanceLimiter && touchDeg < 45) {
                 Core.Run.make('>');
             }
-            // While swipe don't reach distance apply previous transform
+            // While swipe don't reach distance apply previous transform.
             else {
                 Core.Animation.make();
             }
 
-            // After animation
+            // After animation.
             Core.Animation.after(function() {
-                // Enable events
+                // Enable events.
                 Core.Events.enable();
-                // If autoplay start auto run
+                // If autoplay start auto run.
                 Core.Run.play();
             });
 
-
-            // Unset dragging flag
+            // Unset dragging flag.
             this.dragging = false;
-            // Disable other events
+
+            // Disable other events.
             Core.Events.attachClicks()
                 .disable()
                 .call(Glide.options.swipeEnd)
                 .trigger('swipeEnd');
-            // Remove dragging class
-            // Unbind events
+
+            // Remove dragging class and unbind events.
             Glide.track
                 .removeClass(Glide.options.classes.dragging)
                 .off('touchmove.glide mousemove.glide')
@@ -262,8 +273,7 @@ var Touch = function(Glide, Core) {
 
     };
 
-
-    // @return Module
-    return new Module();
+    // Return class.
+    return new Touch();
 
 };

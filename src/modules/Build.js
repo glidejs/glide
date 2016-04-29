@@ -1,26 +1,26 @@
 /**
- * --------------------------------
- * Glide Build
- * --------------------------------
- * Build slider DOM
+ * Build module.
+ *
+ * @param {[type]} Glide
+ * @param {[type]} Core
  * @return {Build}
  */
-
 var Build = function(Glide, Core) {
 
-    // Build Module Constructor
-    function Module() {
+    // Build constructor.
+    function Build() {
         this.init();
     }
 
-
     /**
-     * Init slider build
-     * @return {[type]} [description]
+     * Init slider builder.
+     *
+     * @return {Void}
      */
-    Module.prototype.init = function() {
+    Build.prototype.init = function() {
         // Build proper slider type
         this[Glide.options.type]();
+
         // Set slide active class
         this.active();
 
@@ -28,99 +28,114 @@ var Build = function(Glide, Core) {
         Core.Height.set();
     };
 
-
     /**
-     * Check if slider type is
-     * @param  {string} name Type name to check
-     * @return {boolean}
+     * Check slider type.
+     *
+     * @param  {String} name
+     * @return {Boolean}
      */
-    Module.prototype.isType = function(name) {
+    Build.prototype.isType = function(name) {
         return Glide.options.type === name;
     };
 
-
     /**
-     * Check if slider type is
-     * @param  {string} name Type name to check
-     * @return {boolean}
+     * Check slider mode.
+     *
+     * @param  {String} name
+     * @return {Boolean}
      */
-    Module.prototype.isMode = function(name) {
+    Build.prototype.isMode = function(name) {
         return Glide.options.mode === name;
     };
 
-
     /**
-     * Build Slider type
+     * Build slider type.
+     *
+     * @return {Void}
      */
-    Module.prototype.slider = function() {
+    Build.prototype.slider = function() {
 
-        // Turn on jumping flag
+        // Turn on jumping flag.
         Core.Transition.jumping = true;
-        // Apply slides width
+
+        // Apply slides width.
         Glide.slides[Glide.size](Glide[Glide.size]);
-        // Apply translate
+
+        // Apply translate.
         Glide.track.css(Glide.size, Glide[Glide.size] * Glide.length);
-        // If mode is vertical apply height
+
+        // If mode is vertical apply height.
         if (this.isMode('vertical')) {
             Core.Height.set(true);
         }
-        // Go to startup position
+
+        // Go to startup position.
         Core.Animation.make();
-        // Turn off jumping flag
+
+        // Turn off jumping flag.
         Core.Transition.jumping = false;
 
     };
 
-
     /**
-     * Build Carousel type
-     * @return {[type]} [description]
+     * Build carousel type.
+     *
+     * @return {Void}
      */
-    Module.prototype.carousel = function() {
+    Build.prototype.carousel = function() {
 
-        // Turn on jumping flag
+        // Turn on jumping flag.
         Core.Transition.jumping = true;
-        // Update shift for carusel type
+
+        // Update shift for carusel type.
         Core.Clones.shift = (Glide[Glide.size] * Core.Clones.items.length / 2) - Glide[Glide.size];
-        // Apply slides width
+
+        // Apply slides width.
         Glide.slides[Glide.size](Glide[Glide.size]);
-        // Apply translate
+
+        // Apply translate.
         Glide.track.css(Glide.size, (Glide[Glide.size] * Glide.length) + Core.Clones.getGrowth());
-        // If mode is vertical apply height
+
+        // If mode is vertical apply height.
         if (this.isMode('vertical')) {
             Core.Height.set(true);
         }
-        // Go to startup position
+
+        // Go to startup position.
         Core.Animation.make();
-        // Append clones
+
+        // Append clones.
         Core.Clones.append();
-        // Turn off jumping flag
+
+        // Turn off jumping flag.
         Core.Transition.jumping = false;
 
     };
 
-
     /**
-     * Build Slideshow type
-     * @return {[type]} [description]
+     * Build slideshow type.
+     *
+     * @return {Void}
      */
-    Module.prototype.slideshow = function() {
+    Build.prototype.slideshow = function() {
 
         // Turn on jumping flag
         Core.Transition.jumping = true;
+
         // Go to startup position
         Core.Animation.make();
+
         // Turn off jumping flag
         Core.Transition.jumping = false;
 
     };
 
-
     /**
-     * Set active class
-     * to current slide
+     * Set active class to current slide.
+     *
+     * @return {Void}
      */
-    Module.prototype.active = function() {
+    Build.prototype.active = function() {
 
         Glide.slides
             .eq(Glide.current - 1).addClass(Glide.options.classes.active)
@@ -128,7 +143,7 @@ var Build = function(Glide, Core) {
 
     };
 
-    // @return Module
-    return new Module();
+    // Return class.
+    return new Build();
 
 };

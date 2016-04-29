@@ -1,65 +1,64 @@
 /**
- * --------------------------------
- * Glide Helper
- * --------------------------------
- * Helper functions
+ * helper module.
+ *
+ * @param {Object} Glide
+ * @param {Object} Core
  * @return {Helper}
  */
-
 var Helper = function(Glide, Core) {
 
-
     /**
-     * Helper Module Constructor
+     * Helper constructor.
      */
-    function Module() {
+    function Helper() {
     }
-
 
     /**
      * If slider axis is vertical (y axis) return vertical value
-     * else axis is horizontal (x axis) so return horizontal value
+     * else axis is horizontal (x axis) so return horizontal value.
+     *
      * @param  {Mixed} hValue
      * @param  {Mixed} vValue
      * @return {Mixed}
      */
-    Module.prototype.byAxis = function(hValue, vValue) {
+    Helper.prototype.byAxis = function(hValue, vValue) {
         if (Glide.axis === 'y') {
             return vValue;
-        } else {
-            return hValue;
         }
+
+        return hValue;
     };
 
-
     /**
-     * Capitalise string
-     * @param  {string} s
-     * @return {string}
+     * Capitalise string.
+     *
+     * @param  {String} s
+     * @return {String}
      */
-    Module.prototype.capitalise = function(s) {
-        return s.charAt(0).toUpperCase() + s.slice(1);
+    Helper.prototype.capitalise = function(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
     };
 
-
     /**
-     * Get time
+     * Get time.
+     *
      * @version Underscore.js 1.8.3
      * @source http://underscorejs.org/
      * @copyright (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors. Underscore may be freely distributed under the MIT license.
+     * @return {String}
      */
-    Module.prototype.now = Date.now || function() {
+    Helper.prototype.now = Date.now || function() {
         return new Date().getTime();
     };
 
-
     /**
-     * Throttle
+     * Throttle.
+     *
      * @version Underscore.js 1.8.3
      * @source http://underscorejs.org/
      * @copyright (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors. Underscore may be freely distributed under the MIT license.
      */
-    Module.prototype.throttle = function(func, wait, options) {
+    Helper.prototype.throttle = function(func, wait, options) {
         var that = this;
         var context;
         var args;
@@ -102,20 +101,18 @@ var Helper = function(Glide, Core) {
         };
     };
 
-
     /**
-     * Remove transition
+     * Remove transition.
+     *
+     * @return {Void}
      */
-    Module.prototype.removeStyles = function(elements) {
+    Helper.prototype.removeStyles = function(elements) {
         for (var i = 0; i < elements.length; i++) {
             elements[i].removeAttr('style');
         }
-
     };
 
-
-    // @return Module
-    return new Module();
-
+    // Return class.
+    return new Helper();
 
 };

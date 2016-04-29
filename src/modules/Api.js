@@ -1,33 +1,31 @@
 /**
- * --------------------------------
- * Glide Api
- * --------------------------------
- * Plugin api module
+ * Api module.
+ *
+ * @param {Object} Glide
+ * @param {Object} Core
  * @return {Api}
  */
-
 var Api = function(Glide, Core) {
 
-
     /**
-     * Api Module Constructor
+     * Api constructor.
      */
-    function Module() {
+    function Api() {
     }
 
-
     /**
-     * Api instance
-     * @return {object}
+     * Api instance.
+     *
+     * @return {Object}
      */
-    Module.prototype.instance = function() {
+    Api.prototype.instance = function() {
 
         return {
 
             /**
-             * Get current slide index
+             * Get current slide index.
              *
-             * @return {int}
+             * @return {Integer}
              */
             current: function() {
                 return Glide.current;
@@ -35,11 +33,11 @@ var Api = function(Glide, Core) {
 
 
             /**
-             * Go to specifed slide
+             * Go to specifed slide.
              *
-             * @param  {String}   distance
+             * @param  {String} distance
              * @param  {Function} callback
-             * @return void
+             * @return {Void}
              */
             go: function(distance, callback) {
                 Core.Run.pause();
@@ -51,28 +49,35 @@ var Api = function(Glide, Core) {
             /**
              * Jump without animation to specifed slide
              *
-             * @param  {String}   distance
+             * @param  {String} distance
              * @param  {Function} callback
-             * @return {Core.Run}
+             * @return {Void}
              */
             jump: function(distance, callback) {
-                // Let know that we want jumping
+
+                // Let know that we want jumping.
                 Core.Transition.jumping = true;
+
+                // Take off jumping flag,
+                // after animation.
                 Core.Animation.after(function() {
-                    // Jumping done, take down flag
+
                     Core.Transition.jumping = false;
                 });
-                return Core.Run.make(distance, callback);
+
+                // Move slider.
+                Core.Run.make(distance, callback);
+
             },
 
 
             /**
-             * Animate/move slider with passed distance
+             * Move slider by passed distance.
              *
-             * @param  {int} distance
-             * @return {void}
+             * @param  {Integer} distance
+             * @return {Void}
              */
-            animate: function(distance) {
+            move: function(distance) {
                 Core.Transition.jumping = true;
                 Core.Animation.make(distance);
                 Core.Transition.jumping = false;
@@ -80,22 +85,28 @@ var Api = function(Glide, Core) {
 
 
             /**
-             * Start autoplay
+             * Start autoplay.
              *
-             * @return {Core.Run}
+             * @return {Void}
              */
             start: function(interval) {
-                // We want running
+
+                // We want running, turn on flag.
                 Core.Run.running = true;
+
+                // Set autoplay duration.
                 Glide.options.autoplay = parseInt(interval);
-                return Core.Run.play();
+
+                // Run autoplay.
+                Core.Run.play();
+
             },
 
 
             /**
-             * Play autoplay
+             * Run autoplay.
              *
-             * @return {Core.Run}
+             * @return {Boolean}
              */
             play: function() {
                 return Core.Run.play();
@@ -103,9 +114,9 @@ var Api = function(Glide, Core) {
 
 
             /**
-             * Pause autoplay
+             * Pause autoplay.
              *
-             * @return {Core.Run}
+             * @return {Integer}
              */
             pause: function() {
                 return Core.Run.pause();
@@ -113,9 +124,9 @@ var Api = function(Glide, Core) {
 
 
             /**
-             * Destroy
+             * Destroy slider.
              *
-             * @return {void}
+             * @return {Void}
              */
             destroy: function() {
 
@@ -140,9 +151,9 @@ var Api = function(Glide, Core) {
 
 
             /**
-             * Refresh slider
+             * Refresh slider.
              *
-             * @return {void}
+             * @return {Void}
              */
             refresh: function() {
                 Core.Run.pause();
@@ -159,8 +170,8 @@ var Api = function(Glide, Core) {
     };
 
 
-    // @return Module
-    return new Module();
+    // Return class.
+    return new Api();
 
 
 };

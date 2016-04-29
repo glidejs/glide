@@ -1,6 +1,7 @@
 /**
- * Wire Glide to jQuery
- * @param  {object} options Plugin options
+ * Wire Glide to the jQuery.
+ *
+ * @param  {object} options
  * @return {object}
  */
 

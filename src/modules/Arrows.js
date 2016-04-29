@@ -1,40 +1,43 @@
 /**
- * --------------------------------
- * Glide Arrows
- * --------------------------------
- * Arrows navigation module
+ * Arrows module.
+ *
+ * @param {Object} Glide
+ * @param {Object} Core
  * @return {Arrows}
  */
-
 var Arrows = function(Glide, Core) {
 
 
     /**
-     * Arrows Module Constructor
+     * Arrows constructor.
      */
-    function Module() {
+    function Arrows() {
         this.build();
         this.bind();
     }
 
 
     /**
-     * Build
-     * arrows DOM
+     * Build arrows. Gets DOM elements.
+     *
+     * @return {Void}
      */
-    Module.prototype.build = function() {
+    Arrows.prototype.build = function() {
         this.wrapper = Glide.slider.find('.' + Glide.options.classes.arrows);
         this.items = this.wrapper.children();
     };
 
 
     /**
-     * Disable arrow
+     * Disable next/previous arrow.
+     *
+     * @param {String} type
+     * @return {Void}
      */
-    Module.prototype.disable = function(type) {
+    Arrows.prototype.disable = function(type) {
         var classes = Glide.options.classes;
 
-        return this.items.filter('.' + classes['arrow' + Core.Helper.capitalise(type)])
+        this.items.filter('.' + classes['arrow' + Core.Helper.capitalise(type)])
             .unbind('click.glide touchstart.glide')
             .addClass(classes.disabled)
             .siblings()
@@ -44,18 +47,23 @@ var Arrows = function(Glide, Core) {
 
 
     /**
-     * Show arrows
+     * Show both arrows.
+     *
+     * @return {Void}
      */
-    Module.prototype.enable = function() {
+    Arrows.prototype.enable = function() {
         this.bind();
-        return this.items.removeClass(Glide.options.classes.disabled);
+
+        this.items.removeClass(Glide.options.classes.disabled);
     };
 
     /**
-     * Click arrow method
-     * @param  {Object} event
+     * Arrow click event.
+     *
+     * @param {Object} event
+     * @return {Void}
      */
-    Module.prototype.click = function(event) {
+    Arrows.prototype.click = function(event) {
         event.preventDefault();
 
         if (!Core.Events.disabled) {
@@ -69,24 +77,26 @@ var Arrows = function(Glide, Core) {
 
 
     /**
-     * Bind
-     * arrows events
+     * Bind arrows events.
+     *
+     * @return {Void}
      */
-    Module.prototype.bind = function() {
-        return this.items.on('click.glide touchstart.glide', this.click);
+    Arrows.prototype.bind = function() {
+        this.items.on('click.glide touchstart.glide', this.click);
     };
 
 
     /**
-     * Unbind
-     * arrows events
+     * Unbind arrows events.
+     *
+     * @return {Void}
      */
-    Module.prototype.unbind = function() {
-        return this.items.off('click.glide touchstart.glide');
+    Arrows.prototype.unbind = function() {
+        this.items.off('click.glide touchstart.glide');
     };
 
 
-    // @return Module
-    return new Module();
+    // Return class.
+    return new Arrows();
 
 };

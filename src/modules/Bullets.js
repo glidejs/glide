@@ -1,23 +1,26 @@
 /**
- * --------------------------------
- * Glide Bullets
- * --------------------------------
- * Bullets navigation module
+ * Bullets module.
+ *
+ * @param {Object} Glide
+ * @param {Object} Core
  * @return {Bullets}
  */
-
 var Bullets = function(Glide, Core) {
 
-
     /**
-     * Bullets Module Constructor
+     * Bullets constructor.
      */
-    function Module() {
+    function Bullets() {
         this.init();
         this.bind();
     }
 
-    Module.prototype.init = function() {
+    /**
+     * Init bullets builder.
+     *
+     * @return {self}
+     */
+    Bullets.prototype.init = function() {
         this.build();
         this.active();
 
@@ -25,13 +28,16 @@ var Bullets = function(Glide, Core) {
     };
 
     /**
-     * Build
-     * bullets DOM
+     * Get DOM and setup bullets.
+     *
+     * @return {Void}
      */
-    Module.prototype.build = function() {
+    Bullets.prototype.build = function() {
 
+        // Get bullets wrapper.
         this.wrapper = Glide.slider.children('.' + Glide.options.classes.bullets);
 
+        // Set class and direction to each bullet.
         for (var i = 1; i <= Glide.length; i++) {
             $('<button>', {
                 'class': Glide.options.classes.bullet,
@@ -39,36 +45,39 @@ var Bullets = function(Glide, Core) {
             }).appendTo(this.wrapper);
         }
 
+        // Get all bullets.
         this.items = this.wrapper.children();
 
     };
 
-
     /**
-     * Handle active class
-     * Adding and removing active class
+     * Handle active class. Adding and removing active class.
+     *
+     * @return {Void}
      */
-    Module.prototype.active = function() {
-        return this.items
-            .eq(Glide.current - 1).addClass('active')
+    Bullets.prototype.active = function() {
+        this.items.eq(Glide.current - 1)
+            .addClass('active')
             .siblings().removeClass('active');
     };
 
-
     /**
-     * Delete all bullets
+     * Delete all bullets.
+     *
+     * @return {self}
      */
-    Module.prototype.remove = function() {
+    Bullets.prototype.remove = function() {
         this.items.remove();
+
         return this;
     };
 
-
     /**
-     * Bullet click
-     * @param  {Object} event
+     * Bullet click event.
+     *
+     * @param {Object} event
      */
-    Module.prototype.click = function(event) {
+    Bullets.prototype.click = function(event) {
         event.preventDefault();
 
         if (!Core.Events.disabled) {
@@ -80,26 +89,25 @@ var Bullets = function(Glide, Core) {
         }
     };
 
-
     /**
-     * Bind
-     * bullets events
+     * Bind bullets events.
+     *
+     * @return {Void}
      */
-    Module.prototype.bind = function() {
-        return this.wrapper.on('click.glide touchstart.glide', 'button', this.click);
+    Bullets.prototype.bind = function() {
+        this.wrapper.on('click.glide touchstart.glide', 'button', this.click);
     };
 
-
     /**
-     * Unbind
-     * bullets events
+     * Unbind bullets events.
+     *
+     * @return {Void}
      */
-    Module.prototype.unbind = function() {
-        return this.wrapper.off('click.glide touchstart.glide', 'button');
+    Bullets.prototype.unbind = function() {
+        this.wrapper.off('click.glide touchstart.glide', 'button');
     };
 
-
-    // @return Module
-    return new Module();
+    // Return class.
+    return new Bullets();
 
 };

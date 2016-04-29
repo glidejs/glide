@@ -1,19 +1,19 @@
 /**
- * --------------------------------
- * Glide Core
- * --------------------------------
- * @param {Glide} Glide	Slider Class
- * @param {array} Modules	Modules list to construct
+ * Glide core.
+ *
+ * @param {Object} Glide
+ * @param {Object} Modules
  * @return {Core}
  */
-
 var Core = function(Glide, Modules) {
 
     /**
-     * Core Module Constructor
-     * Construct modules and inject Glide and Core as dependency
+     * Core constructor. Construct modules and
+     * inject Glide and Core as dependency.
+     *
+     * @return {Void}
      */
-    function Module() {
+    function Core() {
 
         for (var module in Modules) {
             this[module] = new Modules[module](Glide, this);
@@ -21,7 +21,7 @@ var Core = function(Glide, Modules) {
 
     }
 
-    // @return Module
-    return new Module();
+    // Return class.
+    return new Core();
 
 };

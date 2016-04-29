@@ -1,42 +1,60 @@
 /**
- * --------------------------------
- * Glide Clones
- * --------------------------------
- * Clones module
- * @return {Clones}
+ * Clones module.
+ *
+ * @param {Object} Glide
+ * @param {Object} Core
+ * @return {Void}
  */
-
 var Clones = function(Glide, Core) {
 
-
+    /**
+     * Clones position map.
+     *
+     * @type {Array}
+     */
     var map = [0, 1];
-    var pattern;
-
 
     /**
-     * Clones Module Constructor
+     * Clones order pattern.
+     *
+     * @type {Array}
      */
-    function Module() {
+    var pattern;
+
+    /**
+     * Clones constructor.
+     */
+    function Clones() {
+        this.items = [];
+        this.shift = 0;
+
         this.init();
     }
 
+    /**
+     * Init clones builder.
+     *
+     * @return {self}
+     */
+    Clones.prototype.init = function() {
 
-    Module.prototype.init = function() {
-        this.items = [];
-
+        // Map clones order pattern.
         this.map();
+
+        // Collect slides to clone
+        // with created pattern.
         this.collect();
 
-        this.shift = 0;
-
         return this;
+
     };
 
     /**
-     * Map clones length
-     * to pattern
+     * Generate clones pattern.
+     *
+     * @return {Void}
      */
-    Module.prototype.map = function() {
+    Clones.prototype.map = function() {
         var i;
         pattern = [];
 
@@ -46,10 +64,11 @@ var Clones = function(Glide, Core) {
     };
 
     /**
-     * Collect clones
-     * with maped pattern
+     * Collect clones with pattern.
+     *
+     * @return {Void}
      */
-    Module.prototype.collect = function() {
+    Clones.prototype.collect = function() {
         var item;
         var i;
 
@@ -61,31 +80,34 @@ var Clones = function(Glide, Core) {
         }
     };
 
-
     /**
-     * Append cloned slides before
-     * and after real slides
+     * Append cloned slides with generated pattern.
+     *
+     * @return {Void}
      */
-    Module.prototype.append = function() {
-        var item;
+    Clones.prototype.append = function() {
         var i;
+        var item;
 
         for (i = 0; i < this.items.length; i++) {
             item = this.items[i][Glide.size](Glide[Glide.size]);
 
+            // Append clone if pattern position is positive.
             if (pattern[i] >= 0) {
                 item.appendTo(Glide.track);
+            // Prepend clone if pattern position is negative.
             } else {
                 item.prependTo(Glide.track);
             }
         }
     };
 
-
     /**
-     * Remove cloned slides
+     * Remove all cloned slides.
+     *
+     * @return {self}
      */
-    Module.prototype.remove = function() {
+    Clones.prototype.remove = function() {
         var i;
 
         for (i = 0; i < this.items.length; i++) {
@@ -95,17 +117,16 @@ var Clones = function(Glide, Core) {
         return this;
     };
 
-
     /**
-     * Get width width of all the clones
+     * Get size grow caused by clones.
+     *
+     * @return {Number}
      */
-    Module.prototype.getGrowth = function() {
+    Clones.prototype.getGrowth = function() {
         return Glide.width * this.items.length;
     };
 
-
-    // @return Module
-    return new Module();
-
+    // Return class.
+    return new Clones();
 
 };

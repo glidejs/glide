@@ -1,18 +1,15 @@
 /**
- * --------------------------------
- * Glide Main
- * --------------------------------
- * Responsible for slider initiation,
- * extending defaults, returning public api
- * @param {jQuery} element Root element
- * @param {Object} options Plugin init options
- * @return {Glide}
+ * Construct Glide. Initialize slider, extends
+ * defaults and returning public api.
+ *
+ * @param {Object} element
+ * @param {Object} options
  */
-
 var Glide = function(element, options) {
 
     /**
-     * Default options
+     * Default slider options.
+     *
      * @type {Object}
      */
     var defaults = {
@@ -56,18 +53,25 @@ var Glide = function(element, options) {
         swipeMove: function(event) {},
     };
 
-    // Extend options
+    // Extend defaults with
+    // the init options.
     this.options = $.extend({}, defaults, options);
-    this._uid = Math.floor(Math.random() * 1000);
+
+    // Generate unique slider instance id.
+    this.uuid = Math.floor(Math.random() * 1000);
+
+    // Start at slide number specifed in options.
     this.current = parseInt(this.options.startAt);
+
+    // Store main slider DOM element.
     this.element = element;
 
-    // Collect DOM
+    // Collect slider DOM and
+    // init slider sizes.
     this.collect();
-    // Init values
     this.setup();
 
-    // Call before init callback
+    // Call before init callback.
     this.options.beforeInit({
         index: this.current,
         length: this.slides.length,
@@ -76,7 +80,8 @@ var Glide = function(element, options) {
     });
 
     /**
-     * Construct Core with modules
+     * Construct core with modules.
+     *
      * @type {Core}
      */
     var Engine = new Core(this, {
@@ -95,18 +100,19 @@ var Glide = function(element, options) {
         Api: Api
     });
 
-    // Call after init callback
+    // Call after init callback.
     Engine.Events.call(this.options.afterInit);
 
-    // api return
+    // Return slider Api.
     return Engine.Api.instance();
 
 };
 
 
 /**
- * Collect DOM
- * and set classes
+ * Collect DOM and set classes.
+ *
+ * @return {void}
  */
 Glide.prototype.collect = function() {
     var options = this.options;
@@ -120,53 +126,82 @@ Glide.prototype.collect = function() {
 
 
 /**
- * Setup properties and values
+ * Setup slider dementions.
+ *
+ * @return {Void}
  */
 Glide.prototype.setup = function() {
-    var modeMap = {
+
+    /**
+     * Mode to dimentions (size and axis) mapper.
+     *
+     * @type {Object}
+     */
+    var modeToDimensionsMap = {
         horizontal: ['width', 'x'],
         vertical: ['height', 'y'],
     };
 
-    this.size = modeMap[this.options.mode][0];
-    this.axis = modeMap[this.options.mode][1];
+    // Get slider size by active mode.
+    this.size = modeToDimensionsMap[this.options.mode][0];
+
+    // Get slider axis by active mode.
+    this.axis = modeToDimensionsMap[this.options.mode][1];
+
+    // Get slider items length.
     this.length = this.slides.length;
 
+    // Get slider configured paddings.
     this.paddings = this.getPaddings();
+
+    // Set slider size.
     this[this.size] = this.getSize();
 };
 
 
 /**
- * Normalize paddings option value
- * Parsing string (%, px) and numbers
- * @return {Number} normalized value
+ * Normalize paddings option value. Parsing
+ * strings procents, pixels and numbers.
+ *
+ * @return {string} Normalized value
  */
 Glide.prototype.getPaddings = function() {
 
     var option = this.options.paddings;
 
+    // If we have a string, we need
+    // to parse it to real number.
     if (typeof option === 'string') {
 
+        // Parse string to int.
         var normalized = parseInt(option, 10);
+
+        // Check if string is procentage number.
         var isPercentage = option.indexOf('%') >= 0;
 
+        // If paddings value is procentage. Calculate
+        // real number value from slider element.
         if (isPercentage) {
             return parseInt(this.slider[this.size]() * (normalized / 100));
-        } else {
-            return normalized;
         }
 
+        // Value is number as string, so
+        // just return normalized.
+        return normalized;
     }
 
+    // Value is number, we don't need
+    // to do anything, return.
     return option;
 
 };
 
 
 /**
- * Get slider width updated by addtional options
- * @return {Number} width value
+ * Get slider size width updated
+ * by addtional paddings.
+ *
+ * @return {number}
  */
 Glide.prototype.getSize = function() {
     return this.slider[this.size]() - (this.paddings * 2);

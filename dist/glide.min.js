@@ -1,8 +1,8 @@
 /*!
- * Glide.js
- * Version: 2.0.7
- * Simple, lightweight and fast jQuery slider
- * Author: @jedrzejchalubek
+ * glidejs
+ * Version: 2.0.8
+ * Glide is a responsive and touch-friendly jQuery slider. Based on CSS3 transitions with fallback to older broswers. It's simple, lightweight and fast.
+ * Author: Jędrzej Chałubek <jedrzej.chalubek@gmail.com>
  * Site: http://http://glide.jedrzejchalubek.com/
  * Licensed under the MIT license
  */

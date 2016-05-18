@@ -1,9 +1,9 @@
 {
-  "name": "Glide.js",
-  "version": "2.0.7",
-  "description": "Simple, lightweight and fast jQuery slider",
-  "main": "Gruntfile.js",
-  "author": "@jedrzejchalubek",
+  "name": "glidejs",
+  "version": "2.0.8",
+  "description": "Glide is a responsive and touch-friendly jQuery slider. Based on CSS3 transitions with fallback to older broswers. It's simple, lightweight and fast.",
+  "main": "dist/glide.js",
+  "author": "Jędrzej Chałubek <jedrzej.chalubek@gmail.com>",
   "homepage": "http://glide.jedrzejchalubek.com",
   "repository": {
     "type": "git",
@@ -15,12 +15,16 @@
     "lightweight",
     "fast",
     "slider",
+    "carousel",
     "jQuery",
     "CSS3",
     "transitions",
     "touch",
     "responsive"
   ],
+  "dependencies": {
+    "jquery": "2.2.*"
+  },
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-autoprefixer": "*",

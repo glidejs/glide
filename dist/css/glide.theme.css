@@ -32,6 +32,7 @@
 }
 .glide--horizontal .glide__arrow {
   -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
           transform: translateY(-50%);
 }
 .glide--horizontal .glide__arrow.prev {
@@ -42,6 +43,7 @@
 }
 .glide--vertical .glide__arrow {
   -webkit-transform: translateX(-50%);
+      -ms-transform: translateX(-50%);
           transform: translateX(-50%);
 }
 .glide--vertical .glide__arrow.prev {
@@ -68,6 +70,7 @@
   width: 12px;
   height: auto;
   -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
           transform: translateY(-50%);
 }
 .glide__bullets > * {

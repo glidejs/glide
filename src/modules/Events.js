@@ -242,7 +242,7 @@ var Events = function(Glide, Core) {
 
         $(window)
             .off('keyup.glide')
-            .off('resize.glide.' + Glide._uid);
+            .off('resize.glide.' + Glide.uuid);
 
     };
 

@@ -2,7 +2,7 @@
 
 [Glide.js](http://glide.jedrzejchalubek.com) is a responsive and touch-friendly jQuery slider. Based on CSS3 transitions. It's simple, lightweight and fast. It’s designed to slide. No less, no more.
 
-[![Build Status](https://travis-ci.org/jedrzejchalubek/Glide.js.svg?branch=master)](https://travis-ci.org/jedrzejchalubek/Glide.js)
+[![Build Status](https://api.travis-ci.org/jedrzejchalubek/glidejs.svg?branch=master)](https://travis-ci.org/jedrzejchalubek/Glide.js)
 
 ##Announcement
 Plugin in version releases `2.*.*` and `1.*.*` are NOT compatible. Big changes are made, so read documentation before upgrade.

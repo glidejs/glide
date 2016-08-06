@@ -141,6 +141,8 @@ var Api = function(Glide, Core) {
                 Core.Arrows.unbind();
                 Core.Bullets.unbind();
 
+                Glide.destroyed = true;
+
                 delete Glide.slider;
                 delete Glide.track;
                 delete Glide.slides;

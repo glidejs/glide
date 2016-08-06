@@ -71,6 +71,9 @@ var Glide = function(element, options) {
     this.collect();
     this.setup();
 
+    // Mark the glide as not destroyed
+    this.destroyed = false;
+
     // Call before init callback.
     this.options.beforeInit({
         index: this.current,

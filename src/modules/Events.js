@@ -75,12 +75,14 @@ var Events = function(Glide, Core) {
     Events.prototype.resize = function() {
 
         $(window).on('resize.glide.' + Glide.uuid, Core.Helper.throttle(function() {
-            Core.Transition.jumping = true;
-            Glide.setup();
-            Core.Build.init();
-            Core.Run.make('=' + Glide.current, false);
-            Core.Run.play();
-            Core.Transition.jumping = false;
+            if(!Glide.destroyed) {
+                Core.Transition.jumping = true;
+                Glide.setup();
+                Core.Build.init();
+                Core.Run.make('=' + Glide.current, false);
+                Core.Run.play();
+                Core.Transition.jumping = false;
+            }
         }, Glide.options.throttle));
 
     };

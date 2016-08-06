@@ -18,6 +18,7 @@ var Animation = function(Glide, Core) {
      * Animation constructor.
      */
     function Animation() {
+
     }
 
     /**
@@ -27,6 +28,11 @@ var Animation = function(Glide, Core) {
      * @return {self}
      */
     Animation.prototype.make = function(displacement) {
+        // Do not run if we have only one slide.
+        if (! Core.Run.canProcess()) {
+            return Core.Arrows.disable();
+        }
+
         // Parse displacement to integer before use.
         offset = (typeof displacement !== 'undefined') ? parseInt(displacement) : 0;
 

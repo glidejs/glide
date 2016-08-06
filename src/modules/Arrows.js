@@ -29,13 +29,17 @@ var Arrows = function(Glide, Core) {
 
 
     /**
-     * Disable next/previous arrow.
+     * Disable next/previous arrow and enable another.
      *
      * @param {String} type
      * @return {Void}
      */
     Arrows.prototype.disable = function(type) {
         var classes = Glide.options.classes;
+
+        if (!type) {
+            return this.disableBoth();
+        }
 
         this.items.filter('.' + classes['arrow' + Core.Helper.capitalise(type)])
             .unbind('click.glide touchstart.glide')
@@ -45,6 +49,17 @@ var Arrows = function(Glide, Core) {
             .bind('mouseenter.glide', this.hover)
             .bind('mouseleave.glide', this.hover)
             .removeClass(classes.disabled);
+    };
+
+    /**
+     * Disable both arrows.
+     *
+     * @return {Void}
+     */
+    Arrows.prototype.disableBoth = function() {
+        this.items
+            .unbind('click.glide touchstart.glide')
+            .addClass(Glide.options.classes.disabled);
     };
 
 

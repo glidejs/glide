@@ -32,6 +32,10 @@ var Run = function(Glide, Core) {
 
         var that = this;
 
+        if (! this.canProcess()) {
+            return;
+        }
+
         if (Glide.options.autoplay || this.running) {
 
             if (typeof this.interval === 'undefined') {
@@ -118,6 +122,11 @@ var Run = function(Glide, Core) {
 
         // Extract move steps.
         this.steps = (move.substr(1)) ? move.substr(1) : 0;
+
+        // Do not run if we have only one slide.
+        if (! this.canProcess()) {
+            return this.stop();
+        }
 
         // Stop autoplay until hoverpause is not set.
         if (!Glide.options.hoverpause) {
@@ -209,6 +218,24 @@ var Run = function(Glide, Core) {
             .call(Glide.options.duringTransition)
             .trigger('duringTransition');
 
+    };
+
+    /**
+     * Stop slider from running.
+     *
+     * @return {void}
+     */
+    Run.prototype.stop = function() {
+        this.pause();
+    };
+
+    /**
+     * Stop slider from running.
+     *
+     * @return {void}
+     */
+    Run.prototype.canProcess = function() {
+        return Glide.slides.length > 1;
     };
 
     // Return class.

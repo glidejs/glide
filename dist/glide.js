@@ -28,6 +28,7 @@ var Animation = function(Glide, Core) {
      * Animation constructor.
      */
     function Animation() {
+
     }
 
     /**
@@ -37,6 +38,11 @@ var Animation = function(Glide, Core) {
      * @return {self}
      */
     Animation.prototype.make = function(displacement) {
+        // Do not run if we have only one slide.
+        if (! Core.Run.canProcess()) {
+            return Core.Arrows.disable();
+        }
+
         // Parse displacement to integer before use.
         offset = (typeof displacement !== 'undefined') ? parseInt(displacement) : 0;
 
@@ -226,6 +232,7 @@ var Api = function(Glide, Core) {
      * Api constructor.
      */
     function Api() {
+
     }
 
     /**
@@ -356,6 +363,8 @@ var Api = function(Glide, Core) {
                 Core.Arrows.unbind();
                 Core.Bullets.unbind();
 
+                Glide.destroyed = true;
+
                 delete Glide.slider;
                 delete Glide.track;
                 delete Glide.slides;
@@ -421,13 +430,17 @@ var Arrows = function(Glide, Core) {
 
 
     /**
-     * Disable next/previous arrow.
+     * Disable next/previous arrow and enable another.
      *
      * @param {String} type
      * @return {Void}
      */
     Arrows.prototype.disable = function(type) {
         var classes = Glide.options.classes;
+
+        if (!type) {
+            return this.disableBoth();
+        }
 
         this.items.filter('.' + classes['arrow' + Core.Helper.capitalise(type)])
             .unbind('click.glide touchstart.glide')
@@ -437,6 +450,17 @@ var Arrows = function(Glide, Core) {
             .bind('mouseenter.glide', this.hover)
             .bind('mouseleave.glide', this.hover)
             .removeClass(classes.disabled);
+    };
+
+    /**
+     * Disable both arrows.
+     *
+     * @return {Void}
+     */
+    Arrows.prototype.disableBoth = function() {
+        this.items
+            .unbind('click.glide touchstart.glide')
+            .addClass(Glide.options.classes.disabled);
     };
 
 
@@ -1049,12 +1073,14 @@ var Events = function(Glide, Core) {
     Events.prototype.resize = function() {
 
         $(window).on('resize.glide.' + Glide.uuid, Core.Helper.throttle(function() {
-            Core.Transition.jumping = true;
-            Glide.setup();
-            Core.Build.init();
-            Core.Run.make('=' + Glide.current, false);
-            Core.Run.play();
-            Core.Transition.jumping = false;
+            if(!Glide.destroyed) {
+                Core.Transition.jumping = true;
+                Glide.setup();
+                Core.Build.init();
+                Core.Run.make('=' + Glide.current, false);
+                Core.Run.play();
+                Core.Transition.jumping = false;
+            }
         }, Glide.options.throttle));
 
     };
@@ -1421,6 +1447,10 @@ var Run = function(Glide, Core) {
 
         var that = this;
 
+        if (! this.canProcess()) {
+            return;
+        }
+
         if (Glide.options.autoplay || this.running) {
 
             if (typeof this.interval === 'undefined') {
@@ -1507,6 +1537,11 @@ var Run = function(Glide, Core) {
 
         // Extract move steps.
         this.steps = (move.substr(1)) ? move.substr(1) : 0;
+
+        // Do not run if we have only one slide.
+        if (! this.canProcess()) {
+            return this.stop();
+        }
 
         // Stop autoplay until hoverpause is not set.
         if (!Glide.options.hoverpause) {
@@ -1598,6 +1633,24 @@ var Run = function(Glide, Core) {
             .call(Glide.options.duringTransition)
             .trigger('duringTransition');
 
+    };
+
+    /**
+     * Stop slider from running.
+     *
+     * @return {void}
+     */
+    Run.prototype.stop = function() {
+        this.pause();
+    };
+
+    /**
+     * Stop slider from running.
+     *
+     * @return {void}
+     */
+    Run.prototype.canProcess = function() {
+        return Glide.slides.length > 1;
     };
 
     // Return class.
@@ -2043,6 +2096,9 @@ var Glide = function(element, options) {
     this.collect();
     this.setup();
 
+    // Mark the glide as not destroyed
+    this.destroyed = false;
+
     // Call before init callback.
     this.options.beforeInit({
         index: this.current,
@@ -2060,11 +2116,11 @@ var Glide = function(element, options) {
         Helper: Helper,
         Translate: Translate,
         Transition: Transition,
+        Arrows: Arrows,
+        Bullets: Bullets,
         Run: Run,
         Animation: Animation,
         Clones: Clones,
-        Arrows: Arrows,
-        Bullets: Bullets,
         Height: Height,
         Build: Build,
         Events: Events,

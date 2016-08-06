@@ -21,8 +21,12 @@
   background-color: transparent;
   border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 4px;
-  -webkit-transition: border 300ms ease-in-out;
-          transition: border 300ms ease-in-out;
+  opacity: 1;
+  -webkit-transition: opacity 150ms ease, border 300ms ease-in-out;
+          transition: opacity 150ms ease, border 300ms ease-in-out;
+}
+.glide__arrow.disabled {
+  opacity: 0.33;
 }
 .glide__arrow:focus {
   outline: none;
@@ -101,12 +105,4 @@
 .glide__bullets > *:focus {
   border: 2px solid white;
   background-color: rgba(255, 255, 255, 0.5);
-}
-.glide--slider .glide__arrow {
-  opacity: 1;
-  -webkit-transition: opacity 150ms ease;
-          transition: opacity 150ms ease;
-}
-.glide--slider .glide__arrow.disabled {
-  opacity: 0.33;
 }

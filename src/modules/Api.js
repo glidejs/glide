@@ -11,6 +11,7 @@ var Api = function(Glide, Core) {
      * Api constructor.
      */
     function Api() {
+
     }
 
     /**

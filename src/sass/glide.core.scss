@@ -19,6 +19,7 @@
 		transform-style: preserve-3d;
 		touch-action: pan-Y;
 		overflow: hidden;
+		padding: 0;
 
 		&.dragging {
 			cursor: grabbing;

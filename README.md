@@ -4,9 +4,6 @@
 
 [![Build Status](https://api.travis-ci.org/jedrzejchalubek/glidejs.svg?branch=master)](https://travis-ci.org/jedrzejchalubek/glidejs)
 
-##Announcement
-Plugin in version releases `2.*.*` and `1.*.*` are NOT compatible. Big changes are made, so read documentation before upgrade.
-
 ##Documentation
 Available at: http://glide.jedrzejchalubek.com/docs.html
 

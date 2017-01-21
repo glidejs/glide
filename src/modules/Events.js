@@ -19,11 +19,14 @@ var Events = function(Glide, Core) {
      */
     function Events() {
         this.disabled = false;
+        this.prevented = false;
 
         this.keyboard();
         this.hoverpause();
         this.resize();
         this.bindTriggers();
+        this.bindAnchors();
+        this.bindImages();
     }
 
     /**
@@ -122,25 +125,29 @@ var Events = function(Glide, Core) {
     };
 
     /**
-     * Disable all events.
+     * Bind events to anchors inside track.
      *
-     * @return {self}
+     * @return {Void}
      */
-    Events.prototype.disable = function() {
-        this.disabled = true;
-
-        return this;
+    Events.prototype.bindAnchors = function() {
+        Glide.track.on('click.glide', 'a', function(e) {
+            if (this.prevented) {
+                e.preventDefault();
+            }
+        }.bind(this));
     };
 
     /**
-     * Enable all events.
+     * Bind events to images inside track.
      *
-     * @return {self}
+     * @return {Void}
      */
-    Events.prototype.enable = function() {
-        this.disabled = false;
-
-        return this;
+    Events.prototype.bindImages = function() {
+        Glide.track.on('dragstart.glide', 'img', function(e) {
+            if (this.prevented) {
+                e.preventDefault();
+            }
+        }.bind(this));
     };
 
     /**
@@ -148,9 +155,11 @@ var Events = function(Glide, Core) {
      *
      * @return {self}
      */
-    Events.prototype.detachClicks = function() {
+    Events.prototype.detachClicks = function(event) {
         Glide.track.find('a').each(function(i, a) {
-            $(a).attr('data-href', $(a).attr('href')).removeAttr('href');
+            $(a)
+                .attr('data-href', $(a).attr('href'))
+                .removeAttr('href');
         });
 
         return this;
@@ -161,10 +170,16 @@ var Events = function(Glide, Core) {
      *
      * @return {self}
      */
-    Events.prototype.attachClicks = function() {
+    Events.prototype.attachClicks = function(event) {
         Glide.track.find('a').each(function(i, a) {
-            $(a).attr('href', $(a).attr('data-href'));
+            $(a)
+                .attr('href', $(a).attr('data-href'))
+                .removeAttr('data-href');
         });
+
+        Core.Animation.after(function() {
+            this.prevented = false;
+        }.bind(this));
 
         return this;
     };
@@ -174,12 +189,8 @@ var Events = function(Glide, Core) {
      *
      * @return {self}
      */
-    Events.prototype.preventClicks = function(event) {
-        if (event.type === 'mousemove') {
-            Glide.track.one('click', 'a', function(e) {
-                e.preventDefault();
-            });
-        }
+    Events.prototype.preventClicks = function() {
+        this.prevented = true;
 
         return this;
     };
@@ -235,6 +246,8 @@ var Events = function(Glide, Core) {
     Events.prototype.unbind = function() {
 
         Glide.track
+            .off('click.glide', 'a')
+            .off('dragstart.glide', 'img')
             .off('keyup.glide')
             .off('mouseover.glide')
             .off('mouseout.glide');
@@ -246,6 +259,28 @@ var Events = function(Glide, Core) {
             .off('keyup.glide')
             .off('resize.glide.' + Glide.uuid);
 
+    };
+
+    /**
+     * Disable all events.
+     *
+     * @return {self}
+     */
+    Events.prototype.disable = function() {
+        this.disabled = true;
+
+        return this;
+    };
+
+    /**
+     * Enable all events.
+     *
+     * @return {self}
+     */
+    Events.prototype.enable = function() {
+        this.disabled = false;
+
+        return this;
     };
 
     // Return class.

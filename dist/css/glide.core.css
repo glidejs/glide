@@ -18,9 +18,9 @@
   -ms-touch-action: pan-Y;
       touch-action: pan-Y;
   overflow: hidden;
+  padding: 0;
 }
 .glide__track.dragging {
-  cursor: -webkit-grabbing;
   cursor: grabbing;
   -webkit-user-select: none;
      -moz-user-select: none;

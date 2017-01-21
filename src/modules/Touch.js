@@ -83,7 +83,8 @@ var Touch = function(Glide, Core) {
             });
 
             // Detach clicks inside track.
-            Core.Events.detachClicks()
+            Core.Events
+                .detachClicks()
                 .call(Glide.options.swipeStart)
                 .trigger('swipeStart');
             // Pause if autoplay.
@@ -139,7 +140,8 @@ var Touch = function(Glide, Core) {
             }
 
             // Prevent clicks inside track.
-            Core.Events.preventClicks(event)
+            Core.Events
+                .preventClicks()
                 .call(Glide.options.swipeMove)
                 .trigger('swipeMove');
 
@@ -258,7 +260,8 @@ var Touch = function(Glide, Core) {
             this.dragging = false;
 
             // Disable other events.
-            Core.Events.attachClicks()
+            Core.Events
+                .attachClicks()
                 .disable()
                 .call(Glide.options.swipeEnd)
                 .trigger('swipeEnd');

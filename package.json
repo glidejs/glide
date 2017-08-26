@@ -1,13 +1,12 @@
 {
   "name": "glidejs",
   "version": "2.1.0",
-  "description": "Glide is a responsive and touch-friendly jQuery slider. Based on CSS3 transitions with fallback to older broswers. It's simple, lightweight and fast.",
-  "main": "dist/glide.js",
+  "description": "Glide is a responsive and touch-friendly javascript slider. It's simple, lightweight and fast.",
   "author": "Jędrzej Chałubek <jedrzej.chalubek@gmail.com>",
   "homepage": "http://glide.jedrzejchalubek.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jedrzejchalubek/Glide.js.git"
+    "url": "https://github.com/jedrzejchalubek/glidejs.git"
   },
   "license": "MIT",
   "keywords": [
@@ -16,27 +15,20 @@
     "fast",
     "slider",
     "carousel",
-    "jQuery",
-    "CSS3",
-    "transitions",
     "touch",
     "responsive"
   ],
-  "dependencies": {
-    "jquery": "2.2.*"
+  "scripts": {
+    "minify:css:core": "cssnano < dist/css/glide.core.css > dist/css/glide.core.min.css",
+    "minify:css:theme": "cssnano < dist/css/glide.theme.css > dist/css/glide.theme.min.css",
+    "minify:css": "npm run minify:css:core && npm run minify:css:theme",
+    "build:css:core": "node-sass assets/sass/glide.core.scss dist/css/glide.core.css",
+    "build:css:theme": "node-sass assets/sass/glide.theme.scss dist/css/glide.theme.css",
+    "build:css": "npm run build:css:core && npm run build:css:theme",
+    "build": "npm run build:css && npm run minify:css"
   },
   "devDependencies": {
-    "grunt": "~0.4.2",
-    "grunt-autoprefixer": "*",
-    "grunt-contrib-less": "*",
-    "grunt-less-to-sass": "*",
-    "grunt-contrib-coffee": "*",
-    "grunt-contrib-concat": "*",
-    "grunt-contrib-jasmine": "*",
-    "grunt-contrib-jshint": "*",
-    "grunt-contrib-uglify": "*",
-    "grunt-contrib-watch": "*",
-    "matchdep": "*",
-    "module": "0.0.1"
+    "cssnano-cli": "^1.0.5",
+    "node-sass": "^4.5.3"
   }
 }

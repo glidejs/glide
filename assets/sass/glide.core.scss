@@ -1,6 +1,5 @@
 .glide {
-
-	@that: .glide;
+	$this: &;
 
 	position: relative;
 	width: 100%;
@@ -21,12 +20,11 @@
 		overflow: hidden;
 		padding: 0;
 
-		&.dragging {
+		&--dragging {
 			cursor: grabbing;
 			user-select: none;
 		}
 	}
-
 
 	&__slide {
 		width: 100%;
@@ -42,12 +40,10 @@
 		}
 	}
 
-
 	&__arrows {
 		-webkit-touch-callout: none;
 		user-select: none;
 	}
-
 
 	&__arrow {
 		cursor: pointer;
@@ -59,55 +55,43 @@
 	}
 
 	&--slider {
-
-		@{that}__slide {
+		#{$this}__slide {
 			float: left;
 			clear: none;
 		}
 
-		@{that}__arrow {}
-
+		#{$this}__arrow {}
 	}
-
 
 	&--carousel {
-
-		&@{that}--vertical {
-
-			@{that}__track {
+		&#{$this}--vertical {
+			#{$this}__track {
 				overflow: visible;
 			}
-
 		}
 
-		@{that}__slide {
+		#{$this}__slide {
 			float: left;
 			clear: none;
 		}
-
 	}
 
-
 	&--slideshow {
-
-		@{that}__wrapper {
+		#{$this}__wrapper {
 			height: 100%;
 		}
 
-		@{that}__slide {
+		#{$this}__slide {
 			height: 100%;
 			position: absolute;
 			top: 0; left: 0;
 			z-index: -1;
-			// Flashing issue fix
 			-webkit-transform-style: preserve-3d;
 			-webkit-transform: translate3d(0px, 0px, 0px);
 
-			&.active {
+			&--active {
 				z-index: 1;
 			}
 		}
-
 	}
-
 }

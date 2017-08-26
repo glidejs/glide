@@ -1,6 +1,5 @@
 .glide {
-
-	$that: '.glide' !default;
+	@this: .glide;
 
 	position: relative;
 	width: 100%;
@@ -27,7 +26,6 @@
 		}
 	}
 
-
 	&__slide {
 		width: 100%;
 		user-select: none;
@@ -42,12 +40,10 @@
 		}
 	}
 
-
 	&__arrows {
 		-webkit-touch-callout: none;
 		user-select: none;
 	}
-
 
 	&__arrow {
 		cursor: pointer;
@@ -59,42 +55,33 @@
 	}
 
 	&--slider {
-
-		#{$that}__slide {
+		@{this}__slide {
 			float: left;
 			clear: none;
 		}
 
-		#{$that}__arrow {}
-
+		@{this}__arrow {}
 	}
-
 
 	&--carousel {
-
-		&#{$that}--vertical {
-
-			#{$that}__track {
+		&@{this}--vertical {
+			@{this}__track {
 				overflow: visible;
 			}
-
 		}
 
-		#{$that}__slide {
+		@{this}__slide {
 			float: left;
 			clear: none;
 		}
-
 	}
 
-
 	&--slideshow {
-
-		#{$that}__wrapper {
+		@{this}__wrapper {
 			height: 100%;
 		}
 
-		#{$that}__slide {
+		@{this}__slide {
 			height: 100%;
 			position: absolute;
 			top: 0; left: 0;
@@ -107,7 +94,5 @@
 				z-index: 1;
 			}
 		}
-
 	}
-
 }

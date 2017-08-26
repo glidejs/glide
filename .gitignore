@@ -1,6 +1,4 @@
 .DS_Store
-node_modules/
-bower_components/
-website/
-*.scssc
-.sass-cache/
+
+node_modules
+package-lock.json

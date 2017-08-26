@@ -1,32 +1,27 @@
 .glide {
-	@that: .glide;
-
+	@this: .glide;
 
 	&__wrapper {}
 
-
 	&__track {}
 
-
 	&__slide {}
-
 
 	&__arrows {
 		position: absolute;
 
-		@{that}--horizontal & {
+		@{this}--horizontal & {
 			top: 50%;
 			width: 92%;
 			margin-left: 4%;
 		}
 
-		@{that}--vertical & {
+		@{this}--vertical & {
 			left: 50%;
 			height: 88%;
 			margin-top: 6%;
 		}
 	}
-
 
 	&__arrow {
 		position: absolute;
@@ -48,14 +43,14 @@
 		&:focus { outline: none; }
 		&:hover { border-color: white; }
 
-		@{that}--horizontal & {
+		@{this}--horizontal & {
 			transform: translateY(-50%);
 
 			&.prev { left: 0; }
 			&.next { right: 0; }
 		}
 
-		@{that}--vertical & {
+		@{this}--vertical & {
 			transform: translateX(-50%);
 
 			&.prev { top: 0; }
@@ -63,20 +58,19 @@
 		}
 	}
 
-
 	&__bullets {
 		position: absolute;
 		z-index: 2;
 		list-style: none;
 
-		@{that}--horizontal & {
+		@{this}--horizontal & {
 			bottom: 8%; left: 0;
 			width: 100%;
 			height: 12px;
 			text-align: center;
 		}
 
-		@{that}--vertical & {
+		@{this}--vertical & {
 			top: 50%; right: 8%;
 			width: 12px;
 			height: auto;
@@ -94,11 +88,11 @@
 			border: 2px solid transparent;
 			transition: all 300ms ease-in-out;
 
-			@{that}--horizontal & {
+			@{this}--horizontal & {
 				margin: 0 5px;
 			}
 
-			@{that}--vertical & {
+			@{this}--vertical & {
 				vertical-align: middle;
 			}
 
@@ -113,7 +107,6 @@
 			}
 		}
 	}
-
 
 	&--slider {}
 

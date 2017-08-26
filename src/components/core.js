@@ -1,17 +1,38 @@
-import defaults from '../defaults'
+import uid from '../utils/uid'
 
 class Core {
-  constructor() {
-    this.uid = new Date().valueOf()
+  constructor(uid) {
+    this.uid = uid
+    this.destroyed = false
   }
 
-  set settings(settings) {
-    this.settings = Object.assign(defaults, settings)
+  init() {
+
   }
 
-  set element(element) {
-    this.element = element
+  get settings() {
+    return this.attrs
+  }
+
+  set settings(attrs) {
+    this.attrs = attrs
+  }
+
+  get element() {
+    return this.el
+  }
+
+  set element(el) {
+    this.el = el
+  }
+
+  get current() {
+    return this.index
+  }
+
+  set current(i) {
+    this.index = parseInt(i)
   }
 }
 
-export default new Core()
+export default new Core(uid())

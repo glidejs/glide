@@ -1,9 +1,24 @@
+import defaults from './defaults'
 import Core from './components/core'
+import Event from './components/event'
 
 export default class Glide {
-  constructor(element, settings) {
+  constructor(element, options) {
+    let settings = Object.assign(defaults, options)
+
     Core.element = element
     Core.settings = settings
+    Core.current = settings.startAt
+
+    Event.call(settings.beforeInit)
+
+    Core.init()
+
+    Event.call(settings.afterInit)
+  }
+
+  current() {
+    return Core.current
   }
 }
 

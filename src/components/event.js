@@ -1,182 +1,7 @@
-/*!
- * Glide.js v3.0.0
- * (c) 2013-2017 Jędrzej Chałubek <jedrzej.chalubek@gmail.com>
- * Released under the MIT License.
- */
-
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(global.Glide = factory());
-}(this, (function () { 'use strict';
-
-var defaults = {
-  /**
-   * Type of the slides movements. Available types:
-   * `slider` - Rewinds slider to the start/end when it reaches first or last slide.
-   * `carousel` - Changes slides without starting over when it reaches first or last slide.
-   * `slideshow` - Changes slides with fade effect.
-   *
-   * @type {String}
-   */
-  type: 'carousel',
-
-  /**
-   * Direction of the slider movements. Available modes:
-   * `horizontal` - Move slider on X axis.
-   * `vertical` - Move slider on Y axis.
-   *
-   * @type {String}
-   */
-  mode: 'horizontal',
-
-  /**
-   * Start at specifed slide index.
-   *
-   * @type {Number}
-   */
-  startAt: 1,
-
-  /**
-   * Change slides after specifed interval.
-   * Use false for turning off autoplay.
-   *
-   * @type {Boolean}
-   */
-  autoplay: 4000,
-
-  /**
-   * Stop autoplay on mouseover.
-   *
-   * @type {Boolean}
-   */
-  hoverpause: true,
-
-  /**
-   * Allow for changing slides with keyboard left and right arrows.
-   *
-   * @type {Boolean}
-   */
-  keyboard: true,
-  touchDistance: 80,
-  dragDistance: 120,
-  animationDuration: 400,
-  animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
-  throttle: 16,
-  autoheight: false,
-  paddings: 0,
-  centered: true,
-  classes: {
-    clone: 'clone',
-    active: 'active',
-    dragging: 'dragging',
-    disabled: 'disabled'
-  },
-  beforeInit: function beforeInit(event) {},
-  afterInit: function afterInit(event) {},
-  beforeTransition: function beforeTransition(event) {},
-  duringTransition: function duringTransition(event) {},
-  afterTransition: function afterTransition(event) {},
-  swipeStart: function swipeStart(event) {},
-  swipeEnd: function swipeEnd(event) {},
-  swipeMove: function swipeMove(event) {}
-};
-
-function uid() {
-  return new Date().valueOf();
-}
-
-var classCallCheck = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
-
-var createClass = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-}();
-
-
-
-
-
-
-
-var _extends = Object.assign || function (target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i];
-
-    for (var key in source) {
-      if (Object.prototype.hasOwnProperty.call(source, key)) {
-        target[key] = source[key];
-      }
-    }
-  }
-
-  return target;
-};
-
-var Core = function () {
-  function Core(uid$$1) {
-    classCallCheck(this, Core);
-
-    this.uid = uid$$1;
-    this.destroyed = false;
-  }
-
-  createClass(Core, [{
-    key: 'init',
-    value: function init() {}
-  }, {
-    key: 'settings',
-    get: function get$$1() {
-      return this.attrs;
-    },
-    set: function set$$1(attrs) {
-      this.attrs = attrs;
-    }
-  }, {
-    key: 'element',
-    get: function get$$1() {
-      return this.el;
-    },
-    set: function set$$1(el) {
-      this.el = el;
-    }
-  }, {
-    key: 'current',
-    get: function get$$1() {
-      return this.index;
-    },
-    set: function set$$1(i) {
-      this.index = parseInt(i);
-    }
-  }]);
-  return Core;
-}();
-
-var Core$1 = new Core(uid());
-
-var Event = function () {
-    function Event() {
-        classCallCheck(this, Event);
-
-        this.disabled = false;
-        this.prevented = false;
+class Event {
+    constructor() {
+        this.disabled = false
+        this.prevented = false
     }
 
     /**
@@ -185,27 +10,22 @@ var Event = function () {
      * @param {Function} func
      * @return {self}
      */
-
-
-    createClass(Event, [{
-        key: 'call',
-        value: function call(func) {
-            if (func !== 'undefined' && typeof func === 'function') {
-                func(this.params());
-            }
-
-            return this;
+    call(func) {
+        if ((func !== 'undefined') && (typeof func === 'function')) {
+            func(this.params())
         }
-    }, {
-        key: 'params',
-        value: function params() {
-            return {};
-        }
-    }]);
-    return Event;
-}();
 
-var Event$1 = new Event();
+        return this
+    }
+
+    params() {
+        return {
+
+        }
+    }
+}
+
+export default new Event()
 
 // /**
 //  * Events module.
@@ -496,33 +316,3 @@ var Event$1 = new Event();
 //     return new Events();
 
 // };
-
-var Glide = function () {
-  function Glide(element, options) {
-    classCallCheck(this, Glide);
-
-    var settings = _extends(defaults, options);
-
-    Core$1.element = element;
-    Core$1.settings = settings;
-    Core$1.current = settings.startAt;
-
-    Event$1.call(settings.beforeInit);
-
-    Core$1.init();
-
-    Event$1.call(settings.afterInit);
-  }
-
-  createClass(Glide, [{
-    key: 'current',
-    value: function current() {
-      return Core$1.current;
-    }
-  }]);
-  return Glide;
-}();
-
-return Glide;
-
-})));

@@ -14,7 +14,7 @@
     touch-action: pan-Y;
     overflow: hidden;
     padding: 0; }
-    .glide__track.dragging {
+    .glide__track--dragging {
       cursor: grabbing;
       user-select: none; }
   .glide__slide {
@@ -53,5 +53,5 @@
     z-index: -1;
     -webkit-transform-style: preserve-3d;
     -webkit-transform: translate3d(0px, 0px, 0px); }
-    .glide--slideshow .glide__slide.active {
+    .glide--slideshow .glide__slide--active {
       z-index: 1; }

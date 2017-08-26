@@ -1,43 +1,4 @@
-const defaults = {
-  autoplay: 4000,
-  type: 'carousel',
-  mode: 'horizontal',
-  startAt: 1,
-  hoverpause: true,
-  keyboard: true,
-  touchDistance: 80,
-  dragDistance: 120,
-  animationDuration: 400,
-  animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
-  throttle: 16,
-  autoheight: false,
-  paddings: 0,
-  centered: true,
-  classes: {
-    base: 'glide',
-    wrapper: 'glide__wrapper',
-    track: 'glide__track',
-    slide: 'glide__slide',
-    arrows: 'glide__arrows',
-    arrow: 'glide__arrow',
-    arrowNext: 'next',
-    arrowPrev: 'prev',
-    bullets: 'glide__bullets',
-    bullet: 'glide__bullet',
-    clone: 'clone',
-    active: 'active',
-    dragging: 'dragging',
-    disabled: 'disabled'
-  },
-  beforeInit(event) {},
-  afterInit(event) {},
-  beforeTransition(event) {},
-  duringTransition(event) {},
-  afterTransition(event) {},
-  swipeStart(event) {},
-  swipeEnd(event) {},
-  swipeMove(event) {}
-}
+import defaults from './defaults'
 
 export default class Glide {
   constructor(element, options) {

@@ -3,7 +3,7 @@ import banner from './banner'
 import babel from 'rollup-plugin-babel'
 import uglify from 'rollup-plugin-uglify'
 
-export default Object.assign(build, {
+const settings = {
   output: {
     file: 'dist/glide.min.js',
     format: 'umd',
@@ -17,4 +17,6 @@ export default Object.assign(build, {
       }
     })
   ]
-})
+}
+
+export default Object.assign(build, settings)

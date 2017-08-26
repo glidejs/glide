@@ -19,11 +19,11 @@ export default {
   mode: 'horizontal',
 
   /**
-   * Start at specifed slide index.
+   * Start at specifed slide zero-based index.
    *
    * @type {Number}
    */
-  startAt: 1,
+  startAt: 0,
 
   /**
    * Focus currently active slide at specifed position in the track. Available inputs:
@@ -112,6 +112,8 @@ export default {
    * @type {Object}
    */
   classes: {
+    prefix: 'glide',
+    separator: '--',
     clone: 'clone',
     active: 'active',
     dragging: 'dragging',

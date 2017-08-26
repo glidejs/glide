@@ -1,5 +1,7 @@
 import defaults from './defaults'
 import Core from './components/core'
+import Build from './components/build'
+import Nodes from './components/nodes'
 import Events from './components/events'
 
 export default class Glide {
@@ -12,13 +14,13 @@ export default class Glide {
   constructor(element, options) {
     let settings = Object.assign(defaults, options)
 
-    Core.element = element
     Core.settings = settings
     Core.index = settings.startAt
 
     Events.call(settings.beforeInit)
 
-    Core.init()
+    Nodes.init(element)
+    Build.init()
 
     Events.call(settings.afterInit)
   }

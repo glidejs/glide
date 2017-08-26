@@ -31,11 +31,11 @@ var defaults = {
   mode: 'horizontal',
 
   /**
-   * Start at specifed slide index.
+   * Start at specifed slide zero-based index.
    *
    * @type {Number}
    */
-  startAt: 1,
+  startAt: 0,
 
   /**
    * Focus currently active slide at specifed position in the track. Available inputs:
@@ -124,6 +124,8 @@ var defaults = {
    * @type {Object}
    */
   classes: {
+    prefix: 'glide',
+    separator: '--',
     clone: 'clone',
     active: 'active',
     dragging: 'dragging',
@@ -194,6 +196,11 @@ var defaults = {
   swipeEnd: function swipeEnd(event) {}
 };
 
+/**
+ * Generates "unique" identifier number.
+ *
+ * @return {Number}
+ */
 function uid() {
   return new Date().valueOf();
 }
@@ -243,6 +250,11 @@ var _extends = Object.assign || function (target) {
 };
 
 var Core = function () {
+  /**
+   * Construct core.
+   *
+   * @param {Integer} id
+   */
   function Core(id) {
     classCallCheck(this, Core);
 
@@ -250,30 +262,70 @@ var Core = function () {
     this.destroyed = false;
   }
 
+  /**
+   * Gets value of the core options.
+   *
+   * @return {Object}
+   */
+
+
   createClass(Core, [{
-    key: 'init',
-    value: function init() {}
-  }, {
     key: 'settings',
     get: function get$$1() {
       return this.opt;
-    },
+    }
+
+    /**
+     * Sets value of the core options.
+     *
+     * @param  {Object} opt
+     * @return {Void}
+     */
+    ,
     set: function set$$1(opt) {
       this.opt = opt;
     }
+
+    /**
+     * Gets node of the slider main element.
+     *
+     * @return {Object}
+     */
+
   }, {
     key: 'element',
     get: function get$$1() {
       return this.el;
-    },
+    }
+
+    /**
+     * Sets node of the slider main element.
+     *
+     * @return {Object}
+     */
+    ,
     set: function set$$1(el) {
       this.el = el;
     }
+
+    /**
+     * Gets current index of the slider.
+     *
+     * @return {Object}
+     */
+
   }, {
     key: 'index',
     get: function get$$1() {
       return this.i;
-    },
+    }
+
+    /**
+     * Sets current index a slider.
+     *
+     * @return {Object}
+     */
+    ,
     set: function set$$1(i) {
       this.i = parseInt(i);
     }
@@ -283,43 +335,285 @@ var Core = function () {
 
 var Core$1 = new Core(uid());
 
-var Event = function () {
-    function Event() {
-        classCallCheck(this, Event);
+var Nodes = function () {
+  function Nodes() {
+    classCallCheck(this, Nodes);
+  }
+
+  createClass(Nodes, [{
+    key: 'init',
+    value: function init(element) {
+      this.element = element;
+      this.track = this.find('[data-glide="track"]');
+      this.wrapper = this.track.children[0];
+      this.slides = this.wrapper.children;
+    }
+  }, {
+    key: 'find',
+    value: function find(selector) {
+      return this.element.querySelector(selector);
+    }
+  }]);
+  return Nodes;
+}();
+
+var Nodes$1 = new Nodes();
+
+function siblings(el) {
+  var n = el.parentNode.firstChild;
+  var matched = [];
+
+  for (; n; n = n.nextSibling) {
+    if (n.nodeType === 1 && n !== el) {
+      matched.push(n);
+    }
+  }
+
+  return matched;
+}
+
+function prefixer(string) {
+  var prefix = Core$1.settings.classes.prefix + Core$1.settings.classes.separator;
+
+  return prefix + string;
+}
+
+var Build = function () {
+  function Build() {
+    classCallCheck(this, Build);
+  }
+
+  createClass(Build, [{
+    key: 'init',
+    value: function init() {
+      this.typeClass();
+      this.modeClass();
+      this.activeClass();
+    }
+  }, {
+    key: 'typeClass',
+    value: function typeClass() {
+      Nodes$1.element.classList.add(prefixer(Core$1.settings.type));
+    }
+  }, {
+    key: 'modeClass',
+    value: function modeClass() {
+      Nodes$1.element.classList.add(prefixer(Core$1.settings.mode));
+    }
+  }, {
+    key: 'activeClass',
+    value: function activeClass() {
+      var el = Nodes$1.slides[Core$1.index];
+
+      el.classList.add(prefixer(Core$1.settings.classes.active));
+
+      siblings(el).forEach(function (sibling) {
+        sibling.classList.remove(prefixer(Core$1.settings.classes.active));
+      });
+    }
+  }]);
+  return Build;
+}();
+
+var Build$1 = new Build();
+
+// /**
+//  * Build module.
+//  *
+//  * @param {[type]} Glide
+//  * @param {[type]} Core
+//  * @return {Build}
+//  */
+// var Build = function(Glide, Core) {
+
+//     // Build constructor.
+//     function Build() {
+//         this.init();
+//     }
+
+//     /**
+//      * Init slider builder.
+//      *
+//      * @return {Void}
+//      */
+//     Build.prototype.init = function() {
+//         // Build proper slider type
+//         this[Glide.options.type]();
+
+//         // Set slide active class
+//         this.active();
+
+//         // Set slides height
+//         Core.Height.set();
+//     };
+
+//     /**
+//      * Check slider type.
+//      *
+//      * @param  {String} name
+//      * @return {Boolean}
+//      */
+//     Build.prototype.isType = function(name) {
+//         return Glide.options.type === name;
+//     };
+
+//     /**
+//      * Check slider mode.
+//      *
+//      * @param  {String} name
+//      * @return {Boolean}
+//      */
+//     Build.prototype.isMode = function(name) {
+//         return Glide.options.mode === name;
+//     };
+
+//     /**
+//      * Build slider type.
+//      *
+//      * @return {Void}
+//      */
+//     Build.prototype.slider = function() {
+
+//         // Turn on jumping flag.
+//         Core.Transition.jumping = true;
+
+//         // Apply slides width.
+//         Glide.slides[Glide.size](Glide[Glide.size]);
+
+//         // Apply translate.
+//         Glide.track.css(Glide.size, Glide[Glide.size] * Glide.length);
+
+//         // If mode is vertical apply height.
+//         if (this.isMode('vertical')) {
+//             Core.Height.set(true);
+//         }
+
+//         // Go to startup position.
+//         Core.Animation.make();
+
+//         // Turn off jumping flag.
+//         Core.Transition.jumping = false;
+
+//     };
+
+//     /**
+//      * Build carousel type.
+//      *
+//      * @return {Void}
+//      */
+//     Build.prototype.carousel = function() {
+
+//         // Turn on jumping flag.
+//         Core.Transition.jumping = true;
+
+//         // Update shift for carusel type.
+//         Core.Clones.shift = (Glide[Glide.size] * Core.Clones.items.length / 2) - Glide[Glide.size];
+
+//         // Apply slides width.
+//         Glide.slides[Glide.size](Glide[Glide.size]);
+
+//         // Apply translate.
+//         Glide.track.css(Glide.size, (Glide[Glide.size] * Glide.length) + Core.Clones.getGrowth());
+
+//         // If mode is vertical apply height.
+//         if (this.isMode('vertical')) {
+//             Core.Height.set(true);
+//         }
+
+//         // Go to startup position.
+//         Core.Animation.make();
+
+//         // Append clones.
+//         Core.Clones.append();
+
+//         // Turn off jumping flag.
+//         Core.Transition.jumping = false;
+
+//     };
+
+//     /**
+//      * Build slideshow type.
+//      *
+//      * @return {Void}
+//      */
+//     Build.prototype.slideshow = function() {
+
+//         // Turn on jumping flag
+//         Core.Transition.jumping = true;
+
+//         // Go to startup position
+//         Core.Animation.make();
+
+//         // Turn off jumping flag
+//         Core.Transition.jumping = false;
+
+//     };
+
+//     /**
+//      * Set active class to current slide.
+//      *
+//      * @return {Void}
+//      */
+//     Build.prototype.active = function() {
+
+//         Glide.slides
+//             .eq(Glide.current - 1).addClass(Glide.options.classes.active)
+//             .siblings().removeClass(Glide.options.classes.active);
+
+//     };
+
+//     // Return class.
+//     return new Build();
+
+// };
+
+var Events = function () {
+    /**
+     * Construct events.
+     */
+    function Events() {
+        classCallCheck(this, Events);
 
         this.disabled = false;
         this.prevented = false;
     }
 
     /**
-     * Call event function with parameters.
+     * Calls callback with attributes.
      *
      * @param {Function} func
      * @return {self}
      */
 
 
-    createClass(Event, [{
+    createClass(Events, [{
         key: 'call',
         value: function call(func) {
             if (func !== 'undefined' && typeof func === 'function') {
-                func(this.params());
+                func(this.attrs());
             }
 
             return this;
         }
+
+        /**
+         * Gets attributes for events callback's parameter.
+         *
+         * @return {Object}
+         */
+
     }, {
-        key: 'params',
-        value: function params() {
+        key: 'attrs',
+        value: function attrs() {
             return {
                 index: Core$1.index
             };
         }
     }]);
-    return Event;
+    return Events;
 }();
 
-var Event$1 = new Event();
+var Events$1 = new Events();
 
 // /**
 //  * Events module.
@@ -612,21 +906,34 @@ var Event$1 = new Event();
 // };
 
 var Glide = function () {
+  /**
+   * Construct glide.
+   *
+   * @param  {String} element
+   * @param  {Object} options
+   */
   function Glide(element, options) {
     classCallCheck(this, Glide);
 
     var settings = _extends(defaults, options);
 
-    Core$1.element = element;
     Core$1.settings = settings;
     Core$1.index = settings.startAt;
 
-    Event$1.call(settings.beforeInit);
+    Events$1.call(settings.beforeInit);
 
-    Core$1.init();
+    Nodes$1.init(element);
+    Build$1.init();
 
-    Event$1.call(settings.afterInit);
+    Events$1.call(settings.afterInit);
   }
+
+  /**
+   * Gets current slide index.
+   *
+   * @return {Number}
+   */
+
 
   createClass(Glide, [{
     key: 'index',

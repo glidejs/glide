@@ -12,15 +12,6 @@ class Core {
   }
 
   /**
-   * Initialize core of the slider.
-   *
-   * @return {Void}
-   */
-  init() {
-
-  }
-
-  /**
    * Gets value of the core options.
    *
    * @return {Object}

@@ -35,7 +35,7 @@ class Events {
     }
 }
 
-export default new Event()
+export default new Events()
 
 // /**
 //  * Events module.

@@ -1,24 +1,35 @@
 import defaults from './defaults'
 import Core from './components/core'
-import Event from './components/event'
+import Events from './components/events'
 
 export default class Glide {
+  /**
+   * Construct glide.
+   *
+   * @param  {String} element
+   * @param  {Object} options
+   */
   constructor(element, options) {
     let settings = Object.assign(defaults, options)
 
     Core.element = element
     Core.settings = settings
-    Core.current = settings.startAt
+    Core.index = settings.startAt
 
-    Event.call(settings.beforeInit)
+    Events.call(settings.beforeInit)
 
     Core.init()
 
-    Event.call(settings.afterInit)
+    Events.call(settings.afterInit)
   }
 
-  current() {
-    return Core.current
+  /**
+   * Gets current slide index.
+   *
+   * @return {Number}
+   */
+  index() {
+    return Core.index
   }
 }
 

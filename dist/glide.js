@@ -38,10 +38,19 @@ var defaults = {
   startAt: 1,
 
   /**
+   * Focus currently active slide at specifed position in the track. Available inputs:
+   * `center` - Current slide will be always focused at the center of track.
+   * `(1,2,3...)` - Current slide will be focused at the specifed position number.
+   *
+   * @type {String|Number}
+   */
+  focusAt: 'center',
+
+  /**
    * Change slides after specifed interval.
    * Use false for turning off autoplay.
    *
-   * @type {Boolean}
+   * @type {Number|Boolean}
    */
   autoplay: 4000,
 
@@ -58,28 +67,131 @@ var defaults = {
    * @type {Boolean}
    */
   keyboard: true,
+
+  /**
+   * Minimal touch-swipe distance needed to change slide. False for turning off touch.
+   *
+   * @type {Number}
+   */
   touchDistance: 80,
+
+  /**
+   * Minimal mouse drag distance needed to change slide. False for turning off mouse drag.
+   *
+   * @type {Number}
+   */
   dragDistance: 120,
+
+  /**
+   * Duration of the animation in milliseconds.
+   *
+   * @type {Number}
+   */
   animationDuration: 400,
+
+  /**
+   * Easing function for animation.
+   *
+   * @type {String}
+   */
   animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
+
+  /**
+   * Optimalize resize events. Call at most once per every wait in milliseconds.
+   *
+   * @type {Number}
+   */
   throttle: 16,
+
+  /**
+   * Set height of the slider based on current slide content.
+   *
+   * @type {Boolean}
+   */
   autoheight: false,
+
+  /**
+   * Area number of the next and previous viewports visible
+   * in current view. Can be number, percentage or pixels.
+   *
+   * @type {Number|String}
+   */
   paddings: 0,
-  centered: true,
+
+  /**
+   * List of internally used DOM classes.
+   *
+   * @type {Object}
+   */
   classes: {
     clone: 'clone',
     active: 'active',
     dragging: 'dragging',
     disabled: 'disabled'
   },
+
+  /**
+   * Callback that fires before a slider initialization.
+   *
+   * @param {Object} event
+   */
   beforeInit: function beforeInit(event) {},
+
+
+  /**
+   * Callback that fires after a slider initialization.
+   *
+   * @param {Object} event
+   */
   afterInit: function afterInit(event) {},
+
+
+  /**
+   * Callback that fires before a slide change.
+   *
+   * @param {Object} event
+   */
   beforeTransition: function beforeTransition(event) {},
+
+
+  /**
+   * Callback that fires during changing of a slide.
+   *
+   * @param {Object} event
+   */
   duringTransition: function duringTransition(event) {},
+
+
+  /**
+   * Callback that fires after a slide change.
+   *
+   * @param {Object} event
+   */
   afterTransition: function afterTransition(event) {},
+
+
+  /**
+   * Callback that fires on start of touch/drag interaction.
+   *
+   * @param {Object} event
+   */
   swipeStart: function swipeStart(event) {},
-  swipeEnd: function swipeEnd(event) {},
-  swipeMove: function swipeMove(event) {}
+
+
+  /**
+   * Callback that fires during touch/drag interaction.
+   *
+   * @param {Object} event
+   */
+  swipeMove: function swipeMove(event) {},
+
+
+  /**
+   * Callback that fires on end of touch/drag interaction.
+   *
+   * @param {Object} event
+   */
+  swipeEnd: function swipeEnd(event) {}
 };
 
 function uid() {
@@ -131,10 +243,10 @@ var _extends = Object.assign || function (target) {
 };
 
 var Core = function () {
-  function Core(uid$$1) {
+  function Core(id) {
     classCallCheck(this, Core);
 
-    this.uid = uid$$1;
+    this.id = id;
     this.destroyed = false;
   }
 
@@ -144,10 +256,10 @@ var Core = function () {
   }, {
     key: 'settings',
     get: function get$$1() {
-      return this.attrs;
+      return this.opt;
     },
-    set: function set$$1(attrs) {
-      this.attrs = attrs;
+    set: function set$$1(opt) {
+      this.opt = opt;
     }
   }, {
     key: 'element',
@@ -158,12 +270,12 @@ var Core = function () {
       this.el = el;
     }
   }, {
-    key: 'current',
+    key: 'index',
     get: function get$$1() {
-      return this.index;
+      return this.i;
     },
     set: function set$$1(i) {
-      this.index = parseInt(i);
+      this.i = parseInt(i);
     }
   }]);
   return Core;
@@ -199,7 +311,9 @@ var Event = function () {
     }, {
         key: 'params',
         value: function params() {
-            return {};
+            return {
+                index: Core$1.index
+            };
         }
     }]);
     return Event;
@@ -505,7 +619,7 @@ var Glide = function () {
 
     Core$1.element = element;
     Core$1.settings = settings;
-    Core$1.current = settings.startAt;
+    Core$1.index = settings.startAt;
 
     Event$1.call(settings.beforeInit);
 
@@ -515,9 +629,9 @@ var Glide = function () {
   }
 
   createClass(Glide, [{
-    key: 'current',
-    value: function current() {
-      return Core$1.current;
+    key: 'index',
+    value: function index() {
+      return Core$1.index;
     }
   }]);
   return Glide;

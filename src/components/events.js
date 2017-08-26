@@ -1,26 +1,36 @@
-class Event {
+import Core from './core'
+
+class Events {
+    /**
+     * Construct events.
+     */
     constructor() {
         this.disabled = false
         this.prevented = false
     }
 
     /**
-     * Call event function with parameters.
+     * Calls callback with attributes.
      *
      * @param {Function} func
      * @return {self}
      */
     call(func) {
         if ((func !== 'undefined') && (typeof func === 'function')) {
-            func(this.params())
+            func(this.attrs())
         }
 
         return this
     }
 
-    params() {
+    /**
+     * Gets attributes for events callback's parameter.
+     *
+     * @return {Object}
+     */
+    attrs() {
         return {
-
+            index: Core.index
         }
     }
 }

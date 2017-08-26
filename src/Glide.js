@@ -5,7 +5,7 @@
  * @param {Object} element
  * @param {Object} options
  */
-var Glide = function(element, options) {
+let Glide = function(element, options) {
 
     /**
      * Default slider options.

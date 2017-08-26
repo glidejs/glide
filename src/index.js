@@ -1,8 +1,9 @@
-import defaults from './defaults'
+import Core from './components/core'
 
 export default class Glide {
-  constructor(element, options) {
-    this.options = Object.assign(defaults, options)
+  constructor(element, settings) {
+    Core.element = element
+    Core.settings = settings
   }
 }
 

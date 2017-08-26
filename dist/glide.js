@@ -51,14 +51,78 @@ var defaults = {
   swipeMove: function swipeMove(event) {}
 };
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
 
-var Glide = function Glide(element, options) {
-  _classCallCheck(this, Glide);
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
 
-  this.options = _extends(defaults, options);
+
+
+
+
+
+
+var _extends = Object.assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
+
+var Core = function () {
+  function Core() {
+    classCallCheck(this, Core);
+
+    this.uid = new Date().valueOf();
+  }
+
+  createClass(Core, [{
+    key: 'settings',
+    set: function set$$1(settings) {
+      this.settings = _extends(defaults, settings);
+    }
+  }, {
+    key: 'element',
+    set: function set$$1(element) {
+      this.element = element;
+    }
+  }]);
+  return Core;
+}();
+
+var Core$1 = new Core();
+
+var Glide = function Glide(element, settings) {
+  classCallCheck(this, Glide);
+
+  Core$1.element = element;
+  Core$1.settings = settings;
 };
 
 return Glide;

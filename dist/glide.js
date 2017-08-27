@@ -10,200 +10,46 @@
 	(global.Glide = factory());
 }(this, (function () { 'use strict';
 
-var defaults = {
-  /**
-   * Type of the slides movements. Available types:
-   * `slider` - Rewinds slider to the start/end when it reaches first or last slide.
-   * `carousel` - Changes slides without starting over when it reaches first or last slide.
-   * `slideshow` - Changes slides with fade effect.
-   *
-   * @type {String}
-   */
-  type: 'carousel',
+function warn(msg) {
+  console.error("[Glide warn]: " + msg);
+}
 
-  /**
-   * Direction of the slider movements. Available modes:
-   * `horizontal` - Move slider on X axis.
-   * `vertical` - Move slider on Y axis.
-   *
-   * @type {String}
-   */
-  mode: 'horizontal',
+function siblings(node) {
+  var n = node.parentNode.firstChild;
+  var matched = [];
 
-  /**
-   * Start at specifed slide zero-based index.
-   *
-   * @type {Number}
-   */
-  startAt: 0,
+  for (; n; n = n.nextSibling) {
+    if (n.nodeType === 1 && n !== node) {
+      matched.push(n);
+    }
+  }
 
-  /**
-   * Focus currently active slide at specifed position in the track. Available inputs:
-   * `center` - Current slide will be always focused at the center of track.
-   * `(1,2,3...)` - Current slide will be focused at the specifed position number.
-   *
-   * @type {String|Number}
-   */
-  focusAt: 'center',
+  return matched;
+}
 
-  /**
-   * Change slides after specifed interval.
-   * Use false for turning off autoplay.
-   *
-   * @type {Number|Boolean}
-   */
-  autoplay: 4000,
+function exist(node) {
+  if (node instanceof HTMLElement) {
+    return true;
+  }
 
-  /**
-   * Stop autoplay on mouseover.
-   *
-   * @type {Boolean}
-   */
-  hoverpause: true,
+  return false;
+}
 
-  /**
-   * Allow for changing slides with keyboard left and right arrows.
-   *
-   * @type {Boolean}
-   */
-  keyboard: true,
-
-  /**
-   * Minimal touch-swipe distance needed to change slide. False for turning off touch.
-   *
-   * @type {Number}
-   */
-  touchDistance: 80,
-
-  /**
-   * Minimal mouse drag distance needed to change slide. False for turning off mouse drag.
-   *
-   * @type {Number}
-   */
-  dragDistance: 120,
-
-  /**
-   * Duration of the animation in milliseconds.
-   *
-   * @type {Number}
-   */
-  animationDuration: 400,
-
-  /**
-   * Easing function for animation.
-   *
-   * @type {String}
-   */
-  animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
-
-  /**
-   * Optimalize resize events. Call at most once per every wait in milliseconds.
-   *
-   * @type {Number}
-   */
-  throttle: 16,
-
-  /**
-   * Set height of the slider based on current slide content.
-   *
-   * @type {Boolean}
-   */
-  autoheight: false,
-
-  /**
-   * Area number of the next and previous viewports visible
-   * in current view. Can be number, percentage or pixels.
-   *
-   * @type {Number|String}
-   */
-  paddings: 0,
-
-  /**
-   * List of internally used DOM classes.
-   *
-   * @type {Object}
-   */
-  classes: {
-    prefix: 'glide',
-    separator: '--',
-    clone: 'clone',
-    active: 'active',
-    dragging: 'dragging',
-    disabled: 'disabled'
-  },
-
-  /**
-   * Callback that fires before a slider initialization.
-   *
-   * @param {Object} event
-   */
-  beforeInit: function beforeInit(event) {},
-
-
-  /**
-   * Callback that fires after a slider initialization.
-   *
-   * @param {Object} event
-   */
-  afterInit: function afterInit(event) {},
-
-
-  /**
-   * Callback that fires before a slide change.
-   *
-   * @param {Object} event
-   */
-  beforeTransition: function beforeTransition(event) {},
-
-
-  /**
-   * Callback that fires during changing of a slide.
-   *
-   * @param {Object} event
-   */
-  duringTransition: function duringTransition(event) {},
-
-
-  /**
-   * Callback that fires after a slide change.
-   *
-   * @param {Object} event
-   */
-  afterTransition: function afterTransition(event) {},
-
-
-  /**
-   * Callback that fires on start of touch/drag interaction.
-   *
-   * @param {Object} event
-   */
-  swipeStart: function swipeStart(event) {},
-
-
-  /**
-   * Callback that fires during touch/drag interaction.
-   *
-   * @param {Object} event
-   */
-  swipeMove: function swipeMove(event) {},
-
-
-  /**
-   * Callback that fires on end of touch/drag interaction.
-   *
-   * @param {Object} event
-   */
-  swipeEnd: function swipeEnd(event) {}
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
 };
 
-/**
- * Generates "unique" identifier number.
- *
- * @return {Number}
- */
-function uid() {
-  return new Date().valueOf();
-}
+
+
+
+
+
+
+
+
+
 
 var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -249,6 +95,118 @@ var _extends = Object.assign || function (target) {
   return target;
 };
 
+var DOM = function () {
+  function DOM() {
+    classCallCheck(this, DOM);
+  }
+
+  createClass(DOM, [{
+    key: 'init',
+
+    /**
+     * Setup slider HTML nodes.
+     *
+     * @param  {String|HTMLElement} element
+     */
+    value: function init(element) {
+      this.element = element;
+      this.track = this.element.querySelector('[data-glide="track"]');
+    }
+
+    /**
+     * Gets node of the slider main element.
+     *
+     * @return {Object}
+     */
+
+  }, {
+    key: 'element',
+    get: function get$$1() {
+      return this.el;
+    }
+
+    /**
+     * Sets node of the slider main element.
+     *
+     * @return {Object}
+     */
+    ,
+    set: function set$$1(el) {
+      if (typeof el === 'string') {
+        el = document.querySelector(el);
+      }
+
+      if (exist(el)) {
+        this.el = el;
+      } else {
+        warn('Main element must be a HTML node');
+      }
+    }
+
+    /**
+     * Gets node of the slides track.
+     *
+     * @return {Object}
+     */
+
+  }, {
+    key: 'track',
+    get: function get$$1() {
+      return this.tr;
+    }
+
+    /**
+     * Sets node of the slides track.
+     *
+     * @return {Void}
+     */
+    ,
+    set: function set$$1(tr) {
+      if (exist(tr)) {
+        this.tr = tr;
+      } else {
+        warn('Could not find track element. Please use [' + TRACK_ATTRIBUTE + '] attribute.');
+      }
+    }
+
+    /**
+     * Gets node of the slides wrapper.
+     *
+     * @return {Object}
+     */
+
+  }, {
+    key: 'wrapper',
+    get: function get$$1() {
+      return this.track.children[0];
+    }
+
+    /**
+     * Gets collection of the slide nodes.
+     *
+     * @return {Array}
+     */
+
+  }, {
+    key: 'slides',
+    get: function get$$1() {
+      return this.wrapper.children;
+    }
+  }]);
+  return DOM;
+}();
+
+var DOM$1 = new DOM();
+
+/**
+ * Generates "unique" identifier number.
+ *
+ * @return {Number}
+ */
+function uid() {
+  return new Date().valueOf();
+}
+
 var Core = function () {
   /**
    * Construct core.
@@ -283,29 +241,11 @@ var Core = function () {
      */
     ,
     set: function set$$1(opt) {
-      this.opt = opt;
-    }
-
-    /**
-     * Gets node of the slider main element.
-     *
-     * @return {Object}
-     */
-
-  }, {
-    key: 'element',
-    get: function get$$1() {
-      return this.el;
-    }
-
-    /**
-     * Sets node of the slider main element.
-     *
-     * @return {Object}
-     */
-    ,
-    set: function set$$1(el) {
-      this.el = el;
+      if ((typeof opt === 'undefined' ? 'undefined' : _typeof(opt)) === 'object') {
+        this.opt = opt;
+      } else {
+        warn('Options must be an `object` instance.');
+      }
     }
 
     /**
@@ -335,52 +275,6 @@ var Core = function () {
 
 var Core$1 = new Core(uid());
 
-var Nodes = function () {
-  function Nodes() {
-    classCallCheck(this, Nodes);
-  }
-
-  createClass(Nodes, [{
-    key: 'init',
-    value: function init(element) {
-      this.element = element;
-      this.track = element.querySelector('[data-glide="track"]');
-      this.wrapper = this.track.children[0];
-      this.slides = this.wrapper.children;
-    }
-  }]);
-  return Nodes;
-}();
-
-var Nodes$1 = new Nodes();
-
-function siblings(node) {
-  var n = node.parentNode.firstChild;
-  var matched = [];
-
-  for (; n; n = n.nextSibling) {
-    if (n.nodeType === 1 && n !== node) {
-      matched.push(n);
-    }
-  }
-
-  return matched;
-}
-
-function addPrefix(string) {
-  var prefix = Core$1.settings.classes.prefix + Core$1.settings.classes.separator;
-
-  return prefix + string;
-}
-
-function addClass(el, name) {
-  el.classList.add(addPrefix(name));
-}
-
-function removeClass(el, name) {
-  el.classList.remove(addPrefix(name));
-}
-
 var Build = function () {
   function Build() {
     classCallCheck(this, Build);
@@ -388,30 +282,66 @@ var Build = function () {
 
   createClass(Build, [{
     key: 'init',
+
+    /**
+     * Init slider building. Adds classes, sets
+     * dimensions and setups initial state.
+     */
     value: function init() {
       this.typeClass();
       this.modeClass();
       this.activeClass();
     }
+
+    /**
+     * Adds `type` class to the slider element.
+     *
+     * @return {Void}
+     */
+
   }, {
     key: 'typeClass',
     value: function typeClass() {
-      addClass(Nodes$1.element, Core$1.settings.type);
+      var settings = Core$1.settings;
+
+      var type = settings.classes[settings.type];
+
+      DOM$1.element.classList.add(type);
     }
+
+    /**
+     * Adds `mode` class to the slider element.
+     *
+     * @return {Void}
+     */
+
   }, {
     key: 'modeClass',
     value: function modeClass() {
-      addClass(Nodes$1.element, Core$1.settings.mode);
+      var settings = Core$1.settings;
+
+      var mode = settings.classes[settings.mode];
+
+      DOM$1.element.classList.add(mode);
     }
+
+    /**
+     * Sets active class to current slide.
+     *
+     * @return {Void}
+     */
+
   }, {
     key: 'activeClass',
     value: function activeClass() {
-      var el = Nodes$1.slides[Core$1.index];
+      var settings = Core$1.settings;
 
-      addClass(el, Core$1.settings.classes.active);
+      var slide = DOM$1.slides[Core$1.index];
 
-      siblings(el).forEach(function (sibling) {
-        removeClass(sibling, Core$1.settings.classes.active);
+      slide.classList.add(settings.classes.activeSlide);
+
+      siblings(slide).forEach(function (sibling) {
+        sibling.classList.remove(settings.classes.activeSlide);
       });
     }
   }]);
@@ -908,43 +838,237 @@ var Events$1 = new Events();
 
 // };
 
+var defaults$1 = {
+  /**
+   * Type of the slides movements. Available types:
+   * `slider` - Rewinds slider to the start/end when it reaches first or last slide.
+   * `carousel` - Changes slides without starting over when it reaches first or last slide.
+   * `slideshow` - Changes slides with fade effect.
+   *
+   * @type {String}
+   */
+  type: 'carousel',
+
+  /**
+   * Direction of the slider movements. Available modes:
+   * `horizontal` - Move slider on X axis.
+   * `vertical` - Move slider on Y axis.
+   *
+   * @type {String}
+   */
+  mode: 'horizontal',
+
+  /**
+   * Start at specifed slide zero-based index.
+   *
+   * @type {Number}
+   */
+  startAt: 0,
+
+  /**
+   * Focus currently active slide at specifed position in the track. Available inputs:
+   * `center` - Current slide will be always focused at the center of track.
+   * `(1,2,3...)` - Current slide will be focused at the specifed position number.
+   *
+   * @type {String|Number}
+   */
+  focusAt: 'center',
+
+  /**
+   * Change slides after specifed interval.
+   * Use false for turning off autoplay.
+   *
+   * @type {Number|Boolean}
+   */
+  autoplay: 4000,
+
+  /**
+   * Stop autoplay on mouseover.
+   *
+   * @type {Boolean}
+   */
+  hoverpause: true,
+
+  /**
+   * Allow for changing slides with keyboard left and right arrows.
+   *
+   * @type {Boolean}
+   */
+  keyboard: true,
+
+  /**
+   * Minimal touch-swipe distance needed to change slide. False for turning off touch.
+   *
+   * @type {Number}
+   */
+  touchDistance: 80,
+
+  /**
+   * Minimal mouse drag distance needed to change slide. False for turning off mouse drag.
+   *
+   * @type {Number}
+   */
+  dragDistance: 120,
+
+  /**
+   * Duration of the animation in milliseconds.
+   *
+   * @type {Number}
+   */
+  animationDuration: 400,
+
+  /**
+   * Easing function for animation.
+   *
+   * @type {String}
+   */
+  animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
+
+  /**
+   * Optimalize resize events. Call at most once per every wait in milliseconds.
+   *
+   * @type {Number}
+   */
+  throttle: 16,
+
+  /**
+   * Set height of the slider based on current slide content.
+   *
+   * @type {Boolean}
+   */
+  autoheight: false,
+
+  /**
+   * Distance value of the next and previous viewports which have to be
+   * peeked in current view. Can be number, percentage or pixels.
+   *
+   * @type {Number|String}
+   */
+  peek: 0,
+
+  /**
+   * List of internally used DOM classes.
+   *
+   * @type {Object}
+   */
+  classes: {
+    horizontal: 'glide--horizontal',
+    vertical: 'glide--vertical',
+    slider: 'glide--slider',
+    carousel: 'glide--carousel',
+    slideshow: 'glide--slideshow',
+    dragging: 'glide--dragging',
+    cloneSlide: 'glide__slide--clone',
+    activeSlide: 'glide__slide--active',
+    disabledArrow: 'glide__arrow--disabled',
+    activeBullet: 'glide__bullet--active'
+  },
+
+  /**
+   * Callback that fires before a slider initialization.
+   *
+   * @param {Object} event
+   */
+  beforeInit: function beforeInit(event) {},
+
+
+  /**
+   * Callback that fires after a slider initialization.
+   *
+   * @param {Object} event
+   */
+  afterInit: function afterInit(event) {},
+
+
+  /**
+   * Callback that fires before a slide change.
+   *
+   * @param {Object} event
+   */
+  beforeTransition: function beforeTransition(event) {},
+
+
+  /**
+   * Callback that fires during changing of a slide.
+   *
+   * @param {Object} event
+   */
+  duringTransition: function duringTransition(event) {},
+
+
+  /**
+   * Callback that fires after a slide change.
+   *
+   * @param {Object} event
+   */
+  afterTransition: function afterTransition(event) {},
+
+
+  /**
+   * Callback that fires on start of touch/drag interaction.
+   *
+   * @param {Object} event
+   */
+  swipeStart: function swipeStart(event) {},
+
+
+  /**
+   * Callback that fires during touch/drag interaction.
+   *
+   * @param {Object} event
+   */
+  swipeMove: function swipeMove(event) {},
+
+
+  /**
+   * Callback that fires on end of touch/drag interaction.
+   *
+   * @param {Object} event
+   */
+  swipeEnd: function swipeEnd(event) {}
+};
+
 var Glide = function () {
-  /**
-   * Construct glide.
-   *
-   * @param  {String} element
-   * @param  {Object} options
-   */
-  function Glide(element, options) {
-    classCallCheck(this, Glide);
+    /**
+     * Construct glide.
+     *
+     * @param  {String} selector
+     * @param  {Object} options
+     */
+    function Glide(selector) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        classCallCheck(this, Glide);
 
-    var settings = _extends(defaults, options);
+        this.selector = selector;
+        this.options = options;
 
-    Core$1.settings = settings;
-    Core$1.index = settings.startAt;
+        var settings = _extends(defaults$1, options);
 
-    Events$1.call(settings.beforeInit);
+        Core$1.settings = settings;
+        Core$1.index = settings.startAt;
 
-    Nodes$1.init(element);
-    Build$1.init();
+        Events$1.call(settings.beforeInit);
 
-    Events$1.call(settings.afterInit);
-  }
+        DOM$1.init(selector);
+        Build$1.init();
 
-  /**
-   * Gets current slide index.
-   *
-   * @return {Number}
-   */
-
-
-  createClass(Glide, [{
-    key: 'index',
-    value: function index() {
-      return Core$1.index;
+        Events$1.call(settings.afterInit);
     }
-  }]);
-  return Glide;
+
+    /**
+     * Gets current slide index.
+     *
+     * @return {Number}
+     */
+
+
+    createClass(Glide, [{
+        key: 'index',
+        value: function index() {
+            return Core$1.index;
+        }
+    }]);
+    return Glide;
 }();
 
 return Glide;

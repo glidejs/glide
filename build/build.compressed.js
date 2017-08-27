@@ -12,6 +12,10 @@ const settings = {
     uglify({
       output: {
         comments: '/^!/'
+      },
+      compress: {
+        drop_console: true,
+        pure_funcs: 'warn'
       }
     })
   ])

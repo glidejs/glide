@@ -1,31 +1,59 @@
+import DOM from './dom'
 import Core from './core'
-import Nodes from './nodes'
 
 import { siblings } from '../utils/dom'
-import { addClass, removeClass } from '../utils/class'
 
 class Build {
+  /**
+   * Init slider building. Adds classes, sets
+   * dimensions and setups initial state.
+   */
   init() {
     this.typeClass()
     this.modeClass()
     this.activeClass()
   }
 
+  /**
+   * Adds `type` class to the slider element.
+   *
+   * @return {Void}
+   */
   typeClass() {
-    addClass(Nodes.element, Core.settings.type)
+    const settings = Core.settings
+
+    let type = settings.classes[settings.type]
+
+    DOM.element.classList.add(type)
   }
 
+  /**
+   * Adds `mode` class to the slider element.
+   *
+   * @return {Void}
+   */
   modeClass() {
-    addClass(Nodes.element, Core.settings.mode)
+    const settings = Core.settings
+
+    let mode = settings.classes[settings.mode]
+
+    DOM.element.classList.add(mode)
   }
 
+  /**
+   * Sets active class to current slide.
+   *
+   * @return {Void}
+   */
   activeClass() {
-    let el = Nodes.slides[Core.index]
+    const settings = Core.settings
 
-    addClass(el, Core.settings.classes.active)
+    let slide = DOM.slides[Core.index]
 
-    siblings(el).forEach((sibling) => {
-      removeClass(sibling, Core.settings.classes.active)
+    slide.classList.add(settings.classes.activeSlide)
+
+    siblings(slide).forEach((sibling) => {
+      sibling.classList.remove(settings.classes.activeSlide)
     })
   }
 }

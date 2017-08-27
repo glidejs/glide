@@ -10,3 +10,11 @@ export function siblings(node) {
 
   return matched
 }
+
+export function exist(node) {
+  if (node instanceof HTMLElement) {
+    return true
+  }
+
+  return false
+}

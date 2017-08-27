@@ -1,4 +1,5 @@
 import uid from '../utils/uid'
+import warn from '../utils/warn'
 
 class Core {
   /**
@@ -27,25 +28,11 @@ class Core {
    * @return {Void}
    */
   set settings(opt) {
-    this.opt = opt
-  }
-
-  /**
-   * Gets node of the slider main element.
-   *
-   * @return {Object}
-   */
-  get element() {
-    return this.el
-  }
-
-  /**
-   * Sets node of the slider main element.
-   *
-   * @return {Object}
-   */
-  set element(el) {
-    this.el = el
+    if (typeof opt === 'object') {
+      this.opt = opt
+    } else {
+      warn('Options must be an `object` instance.')
+    }
   }
 
   /**

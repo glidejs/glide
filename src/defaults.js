@@ -99,12 +99,12 @@ export default {
   autoheight: false,
 
   /**
-   * Area number of the next and previous viewports visible
-   * in current view. Can be number, percentage or pixels.
+   * Distance value of the next and previous viewports which have to be
+   * peeked in current view. Can be number, percentage or pixels.
    *
    * @type {Number|String}
    */
-  paddings: 0,
+  peek: 0,
 
   /**
    * List of internally used DOM classes.
@@ -112,12 +112,16 @@ export default {
    * @type {Object}
    */
   classes: {
-    prefix: 'glide',
-    separator: '--',
-    clone: 'clone',
-    active: 'active',
-    dragging: 'dragging',
-    disabled: 'disabled'
+    horizontal: 'glide--horizontal',
+    vertical: 'glide--vertical',
+    slider: 'glide--slider',
+    carousel: 'glide--carousel',
+    slideshow: 'glide--slideshow',
+    dragging: 'glide--dragging',
+    cloneSlide: 'glide__slide--clone',
+    activeSlide: 'glide__slide--active',
+    disabledArrow: 'glide__arrow--disabled',
+    activeBullet: 'glide__bullet--active',
   },
 
   /**

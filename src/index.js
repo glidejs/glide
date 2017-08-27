@@ -1,17 +1,21 @@
-import defaults from './defaults'
+import DOM from './components/dom'
 import Core from './components/core'
 import Build from './components/build'
-import Nodes from './components/nodes'
 import Events from './components/events'
+
+import defaults from './defaults'
 
 export default class Glide {
   /**
    * Construct glide.
    *
-   * @param  {String} element
+   * @param  {String} selector
    * @param  {Object} options
    */
-  constructor(element, options) {
+  constructor(selector, options = {}) {
+    this.selector = selector
+    this.options = options
+
     let settings = Object.assign(defaults, options)
 
     Core.settings = settings
@@ -19,7 +23,7 @@ export default class Glide {
 
     Events.call(settings.beforeInit)
 
-    Nodes.init(element)
+    DOM.init(selector)
     Build.init()
 
     Events.call(settings.afterInit)

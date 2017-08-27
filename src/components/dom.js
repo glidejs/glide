@@ -9,7 +9,10 @@ class DOM {
    */
   init(element) {
     this.element = element
+
     this.track = this.element.querySelector('[data-glide="track"]')
+    this.arrows = this.element.querySelector('[data-glide="arrows"]')
+    this.bullets = this.element.querySelector('[data-glide="bullets"]')
   }
 
   /**

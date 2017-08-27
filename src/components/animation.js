@@ -32,10 +32,14 @@ class Animation {
    * @return {Void}
    */
   slider() {
-      var translate = Dimensions.slideSize * Core.index;
+    var translate = (Dimensions.slideSize * Core.index)
 
-      Transition.set(DOM.wrapper)
-      Translate.set(DOM.wrapper, translate)
+    if (Core.settings.focusAt === 'center') {
+      translate = translate - (Dimensions.width/2 - Dimensions.slideSize/2);
+    }
+
+    Transition.set(DOM.wrapper)
+    Translate.set(DOM.wrapper, translate)
   }
 
   /**

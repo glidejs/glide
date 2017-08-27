@@ -23,7 +23,7 @@ class Dimensions {
   }
 
   setupWrapper(dimention) {
-    DOM.wrapper.style[dimention] = `${this.slideSize * this.length}px`
+    DOM.wrapper.style[dimention] = `${this.wrapperSize}px`
   }
 
   get dimention() {
@@ -43,6 +43,10 @@ class Dimensions {
     }
 
     return this.slideWidth
+  }
+
+  get wrapperSize() {
+    return this.slideSize * this.length
   }
 
   get length() {

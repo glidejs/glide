@@ -449,8 +449,8 @@ var Translate = function () {
 
   }, {
     key: 'set',
-    value: function set$$1(el, value) {
-      el.style.transform = this.get(value);
+    value: function set$$1(value) {
+      DOM$1.wrapper.style.transform = this.get(value);
 
       return this;
     }
@@ -461,50 +461,81 @@ var Translate = function () {
 var Translate$1 = new Translate();
 
 var Transition = function () {
-    function Transition() {
-        classCallCheck(this, Transition);
+  /**
+   * Construct transition.
+   */
+  function Transition() {
+    classCallCheck(this, Transition);
 
-        this.jumping = false;
+    this.disabled = false;
+  }
+
+  /**
+   * Gets value of transition.
+   *
+   * @param {String} property
+   * @return {String}
+   */
+
+
+  createClass(Transition, [{
+    key: 'get',
+    value: function get$$1() {
+      var property = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'all';
+
+      var settings = Core$1.settings;
+
+      if (!this.disabled) {
+        return property + ' ' + settings.animationDuration + 'ms ' + settings.animationTimingFunc;
+      }
+
+      return property + ' 0ms ' + settings.animationTimingFunc;
     }
 
     /**
-     * Gets value of transition.
+     * Sets value of transition.
      *
      * @param {String} property
-     * @return {String}
+     * @return {self}
      */
 
+  }, {
+    key: 'set',
+    value: function set$$1(property) {
+      DOM$1.wrapper.style.transition = this.get(property);
 
-    createClass(Transition, [{
-        key: 'get',
-        value: function get$$1() {
-            var property = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'all';
+      return this;
+    }
 
-            var settings = Core$1.settings;
+    /**
+     * Enable transition.
+     *
+     * @return {self}
+     */
 
-            if (!this.jumping) {
-                return property + ' ' + settings.animationDuration + 'ms ' + settings.animationTimingFunc;
-            }
+  }, {
+    key: 'enable',
+    value: function enable() {
+      this.disabled = false;
 
-            return property + ' 0ms ' + settings.animationTimingFunc;
-        }
+      return this;
+    }
 
-        /**
-         * Sets value of transition.
-         *
-         * @param {HTMLElement} el
-         * @return {self}
-         */
+    /**
+     * Disable transition.
+     *
+     * @return {self}
+     */
 
-    }, {
-        key: 'set',
-        value: function set$$1(el) {
-            el.style.transition = this.get();
+  }, {
+    key: 'disable',
+    value: function disable() {
+      this.disabled = true;
 
-            return this;
-        }
-    }]);
-    return Transition;
+      return this;
+    }
+  }]);
+  return Transition;
 }();
 
 var Transition$1 = new Transition();
@@ -552,8 +583,12 @@ var Animation = function () {
         translate = translate - (Dimensions$1.width / 2 - Dimensions$1.slideSize / 2);
       }
 
-      Transition$1.set(DOM$1.wrapper);
-      Translate$1.set(DOM$1.wrapper, translate);
+      if (Core$1.settings.focusAt > 0) {
+        translate = translate - Dimensions$1.slideSize * Core$1.settings.focusAt;
+      }
+
+      Transition$1.set('transform');
+      Translate$1.set(translate);
     }
 
     /**
@@ -796,6 +831,61 @@ var Animation$1 = new Animation();
 
 // };
 
+var Run = function () {
+  function Run() {
+    classCallCheck(this, Run);
+
+    this.flag = false;
+    this.running = false;
+  }
+
+  createClass(Run, [{
+    key: 'play',
+    value: function play() {
+      var _this = this;
+
+      if (Core$1.settings.autoplay || this.running) {
+        if (typeof this.interval === 'undefined') {
+          this.interval = setInterval(function () {
+            _this.pause();
+            _this.make('>');
+            _this.play();
+          }, this.time);
+        }
+      }
+    }
+  }, {
+    key: 'pause',
+    value: function pause() {
+      if (Core$1.settings.autoplay || this.running) {
+        if (this.interval >= 0) {
+          this.interval = clearInterval(this.interval);
+        }
+      }
+    }
+  }, {
+    key: 'make',
+    value: function make() {
+      Core$1.index = 2;
+      Animation$1.make();
+    }
+  }, {
+    key: 'time',
+    get: function get$$1() {
+      var autoplay = DOM$1.slides[Core$1.index].getAttribute('data-glide-autoplay');
+
+      if (autoplay) {
+        return parseInt(autoplay);
+      }
+
+      return Core$1.settings.autoplay;
+    }
+  }]);
+  return Run;
+}();
+
+var Run$1 = new Run();
+
 var Build = function () {
   function Build() {
     classCallCheck(this, Build);
@@ -809,12 +899,16 @@ var Build = function () {
      * dimensions and setups initial state.
      */
     value: function init() {
+      Transition$1.disable();
+
       this[Core$1.settings.type]();
 
       this.typeClass();
       this.modeClass();
       this.activeClass();
       this.setHeight();
+
+      Transition$1.enable();
     }
 
     /**
@@ -826,12 +920,8 @@ var Build = function () {
   }, {
     key: 'slider',
     value: function slider() {
-      Transition$1.jumping = true;
-
       Dimensions$1.apply();
       Animation$1.make();
-
-      Transition$1.jumping = false;
     }
 
     /**
@@ -1301,13 +1391,7 @@ var Arrows = function () {
     createClass(Arrows, [{
         key: 'init',
         value: function init() {
-            var _this = this;
-
             this.bind();
-
-            setTimeout(function () {
-                return _this.unbind();
-            }, 5000);
         }
 
         /**
@@ -1765,6 +1849,7 @@ var Glide = function () {
         DOM$1.init(selector);
         Arrows$1.init();
         Build$1.init();
+        Run$1.play();
 
         Events$1.call(settings.afterInit);
     }

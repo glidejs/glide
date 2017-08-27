@@ -1,3 +1,4 @@
+import DOM from './dom'
 import Dimensions from './dimensions'
 
 /**
@@ -30,8 +31,8 @@ class Translate {
    * @param {HTMLElement} el
    * @return {self}
    */
-  set(el, value) {
-      el.style.transform = this.get(value)
+  set(value) {
+      DOM.wrapper.style.transform = this.get(value)
 
       return this
   }

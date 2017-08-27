@@ -12,12 +12,16 @@ class Build {
    * dimensions and setups initial state.
    */
   init() {
+    Transition.disable()
+
     this[Core.settings.type]()
 
     this.typeClass()
     this.modeClass()
     this.activeClass()
     this.setHeight()
+
+    Transition.enable()
   }
 
   /**
@@ -26,12 +30,8 @@ class Build {
    * @return {Void}
    */
   slider() {
-      Transition.jumping = true;
-
-      Dimensions.apply()
-      Animation.make()
-
-      Transition.jumping = false;
+    Dimensions.apply()
+    Animation.make()
   }
 
   /**

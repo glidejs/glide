@@ -1,4 +1,5 @@
 import DOM from './components/dom'
+import Run from './components/run'
 import Core from './components/core'
 import Build from './components/build'
 import Arrows from './components/arrows'
@@ -27,6 +28,7 @@ export default class Glide {
     DOM.init(selector)
     Arrows.init()
     Build.init()
+    Run.play()
 
     Events.call(settings.afterInit)
   }

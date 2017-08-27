@@ -8,8 +8,6 @@ class Arrows {
 
   init() {
       this.bind()
-
-      setTimeout(() => this.unbind(), 5000)
   }
 
   /**

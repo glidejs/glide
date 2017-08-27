@@ -38,8 +38,12 @@ class Animation {
       translate = translate - (Dimensions.width/2 - Dimensions.slideSize/2);
     }
 
-    Transition.set(DOM.wrapper)
-    Translate.set(DOM.wrapper, translate)
+    if (Core.settings.focusAt > 0) {
+      translate = translate - (Dimensions.slideSize * Core.settings.focusAt);
+    }
+
+    Transition.set('transform')
+    Translate.set(translate)
   }
 
   /**

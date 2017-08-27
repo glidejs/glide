@@ -1,37 +1,63 @@
+import DOM from './dom'
 import Core from './core'
 
 class Transition {
-    constructor() {
-        this.jumping = false
+  /**
+   * Construct transition.
+   */
+  constructor() {
+    this.disabled = false
+  }
+
+  /**
+   * Gets value of transition.
+   *
+   * @param {String} property
+   * @return {String}
+   */
+  get(property = 'all') {
+    let settings = Core.settings
+
+    if (! this.disabled) {
+      return `${property} ${settings.animationDuration}ms ${settings.animationTimingFunc}`
     }
 
-    /**
-     * Gets value of transition.
-     *
-     * @param {String} property
-     * @return {String}
-     */
-    get(property = 'all') {
-        let settings = Core.settings
+    return `${property} 0ms ${settings.animationTimingFunc}`
+  }
 
-        if (! this.jumping) {
-            return `${property} ${settings.animationDuration}ms ${settings.animationTimingFunc}`
-        }
+  /**
+   * Sets value of transition.
+   *
+   * @param {String} property
+   * @return {self}
+   */
+  set(property) {
+    DOM.wrapper.style.transition = this.get(property)
 
-        return `${property} 0ms ${settings.animationTimingFunc}`
-    }
+    return this
+  }
 
-    /**
-     * Sets value of transition.
-     *
-     * @param {HTMLElement} el
-     * @return {self}
-     */
-    set(el) {
-        el.style.transition = this.get()
+  /**
+   * Enable transition.
+   *
+   * @return {self}
+   */
+  enable() {
+    this.disabled = false
 
-        return this
-    }
+    return this
+  }
+
+  /**
+   * Disable transition.
+   *
+   * @return {self}
+   */
+  disable() {
+    this.disabled = true
+
+    return this
+  }
 }
 
 export default new Transition()

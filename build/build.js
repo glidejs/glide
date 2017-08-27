@@ -10,6 +10,11 @@ export default {
     banner
   },
   plugins: [
-    babel()
+    babel({
+      plugins: [
+        'external-helpers',
+        'transform-object-assign'
+      ]
+    })
   ]
 }

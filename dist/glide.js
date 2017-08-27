@@ -344,14 +344,9 @@ var Nodes = function () {
     key: 'init',
     value: function init(element) {
       this.element = element;
-      this.track = this.find('[data-glide="track"]');
+      this.track = element.querySelector('[data-glide="track"]');
       this.wrapper = this.track.children[0];
       this.slides = this.wrapper.children;
-    }
-  }, {
-    key: 'find',
-    value: function find(selector) {
-      return this.element.querySelector(selector);
     }
   }]);
   return Nodes;
@@ -359,12 +354,12 @@ var Nodes = function () {
 
 var Nodes$1 = new Nodes();
 
-function siblings(el) {
-  var n = el.parentNode.firstChild;
+function siblings(node) {
+  var n = node.parentNode.firstChild;
   var matched = [];
 
   for (; n; n = n.nextSibling) {
-    if (n.nodeType === 1 && n !== el) {
+    if (n.nodeType === 1 && n !== node) {
       matched.push(n);
     }
   }
@@ -372,10 +367,18 @@ function siblings(el) {
   return matched;
 }
 
-function prefixer(string) {
+function addPrefix(string) {
   var prefix = Core$1.settings.classes.prefix + Core$1.settings.classes.separator;
 
   return prefix + string;
+}
+
+function addClass(el, name) {
+  el.classList.add(addPrefix(name));
+}
+
+function removeClass(el, name) {
+  el.classList.remove(addPrefix(name));
 }
 
 var Build = function () {
@@ -393,22 +396,22 @@ var Build = function () {
   }, {
     key: 'typeClass',
     value: function typeClass() {
-      Nodes$1.element.classList.add(prefixer(Core$1.settings.type));
+      addClass(Nodes$1.element, Core$1.settings.type);
     }
   }, {
     key: 'modeClass',
     value: function modeClass() {
-      Nodes$1.element.classList.add(prefixer(Core$1.settings.mode));
+      addClass(Nodes$1.element, Core$1.settings.mode);
     }
   }, {
     key: 'activeClass',
     value: function activeClass() {
       var el = Nodes$1.slides[Core$1.index];
 
-      el.classList.add(prefixer(Core$1.settings.classes.active));
+      addClass(el, Core$1.settings.classes.active);
 
       siblings(el).forEach(function (sibling) {
-        sibling.classList.remove(prefixer(Core$1.settings.classes.active));
+        removeClass(sibling, Core$1.settings.classes.active);
       });
     }
   }]);

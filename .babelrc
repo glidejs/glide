@@ -6,8 +6,14 @@
       }
     ]
   ],
-  "plugins": [
-    "external-helpers",
-    "transform-object-assign"
-  ]
+
+  "env": {
+    "test": {
+      "presets": [
+        [
+          "es2015"
+        ]
+      ]
+    }
+  },
 }

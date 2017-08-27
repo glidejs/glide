@@ -4,19 +4,17 @@ import babel from 'rollup-plugin-babel'
 import uglify from 'rollup-plugin-uglify'
 
 const settings = {
-  output: {
-    file: 'dist/glide.min.js',
-    format: 'umd',
-    banner
-  },
-  plugins: [
-    babel(),
+  output: Object.assign(build.output, {
+    file: 'dist/glide.min.js'
+  }),
+
+  plugins: build.plugins.concat([
     uglify({
       output: {
         comments: '/^!/'
       }
     })
-  ]
+  ])
 }
 
 export default Object.assign(build, settings)

@@ -1,8 +1,8 @@
 import Core from './core'
 import Nodes from './nodes'
 
-import siblings from '../utils/siblings'
-import prefixer from '../utils/prefixer'
+import { siblings } from '../utils/dom'
+import { addClass, removeClass } from '../utils/class'
 
 class Build {
   init() {
@@ -12,20 +12,20 @@ class Build {
   }
 
   typeClass() {
-    Nodes.element.classList.add(prefixer(Core.settings.type))
+    addClass(Nodes.element, Core.settings.type)
   }
 
   modeClass() {
-    Nodes.element.classList.add(prefixer(Core.settings.mode))
+    addClass(Nodes.element, Core.settings.mode)
   }
 
   activeClass() {
     let el = Nodes.slides[Core.index]
 
-    el.classList.add(prefixer(Core.settings.classes.active))
+    addClass(el, Core.settings.classes.active)
 
     siblings(el).forEach((sibling) => {
-      sibling.classList.remove(prefixer(Core.settings.classes.active))
+      removeClass(sibling, Core.settings.classes.active)
     })
   }
 }

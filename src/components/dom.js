@@ -34,7 +34,7 @@ class DOM {
     if (exist(el)) {
       this.el = el
     } else {
-      warn('Main element must be a HTML node')
+      warn('Main element must be a existing HTML node')
     }
   }
 

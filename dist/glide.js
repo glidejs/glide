@@ -221,13 +221,39 @@ var Core = function () {
   }
 
   /**
-   * Gets value of the core options.
+   * Checks if slider is a precised type.
    *
-   * @return {Object}
+   * @param  {String} name
+   * @return {Boolean}
    */
 
 
   createClass(Core, [{
+    key: 'isType',
+    value: function isType(name) {
+      return this.settings.type === name;
+    }
+
+    /**
+     * Checks if slider is in precised mode.
+     *
+     * @param  {String} name
+     * @return {Boolean}
+     */
+
+  }, {
+    key: 'isMode',
+    value: function isMode(name) {
+      return this.settings.mode === name;
+    }
+
+    /**
+     * Gets value of the core options.
+     *
+     * @return {Object}
+     */
+
+  }, {
     key: 'settings',
     get: function get$$1() {
       return this.opt;
@@ -284,17 +310,119 @@ var Build = function () {
     key: 'init',
 
     /**
-     * Init slider building. Adds classes, sets
+     * Init glide building. Adds classes, sets
      * dimensions and setups initial state.
      */
     value: function init() {
+      this[Core$1.settings.type]();
+
       this.typeClass();
       this.modeClass();
       this.activeClass();
+      this.setHeight();
     }
 
     /**
-     * Adds `type` class to the slider element.
+     * Build glide of `slider` type.
+     *
+     * @return {Void}
+     */
+
+  }, {
+    key: 'slider',
+    value: function slider() {}
+    // // Turn on jumping flag.
+    // Core.Transition.jumping = true;
+
+    // // Apply slides width.
+    // Glide.slides[Glide.size](Glide[Glide.size]);
+
+    // // Apply translate.
+    // Glide.track.css(Glide.size, Glide[Glide.size] * Glide.length);
+
+    // // If mode is vertical apply height.
+    // if (this.isMode('vertical')) {
+    //     Core.Height.set(true);
+    // }
+
+    // // Go to startup position.
+    // Core.Animation.make();
+
+    // // Turn off jumping flag.
+    // Core.Transition.jumping = false;
+
+
+    /**
+     * Build glide of `carousel` type.
+     *
+     * @return {Void}
+     */
+
+  }, {
+    key: 'carousel',
+    value: function carousel() {}
+    // // Turn on jumping flag.
+    // Core.Transition.jumping = true;
+
+    // // Update shift for carusel type.
+    // Core.Clones.shift = (Glide[Glide.size] * Core.Clones.items.length / 2) - Glide[Glide.size];
+
+    // // Apply slides width.
+    // Glide.slides[Glide.size](Glide[Glide.size]);
+
+    // // Apply translate.
+    // Glide.track.css(Glide.size, (Glide[Glide.size] * Glide.length) + Core.Clones.getGrowth());
+
+    // // If mode is vertical apply height.
+    // if (this.isMode('vertical')) {
+    //     Core.Height.set(true);
+    // }
+
+    // // Go to startup position.
+    // Core.Animation.make();
+
+    // // Append clones.
+    // Core.Clones.append();
+
+    // // Turn off jumping flag.
+    // Core.Transition.jumping = false;
+
+
+    /**
+     * Build glide of `slideshow` type.
+     *
+     * @return {Void}
+     */
+
+  }, {
+    key: 'slideshow',
+    value: function slideshow() {}
+    // // Turn on jumping flag
+    // Core.Transition.jumping = true;
+
+    // // Go to startup position
+    // Core.Animation.make();
+
+    // // Turn off jumping flag
+    // Core.Transition.jumping = false;
+
+
+    /**
+     * Sets height of the slides track.
+     *
+     * @return {Void}
+     */
+
+  }, {
+    key: 'setHeight',
+    value: function setHeight() {
+      if (Core$1.settings.autoheight) {
+        // Core.Height.set();
+      }
+    }
+
+    /**
+     * Adds `type` class to the glide element.
      *
      * @return {Void}
      */
@@ -310,7 +438,7 @@ var Build = function () {
     }
 
     /**
-     * Adds `mode` class to the slider element.
+     * Adds `mode` class to the glide element.
      *
      * @return {Void}
      */
@@ -349,156 +477,6 @@ var Build = function () {
 }();
 
 var Build$1 = new Build();
-
-// /**
-//  * Build module.
-//  *
-//  * @param {[type]} Glide
-//  * @param {[type]} Core
-//  * @return {Build}
-//  */
-// var Build = function(Glide, Core) {
-
-//     // Build constructor.
-//     function Build() {
-//         this.init();
-//     }
-
-//     /**
-//      * Init slider builder.
-//      *
-//      * @return {Void}
-//      */
-//     Build.prototype.init = function() {
-//         // Build proper slider type
-//         this[Glide.options.type]();
-
-//         // Set slide active class
-//         this.active();
-
-//         // Set slides height
-//         Core.Height.set();
-//     };
-
-//     /**
-//      * Check slider type.
-//      *
-//      * @param  {String} name
-//      * @return {Boolean}
-//      */
-//     Build.prototype.isType = function(name) {
-//         return Glide.options.type === name;
-//     };
-
-//     /**
-//      * Check slider mode.
-//      *
-//      * @param  {String} name
-//      * @return {Boolean}
-//      */
-//     Build.prototype.isMode = function(name) {
-//         return Glide.options.mode === name;
-//     };
-
-//     /**
-//      * Build slider type.
-//      *
-//      * @return {Void}
-//      */
-//     Build.prototype.slider = function() {
-
-//         // Turn on jumping flag.
-//         Core.Transition.jumping = true;
-
-//         // Apply slides width.
-//         Glide.slides[Glide.size](Glide[Glide.size]);
-
-//         // Apply translate.
-//         Glide.track.css(Glide.size, Glide[Glide.size] * Glide.length);
-
-//         // If mode is vertical apply height.
-//         if (this.isMode('vertical')) {
-//             Core.Height.set(true);
-//         }
-
-//         // Go to startup position.
-//         Core.Animation.make();
-
-//         // Turn off jumping flag.
-//         Core.Transition.jumping = false;
-
-//     };
-
-//     /**
-//      * Build carousel type.
-//      *
-//      * @return {Void}
-//      */
-//     Build.prototype.carousel = function() {
-
-//         // Turn on jumping flag.
-//         Core.Transition.jumping = true;
-
-//         // Update shift for carusel type.
-//         Core.Clones.shift = (Glide[Glide.size] * Core.Clones.items.length / 2) - Glide[Glide.size];
-
-//         // Apply slides width.
-//         Glide.slides[Glide.size](Glide[Glide.size]);
-
-//         // Apply translate.
-//         Glide.track.css(Glide.size, (Glide[Glide.size] * Glide.length) + Core.Clones.getGrowth());
-
-//         // If mode is vertical apply height.
-//         if (this.isMode('vertical')) {
-//             Core.Height.set(true);
-//         }
-
-//         // Go to startup position.
-//         Core.Animation.make();
-
-//         // Append clones.
-//         Core.Clones.append();
-
-//         // Turn off jumping flag.
-//         Core.Transition.jumping = false;
-
-//     };
-
-//     /**
-//      * Build slideshow type.
-//      *
-//      * @return {Void}
-//      */
-//     Build.prototype.slideshow = function() {
-
-//         // Turn on jumping flag
-//         Core.Transition.jumping = true;
-
-//         // Go to startup position
-//         Core.Animation.make();
-
-//         // Turn off jumping flag
-//         Core.Transition.jumping = false;
-
-//     };
-
-//     /**
-//      * Set active class to current slide.
-//      *
-//      * @return {Void}
-//      */
-//     Build.prototype.active = function() {
-
-//         Glide.slides
-//             .eq(Glide.current - 1).addClass(Glide.options.classes.active)
-//             .siblings().removeClass(Glide.options.classes.active);
-
-//     };
-
-//     // Return class.
-//     return new Build();
-
-// };
 
 var Events = function () {
     /**

@@ -13,6 +13,26 @@ class Core {
   }
 
   /**
+   * Checks if slider is a precised type.
+   *
+   * @param  {String} name
+   * @return {Boolean}
+   */
+  isType(name) {
+    return this.settings.type === name
+  }
+
+  /**
+   * Checks if slider is in precised mode.
+   *
+   * @param  {String} name
+   * @return {Boolean}
+   */
+  isMode(name) {
+    return this.settings.mode === name
+  }
+
+  /**
    * Gets value of the core options.
    *
    * @return {Object}

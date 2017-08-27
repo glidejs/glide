@@ -1,3 +1,9 @@
+/**
+ * Finds siblings elements of the passed node.
+ *
+ * @param  {HTMLElement} node
+ * @return {Array}
+ */
 export function siblings(node) {
   let n = node.parentNode.firstChild
   let matched = []
@@ -11,8 +17,14 @@ export function siblings(node) {
   return matched
 }
 
+/**
+ * Checks if precised node exist and is a valid element.
+ *
+ * @param  {HTMLElement} node
+ * @return {Boolean}
+ */
 export function exist(node) {
-  if (node instanceof HTMLElement) {
+  if (node && node instanceof HTMLElement) {
     return true
   }
 

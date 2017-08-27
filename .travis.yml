@@ -6,7 +6,11 @@ notifications:
     on_failure: change
 
 node_js:
-  - '0.10'
+  - '6.0'
 
 before_script:
   - npm install
+
+script:
+  - npm run test
+  - npm run build

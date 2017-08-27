@@ -7,7 +7,7 @@ export default {
    *
    * @type {String}
    */
-  type: 'carousel',
+  type: 'slider',
 
   /**
    * Direction of the slider movements. Available modes:
@@ -24,6 +24,13 @@ export default {
    * @type {Number}
    */
   startAt: 0,
+
+  /**
+   * Number of slides visible on viewport.
+   *
+   * @type {Number}
+   */
+  perView: 1,
 
   /**
    * Focus currently active slide at specifed position in the track. Available inputs:

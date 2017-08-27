@@ -10,10 +10,22 @@
 	(global.Glide = factory());
 }(this, (function () { 'use strict';
 
+/**
+ * Outputs warning message to the boswer console.
+ *
+ * @param  {String} msg
+ * @return {Void}
+ */
 function warn(msg) {
   console.error("[Glide warn]: " + msg);
 }
 
+/**
+ * Finds siblings elements of the passed node.
+ *
+ * @param  {HTMLElement} node
+ * @return {Array}
+ */
 function siblings(node) {
   var n = node.parentNode.firstChild;
   var matched = [];
@@ -27,8 +39,14 @@ function siblings(node) {
   return matched;
 }
 
+/**
+ * Checks if precised node exist and is a valid element.
+ *
+ * @param  {HTMLElement} node
+ * @return {Boolean}
+ */
 function exist(node) {
-  if (node instanceof HTMLElement) {
+  if (node && node instanceof HTMLElement) {
     return true;
   }
 
@@ -139,7 +157,7 @@ var DOM = function () {
       if (exist(el)) {
         this.el = el;
       } else {
-        warn('Main element must be a HTML node');
+        warn('Main element must be a existing HTML node');
       }
     }
 
@@ -301,6 +319,85 @@ var Core = function () {
 
 var Core$1 = new Core(uid());
 
+function ucfirst(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+var MODE_TO_DIMENSIONS = {
+  horizontal: ['width', 'x'],
+  vertical: ['height', 'y']
+};
+
+var Dimensions = function () {
+  function Dimensions() {
+    classCallCheck(this, Dimensions);
+  }
+
+  createClass(Dimensions, [{
+    key: 'apply',
+    value: function apply() {
+      var dimention = this.dimention.size;
+
+      this.setupSlides(dimention);
+      this.setupWrapper(dimention);
+    }
+  }, {
+    key: 'setupSlides',
+    value: function setupSlides(dimention) {
+      var dimentionGetter = 'slide' + ucfirst(dimention);
+
+      for (var i = 0; i < DOM$1.slides.length; i++) {
+        DOM$1.slides[i].style[dimention] = this[dimentionGetter] + 'px';
+      }
+    }
+  }, {
+    key: 'setupWrapper',
+    value: function setupWrapper(dimention) {
+      var dimentionGetter = 'slide' + ucfirst(dimention);
+
+      DOM$1.wrapper.style[dimention] = this[dimentionGetter] * this.length + 'px';
+    }
+  }, {
+    key: 'dimention',
+    get: function get$$1() {
+      var settings = Core$1.settings;
+
+      return {
+        size: MODE_TO_DIMENSIONS[settings.mode][0],
+        axis: MODE_TO_DIMENSIONS[settings.mode][1]
+      };
+    }
+  }, {
+    key: 'length',
+    get: function get$$1() {
+      return DOM$1.slides.length;
+    }
+  }, {
+    key: 'width',
+    get: function get$$1() {
+      return DOM$1.element.offsetWidth;
+    }
+  }, {
+    key: 'height',
+    get: function get$$1() {
+      return DOM$1.element.offsetHeight;
+    }
+  }, {
+    key: 'slideWidth',
+    get: function get$$1() {
+      return DOM$1.element.offsetWidth / Core$1.settings.perView;
+    }
+  }, {
+    key: 'slideHeight',
+    get: function get$$1() {
+      return DOM$1.element.offsetHeight / Core$1.settings.perView;
+    }
+  }]);
+  return Dimensions;
+}();
+
+var Dimensions$1 = new Dimensions();
+
 var Build = function () {
   function Build() {
     classCallCheck(this, Build);
@@ -330,27 +427,27 @@ var Build = function () {
 
   }, {
     key: 'slider',
-    value: function slider() {}
-    // // Turn on jumping flag.
-    // Core.Transition.jumping = true;
+    value: function slider() {
+      // // Turn on jumping flag.
+      // Core.Transition.jumping = true;
 
-    // // Apply slides width.
-    // Glide.slides[Glide.size](Glide[Glide.size]);
+      // Apply slides width.
+      Dimensions$1.apply();
 
-    // // Apply translate.
-    // Glide.track.css(Glide.size, Glide[Glide.size] * Glide.length);
+      // // Apply translate.
+      // Glide.track.css(Glide.size, Glide[Glide.size] * Glide.length);
 
-    // // If mode is vertical apply height.
-    // if (this.isMode('vertical')) {
-    //     Core.Height.set(true);
-    // }
+      // // If mode is vertical apply height.
+      // if (this.isMode('vertical')) {
+      //     Core.Height.set(true);
+      // }
 
-    // // Go to startup position.
-    // Core.Animation.make();
+      // // Go to startup position.
+      // Core.Animation.make();
 
-    // // Turn off jumping flag.
-    // Core.Transition.jumping = false;
-
+      // // Turn off jumping flag.
+      // Core.Transition.jumping = false;
+    }
 
     /**
      * Build glide of `carousel` type.
@@ -360,33 +457,33 @@ var Build = function () {
 
   }, {
     key: 'carousel',
-    value: function carousel() {}
-    // // Turn on jumping flag.
-    // Core.Transition.jumping = true;
+    value: function carousel() {
+      // // Turn on jumping flag.
+      // Core.Transition.jumping = true;
 
-    // // Update shift for carusel type.
-    // Core.Clones.shift = (Glide[Glide.size] * Core.Clones.items.length / 2) - Glide[Glide.size];
+      // // Update shift for carusel type.
+      // Core.Clones.shift = (Glide[Glide.size] * Core.Clones.items.length / 2) - Glide[Glide.size];
 
-    // // Apply slides width.
-    // Glide.slides[Glide.size](Glide[Glide.size]);
+      // Apply slides width.
+      Dimensions$1.setupSlides();
 
-    // // Apply translate.
-    // Glide.track.css(Glide.size, (Glide[Glide.size] * Glide.length) + Core.Clones.getGrowth());
+      // // Apply translate.
+      // Glide.track.css(Glide.size, (Glide[Glide.size] * Glide.length) + Core.Clones.getGrowth());
 
-    // // If mode is vertical apply height.
-    // if (this.isMode('vertical')) {
-    //     Core.Height.set(true);
-    // }
+      // // If mode is vertical apply height.
+      // if (this.isMode('vertical')) {
+      //     Core.Height.set(true);
+      // }
 
-    // // Go to startup position.
-    // Core.Animation.make();
+      // // Go to startup position.
+      // Core.Animation.make();
 
-    // // Append clones.
-    // Core.Clones.append();
+      // // Append clones.
+      // Core.Clones.append();
 
-    // // Turn off jumping flag.
-    // Core.Transition.jumping = false;
-
+      // // Turn off jumping flag.
+      // Core.Transition.jumping = false;
+    }
 
     /**
      * Build glide of `slideshow` type.
@@ -825,7 +922,7 @@ var defaults$1 = {
    *
    * @type {String}
    */
-  type: 'carousel',
+  type: 'slider',
 
   /**
    * Direction of the slider movements. Available modes:
@@ -842,6 +939,13 @@ var defaults$1 = {
    * @type {Number}
    */
   startAt: 0,
+
+  /**
+   * Number of slides visible on viewport.
+   *
+   * @type {Number}
+   */
+  perView: 1,
 
   /**
    * Focus currently active slide at specifed position in the track. Available inputs:

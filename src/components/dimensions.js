@@ -17,17 +17,13 @@ class Dimensions {
   }
 
   setupSlides(dimention) {
-    let dimentionGetter = `slide${ucfirst(dimention)}`
-
     for (var i = 0; i < DOM.slides.length; i++) {
-      DOM.slides[i].style[dimention] = `${this[dimentionGetter]}px`
+      DOM.slides[i].style[dimention] = `${this.slideSize}px`
     }
   }
 
   setupWrapper(dimention) {
-    let dimentionGetter = `slide${ucfirst(dimention)}`
-
-    DOM.wrapper.style[dimention] = `${this[dimentionGetter] * this.length}px`
+    DOM.wrapper.style[dimention] = `${this.slideSize * this.length}px`
   }
 
   get dimention() {
@@ -37,6 +33,16 @@ class Dimensions {
       size: MODE_TO_DIMENSIONS[settings.mode][0],
       axis: MODE_TO_DIMENSIONS[settings.mode][1]
     }
+  }
+
+  get slideSize() {
+    let dimention = this.dimention
+
+    if (Core.isMode('vertical')) {
+      return this.slideHeight
+    }
+
+    return this.slideWidth
   }
 
   get length() {

@@ -1,5 +1,7 @@
 import DOM from './dom'
 import Core from './core'
+import Animation from './animation'
+import Transition from './transition'
 import Dimensions from './dimensions'
 
 import { siblings } from '../utils/dom'
@@ -24,25 +26,12 @@ class Build {
    * @return {Void}
    */
   slider() {
-      // // Turn on jumping flag.
-      // Core.Transition.jumping = true;
+      Transition.jumping = true;
 
-      // Apply slides width.
       Dimensions.apply()
+      Animation.make()
 
-      // // Apply translate.
-      // Glide.track.css(Glide.size, Glide[Glide.size] * Glide.length);
-
-      // // If mode is vertical apply height.
-      // if (this.isMode('vertical')) {
-      //     Core.Height.set(true);
-      // }
-
-      // // Go to startup position.
-      // Core.Animation.make();
-
-      // // Turn off jumping flag.
-      // Core.Transition.jumping = false;
+      Transition.jumping = false;
   }
 
   /**
@@ -51,22 +40,16 @@ class Build {
    * @return {Void}
    */
   carousel() {
-      // // Turn on jumping flag.
-      // Core.Transition.jumping = true;
+      Transition.jumping = true
 
       // // Update shift for carusel type.
       // Core.Clones.shift = (Glide[Glide.size] * Core.Clones.items.length / 2) - Glide[Glide.size];
 
-      // Apply slides width.
-      Dimensions.setupSlides()
+      Dimensions.apply()
 
-      // // Apply translate.
-      // Glide.track.css(Glide.size, (Glide[Glide.size] * Glide.length) + Core.Clones.getGrowth());
-
-      // // If mode is vertical apply height.
-      // if (this.isMode('vertical')) {
-      //     Core.Height.set(true);
-      // }
+      if (Core.isMode('vertical')) {
+          // Core.Height.set(true);
+      }
 
       // // Go to startup position.
       // Core.Animation.make();
@@ -74,8 +57,7 @@ class Build {
       // // Append clones.
       // Core.Clones.append();
 
-      // // Turn off jumping flag.
-      // Core.Transition.jumping = false;
+      Transition.jumping = false
   }
 
   /**

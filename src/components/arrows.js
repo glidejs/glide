@@ -1,11 +1,21 @@
 import DOM from './dom'
+import Run from './run'
 import Events from './events'
+import Animation from './animation'
 
 class Arrows {
+  /**
+   * Construct arrows.
+   */
   constructor() {
       this.listeners = {}
   }
 
+  /**
+   * Init arrows. Binds DOM elements with listeners.
+   *
+   * @return {Void}
+   */
   init() {
       this.bind()
   }
@@ -17,7 +27,17 @@ class Arrows {
    * @return {Void}
    */
   click(event) {
-      console.log('clicked')
+    event.preventDefault()
+
+    if (! Events.disabled) {
+        Run.pause()
+
+        Run.make(event.target.dataset.glideDir)
+
+        Animation.after(function() {
+            Run.play()
+        })
+    }
   }
 
   /**
@@ -27,7 +47,17 @@ class Arrows {
    * @return {Void}
    */
   hover(event) {
-      console.log('hovered')
+    if (! Events.disabled) {
+      switch (event.type) {
+        case 'mouseleave':
+          Run.play()
+          break;
+
+        case 'mouseenter':
+          Run.pause()
+          break;
+      }
+    }
   }
 
   /**
@@ -72,6 +102,11 @@ class Arrows {
     el.removeEventListener(event, this.listeners[event])
   }
 
+  /**
+   * Gets collection of the arrows elements.
+   *
+   * @return {HTMLElement[]}
+   */
   get items() {
       return DOM.arrows.children
   }

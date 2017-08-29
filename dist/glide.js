@@ -569,7 +569,7 @@ var Animation = function () {
     }
 
     /**
-     * Slider animation type.
+     * Logic of the `slider` animation type.
      *
      * @return {Void}
      */
@@ -605,286 +605,36 @@ var Animation = function () {
         callback();
       }, Core$1.settings.animationDuration + 20);
     }
+
+    /**
+     * Gets value of the additional animation displacement.
+     *
+     * @return {Integer}
+     */
+
   }, {
     key: 'offset',
     get: function get$$1() {
       return this.displacement;
-    },
+    }
+
+    /**
+     * Sets value of the additional animation displacement.
+     *
+     * @param  {Number} value
+     * @return {self}
+     */
+    ,
     set: function set$$1(value) {
       this.displacement = typeof value !== 'undefined' ? parseInt(value) : 0;
+
+      return this;
     }
   }]);
   return Animation;
 }();
 
 var Animation$1 = new Animation();
-
-// /**
-//  * Animation module.
-//  *
-//  * @param {Object} Glide
-//  * @param {Object} Core
-//  * @return {Animation}
-//  */
-// var Animation = function(Glide, Core) {
-
-//     /**
-//      * Animation offset value.
-//      *
-//      * @var {Number}
-//      */
-//     var offset;
-
-//     /**
-//      * Animation constructor.
-//      */
-//     function Animation() {
-
-//     }
-
-//     /**
-//      * Make configured animation type.
-//      *
-//      * @param  {Number} displacement
-//      * @return {self}
-//      */
-//     Animation.prototype.make = function(displacement) {
-//         // Do not run if we have only one slide.
-//         if (! Core.Run.canProcess()) {
-//             return Core.Arrows.disable();
-//         }
-
-//         // Parse displacement to integer before use.
-//         offset = (typeof displacement !== 'undefined') ? parseInt(displacement) : 0;
-
-//         // Animation actual translate animation
-//         this[Glide.options.type]();
-
-//         return this;
-//     };
-
-
-//     /**
-//      * After animation callback.
-//      *
-//      * @param  {Function} callback
-//      * @return {Integer}
-//      */
-//     Animation.prototype.after = function(callback) {
-//         return setTimeout(function() {
-//             callback();
-//         }, Glide.options.animationDuration + 20);
-//     };
-
-
-//     /**
-//      * Slider animation type.
-//      *
-//      * @return {Void}
-//      */
-//     Animation.prototype.slider = function() {
-
-//         var translate = Glide[Glide.size] * (Glide.current - 1);
-//         var shift = Core.Clones.shift - Glide.paddings;
-
-//         // If we are on the first slide.
-//         if (Core.Run.isStart()) {
-//             if (Glide.options.centered) {
-//                 shift = Math.abs(shift);
-//             }
-//             // Shift is zero.
-//             else {
-//                 shift = 0;
-//             }
-//             // Hide previous arrow.
-//             Core.Arrows.disable('prev');
-//         }
-
-//         // If we are on the last slide.
-//         else if (Core.Run.isEnd()) {
-//             if (Glide.options.centered) {
-//                 shift = Math.abs(shift);
-//             }
-//             // Double and absolute shift.
-//             else {
-//                 shift = Math.abs(shift * 2);
-//             }
-//             // Hide next arrow.
-//             Core.Arrows.disable('next');
-//         }
-
-//         // We are not on the edge cases.
-//         else {
-//             // Absolute shift
-//             shift = Math.abs(shift);
-//             // Show arrows.
-//             Core.Arrows.enable();
-//         }
-
-//         // Apply translate to
-//         // the slider track.
-//         Glide.track.css({
-//             'transition': Core.Transition.get('all'),
-//             'transform': Core.Translate.set(Glide.axis, translate - shift - offset)
-//         });
-
-//     };
-
-
-//     /**
-//      * Carousel animation type
-//      *
-//      * @return {Void}
-//      */
-//     Animation.prototype.carousel = function() {
-
-//         // Get translate value by multiplying two
-//         // slider size and current slide number.
-//         var translate = Glide[Glide.size] * Glide.current;
-
-//         // Get animation shift.
-//         var shift;
-
-//         // Calculate animation shift.
-//         if (Glide.options.centered) {
-//             // Decrease clones shift with slider
-//             // paddings, because slider is centered.
-//             shift = Core.Clones.shift - Glide.paddings;
-//         } else {
-//             // Shif is only clones shift.
-//             shift = Core.Clones.shift;
-//         }
-
-//         // The flag is set and direction is previous,
-//         // so we are on the first slide and need
-//         // to make offset translate.
-//         if (Core.Run.isOffset('<')) {
-
-//             // Translate is 0 (left edge of the track).
-//             translate = 0;
-
-//             // Take off flag.
-//             Core.Run.flag = false;
-
-//             // Clear transition and jump to last slide,
-//             // after offset animation is done.
-//             this.after(function() {
-//                 Glide.track.css({
-//                     'transition': Core.Transition.clear('all'),
-//                     'transform': Core.Translate.set(Glide.axis, Glide[Glide.size] * Glide.length + shift)
-//                 });
-//             });
-
-//         }
-
-
-//         // The flag is set and direction is next,
-//         // so we're on the last slide and need
-//         // to make offset translate.
-//         if (Core.Run.isOffset('>')) {
-
-//             // Translate is slides width * length with addtional
-//             // offset (right edge of the track).
-//             translate = (Glide[Glide.size] * Glide.length) + Glide[Glide.size];
-
-//             // Reset flag
-//             Core.Run.flag = false;
-
-//             // Clear transition and jump to the first slide,
-//             // after offset animation is done.
-//             this.after(function() {
-//                 Glide.track.css({
-//                     'transition': Core.Transition.clear('all'),
-//                     'transform': Core.Translate.set(Glide.axis, Glide[Glide.size] + shift)
-//                 });
-//             });
-
-//         }
-
-//         /**
-//          * Actual translate apply to wrapper
-//          * overwrite transition (can be pre-cleared)
-//          */
-//         Glide.track.css({
-//             'transition': Core.Transition.get('all'),
-//             'transform': Core.Translate.set(Glide.axis, translate + shift - offset)
-//         });
-
-//     };
-
-
-//     /**
-//      * Slideshow animation type.
-//      *
-//      * @return {Void}
-//      */
-//     Animation.prototype.slideshow = function() {
-
-//         Glide.slides.css('transition', Core.Transition.get('opacity'))
-//             .eq(Glide.current - 1).css('opacity', 1)
-//             .siblings().css('opacity', 0);
-
-//     };
-
-//     // Return class.
-//     return new Animation();
-
-// };
-
-var Run = function () {
-  function Run() {
-    classCallCheck(this, Run);
-
-    this.flag = false;
-    this.running = false;
-  }
-
-  createClass(Run, [{
-    key: 'play',
-    value: function play() {
-      var _this = this;
-
-      if (Core$1.settings.autoplay || this.running) {
-        if (typeof this.interval === 'undefined') {
-          this.interval = setInterval(function () {
-            _this.pause();
-            _this.make('>');
-            _this.play();
-          }, this.time);
-        }
-      }
-    }
-  }, {
-    key: 'pause',
-    value: function pause() {
-      if (Core$1.settings.autoplay || this.running) {
-        if (this.interval >= 0) {
-          this.interval = clearInterval(this.interval);
-        }
-      }
-    }
-  }, {
-    key: 'make',
-    value: function make() {
-      Core$1.index = 2;
-      Animation$1.make();
-    }
-  }, {
-    key: 'time',
-    get: function get$$1() {
-      var autoplay = DOM$1.slides[Core$1.index].getAttribute('data-glide-autoplay');
-
-      if (autoplay) {
-        return parseInt(autoplay);
-      }
-
-      return Core$1.settings.autoplay;
-    }
-  }]);
-  return Run;
-}();
-
-var Run$1 = new Run();
 
 var Build = function () {
   function Build() {
@@ -1042,6 +792,167 @@ var Build = function () {
 }();
 
 var Build$1 = new Build();
+
+var Run = function () {
+  function Run() {
+    classCallCheck(this, Run);
+
+    this.flag = false;
+    this.running = false;
+  }
+
+  createClass(Run, [{
+    key: 'play',
+    value: function play() {
+      var _this = this;
+
+      if (Core$1.settings.autoplay || this.running) {
+        if (typeof this.interval === 'undefined') {
+          this.interval = setInterval(function () {
+            _this.pause();
+            _this.make('>');
+            _this.play();
+          }, this.period);
+        }
+      }
+    }
+  }, {
+    key: 'pause',
+    value: function pause() {
+      if (Core$1.settings.autoplay || this.running) {
+        if (this.interval >= 0) {
+          this.interval = clearInterval(this.interval);
+        }
+      }
+    }
+  }, {
+    key: 'make',
+    value: function make(move, callback) {
+      this.direction = move.substr(0, 1);
+      this.steps = move.substr(1) ? parseInt(move.substr(1)) : 0;
+
+      switch (this.direction) {
+        case '>':
+          // We are at the last slide while moving forward
+          // and step is a number. Set "jumping" flag
+          // and change index to the first.
+          if (this.isEnd()) {
+            Core$1.index = 0;
+
+            this.flag = true;
+          }
+          // Step is not a number, but '>'
+          // scroll slider to the end.
+          else if (this.steps === '>') {
+              Core$1.index = this.length;
+            }
+            // Otherwise change normally.
+            else {
+                Core$1.index = Core$1.index + 1;
+              }
+          break;
+
+        case '<':
+          // When we at first slide and move backward and steps
+          // are number, set flag and index slide to last.
+          if (this.isStart()) {
+            Core$1.index = this.length;
+
+            this.flag = true;
+          }
+          // When steps is not number, but '<'
+          // scroll slider to start.
+          else if (this.steps === '<') {
+              Core$1.index = 0;
+            }
+            // Otherwise change normally.
+            else {
+                Core$1.index = Core$1.index - 1;
+              }
+          break;
+
+        case '=':
+          Core$1.index = this.steps;
+          break;
+      }
+
+      Animation$1.make().after(function () {
+        Build$1.activeClass();
+      });
+    }
+
+    /**
+     * Checks if we are on the first slide.
+     *
+     * @return {Boolean}
+     */
+
+  }, {
+    key: 'isStart',
+    value: function isStart() {
+      return Core$1.index === 0;
+    }
+
+    /**
+     * Checks if we are on the last slide.
+     *
+     * @return {Boolean}
+     */
+
+  }, {
+    key: 'isEnd',
+    value: function isEnd() {
+      return Core$1.index === this.length;
+    }
+
+    /**
+     * Checks if we are making offset run.
+     *
+     * @return {Boolean}
+     */
+
+  }, {
+    key: 'isOffset',
+    value: function isOffset(direction) {
+      return this.flag && this.direction === direction;
+    }
+
+    /**
+     * Gets time period value for the autoplay interval. Prioritizes
+     * times in `data-glide-autoplay` attrubutes over options.
+     *
+     * @return {Number}
+     */
+
+  }, {
+    key: 'period',
+    get: function get$$1() {
+      var autoplay = DOM$1.slides[Core$1.index].getAttribute('data-glide-autoplay');
+
+      if (autoplay) {
+        return parseInt(autoplay);
+      }
+
+      return Core$1.settings.autoplay;
+    }
+
+    /**
+     * Gets value of the running distance based
+     * on zero-indexing number of slides.
+     *
+     * @return {Number}
+     */
+
+  }, {
+    key: 'length',
+    get: function get$$1() {
+      return DOM$1.slides.length - 1;
+    }
+  }]);
+  return Run;
+}();
+
+var Run$1 = new Run();
 
 var Events = function () {
     /**
@@ -1382,11 +1293,21 @@ var Events$1 = new Events();
 // };
 
 var Arrows = function () {
+    /**
+     * Construct arrows.
+     */
     function Arrows() {
         classCallCheck(this, Arrows);
 
         this.listeners = {};
     }
+
+    /**
+     * Init arrows. Binds DOM elements with listeners.
+     *
+     * @return {Void}
+     */
+
 
     createClass(Arrows, [{
         key: 'init',
@@ -1404,7 +1325,17 @@ var Arrows = function () {
     }, {
         key: 'click',
         value: function click(event) {
-            console.log('clicked');
+            event.preventDefault();
+
+            if (!Events$1.disabled) {
+                Run$1.pause();
+
+                Run$1.make(event.target.dataset.glideDir);
+
+                Animation$1.after(function () {
+                    Run$1.play();
+                });
+            }
         }
 
         /**
@@ -1417,7 +1348,17 @@ var Arrows = function () {
     }, {
         key: 'hover',
         value: function hover(event) {
-            console.log('hovered');
+            if (!Events$1.disabled) {
+                switch (event.type) {
+                    case 'mouseleave':
+                        Run$1.play();
+                        break;
+
+                    case 'mouseenter':
+                        Run$1.pause();
+                        break;
+                }
+            }
         }
 
         /**
@@ -1469,6 +1410,13 @@ var Arrows = function () {
         value: function off(event, el) {
             el.removeEventListener(event, this.listeners[event]);
         }
+
+        /**
+         * Gets collection of the arrows elements.
+         *
+         * @return {HTMLElement[]}
+         */
+
     }, {
         key: 'items',
         get: function get$$1() {

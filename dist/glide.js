@@ -374,6 +374,47 @@ var Core = function () {
 
 var Core$1 = new Core(timestamp());
 
+var Peek = function () {
+  function Peek() {
+    classCallCheck(this, Peek);
+
+    this.size = 0;
+  }
+
+  createClass(Peek, [{
+    key: 'init',
+    value: function init() {
+      this.value = Core$1.settings.peek;
+    }
+  }, {
+    key: 'value',
+    get: function get$$1() {
+      return this.size;
+    },
+    set: function set$$1(value) {
+      if (typeof value === 'string') {
+        var normalized = parseInt(value, 10);
+        var isPercentage = value.indexOf('%') >= 0;
+
+        if (isPercentage) {
+          value = parseInt(Dimensions$1.slideSize * (normalized / 100));
+        } else {
+          value = normalized;
+        }
+      }
+
+      if (typeof value === 'number') {
+        this.size = value;
+      } else {
+        warn('Invalid peek value');
+      }
+    }
+  }]);
+  return Peek;
+}();
+
+var Peek$1 = new Peek();
+
 var MODE_TO_DIMENSIONS = {
   horizontal: ['width', 'x'],
   vertical: ['height', 'y']
@@ -448,12 +489,12 @@ var Dimensions = function () {
   }, {
     key: 'slideWidth',
     get: function get$$1() {
-      return DOM$1.element.offsetWidth / Core$1.settings.perView;
+      return DOM$1.element.offsetWidth / Core$1.settings.perView - Peek$1.value;
     }
   }, {
     key: 'slideHeight',
     get: function get$$1() {
-      return DOM$1.element.offsetHeight / Core$1.settings.perView;
+      return DOM$1.element.offsetHeight / Core$1.settings.perView - Peek$1.value;
     }
   }]);
   return Dimensions;
@@ -592,20 +633,35 @@ var Transition = function () {
 
 var Transition$1 = new Transition();
 
-var Focus = function () {
-  function Focus() {
-    classCallCheck(this, Focus);
+var Peeking = function () {
+  function Peeking() {
+    classCallCheck(this, Peeking);
   }
 
-  createClass(Focus, [{
+  createClass(Peeking, [{
     key: 'transform',
     value: function transform(translate) {
+      return translate - Peek$1.value;
+    }
+  }]);
+  return Peeking;
+}();
+
+var Focusing = function () {
+  function Focusing() {
+    classCallCheck(this, Focusing);
+  }
+
+  createClass(Focusing, [{
+    key: 'transform',
+    value: function transform(translate) {
+      var peek = Peek$1.value;
       var width = Dimensions$1.width;
       var focusAt = Core$1.settings.focusAt;
       var slideSize = Dimensions$1.slideSize;
 
       if (focusAt === 'center') {
-        translate = translate - (width / 2 - slideSize / 2);
+        translate = translate - (width / 2 - slideSize / 2) + peek;
       }
 
       if (focusAt > 0) {
@@ -615,10 +671,10 @@ var Focus = function () {
       return translate;
     }
   }]);
-  return Focus;
+  return Focusing;
 }();
 
-var TRANSFORMERS = [Focus];
+var TRANSFORMERS = [Peeking, Focusing];
 
 var Type = function () {
   function Type() {
@@ -1871,9 +1927,10 @@ var Glide = function () {
     key: 'init',
     value: function init() {
       DOM$1.init(this.selector);
+      Peek$1.init();
+      Build$1.init();
       Events$1.init();
       Arrows$1.init();
-      Build$1.init();
       Run$1.init();
     }
 

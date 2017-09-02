@@ -1,7 +1,9 @@
-import Focus from './transformers/focus'
+import Peeking from './transformers/peeking'
+import Focusing from './transformers/focusing'
 
 const TRANSFORMERS = [
-  Focus
+  Peeking,
+  Focusing,
 ]
 
 export default class Type {

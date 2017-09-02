@@ -1,5 +1,6 @@
 import DOM from './dom'
 import Core from './core'
+import Peek from './peek'
 
 import { ucfirst } from '../utils/string'
 
@@ -62,11 +63,11 @@ class Dimensions {
   }
 
   get slideWidth() {
-    return DOM.element.offsetWidth / Core.settings.perView
+    return (DOM.element.offsetWidth / Core.settings.perView) - Peek.value
   }
 
   get slideHeight() {
-    return DOM.element.offsetHeight / Core.settings.perView
+    return (DOM.element.offsetHeight / Core.settings.perView) - Peek.value
   }
 }
 

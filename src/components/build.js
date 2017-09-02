@@ -1,5 +1,6 @@
 import DOM from './dom'
 import Core from './core'
+import Peek from './peek'
 import Animation from './animation'
 import Transition from './transition'
 import Dimensions from './dimensions'
@@ -13,6 +14,8 @@ class Build {
    */
   init() {
     Transition.disable()
+    Peek.init()
+    Dimensions.apply()
 
     this[Core.settings.type]()
 
@@ -21,6 +24,7 @@ class Build {
     this.activeClass()
     this.setHeight()
 
+    Animation.make()
     Transition.enable()
   }
 
@@ -30,8 +34,7 @@ class Build {
    * @return {Void}
    */
   slider() {
-    Dimensions.apply()
-    Animation.make()
+    // Dimensions.apply()
   }
 
   /**

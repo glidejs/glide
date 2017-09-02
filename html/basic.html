@@ -2,6 +2,7 @@
 <!-- <link rel="stylesheet" href="../dist/css/glide.theme.css"> -->
 
 <style>
+  * { margin: 0; padding: 0; bottom: 0; }
   .glide__slide--active .box { border-color: green }
   .box { border: 1px solid red }
 </style>
@@ -30,10 +31,11 @@
 
 <script>
   var glide = new Glide('#glide', {
-    perView: 3,
-    startAt: 1,
-    focusAt: 2,
-    peek: '20%'
+    perView: 4,
+    startAt: 0,
+    focusAt: 0,
+    peek: '15%',
+    autoplay: false
   })
 
   console.log(glide)

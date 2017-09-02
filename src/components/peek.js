@@ -22,7 +22,7 @@ class Peek {
       let isPercentage = value.indexOf('%') >= 0
 
       if (isPercentage) {
-        value = parseInt(Dimensions.slideSize * (normalized / 100))
+        value = parseInt(Dimensions.width * (normalized / 100))
       } else {
         value = normalized
       }

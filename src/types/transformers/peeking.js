@@ -1,7 +1,12 @@
+import Core from '../../components/core'
 import Peek from '../../components/peek'
 
 export default class Peeking {
   transform(translate) {
-    return translate - (Peek.value)
+    if (Core.settings.focusAt >= 0) {
+      translate -= (Peek.value/2)
+    }
+
+    return translate
   }
 }

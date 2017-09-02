@@ -7,16 +7,16 @@ import Slider from '../types/slider'
 
 class Animation {
   /**
-   * Construct animation.
+   * Constructs animation component.
    */
   constructor() {
     this.displacement = 0
   }
 
   /**
-   * Make configured animation type.
+   * Makes configured animation type on slider.
    *
-   * @param  {Number} displacement
+   * @param  {Number} offset
    * @return {self}
    */
   make(offset) {
@@ -28,7 +28,7 @@ class Animation {
   }
 
   /**
-   * Logic of the `slider` animation type.
+   * Makes a `slider` animation type.
    *
    * @return {Void}
    */
@@ -40,7 +40,7 @@ class Animation {
   }
 
   /**
-   * Run callback after animation.
+   * Runs callback after animation.
    *
    * @param  {Closure} callback
    * @return {Integer}

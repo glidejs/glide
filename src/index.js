@@ -1,7 +1,6 @@
 import DOM from './components/dom'
 import Run from './components/run'
 import Core from './components/core'
-import Peek from './components/peek'
 import Build from './components/build'
 import Arrows from './components/arrows'
 import Events from './components/events'
@@ -38,7 +37,6 @@ export default class Glide {
    */
   init() {
     DOM.init(this.selector)
-    Peek.init()
     Build.init()
     Events.init()
     Arrows.init()

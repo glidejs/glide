@@ -63,11 +63,15 @@ class Dimensions {
   }
 
   get slideWidth() {
-    return (DOM.element.offsetWidth / Core.settings.perView) - Peek.value
+    let perView = Core.settings.perView
+
+    return (DOM.element.offsetWidth / perView) - (Peek.value / perView)
   }
 
   get slideHeight() {
-    return (DOM.element.offsetHeight / Core.settings.perView) - Peek.value
+    let perView = Core.settings.perView
+
+    return (DOM.element.offsetHeight / perView) - (Peek.value / perView)
   }
 }
 

@@ -374,47 +374,6 @@ var Core = function () {
 
 var Core$1 = new Core(timestamp());
 
-var Peek = function () {
-  function Peek() {
-    classCallCheck(this, Peek);
-
-    this.size = 0;
-  }
-
-  createClass(Peek, [{
-    key: 'init',
-    value: function init() {
-      this.value = Core$1.settings.peek;
-    }
-  }, {
-    key: 'value',
-    get: function get$$1() {
-      return this.size;
-    },
-    set: function set$$1(value) {
-      if (typeof value === 'string') {
-        var normalized = parseInt(value, 10);
-        var isPercentage = value.indexOf('%') >= 0;
-
-        if (isPercentage) {
-          value = parseInt(Dimensions$1.slideSize * (normalized / 100));
-        } else {
-          value = normalized;
-        }
-      }
-
-      if (typeof value === 'number') {
-        this.size = value;
-      } else {
-        warn('Invalid peek value');
-      }
-    }
-  }]);
-  return Peek;
-}();
-
-var Peek$1 = new Peek();
-
 var MODE_TO_DIMENSIONS = {
   horizontal: ['width', 'x'],
   vertical: ['height', 'y']
@@ -489,18 +448,63 @@ var Dimensions = function () {
   }, {
     key: 'slideWidth',
     get: function get$$1() {
-      return DOM$1.element.offsetWidth / Core$1.settings.perView - Peek$1.value;
+      var perView = Core$1.settings.perView;
+
+      return DOM$1.element.offsetWidth / perView - Peek$1.value / perView;
     }
   }, {
     key: 'slideHeight',
     get: function get$$1() {
-      return DOM$1.element.offsetHeight / Core$1.settings.perView - Peek$1.value;
+      var perView = Core$1.settings.perView;
+
+      return DOM$1.element.offsetHeight / perView - Peek$1.value / perView;
     }
   }]);
   return Dimensions;
 }();
 
 var Dimensions$1 = new Dimensions();
+
+var Peek = function () {
+  function Peek() {
+    classCallCheck(this, Peek);
+
+    this.size = 0;
+  }
+
+  createClass(Peek, [{
+    key: 'init',
+    value: function init() {
+      this.value = Core$1.settings.peek;
+    }
+  }, {
+    key: 'value',
+    get: function get$$1() {
+      return this.size;
+    },
+    set: function set$$1(value) {
+      if (typeof value === 'string') {
+        var normalized = parseInt(value, 10);
+        var isPercentage = value.indexOf('%') >= 0;
+
+        if (isPercentage) {
+          value = parseInt(Dimensions$1.width * (normalized / 100));
+        } else {
+          value = normalized;
+        }
+      }
+
+      if (typeof value === 'number') {
+        this.size = value;
+      } else {
+        warn('Invalid peek value');
+      }
+    }
+  }]);
+  return Peek;
+}();
+
+var Peek$1 = new Peek();
 
 /**
  * Collection of available translate axes.
@@ -641,7 +645,11 @@ var Peeking = function () {
   createClass(Peeking, [{
     key: 'transform',
     value: function transform(translate) {
-      return translate - Peek$1.value;
+      if (Core$1.settings.focusAt >= 0) {
+        translate -= Peek$1.value / 2;
+      }
+
+      return translate;
     }
   }]);
   return Peeking;
@@ -655,17 +663,16 @@ var Focusing = function () {
   createClass(Focusing, [{
     key: 'transform',
     value: function transform(translate) {
-      var peek = Peek$1.value;
       var width = Dimensions$1.width;
       var focusAt = Core$1.settings.focusAt;
       var slideSize = Dimensions$1.slideSize;
 
       if (focusAt === 'center') {
-        translate = translate - (width / 2 - slideSize / 2) + peek;
+        translate -= width / 2 - slideSize / 2;
       }
 
-      if (focusAt > 0) {
-        translate = translate - slideSize * focusAt;
+      if (focusAt >= 0) {
+        translate -= slideSize * focusAt;
       }
 
       return translate;
@@ -719,7 +726,7 @@ var Slider$1 = new Slider();
 
 var Animation = function () {
   /**
-   * Construct animation.
+   * Constructs animation component.
    */
   function Animation() {
     classCallCheck(this, Animation);
@@ -728,9 +735,9 @@ var Animation = function () {
   }
 
   /**
-   * Make configured animation type.
+   * Makes configured animation type on slider.
    *
-   * @param  {Number} displacement
+   * @param  {Number} offset
    * @return {self}
    */
 
@@ -746,7 +753,7 @@ var Animation = function () {
     }
 
     /**
-     * Logic of the `slider` animation type.
+     * Makes a `slider` animation type.
      *
      * @return {Void}
      */
@@ -761,7 +768,7 @@ var Animation = function () {
     }
 
     /**
-     * Run callback after animation.
+     * Runs callback after animation.
      *
      * @param  {Closure} callback
      * @return {Integer}
@@ -819,6 +826,8 @@ var Build = function () {
      */
     value: function init() {
       Transition$1.disable();
+      Peek$1.init();
+      Dimensions$1.apply();
 
       this[Core$1.settings.type]();
 
@@ -827,6 +836,7 @@ var Build = function () {
       this.activeClass();
       this.setHeight();
 
+      Animation$1.make();
       Transition$1.enable();
     }
 
@@ -838,10 +848,9 @@ var Build = function () {
 
   }, {
     key: 'slider',
-    value: function slider() {
-      Dimensions$1.apply();
-      Animation$1.make();
-    }
+    value: function slider() {}
+    // Dimensions.apply()
+
 
     /**
      * Build glide of `carousel` type.
@@ -1561,7 +1570,7 @@ var Events$1 = new Events();
 
 var Arrows = function () {
   /**
-   * Construct arrows.
+   * Constructs arrows component.
    */
   function Arrows() {
     classCallCheck(this, Arrows);
@@ -1570,7 +1579,8 @@ var Arrows = function () {
   }
 
   /**
-   * Init arrows. Binds DOM elements with listeners.
+   * Inits arrows. Binds events listeners
+   * to the arrows HTML elements.
    *
    * @return {Void}
    */
@@ -1583,7 +1593,9 @@ var Arrows = function () {
     }
 
     /**
-     * Arrow click event handler.
+     * Handles `click` event on the arrows HTML elements.
+     * Moves slider in driection precised in
+     * `data-glide-dir` attribute.
      *
      * @param {Object} event
      * @return {Void}
@@ -1604,7 +1616,8 @@ var Arrows = function () {
     }
 
     /**
-     * Arrow hover event handler.
+     * Handles `hover` event on the arrows HTML elements.
+     * Plays and pauses autoplay running.
      *
      * @param {Object} event
      * @return {Void}
@@ -1614,20 +1627,18 @@ var Arrows = function () {
     key: 'hover',
     value: function hover(event) {
       if (!Events$1.disabled) {
-        switch (event.type) {
-          case 'mouseleave':
-            Run$1.init();
-            break;
+        if (event.type === 'mouseleave') {
+          Run$1.init();
+        }
 
-          case 'mouseenter':
-            Run$1.stop();
-            break;
+        if (event.type === 'mouseenter') {
+          Run$1.stop();
         }
       }
     }
 
     /**
-     * Bind arrows events.
+     * Binds events to arrows HTML elements.
      *
      * @return {Void}
      */
@@ -1638,15 +1649,13 @@ var Arrows = function () {
       var items = this.items;
 
       for (var i = 0; i < items.length; i++) {
-        this.on('click', items[i], this.click);
-        this.on('touchstart', items[i], this.click);
-        this.on('mouseenter', items[i], this.hover);
-        this.on('mouseleave', items[i], this.hover);
+        this.on(['click', 'touchstart'], items[i], this.click);
+        this.on(['mouseenter', 'mouseleave'], items[i], this.hover);
       }
     }
 
     /**
-     * Unbind arrows events.
+     * Unbinds events binded to the arrows HTML elements.
      *
      * @return {Void}
      */
@@ -1657,27 +1666,47 @@ var Arrows = function () {
       var items = this.items;
 
       for (var i = 0; i < items.length; i++) {
-        this.off('click', items[i]);
-        this.off('touchstart', items[i]);
-        this.off('mouseenter', items[i]);
-        this.off('mouseleave', items[i]);
+        this.off(['click', 'touchstart', 'mouseenter', 'mouseleave'], items[i]);
       }
-    }
-  }, {
-    key: 'on',
-    value: function on(event, el, closure) {
-      this.listeners[event] = closure;
-
-      el.addEventListener(event, this.listeners[event]);
-    }
-  }, {
-    key: 'off',
-    value: function off(event, el) {
-      el.removeEventListener(event, this.listeners[event]);
     }
 
     /**
-     * Gets collection of the arrows elements.
+     * Adds events listeners to arrows HTML elements.
+     *
+     * @param  {Array} events
+     * @param  {HTMLElement} el
+     * @param  {Closure} closure
+     * @return {Void}
+     */
+
+  }, {
+    key: 'on',
+    value: function on(events, el, closure) {
+      for (var i = 0; i < events.length; i++) {
+        this.listeners[events[i]] = closure;
+
+        el.addEventListener(events[i], this.listeners[events[i]]);
+      }
+    }
+
+    /**
+     * Removes event listeners from arrows HTML elements.
+     *
+     * @param  {Array} events
+     * @param  {HTMLElement} el
+     * @return {Void}
+     */
+
+  }, {
+    key: 'off',
+    value: function off(events, el) {
+      for (var i = 0; i < events.length; i++) {
+        el.removeEventListener(events[i], this.listeners[event]);
+      }
+    }
+
+    /**
+     * Gets collection of the arrows HTML elements.
      *
      * @return {HTMLElement[]}
      */
@@ -1927,7 +1956,6 @@ var Glide = function () {
     key: 'init',
     value: function init() {
       DOM$1.init(this.selector);
-      Peek$1.init();
       Build$1.init();
       Events$1.init();
       Arrows$1.init();

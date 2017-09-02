@@ -374,6 +374,10 @@ var Core = function () {
 
 var Core$1 = new Core(timestamp());
 
+function ucfirst(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 var MODE_TO_DIMENSIONS = {
   horizontal: ['width', 'x'],
   vertical: ['height', 'y']
@@ -724,6 +728,10 @@ var Slider = function (_Type) {
 
 var Slider$1 = new Slider();
 
+var TYPES = {
+  Slider: Slider$1
+};
+
 var Animation = function () {
   /**
    * Constructs animation component.
@@ -747,24 +755,22 @@ var Animation = function () {
     value: function make(offset) {
       this.offset = offset;
 
-      this[Core$1.type]();
+      this.apply();
 
       return this;
     }
 
     /**
-     * Makes a `slider` animation type.
+     * Applies an animation.
      *
      * @return {Void}
      */
 
   }, {
-    key: 'slider',
-    value: function slider() {
-      var translate = Slider$1.translate();
-
+    key: 'apply',
+    value: function apply() {
       Transition$1.set();
-      Translate$1.set(translate);
+      Translate$1.set(this.translate + this.offset);
     }
 
     /**
@@ -779,7 +785,7 @@ var Animation = function () {
     value: function after(callback) {
       return setTimeout(function () {
         callback();
-      }, Core$1.settings.animationDuration + 20);
+      }, Core$1.settings.animationDuration + 10);
     }
 
     /**
@@ -803,8 +809,18 @@ var Animation = function () {
     ,
     set: function set$$1(value) {
       this.displacement = typeof value !== 'undefined' ? parseInt(value) : 0;
+    }
 
-      return this;
+    /**
+     * Gets translate value based on configured glide type.
+     *
+     * @return {Number}
+     */
+
+  }, {
+    key: 'translate',
+    get: function get$$1() {
+      return TYPES[ucfirst(Core$1.type)].translate();
     }
   }]);
   return Animation;

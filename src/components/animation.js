@@ -3,7 +3,13 @@ import Core from './core'
 import Translate from './translate'
 import Transition from './transition'
 
+import { ucfirst } from '../utils/string'
+
 import Slider from '../types/slider'
+
+const TYPES = {
+  Slider
+}
 
 class Animation {
   /**
@@ -22,21 +28,19 @@ class Animation {
   make(offset) {
     this.offset = offset
 
-    this[Core.type]();
+    this.apply()
 
     return this
   }
 
   /**
-   * Makes a `slider` animation type.
+   * Applies an animation.
    *
    * @return {Void}
    */
-  slider() {
-    let translate = Slider.translate()
-
+  apply() {
     Transition.set()
-    Translate.set(translate)
+    Translate.set(this.translate + this.offset)
   }
 
   /**
@@ -48,7 +52,7 @@ class Animation {
   after(callback) {
       return setTimeout(() => {
         callback()
-      }, Core.settings.animationDuration + 20)
+      }, Core.settings.animationDuration + 10)
   }
 
   /**
@@ -68,8 +72,15 @@ class Animation {
    */
   set offset(value) {
     this.displacement = (typeof value !== 'undefined') ? parseInt(value) : 0;
+  }
 
-    return this
+  /**
+   * Gets translate value based on configured glide type.
+   *
+   * @return {Number}
+   */
+  get translate() {
+    return TYPES[ucfirst(Core.type)].translate()
   }
 }
 

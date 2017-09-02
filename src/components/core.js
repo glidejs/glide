@@ -1,5 +1,5 @@
-import uid from '../utils/uid'
 import warn from '../utils/warn'
+import { timestamp } from '../utils/time'
 
 class Core {
   /**
@@ -10,26 +10,6 @@ class Core {
   constructor(id) {
     this.id = id
     this.destroyed = false
-  }
-
-  /**
-   * Checks if slider is a precised type.
-   *
-   * @param  {String} name
-   * @return {Boolean}
-   */
-  isType(name) {
-    return this.settings.type === name
-  }
-
-  /**
-   * Checks if slider is in precised mode.
-   *
-   * @param  {String} name
-   * @return {Boolean}
-   */
-  isMode(name) {
-    return this.settings.mode === name
   }
 
   /**
@@ -72,6 +52,35 @@ class Core {
   set index(i) {
     this.i = parseInt(i)
   }
+
+  /**
+   * Gets type name of the slider.
+   *
+   * @return {String}
+   */
+  get type() {
+    return this.settings.type
+  }
+
+  /**
+   * Checks if slider is a precised type.
+   *
+   * @param  {String} name
+   * @return {Boolean}
+   */
+  isType(name) {
+    return this.settings.type === name
+  }
+
+  /**
+   * Checks if slider is in precised mode.
+   *
+   * @param  {String} name
+   * @return {Boolean}
+   */
+  isMode(name) {
+    return this.settings.mode === name
+  }
 }
 
-export default new Core(uid())
+export default new Core(timestamp())

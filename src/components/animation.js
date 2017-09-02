@@ -2,7 +2,8 @@ import DOM from './dom'
 import Core from './core'
 import Translate from './translate'
 import Transition from './transition'
-import Dimensions from './dimensions'
+
+import Slider from '../types/slider'
 
 class Animation {
   /**
@@ -21,7 +22,7 @@ class Animation {
   make(offset) {
     this.offset = offset
 
-    this[Core.settings.type]();
+    this[Core.type]();
 
     return this
   }
@@ -32,17 +33,9 @@ class Animation {
    * @return {Void}
    */
   slider() {
-    var translate = (Dimensions.slideSize * Core.index)
+    let translate = Slider.translate()
 
-    if (Core.settings.focusAt === 'center') {
-      translate = translate - (Dimensions.width/2 - Dimensions.slideSize/2);
-    }
-
-    if (Core.settings.focusAt > 0) {
-      translate = translate - (Dimensions.slideSize * Core.settings.focusAt);
-    }
-
-    Transition.set('transform')
+    Transition.set()
     Translate.set(translate)
   }
 

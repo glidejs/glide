@@ -96,7 +96,7 @@ export default {
    *
    * @type {Number}
    */
-  throttle: 16,
+  debounce: 200,
 
   /**
    * Set height of the slider based on current slide content.

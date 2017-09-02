@@ -1,38 +1,68 @@
+import Run from './run'
 import Core from './core'
+import Build from './build'
+import Transition from './transition'
+
+import debounce from '../utils/debounce'
 
 class Events {
-    /**
-     * Construct events.
-     */
-    constructor() {
-        this.disabled = false
-        this.prevented = false
+  /**
+   * Construct events.
+   */
+  constructor() {
+    this.listeners = {}
+    this.disabled = false
+    this.prevented = false
+  }
+
+  init() {
+    this.resize()
+  }
+
+  /**
+   * Rebuild slider when window is resized.
+   *
+   * @return {Void}
+   */
+  resize() {
+    this.listeners['resize'] = debounce(() => {
+      if(! Core.destroyed) {
+        Transition.disable()
+
+        Build.init()
+        Run.make(`=${Core.index}`).init()
+
+        Transition.enable()
+      }
+    }, Core.settings.debounce)
+
+    window.addEventListener('resize', this.listeners['resize'])
+  }
+
+  /**
+   * Calls callback with attributes.
+   *
+   * @param {Function} func
+   * @return {self}
+   */
+  call(func) {
+    if ((func !== 'undefined') && (typeof func === 'function')) {
+      func(this.attrs())
     }
 
-    /**
-     * Calls callback with attributes.
-     *
-     * @param {Function} func
-     * @return {self}
-     */
-    call(func) {
-        if ((func !== 'undefined') && (typeof func === 'function')) {
-            func(this.attrs())
-        }
+    return this
+  }
 
-        return this
+  /**
+   * Gets attributes for events callback's parameter.
+   *
+   * @return {Object}
+   */
+  attrs() {
+    return {
+      index: Core.index
     }
-
-    /**
-     * Gets attributes for events callback's parameter.
-     *
-     * @return {Object}
-     */
-    attrs() {
-        return {
-            index: Core.index
-        }
-    }
+  }
 }
 
 export default new Events()

@@ -113,6 +113,42 @@ var _extends = Object.assign || function (target) {
   return target;
 };
 
+
+
+var inherits = function (subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+};
+
+
+
+
+
+
+
+
+
+
+
+var possibleConstructorReturn = function (self, call) {
+  if (!self) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return call && (typeof call === "object" || typeof call === "function") ? call : self;
+};
+
 var DOM = function () {
   function DOM() {
     classCallCheck(this, DOM);
@@ -123,8 +159,6 @@ var DOM = function () {
 
     /**
      * Setup slider HTML nodes.
-     *
-     * @param  {String|HTMLElement} element
      */
     value: function init(element) {
       this.element = element;
@@ -220,13 +254,19 @@ var DOM = function () {
 var DOM$1 = new DOM();
 
 /**
- * Generates "unique" identifier number.
+ * Returns current time in timestamp format.
  *
  * @return {Number}
  */
-function uid() {
+function timestamp() {
   return new Date().valueOf();
 }
+
+/**
+ * Returns current time.
+ *
+ * @return {Number}
+ */
 
 var Core = function () {
   /**
@@ -242,15 +282,22 @@ var Core = function () {
   }
 
   /**
-   * Checks if slider is a precised type.
+   * Gets value of the core options.
    *
-   * @param  {String} name
-   * @return {Boolean}
+   * @return {Object}
    */
 
 
   createClass(Core, [{
     key: 'isType',
+
+
+    /**
+     * Checks if slider is a precised type.
+     *
+     * @param  {String} name
+     * @return {Boolean}
+     */
     value: function isType(name) {
       return this.settings.type === name;
     }
@@ -267,13 +314,6 @@ var Core = function () {
     value: function isMode(name) {
       return this.settings.mode === name;
     }
-
-    /**
-     * Gets value of the core options.
-     *
-     * @return {Object}
-     */
-
   }, {
     key: 'settings',
     get: function get$$1() {
@@ -316,11 +356,23 @@ var Core = function () {
     set: function set$$1(i) {
       this.i = parseInt(i);
     }
+
+    /**
+     * Gets type name of the slider.
+     *
+     * @return {String}
+     */
+
+  }, {
+    key: 'type',
+    get: function get$$1() {
+      return this.settings.type;
+    }
   }]);
   return Core;
 }();
 
-var Core$1 = new Core(uid());
+var Core$1 = new Core(timestamp());
 
 var MODE_TO_DIMENSIONS = {
   horizontal: ['width', 'x'],
@@ -481,7 +533,7 @@ var Transition = function () {
   createClass(Transition, [{
     key: 'get',
     value: function get$$1() {
-      var property = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'all';
+      var property = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'transform';
 
       var settings = Core$1.settings;
 
@@ -540,6 +592,75 @@ var Transition = function () {
 
 var Transition$1 = new Transition();
 
+var Focus = function () {
+  function Focus() {
+    classCallCheck(this, Focus);
+  }
+
+  createClass(Focus, [{
+    key: 'transform',
+    value: function transform(translate) {
+      var width = Dimensions$1.width;
+      var focusAt = Core$1.settings.focusAt;
+      var slideSize = Dimensions$1.slideSize;
+
+      if (focusAt === 'center') {
+        translate = translate - (width / 2 - slideSize / 2);
+      }
+
+      if (focusAt > 0) {
+        translate = translate - slideSize * focusAt;
+      }
+
+      return translate;
+    }
+  }]);
+  return Focus;
+}();
+
+var TRANSFORMERS = [Focus];
+
+var Type = function () {
+  function Type() {
+    classCallCheck(this, Type);
+  }
+
+  createClass(Type, [{
+    key: 'applyTransforms',
+    value: function applyTransforms(translate) {
+      for (var i = 0; i < TRANSFORMERS.length; i++) {
+        var transformer = new TRANSFORMERS[i]();
+
+        translate = transformer.transform(translate);
+      }
+
+      return translate;
+    }
+  }]);
+  return Type;
+}();
+
+var Slider = function (_Type) {
+  inherits(Slider, _Type);
+
+  function Slider() {
+    classCallCheck(this, Slider);
+    return possibleConstructorReturn(this, (Slider.__proto__ || Object.getPrototypeOf(Slider)).apply(this, arguments));
+  }
+
+  createClass(Slider, [{
+    key: 'translate',
+    value: function translate() {
+      var translate = Dimensions$1.slideSize * Core$1.index;
+
+      return this.applyTransforms(translate);
+    }
+  }]);
+  return Slider;
+}(Type);
+
+var Slider$1 = new Slider();
+
 var Animation = function () {
   /**
    * Construct animation.
@@ -563,7 +684,7 @@ var Animation = function () {
     value: function make(offset) {
       this.offset = offset;
 
-      this[Core$1.settings.type]();
+      this[Core$1.type]();
 
       return this;
     }
@@ -577,17 +698,9 @@ var Animation = function () {
   }, {
     key: 'slider',
     value: function slider() {
-      var translate = Dimensions$1.slideSize * Core$1.index;
+      var translate = Slider$1.translate();
 
-      if (Core$1.settings.focusAt === 'center') {
-        translate = translate - (Dimensions$1.width / 2 - Dimensions$1.slideSize / 2);
-      }
-
-      if (Core$1.settings.focusAt > 0) {
-        translate = translate - Dimensions$1.slideSize * Core$1.settings.focusAt;
-      }
-
-      Transition$1.set('transform');
+      Transition$1.set();
       Translate$1.set(translate);
     }
 
@@ -802,28 +915,30 @@ var Run = function () {
   }
 
   createClass(Run, [{
-    key: 'play',
-    value: function play() {
+    key: 'init',
+    value: function init() {
       var _this = this;
 
       if (Core$1.settings.autoplay || this.running) {
         if (typeof this.interval === 'undefined') {
           this.interval = setInterval(function () {
-            _this.pause();
-            _this.make('>');
-            _this.play();
+            _this.stop().make('>').init();
           }, this.period);
         }
       }
+
+      return this;
     }
   }, {
-    key: 'pause',
-    value: function pause() {
+    key: 'stop',
+    value: function stop() {
       if (Core$1.settings.autoplay || this.running) {
         if (this.interval >= 0) {
           this.interval = clearInterval(this.interval);
         }
       }
+
+      return this;
     }
   }, {
     key: 'make',
@@ -879,6 +994,8 @@ var Run = function () {
       Animation$1.make().after(function () {
         Build$1.activeClass();
       });
+
+      return this;
     }
 
     /**
@@ -954,15 +1071,110 @@ var Run = function () {
 
 var Run$1 = new Run();
 
-var Events = function () {
-    /**
-     * Construct events.
-     */
-    function Events() {
-        classCallCheck(this, Events);
+// Similar to ES6's rest param (http://ariya.ofilabs.com/2013/03/es6-and-rest-parameter.html)
+// This accumulates the arguments passed into an array, after a given index.
+var restArgs = function restArgs(func, startIndex) {
+  startIndex = startIndex == null ? func.length - 1 : +startIndex;
+  return function () {
+    var length = Math.max(arguments.length - startIndex, 0),
+        rest = Array(length),
+        index = 0;
+    for (; index < length; index++) {
+      rest[index] = arguments[index + startIndex];
+    }
+    switch (startIndex) {
+      case 0:
+        return func.call(this, rest);
+      case 1:
+        return func.call(this, arguments[0], rest);
+      case 2:
+        return func.call(this, arguments[0], arguments[1], rest);
+    }
+    var args = Array(startIndex + 1);
+    for (index = 0; index < startIndex; index++) {
+      args[index] = arguments[index];
+    }
+    args[startIndex] = rest;
+    return func.apply(this, args);
+  };
+};
 
-        this.disabled = false;
-        this.prevented = false;
+// Delays a function for the given number of milliseconds, and then calls
+// it with the arguments supplied.
+var delay = restArgs(function (func, wait, args) {
+  return setTimeout(function () {
+    return func.apply(null, args);
+  }, wait);
+});
+
+function debounce(func, wait, immediate) {
+  var timeout, result;
+
+  var later = function later(context, args) {
+    timeout = null;
+    if (args) result = func.apply(context, args);
+  };
+
+  var debounced = restArgs(function (args) {
+    if (timeout) clearTimeout(timeout);
+    if (immediate) {
+      var callNow = !timeout;
+      timeout = setTimeout(later, wait);
+      if (callNow) result = func.apply(this, args);
+    } else {
+      timeout = delay(later, wait, this, args);
+    }
+
+    return result;
+  });
+
+  debounced.cancel = function () {
+    clearTimeout(timeout);
+    timeout = null;
+  };
+
+  return debounced;
+}
+
+var Events = function () {
+  /**
+   * Construct events.
+   */
+  function Events() {
+    classCallCheck(this, Events);
+
+    this.listeners = {};
+    this.disabled = false;
+    this.prevented = false;
+  }
+
+  createClass(Events, [{
+    key: 'init',
+    value: function init() {
+      this.resize();
+    }
+
+    /**
+     * Rebuild slider when window is resized.
+     *
+     * @return {Void}
+     */
+
+  }, {
+    key: 'resize',
+    value: function resize() {
+      this.listeners['resize'] = debounce(function () {
+        if (!Core$1.destroyed) {
+          Transition$1.disable();
+
+          Build$1.init();
+          Run$1.make('=' + Core$1.index).init();
+
+          Transition$1.enable();
+        }
+      }, Core$1.settings.debounce);
+
+      window.addEventListener('resize', this.listeners['resize']);
     }
 
     /**
@@ -972,32 +1184,31 @@ var Events = function () {
      * @return {self}
      */
 
+  }, {
+    key: 'call',
+    value: function call(func) {
+      if (func !== 'undefined' && typeof func === 'function') {
+        func(this.attrs());
+      }
 
-    createClass(Events, [{
-        key: 'call',
-        value: function call(func) {
-            if (func !== 'undefined' && typeof func === 'function') {
-                func(this.attrs());
-            }
+      return this;
+    }
 
-            return this;
-        }
+    /**
+     * Gets attributes for events callback's parameter.
+     *
+     * @return {Object}
+     */
 
-        /**
-         * Gets attributes for events callback's parameter.
-         *
-         * @return {Object}
-         */
-
-    }, {
-        key: 'attrs',
-        value: function attrs() {
-            return {
-                index: Core$1.index
-            };
-        }
-    }]);
-    return Events;
+  }, {
+    key: 'attrs',
+    value: function attrs() {
+      return {
+        index: Core$1.index
+      };
+    }
+  }]);
+  return Events;
 }();
 
 var Events$1 = new Events();
@@ -1293,288 +1504,138 @@ var Events$1 = new Events();
 // };
 
 var Arrows = function () {
-    /**
-     * Construct arrows.
-     */
-    function Arrows() {
-        classCallCheck(this, Arrows);
+  /**
+   * Construct arrows.
+   */
+  function Arrows() {
+    classCallCheck(this, Arrows);
 
-        this.listeners = {};
+    this.listeners = {};
+  }
+
+  /**
+   * Init arrows. Binds DOM elements with listeners.
+   *
+   * @return {Void}
+   */
+
+
+  createClass(Arrows, [{
+    key: 'init',
+    value: function init() {
+      this.bind();
     }
 
     /**
-     * Init arrows. Binds DOM elements with listeners.
+     * Arrow click event handler.
+     *
+     * @param {Object} event
+     * @return {Void}
+     */
+
+  }, {
+    key: 'click',
+    value: function click(event) {
+      event.preventDefault();
+
+      if (!Events$1.disabled) {
+        Run$1.stop().make(event.target.dataset.glideDir);
+
+        Animation$1.after(function () {
+          Run$1.init();
+        });
+      }
+    }
+
+    /**
+     * Arrow hover event handler.
+     *
+     * @param {Object} event
+     * @return {Void}
+     */
+
+  }, {
+    key: 'hover',
+    value: function hover(event) {
+      if (!Events$1.disabled) {
+        switch (event.type) {
+          case 'mouseleave':
+            Run$1.init();
+            break;
+
+          case 'mouseenter':
+            Run$1.stop();
+            break;
+        }
+      }
+    }
+
+    /**
+     * Bind arrows events.
      *
      * @return {Void}
      */
 
+  }, {
+    key: 'bind',
+    value: function bind() {
+      var items = this.items;
 
-    createClass(Arrows, [{
-        key: 'init',
-        value: function init() {
-            this.bind();
-        }
+      for (var i = 0; i < items.length; i++) {
+        this.on('click', items[i], this.click);
+        this.on('touchstart', items[i], this.click);
+        this.on('mouseenter', items[i], this.hover);
+        this.on('mouseleave', items[i], this.hover);
+      }
+    }
 
-        /**
-         * Arrow click event handler.
-         *
-         * @param {Object} event
-         * @return {Void}
-         */
+    /**
+     * Unbind arrows events.
+     *
+     * @return {Void}
+     */
 
-    }, {
-        key: 'click',
-        value: function click(event) {
-            event.preventDefault();
+  }, {
+    key: 'unbind',
+    value: function unbind() {
+      var items = this.items;
 
-            if (!Events$1.disabled) {
-                Run$1.pause();
+      for (var i = 0; i < items.length; i++) {
+        this.off('click', items[i]);
+        this.off('touchstart', items[i]);
+        this.off('mouseenter', items[i]);
+        this.off('mouseleave', items[i]);
+      }
+    }
+  }, {
+    key: 'on',
+    value: function on(event, el, closure) {
+      this.listeners[event] = closure;
 
-                Run$1.make(event.target.dataset.glideDir);
+      el.addEventListener(event, this.listeners[event]);
+    }
+  }, {
+    key: 'off',
+    value: function off(event, el) {
+      el.removeEventListener(event, this.listeners[event]);
+    }
 
-                Animation$1.after(function () {
-                    Run$1.play();
-                });
-            }
-        }
+    /**
+     * Gets collection of the arrows elements.
+     *
+     * @return {HTMLElement[]}
+     */
 
-        /**
-         * Arrow hover event handler.
-         *
-         * @param {Object} event
-         * @return {Void}
-         */
-
-    }, {
-        key: 'hover',
-        value: function hover(event) {
-            if (!Events$1.disabled) {
-                switch (event.type) {
-                    case 'mouseleave':
-                        Run$1.play();
-                        break;
-
-                    case 'mouseenter':
-                        Run$1.pause();
-                        break;
-                }
-            }
-        }
-
-        /**
-         * Bind arrows events.
-         *
-         * @return {Void}
-         */
-
-    }, {
-        key: 'bind',
-        value: function bind() {
-            var items = this.items;
-
-            for (var i = 0; i < items.length; i++) {
-                this.on('click', items[i], this.click);
-                this.on('touchstart', items[i], this.click);
-                this.on('mouseenter', items[i], this.hover);
-                this.on('mouseleave', items[i], this.hover);
-            }
-        }
-
-        /**
-         * Unbind arrows events.
-         *
-         * @return {Void}
-         */
-
-    }, {
-        key: 'unbind',
-        value: function unbind() {
-            var items = this.items;
-
-            for (var i = 0; i < items.length; i++) {
-                this.off('click', items[i]);
-                this.off('touchstart', items[i]);
-                this.off('mouseenter', items[i]);
-                this.off('mouseleave', items[i]);
-            }
-        }
-    }, {
-        key: 'on',
-        value: function on(event, el, closure) {
-            this.listeners[event] = closure;
-
-            el.addEventListener(event, this.listeners[event]);
-        }
-    }, {
-        key: 'off',
-        value: function off(event, el) {
-            el.removeEventListener(event, this.listeners[event]);
-        }
-
-        /**
-         * Gets collection of the arrows elements.
-         *
-         * @return {HTMLElement[]}
-         */
-
-    }, {
-        key: 'items',
-        get: function get$$1() {
-            return DOM$1.arrows.children;
-        }
-    }]);
-    return Arrows;
+  }, {
+    key: 'items',
+    get: function get$$1() {
+      return DOM$1.arrows.children;
+    }
+  }]);
+  return Arrows;
 }();
 
 var Arrows$1 = new Arrows();
-
-// /**
-//  * Arrows module.
-//  *
-//  * @param {Object} Glide
-//  * @param {Object} Core
-//  * @return {Arrows}
-//  */
-// var Arrows = function(Glide, Core) {
-
-
-//     /**
-//      * Arrows constructor.
-//      */
-//     function Arrows() {
-//         this.build();
-//         this.bind();
-//     }
-
-
-//     /**
-//      * Build arrows. Gets DOM elements.
-//      *
-//      * @return {Void}
-//      */
-//     Arrows.prototype.build = function() {
-//         this.wrapper = Glide.slider.find('.' + Glide.options.classes.arrows);
-//         this.items = this.wrapper.children();
-//     };
-
-
-//     /**
-//      * Disable next/previous arrow and enable another.
-//      *
-//      * @param {String} type
-//      * @return {Void}
-//      */
-//     Arrows.prototype.disable = function(type) {
-//         var classes = Glide.options.classes;
-
-//         if (!type) {
-//             return this.disableBoth();
-//         }
-
-//         this.items.filter('.' + classes['arrow' + Core.Helper.capitalise(type)])
-//             .unbind('click.glide touchstart.glide')
-//             .addClass(classes.disabled)
-//             .siblings()
-//             .bind('click.glide touchstart.glide', this.click)
-//             .bind('mouseenter.glide', this.hover)
-//             .bind('mouseleave.glide', this.hover)
-//             .removeClass(classes.disabled);
-//     };
-
-//     /**
-//      * Disable both arrows.
-//      *
-//      * @return {Void}
-//      */
-//     Arrows.prototype.disableBoth = function() {
-//         this.items
-//             .unbind('click.glide touchstart.glide')
-//             .addClass(Glide.options.classes.disabled);
-//     };
-
-
-//     /**
-//      * Show both arrows.
-//      *
-//      * @return {Void}
-//      */
-//     Arrows.prototype.enable = function() {
-//         this.bind();
-
-//         this.items.removeClass(Glide.options.classes.disabled);
-//     };
-
-//     /**
-//      * Arrow click event.
-//      *
-//      * @param {Object} event
-//      * @return {Void}
-//      */
-//     Arrows.prototype.click = function(event) {
-//         event.preventDefault();
-
-//         if (!Core.Events.disabled) {
-//             Core.Run.pause();
-//             Core.Run.make($(this).data('glide-dir'));
-//             Core.Animation.after(function() {
-//                 Core.Run.play();
-//             });
-//         }
-//     };
-
-//     /**
-//      * Arrows hover event.
-//      *
-//      * @param {Object} event
-//      * @return {Void}
-//      */
-//     Arrows.prototype.hover = function(event) {
-//         if (!Core.Events.disabled) {
-
-//             switch (event.type) {
-//                 // Start autoplay on mouse leave.
-//                 case 'mouseleave':
-//                     Core.Run.play();
-//                     break;
-//                 // Pause autoplay on mouse enter.
-//                 case 'mouseenter':
-//                     Core.Run.pause();
-//                     break;
-//             }
-
-//         }
-//     };
-
-//     /**
-//      * Bind arrows events.
-//      *
-//      * @return {Void}
-//      */
-//     Arrows.prototype.bind = function() {
-//         this.items
-//             .on('click.glide touchstart.glide', this.click)
-//             .on('mouseenter.glide', this.hover)
-//             .on('mouseleave.glide', this.hover);
-//     };
-
-
-//     /**
-//      * Unbind arrows events.
-//      *
-//      * @return {Void}
-//      */
-//     Arrows.prototype.unbind = function() {
-//         this.items
-//             .off('click.glide touchstart.glide')
-//             .off('mouseenter.glide')
-//             .off('mouseleave.glide');
-//     };
-
-
-//     // Return class.
-//     return new Arrows();
-
-// };
 
 var defaults$1 = {
   /**
@@ -1674,7 +1735,7 @@ var defaults$1 = {
    *
    * @type {Number}
    */
-  throttle: 16,
+  debounce: 200,
 
   /**
    * Set height of the slider based on current slide content.
@@ -1774,32 +1835,46 @@ var defaults$1 = {
 };
 
 var Glide = function () {
-    /**
-     * Construct glide.
-     *
-     * @param  {String} selector
-     * @param  {Object} options
-     */
-    function Glide(selector) {
-        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-        classCallCheck(this, Glide);
+  /**
+   * Construct glide.
+   *
+   * @param  {String} selector
+   * @param  {Object} options
+   */
+  function Glide(selector) {
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    classCallCheck(this, Glide);
 
-        this.selector = selector;
-        this.options = options;
+    this.selector = selector;
+    this.options = options;
 
-        var settings = _extends(defaults$1, options);
+    var settings = _extends(defaults$1, options);
 
-        Core$1.settings = settings;
-        Core$1.index = settings.startAt;
+    Core$1.settings = settings;
+    Core$1.index = settings.startAt;
 
-        Events$1.call(settings.beforeInit);
+    Events$1.call(settings.beforeInit);
 
-        DOM$1.init(selector);
-        Arrows$1.init();
-        Build$1.init();
-        Run$1.play();
+    this.init();
 
-        Events$1.call(settings.afterInit);
+    Events$1.call(settings.afterInit);
+  }
+
+  /**
+   * Initializes glide components.
+   *
+   * @return {Void}
+   */
+
+
+  createClass(Glide, [{
+    key: 'init',
+    value: function init() {
+      DOM$1.init(this.selector);
+      Events$1.init();
+      Arrows$1.init();
+      Build$1.init();
+      Run$1.init();
     }
 
     /**
@@ -1808,14 +1883,13 @@ var Glide = function () {
      * @return {Number}
      */
 
-
-    createClass(Glide, [{
-        key: 'index',
-        value: function index() {
-            return Core$1.index;
-        }
-    }]);
-    return Glide;
+  }, {
+    key: 'index',
+    value: function index() {
+      return Core$1.index;
+    }
+  }]);
+  return Glide;
 }();
 
 return Glide;

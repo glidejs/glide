@@ -4,8 +4,6 @@ import { exist } from '../utils/dom'
 class DOM {
   /**
    * Setup slider HTML nodes.
-   *
-   * @param  {String|HTMLElement} element
    */
   init(element) {
     this.element = element

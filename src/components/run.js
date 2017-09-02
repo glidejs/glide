@@ -9,24 +9,26 @@ class Run {
     this.running = false
   }
 
-  play() {
+  init() {
     if (Core.settings.autoplay || this.running) {
       if (typeof this.interval === 'undefined') {
         this.interval = setInterval(() => {
-          this.pause()
-          this.make('>')
-          this.play()
+          this.stop().make('>').init()
         }, this.period)
       }
     }
+
+    return this
   }
 
-  pause() {
+  stop() {
     if (Core.settings.autoplay || this.running) {
       if (this.interval >= 0) {
         this.interval = clearInterval(this.interval)
       }
     }
+
+    return this
   }
 
   make(move, callback) {
@@ -81,6 +83,8 @@ class Run {
     Animation.make().after(() => {
       Build.activeClass()
     })
+
+    return this
   }
 
   /**

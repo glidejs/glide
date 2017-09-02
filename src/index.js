@@ -25,12 +25,22 @@ export default class Glide {
 
     Events.call(settings.beforeInit)
 
-    DOM.init(selector)
-    Arrows.init()
-    Build.init()
-    Run.play()
+    this.init()
 
     Events.call(settings.afterInit)
+  }
+
+  /**
+   * Initializes glide components.
+   *
+   * @return {Void}
+   */
+  init() {
+    DOM.init(this.selector)
+    Events.init()
+    Arrows.init()
+    Build.init()
+    Run.init()
   }
 
   /**

@@ -15,7 +15,7 @@ class Transition {
    * @param {String} property
    * @return {String}
    */
-  get(property = 'all') {
+  get(property = 'transform') {
     let settings = Core.settings
 
     if (! this.disabled) {

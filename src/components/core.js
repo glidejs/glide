@@ -9,6 +9,7 @@ class Core {
    */
   constructor(id) {
     this.id = id
+    this.disabled = false
     this.destroyed = false
   }
 

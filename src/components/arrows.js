@@ -1,16 +1,10 @@
 import DOM from './dom'
 import Run from './run'
-import Events from './events'
+import Core from './core'
 import Animation from './animation'
+import Binder from '../events/binder'
 
-class Arrows {
-  /**
-   * Constructs arrows component.
-   */
-  constructor() {
-    this.listeners = {}
-  }
-
+class Arrows extends Binder {
   /**
    * Inits arrows. Binds events listeners
    * to the arrows HTML elements.
@@ -19,6 +13,33 @@ class Arrows {
    */
   init() {
     this.bind()
+  }
+
+  /**
+   * Binds events to arrows HTML elements.
+   *
+   * @return {Void}
+   */
+  bind() {
+    let items = this.items
+
+    for (var i = 0; i < items.length; i++) {
+      this.on(['click', 'touchstart'], items[i], this.click)
+      this.on(['mouseenter', 'mouseleave'], items[i], this.hover)
+    }
+  }
+
+  /**
+   * Unbinds events binded to the arrows HTML elements.
+   *
+   * @return {Void}
+   */
+  unbind() {
+    let items = this.items
+
+    for (var i = 0; i < items.length; i++) {
+      this.off(['click', 'touchstart', 'mouseenter', 'mouseleave'], items[i])
+    }
   }
 
   /**
@@ -32,7 +53,7 @@ class Arrows {
   click(event) {
     event.preventDefault()
 
-    if (! Events.disabled) {
+    if (! Core.disabled) {
       Run.stop().make(event.target.dataset.glideDir)
 
       Animation.after(() => {
@@ -49,7 +70,7 @@ class Arrows {
    * @return {Void}
    */
   hover(event) {
-    if (! Events.disabled) {
+    if (! Core.disabled) {
       if (event.type === 'mouseleave') {
         Run.init()
       }
@@ -57,62 +78,6 @@ class Arrows {
       if (event.type === 'mouseenter') {
         Run.stop()
       }
-    }
-  }
-
-  /**
-   * Binds events to arrows HTML elements.
-   *
-   * @return {Void}
-   */
-  bind() {
-      let items = this.items
-
-      for (var i = 0; i < items.length; i++) {
-        this.on(['click', 'touchstart'], items[i], this.click)
-        this.on(['mouseenter', 'mouseleave'], items[i], this.hover)
-      }
-  }
-
-  /**
-   * Unbinds events binded to the arrows HTML elements.
-   *
-   * @return {Void}
-   */
-  unbind() {
-      let items = this.items
-
-      for (var i = 0; i < items.length; i++) {
-        this.off(['click', 'touchstart', 'mouseenter', 'mouseleave'], items[i])
-      }
-  }
-
-  /**
-   * Adds events listeners to arrows HTML elements.
-   *
-   * @param  {Array} events
-   * @param  {HTMLElement} el
-   * @param  {Closure} closure
-   * @return {Void}
-   */
-  on(events, el, closure) {
-    for (var i = 0; i < events.length; i++) {
-      this.listeners[events[i]] = closure
-
-      el.addEventListener(events[i], this.listeners[events[i]])
-    }
-  }
-
-  /**
-   * Removes event listeners from arrows HTML elements.
-   *
-   * @param  {Array} events
-   * @param  {HTMLElement} el
-   * @return {Void}
-   */
-  off(events, el) {
-    for (var i = 0; i < events.length; i++) {
-      el.removeEventListener(events[i], this.listeners[event])
     }
   }
 

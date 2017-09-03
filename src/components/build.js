@@ -17,8 +17,6 @@ class Build {
     Peek.init()
     Dimensions.apply()
 
-    this[Core.settings.type]()
-
     this.typeClass()
     this.modeClass()
     this.activeClass()
@@ -26,57 +24,6 @@ class Build {
 
     Animation.make()
     Transition.enable()
-  }
-
-  /**
-   * Build glide of `slider` type.
-   *
-   * @return {Void}
-   */
-  slider() {
-    // Dimensions.apply()
-  }
-
-  /**
-   * Build glide of `carousel` type.
-   *
-   * @return {Void}
-   */
-  carousel() {
-      Transition.jumping = true
-
-      // // Update shift for carusel type.
-      // Core.Clones.shift = (Glide[Glide.size] * Core.Clones.items.length / 2) - Glide[Glide.size];
-
-      Dimensions.apply()
-
-      if (Core.isMode('vertical')) {
-          // Core.Height.set(true);
-      }
-
-      // // Go to startup position.
-      // Core.Animation.make();
-
-      // // Append clones.
-      // Core.Clones.append();
-
-      Transition.jumping = false
-  }
-
-  /**
-   * Build glide of `slideshow` type.
-   *
-   * @return {Void}
-   */
-  slideshow() {
-    // // Turn on jumping flag
-    // Core.Transition.jumping = true;
-
-    // // Go to startup position
-    // Core.Animation.make();
-
-    // // Turn off jumping flag
-    // Core.Transition.jumping = false;
   }
 
   /**

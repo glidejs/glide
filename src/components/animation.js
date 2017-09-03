@@ -40,7 +40,7 @@ class Animation {
    */
   apply() {
     Transition.set()
-    Translate.set(this.translate + this.offset)
+    Translate.set(this.translate - this.offset)
   }
 
   /**

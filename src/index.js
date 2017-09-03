@@ -3,7 +3,9 @@ import Run from './components/run'
 import Core from './components/core'
 import Build from './components/build'
 import Arrows from './components/arrows'
-import Events from './components/events'
+import Window from './components/window'
+
+import Trigger from './events/trigger'
 
 import defaults from './defaults'
 
@@ -23,11 +25,11 @@ export default class Glide {
     Core.settings = settings
     Core.index = settings.startAt
 
-    Events.call(settings.beforeInit)
+    new Trigger(settings.beforeInit)
 
     this.init()
 
-    Events.call(settings.afterInit)
+    new Trigger(settings.afterInit)
   }
 
   /**
@@ -38,8 +40,8 @@ export default class Glide {
   init() {
     DOM.init(this.selector)
     Build.init()
-    Events.init()
     Arrows.init()
+    Window.init()
     Run.init()
   }
 

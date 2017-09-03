@@ -278,6 +278,7 @@ var Core = function () {
     classCallCheck(this, Core);
 
     this.id = id;
+    this.disabled = false;
     this.destroyed = false;
   }
 
@@ -770,7 +771,7 @@ var Animation = function () {
     key: 'apply',
     value: function apply() {
       Transition$1.set();
-      Translate$1.set(this.translate + this.offset);
+      Translate$1.set(this.translate - this.offset);
     }
 
     /**
@@ -845,8 +846,6 @@ var Build = function () {
       Peek$1.init();
       Dimensions$1.apply();
 
-      this[Core$1.settings.type]();
-
       this.typeClass();
       this.modeClass();
       this.activeClass();
@@ -855,66 +854,6 @@ var Build = function () {
       Animation$1.make();
       Transition$1.enable();
     }
-
-    /**
-     * Build glide of `slider` type.
-     *
-     * @return {Void}
-     */
-
-  }, {
-    key: 'slider',
-    value: function slider() {}
-    // Dimensions.apply()
-
-
-    /**
-     * Build glide of `carousel` type.
-     *
-     * @return {Void}
-     */
-
-  }, {
-    key: 'carousel',
-    value: function carousel() {
-      Transition$1.jumping = true;
-
-      // // Update shift for carusel type.
-      // Core.Clones.shift = (Glide[Glide.size] * Core.Clones.items.length / 2) - Glide[Glide.size];
-
-      Dimensions$1.apply();
-
-      if (Core$1.isMode('vertical')) {}
-      // Core.Height.set(true);
-
-
-      // // Go to startup position.
-      // Core.Animation.make();
-
-      // // Append clones.
-      // Core.Clones.append();
-
-      Transition$1.jumping = false;
-    }
-
-    /**
-     * Build glide of `slideshow` type.
-     *
-     * @return {Void}
-     */
-
-  }, {
-    key: 'slideshow',
-    value: function slideshow() {}
-    // // Turn on jumping flag
-    // Core.Transition.jumping = true;
-
-    // // Go to startup position
-    // Core.Animation.make();
-
-    // // Turn off jumping flag
-    // Core.Transition.jumping = false;
-
 
     /**
      * Sets height of the slides track.
@@ -1152,6 +1091,180 @@ var Run = function () {
 
 var Run$1 = new Run();
 
+var Events = function () {
+  /**
+   * Construct events.
+   */
+  function Events() {
+    var listeners = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    classCallCheck(this, Events);
+
+    this.listeners = listeners;
+  }
+
+  /**
+   * Adds events listeners to arrows HTML elements.
+   *
+   * @param  {Array} events
+   * @param  {HTMLElement} el
+   * @param  {Closure} closure
+   * @return {Void}
+   */
+
+
+  createClass(Events, [{
+    key: 'on',
+    value: function on(events, el, closure) {
+      if (typeof events === 'string') {
+        events = [events];
+      }
+
+      for (var i = 0; i < events.length; i++) {
+        this.listeners[events[i]] = closure;
+
+        el.addEventListener(events[i], this.listeners[events[i]]);
+      }
+    }
+
+    /**
+     * Removes event listeners from arrows HTML elements.
+     *
+     * @param  {Array} events
+     * @param  {HTMLElement} el
+     * @return {Void}
+     */
+
+  }, {
+    key: 'off',
+    value: function off(events, el) {
+      if (typeof events === 'string') {
+        events = [events];
+      }
+
+      for (var i = 0; i < events.length; i++) {
+        el.removeEventListener(events[i], this.listeners[event]);
+      }
+    }
+  }]);
+  return Events;
+}();
+
+var Arrows = function (_Binder) {
+  inherits(Arrows, _Binder);
+
+  function Arrows() {
+    classCallCheck(this, Arrows);
+    return possibleConstructorReturn(this, (Arrows.__proto__ || Object.getPrototypeOf(Arrows)).apply(this, arguments));
+  }
+
+  createClass(Arrows, [{
+    key: 'init',
+
+    /**
+     * Inits arrows. Binds events listeners
+     * to the arrows HTML elements.
+     *
+     * @return {Void}
+     */
+    value: function init() {
+      this.bind();
+    }
+
+    /**
+     * Binds events to arrows HTML elements.
+     *
+     * @return {Void}
+     */
+
+  }, {
+    key: 'bind',
+    value: function bind() {
+      var items = this.items;
+
+      for (var i = 0; i < items.length; i++) {
+        this.on(['click', 'touchstart'], items[i], this.click);
+        this.on(['mouseenter', 'mouseleave'], items[i], this.hover);
+      }
+    }
+
+    /**
+     * Unbinds events binded to the arrows HTML elements.
+     *
+     * @return {Void}
+     */
+
+  }, {
+    key: 'unbind',
+    value: function unbind() {
+      var items = this.items;
+
+      for (var i = 0; i < items.length; i++) {
+        this.off(['click', 'touchstart', 'mouseenter', 'mouseleave'], items[i]);
+      }
+    }
+
+    /**
+     * Handles `click` event on the arrows HTML elements.
+     * Moves slider in driection precised in
+     * `data-glide-dir` attribute.
+     *
+     * @param {Object} event
+     * @return {Void}
+     */
+
+  }, {
+    key: 'click',
+    value: function click(event) {
+      event.preventDefault();
+
+      if (!Core$1.disabled) {
+        Run$1.stop().make(event.target.dataset.glideDir);
+
+        Animation$1.after(function () {
+          Run$1.init();
+        });
+      }
+    }
+
+    /**
+     * Handles `hover` event on the arrows HTML elements.
+     * Plays and pauses autoplay running.
+     *
+     * @param {Object} event
+     * @return {Void}
+     */
+
+  }, {
+    key: 'hover',
+    value: function hover(event) {
+      if (!Core$1.disabled) {
+        if (event.type === 'mouseleave') {
+          Run$1.init();
+        }
+
+        if (event.type === 'mouseenter') {
+          Run$1.stop();
+        }
+      }
+    }
+
+    /**
+     * Gets collection of the arrows HTML elements.
+     *
+     * @return {HTMLElement[]}
+     */
+
+  }, {
+    key: 'items',
+    get: function get$$1() {
+      return DOM$1.arrows.children;
+    }
+  }]);
+  return Arrows;
+}(Events);
+
+var Arrows$1 = new Arrows();
+
 // Similar to ES6's rest param (http://ariya.ofilabs.com/2013/03/es6-and-rest-parameter.html)
 // This accumulates the arguments passed into an array, after a given index.
 var restArgs = function restArgs(func, startIndex) {
@@ -1217,526 +1330,79 @@ function debounce(func, wait, immediate) {
   return debounced;
 }
 
-var Events = function () {
-  /**
-   * Construct events.
-   */
-  function Events() {
-    classCallCheck(this, Events);
+var Window = function (_Binder) {
+  inherits(Window, _Binder);
 
-    this.listeners = {};
-    this.disabled = false;
-    this.prevented = false;
+  function Window() {
+    classCallCheck(this, Window);
+    return possibleConstructorReturn(this, (Window.__proto__ || Object.getPrototypeOf(Window)).apply(this, arguments));
   }
 
-  createClass(Events, [{
+  createClass(Window, [{
     key: 'init',
     value: function init() {
-      this.resize();
+      this.bind();
     }
-
-    /**
-     * Rebuild slider when window is resized.
-     *
-     * @return {Void}
-     */
-
+  }, {
+    key: 'bind',
+    value: function bind() {
+      this.on('resize', window, debounce(this.resize, Core$1.settings.debounce));
+    }
+  }, {
+    key: 'unbind',
+    value: function unbind() {
+      this.off('resize', window);
+    }
   }, {
     key: 'resize',
     value: function resize() {
-      this.listeners['resize'] = debounce(function () {
-        if (!Core$1.destroyed) {
-          Transition$1.disable();
+      if (!Core$1.destroyed) {
+        Transition$1.disable();
 
-          Build$1.init();
-          Run$1.make('=' + Core$1.index).init();
+        Build$1.init();
+        Run$1.make('=' + Core$1.index).init();
 
-          Transition$1.enable();
-        }
-      }, Core$1.settings.debounce);
-
-      window.addEventListener('resize', this.listeners['resize']);
-    }
-
-    /**
-     * Calls callback with attributes.
-     *
-     * @param {Function} func
-     * @return {self}
-     */
-
-  }, {
-    key: 'call',
-    value: function call(func) {
-      if (func !== 'undefined' && typeof func === 'function') {
-        func(this.attrs());
+        Transition$1.enable();
       }
-
-      return this;
     }
+  }]);
+  return Window;
+}(Events);
 
-    /**
-     * Gets attributes for events callback's parameter.
-     *
-     * @return {Object}
-     */
+var Window$1 = new Window();
 
-  }, {
+var Trigger = function () {
+  /**
+   * Calls callback with attributes.
+   *
+   * @param {Function} closure
+   * @return {self}
+   */
+  function Trigger(closure) {
+    classCallCheck(this, Trigger);
+
+    if (closure !== 'undefined' && typeof closure === 'function') {
+      closure(this.attrs);
+    }
+  }
+
+  /**
+   * Gets attributes for events callback's parameter.
+   *
+   * @return {Object}
+   */
+
+
+  createClass(Trigger, [{
     key: 'attrs',
-    value: function attrs() {
+    get: function get$$1() {
       return {
         index: Core$1.index
       };
     }
   }]);
-  return Events;
+  return Trigger;
 }();
-
-var Events$1 = new Events();
-
-// /**
-//  * Events module.
-//  *
-//  * @param {Object} Glide
-//  * @param {Object} Core
-//  * @return {Events}
-//  */
-// var Events = function(Glide, Core) {
-
-//     /**
-//      * Collection of triggers.
-//      *
-//      * @type {Object}
-//      */
-//     var triggers = $('[data-glide-trigger]');
-
-//     /**
-//      * Events constructor.
-//      */
-//     function Events() {
-//         this.disabled = false;
-//         this.prevented = false;
-
-//         this.keyboard();
-//         this.hoverpause();
-//         this.resize();
-//         this.bindTriggers();
-//         this.bindAnchors();
-//         this.bindImages();
-//     }
-
-//     /**
-//      * Bind keyboard events.
-//      *
-//      * @return {Void}
-//      */
-//     Events.prototype.keyboard = function() {
-//         if (Glide.options.keyboard) {
-//             $(window).on('keyup.glide', function(event) {
-//                 if (event.keyCode === 39) {
-//                     Core.Run.make('>');
-//                 }
-//                 if (event.keyCode === 37) {
-//                     Core.Run.make('<');
-//                 }
-//             });
-//         }
-//     };
-
-//     /**
-//      * Bind hoverpause event.
-//      *
-//      * @return {Void}
-//      */
-//     Events.prototype.hoverpause = function() {
-
-//         if (Glide.options.hoverpause) {
-
-//             Glide.track
-//                 .on('mouseover.glide', function() {
-//                     Core.Run.pause();
-//                     Core.Events.trigger('mouseOver');
-//                 })
-//                 .on('mouseout.glide', function() {
-//                     Core.Run.play();
-//                     Core.Events.trigger('mouseOut');
-//                 });
-
-//         }
-
-//     };
-
-//     /**
-//      * Bind resize window event.
-//      *
-//      * @return {Void}
-//      */
-//     Events.prototype.resize = function() {
-
-//         $(window).on('resize.glide.' + Glide.uuid, Core.Helper.throttle(function() {
-//             if(!Glide.destroyed) {
-//                 Core.Transition.jumping = true;
-//                 Glide.setup();
-//                 Core.Build.init();
-//                 Core.Run.make('=' + Glide.current, false);
-//                 Core.Run.play();
-//                 Core.Transition.jumping = false;
-//             }
-//         }, Glide.options.throttle));
-
-//     };
-
-//     /**
-//      * Bind triggers events.
-//      *
-//      * @return {Void}
-//      */
-//     Events.prototype.bindTriggers = function() {
-//         if (triggers.length) {
-//             triggers
-//                 .off('click.glide touchstart.glide')
-//                 .on('click.glide touchstart.glide', this.handleTrigger);
-//         }
-//     };
-
-//     /**
-//      * Hande trigger event.
-//      *
-//      * @param {Object} event
-//      * @return {Void}
-//      */
-//     Events.prototype.handleTrigger = function(event) {
-//         event.preventDefault();
-
-//         var targets = $(this).data('glide-trigger').split(" ");
-
-//         if (!this.disabled) {
-//             for (var el in targets) {
-//                 var target = $(targets[el]).data('glide_api');
-//                 target.pause();
-//                 target.go($(this).data('glide-dir'), this.activeTrigger);
-//                 target.play();
-//             }
-//         }
-//     };
-
-//     /**
-//      * Bind events to anchors inside track.
-//      *
-//      * @return {Void}
-//      */
-//     Events.prototype.bindAnchors = function() {
-//         Glide.track.on('click.glide', 'a', function(e) {
-//             if (this.prevented) {
-//                 e.preventDefault();
-//             }
-//         }.bind(this));
-//     };
-
-//     /**
-//      * Bind events to images inside track.
-//      *
-//      * @return {Void}
-//      */
-//     Events.prototype.bindImages = function() {
-//         Glide.track.on('dragstart.glide', 'img', function(e) {
-//             if (this.prevented) {
-//                 e.preventDefault();
-//             }
-//         }.bind(this));
-//     };
-
-//     /**
-//      * Detach anchors clicks inside track.
-//      *
-//      * @return {self}
-//      */
-//     Events.prototype.detachClicks = function(event) {
-//         Glide.track.find('a').each(function(i, a) {
-//             $(a)
-//                 .attr('data-href', $(a).attr('href'))
-//                 .removeAttr('href');
-//         });
-
-//         return this;
-//     };
-
-//     /**
-//      * Attach anchors clicks inside track.
-//      *
-//      * @return {self}
-//      */
-//     Events.prototype.attachClicks = function(event) {
-//         Glide.track.find('a').each(function(i, a) {
-//             $(a)
-//                 .attr('href', $(a).attr('data-href'))
-//                 .removeAttr('data-href');
-//         });
-
-//         Core.Animation.after(function() {
-//             this.prevented = false;
-//         }.bind(this));
-
-//         return this;
-//     };
-
-//     /**
-//      * Prevent anchors clicks inside track.
-//      *
-//      * @return {self}
-//      */
-//     Events.prototype.preventClicks = function() {
-//         this.prevented = true;
-
-//         return this;
-//     };
-
-//     /*
-//      * Call event function with parameters.
-//      *
-//      * @param {Function} func
-//      * @return {self}
-//      */
-//     Events.prototype.call = function(func) {
-//         if ((func !== 'undefined') && (typeof func === 'function')) {
-//             func(this.getParams());
-//         }
-
-//         return this;
-//     };
-
-//     /**
-//      * Trigger event.
-//      *
-//      * @param  {String} name
-//      * @return {self}
-//      */
-//     Events.prototype.trigger = function(name) {
-//         Glide.slider.trigger(name + ".glide", [this.getParams()]);
-
-//         return this;
-//     };
-
-//     /**
-//      * Get parameters for events callback.
-//      *
-//      * @return {Object}
-//      */
-//     Events.prototype.getParams = function() {
-//         return {
-//             index: Glide.current,
-//             length: Glide.slides.length,
-//             current: Glide.slides.eq(Glide.current - 1),
-//             slider: Glide.slider,
-//             swipe: {
-//                 distance: (Core.Touch.distance || 0)
-//             }
-//         };
-//     };
-
-//     /*
-//      * Unbind all events.
-//      *
-//      * @return {Void}
-//      */
-//     Events.prototype.unbind = function() {
-
-//         Glide.track
-//             .off('click.glide', 'a')
-//             .off('dragstart.glide', 'img')
-//             .off('keyup.glide')
-//             .off('mouseover.glide')
-//             .off('mouseout.glide');
-
-//         triggers
-//             .off('click.glide touchstart.glide');
-
-//         $(window)
-//             .off('keyup.glide')
-//             .off('resize.glide.' + Glide.uuid);
-
-//     };
-
-//     /**
-//      * Disable all events.
-//      *
-//      * @return {self}
-//      */
-//     Events.prototype.disable = function() {
-//         this.disabled = true;
-
-//         return this;
-//     };
-
-//     /**
-//      * Enable all events.
-//      *
-//      * @return {self}
-//      */
-//     Events.prototype.enable = function() {
-//         this.disabled = false;
-
-//         return this;
-//     };
-
-//     // Return class.
-//     return new Events();
-
-// };
-
-var Arrows = function () {
-  /**
-   * Constructs arrows component.
-   */
-  function Arrows() {
-    classCallCheck(this, Arrows);
-
-    this.listeners = {};
-  }
-
-  /**
-   * Inits arrows. Binds events listeners
-   * to the arrows HTML elements.
-   *
-   * @return {Void}
-   */
-
-
-  createClass(Arrows, [{
-    key: 'init',
-    value: function init() {
-      this.bind();
-    }
-
-    /**
-     * Handles `click` event on the arrows HTML elements.
-     * Moves slider in driection precised in
-     * `data-glide-dir` attribute.
-     *
-     * @param {Object} event
-     * @return {Void}
-     */
-
-  }, {
-    key: 'click',
-    value: function click(event) {
-      event.preventDefault();
-
-      if (!Events$1.disabled) {
-        Run$1.stop().make(event.target.dataset.glideDir);
-
-        Animation$1.after(function () {
-          Run$1.init();
-        });
-      }
-    }
-
-    /**
-     * Handles `hover` event on the arrows HTML elements.
-     * Plays and pauses autoplay running.
-     *
-     * @param {Object} event
-     * @return {Void}
-     */
-
-  }, {
-    key: 'hover',
-    value: function hover(event) {
-      if (!Events$1.disabled) {
-        if (event.type === 'mouseleave') {
-          Run$1.init();
-        }
-
-        if (event.type === 'mouseenter') {
-          Run$1.stop();
-        }
-      }
-    }
-
-    /**
-     * Binds events to arrows HTML elements.
-     *
-     * @return {Void}
-     */
-
-  }, {
-    key: 'bind',
-    value: function bind() {
-      var items = this.items;
-
-      for (var i = 0; i < items.length; i++) {
-        this.on(['click', 'touchstart'], items[i], this.click);
-        this.on(['mouseenter', 'mouseleave'], items[i], this.hover);
-      }
-    }
-
-    /**
-     * Unbinds events binded to the arrows HTML elements.
-     *
-     * @return {Void}
-     */
-
-  }, {
-    key: 'unbind',
-    value: function unbind() {
-      var items = this.items;
-
-      for (var i = 0; i < items.length; i++) {
-        this.off(['click', 'touchstart', 'mouseenter', 'mouseleave'], items[i]);
-      }
-    }
-
-    /**
-     * Adds events listeners to arrows HTML elements.
-     *
-     * @param  {Array} events
-     * @param  {HTMLElement} el
-     * @param  {Closure} closure
-     * @return {Void}
-     */
-
-  }, {
-    key: 'on',
-    value: function on(events, el, closure) {
-      for (var i = 0; i < events.length; i++) {
-        this.listeners[events[i]] = closure;
-
-        el.addEventListener(events[i], this.listeners[events[i]]);
-      }
-    }
-
-    /**
-     * Removes event listeners from arrows HTML elements.
-     *
-     * @param  {Array} events
-     * @param  {HTMLElement} el
-     * @return {Void}
-     */
-
-  }, {
-    key: 'off',
-    value: function off(events, el) {
-      for (var i = 0; i < events.length; i++) {
-        el.removeEventListener(events[i], this.listeners[event]);
-      }
-    }
-
-    /**
-     * Gets collection of the arrows HTML elements.
-     *
-     * @return {HTMLElement[]}
-     */
-
-  }, {
-    key: 'items',
-    get: function get$$1() {
-      return DOM$1.arrows.children;
-    }
-  }]);
-  return Arrows;
-}();
-
-var Arrows$1 = new Arrows();
 
 var defaults$1 = {
   /**
@@ -1954,11 +1620,11 @@ var Glide = function () {
     Core$1.settings = settings;
     Core$1.index = settings.startAt;
 
-    Events$1.call(settings.beforeInit);
+    new Trigger(settings.beforeInit);
 
     this.init();
 
-    Events$1.call(settings.afterInit);
+    new Trigger(settings.afterInit);
   }
 
   /**
@@ -1973,8 +1639,8 @@ var Glide = function () {
     value: function init() {
       DOM$1.init(this.selector);
       Build$1.init();
-      Events$1.init();
       Arrows$1.init();
+      Window$1.init();
       Run$1.init();
     }
 

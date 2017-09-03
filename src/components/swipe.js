@@ -3,6 +3,7 @@ import Run from './run'
 import Core from './core'
 import Build from './build'
 import Animation from './animation'
+import Dimensions from './dimensions'
 import Transition from './transition'
 
 import Binder from '../events/binder'
@@ -111,15 +112,17 @@ class Swipe extends Binder {
         limiter = Core.settings.swipeDistance
       }
 
+      let steps = Math.round(swipeDistance/Dimensions.slideWidth)
+
       // While swipe is positive and greater than
       // distance set in options move backward.
       if (swipeDistance > limiter && swipeDeg < 45) {
-        Run.make('<')
+        Run.make(`<${steps}`)
       }
       // While swipe is negative and lower than negative
       // distance set in options move forward.
       else if (swipeDistance < -limiter && swipeDeg < 45) {
-        Run.make('>')
+        Run.make(`>${steps}`)
       }
       // While swipe don't reach distance apply previous transform.
       else {

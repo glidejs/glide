@@ -968,42 +968,31 @@ var Run = function () {
 
       switch (this.direction) {
         case '>':
-          // We are at the last slide while moving forward
-          // and step is a number. Set "jumping" flag
-          // and change index to the first.
-          if (this.isEnd()) {
+          if (typeof this.steps === 'number' && this.steps !== 0) {
+            Core$1.index += Math.min(this.length - Core$1.index, -this.steps);
+          } else if (this.steps === '>') {
+            Core$1.index = this.length;
+          } else if (this.isEnd()) {
             Core$1.index = 0;
 
             this.flag = true;
+          } else {
+            Core$1.index++;
           }
-          // Step is not a number, but '>'
-          // scroll slider to the end.
-          else if (this.steps === '>') {
-              Core$1.index = this.length;
-            }
-            // Otherwise change normally.
-            else {
-                Core$1.index = Core$1.index + 1;
-              }
           break;
 
         case '<':
-          // When we at first slide and move backward and steps
-          // are number, set flag and index slide to last.
-          if (this.isStart()) {
+          if (typeof this.steps === 'number' && this.steps !== 0) {
+            Core$1.index -= Math.min(Core$1.index, this.steps);
+          } else if (this.steps === '<') {
+            Core$1.index = 0;
+          } else if (this.isStart()) {
             Core$1.index = this.length;
 
             this.flag = true;
+          } else {
+            Core$1.index--;
           }
-          // When steps is not number, but '<'
-          // scroll slider to start.
-          else if (this.steps === '<') {
-              Core$1.index = 0;
-            }
-            // Otherwise change normally.
-            else {
-                Core$1.index = Core$1.index - 1;
-              }
           break;
 
         case '=':
@@ -1330,15 +1319,17 @@ var Swipe = function (_Binder) {
           limiter = Core$1.settings.swipeDistance;
         }
 
+        var steps = Math.round(swipeDistance / Dimensions$1.slideWidth);
+
         // While swipe is positive and greater than
         // distance set in options move backward.
         if (swipeDistance > limiter && swipeDeg < 45) {
-          Run$1.make('<');
+          Run$1.make('<' + steps);
         }
         // While swipe is negative and lower than negative
         // distance set in options move forward.
         else if (swipeDistance < -limiter && swipeDeg < 45) {
-            Run$1.make('>');
+            Run$1.make('>' + steps);
           }
           // While swipe don't reach distance apply previous transform.
           else {

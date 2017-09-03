@@ -37,41 +37,36 @@ class Run {
 
     switch (this.direction) {
       case '>':
-        // We are at the last slide while moving forward
-        // and step is a number. Set "jumping" flag
-        // and change index to the first.
-        if (this.isEnd()) {
+        if (typeof this.steps === 'number' && this.steps !== 0) {
+          Core.index += Math.min(this.length - Core.index, -this.steps)
+        }
+        else if (this.steps === '>') {
+          Core.index = this.length
+        }
+        else if (this.isEnd()) {
           Core.index = 0
 
           this.flag = true
         }
-        // Step is not a number, but '>'
-        // scroll slider to the end.
-        else if (this.steps === '>') {
-          Core.index = this.length
-        }
-        // Otherwise change normally.
         else {
-          Core.index = Core.index + 1
+          Core.index++
         }
         break;
 
       case '<':
-        // When we at first slide and move backward and steps
-        // are number, set flag and index slide to last.
-        if (this.isStart()) {
+        if (typeof this.steps === 'number' && this.steps !== 0) {
+          Core.index -= Math.min(Core.index, this.steps)
+        }
+        else if (this.steps === '<') {
+          Core.index = 0
+        }
+        else if (this.isStart()) {
           Core.index = this.length
 
           this.flag = true
         }
-        // When steps is not number, but '<'
-        // scroll slider to start.
-        else if (this.steps === '<') {
-          Core.index = 0
-        }
-        // Otherwise change normally.
         else {
-          Core.index = Core.index - 1
+          Core.index--
         }
         break;
 

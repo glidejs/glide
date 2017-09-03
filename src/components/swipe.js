@@ -14,11 +14,11 @@ const START_EVENTS = ['touchstart', 'mousedown']
 const MOVE_EVENTS = ['touchmove', 'mousemove']
 const END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave']
 
+let limiter = 0
+let distance = 0
+let swipeSin = 0
 let swipeStartX = 0
 let swipeStartY = 0
-let swipeSin = 0
-let distance = 0
-let limiter = 0
 
 class Swipe extends Binder {
   /**

@@ -64,14 +64,14 @@ export default {
   keyboard: true,
 
   /**
-   * Minimal touch-swipe distance needed to change slide. False for turning off touch.
+   * Minimal swipe distance needed to change slide, `false` for turning off touch.
    *
    * @type {Number}
    */
-  touchDistance: 80,
+  swipeDistance: 80,
 
   /**
-   * Minimal mouse drag distance needed to change slide. False for turning off mouse drag.
+   * Minimal mouse drag distance needed to change slide, `false` for turning off mouse drag.
    *
    * @type {Number}
    */

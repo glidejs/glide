@@ -39,7 +39,9 @@ export default class Events {
     }
 
     for (var i = 0; i < events.length; i++) {
-      el.removeEventListener(events[i], this.listeners[event])
+      el.removeEventListener(events[i], this.listeners[events[i]])
+
+      delete this.listeners[event]
     }
   }
 }

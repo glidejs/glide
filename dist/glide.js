@@ -1142,12 +1142,344 @@ var Events = function () {
       }
 
       for (var i = 0; i < events.length; i++) {
-        el.removeEventListener(events[i], this.listeners[event]);
+        el.removeEventListener(events[i], this.listeners[events[i]]);
+
+        delete this.listeners[event];
       }
     }
   }]);
   return Events;
 }();
+
+// Similar to ES6's rest param (http://ariya.ofilabs.com/2013/03/es6-and-rest-parameter.html)
+// This accumulates the arguments passed into an array, after a given index.
+var restArgs = function restArgs(func, startIndex) {
+  startIndex = startIndex == null ? func.length - 1 : +startIndex;
+  return function () {
+    var length = Math.max(arguments.length - startIndex, 0),
+        rest = Array(length),
+        index = 0;
+    for (; index < length; index++) {
+      rest[index] = arguments[index + startIndex];
+    }
+    switch (startIndex) {
+      case 0:
+        return func.call(this, rest);
+      case 1:
+        return func.call(this, arguments[0], rest);
+      case 2:
+        return func.call(this, arguments[0], arguments[1], rest);
+    }
+    var args = Array(startIndex + 1);
+    for (index = 0; index < startIndex; index++) {
+      args[index] = arguments[index];
+    }
+    args[startIndex] = rest;
+    return func.apply(this, args);
+  };
+};
+
+// Delays a function for the given number of milliseconds, and then calls
+// it with the arguments supplied.
+var delay = restArgs(function (func, wait, args) {
+  return setTimeout(function () {
+    return func.apply(null, args);
+  }, wait);
+});
+
+function debounce(func, wait, immediate) {
+  var timeout, result;
+
+  var later = function later(context, args) {
+    timeout = null;
+    if (args) result = func.apply(context, args);
+  };
+
+  var debounced = restArgs(function (args) {
+    if (timeout) clearTimeout(timeout);
+    if (immediate) {
+      var callNow = !timeout;
+      timeout = setTimeout(later, wait);
+      if (callNow) result = func.apply(this, args);
+    } else {
+      timeout = delay(later, wait, this, args);
+    }
+
+    return result;
+  });
+
+  debounced.cancel = function () {
+    clearTimeout(timeout);
+    timeout = null;
+  };
+
+  return debounced;
+}
+
+var START_EVENTS = ['touchstart', 'mousedown'];
+var MOVE_EVENTS = ['touchmove', 'mousemove'];
+var END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave'];
+
+var swipeStartX = 0;
+var swipeStartY = 0;
+var swipeSin = 0;
+var distance = 0;
+var limiter = 0;
+
+var Swipe = function (_Binder) {
+  inherits(Swipe, _Binder);
+
+  /**
+   * Constructs swipe component.
+   */
+  function Swipe() {
+    classCallCheck(this, Swipe);
+
+    var _this = possibleConstructorReturn(this, (Swipe.__proto__ || Object.getPrototypeOf(Swipe)).call(this));
+
+    _this.dragging = false;
+    return _this;
+  }
+
+  /**
+   * Inits swipe bindings.
+   *
+   * @return {Void}
+   */
+
+
+  createClass(Swipe, [{
+    key: 'init',
+    value: function init() {
+      this.bindSwipeStart();
+    }
+  }, {
+    key: 'start',
+    value: function start(event) {
+      if (this.enabled) {
+        var swipe = event.type === 'mousedown' ? event : event.touches[0] || event.changedTouches[0];
+
+        this.disable();
+
+        swipeSin = null;
+        swipeStartX = parseInt(swipe.pageX);
+        swipeStartY = parseInt(swipe.pageY);
+
+        this.bindSwipeMove();
+        this.bindSwipeEnd();
+      }
+    }
+  }, {
+    key: 'move',
+    value: function move(event) {
+      if (this.enabled) {
+        var swipe = event.type === 'mousemove' ? event : event.touches[0] || event.changedTouches[0];
+
+        var subExSx = parseInt(swipe.pageX) - swipeStartX;
+        var subEySy = parseInt(swipe.pageY) - swipeStartY;
+        var powEX = Math.abs(subExSx << 2);
+        var powEY = Math.abs(subEySy << 2);
+        var swipeHypotenuse = Math.sqrt(powEX + powEY);
+        var swipeCathetus = Math.sqrt(powEY);
+
+        swipeSin = Math.asin(swipeCathetus / swipeHypotenuse);
+        distance = swipe.pageX - swipeStartX;
+
+        if (swipeSin * 180 / Math.PI < 45) {
+          Animation$1.make(subExSx);
+        }
+
+        if (swipeSin * 180 / Math.PI < 45) {
+          event.stopPropagation();
+          event.preventDefault();
+
+          DOM$1.wrapper.classList.add(Core$1.settings.classes.dragging);
+        } else {
+          return;
+        }
+      }
+    }
+  }, {
+    key: 'end',
+    value: function end(event) {
+      if (this.enabled) {
+        var swipe = event.type === 'mouseup' || event.type === 'mouseleave' ? event : event.touches[0] || event.changedTouches[0];
+
+        var swipeDistance = swipe.pageX - swipeStartX;
+        var swipeDeg = swipeSin * 180 / Math.PI;
+
+        this.enable();
+
+        if (Core$1.isType('slider')) {
+          if (Run$1.isStart()) {
+            if (swipeDistance > 0) {
+              swipeDistance = 0;
+            }
+          }
+
+          if (Run$1.isEnd()) {
+            if (swipeDistance < 0) {
+              swipeDistance = 0;
+            }
+          }
+        }
+
+        if (event.type === 'mouseup' || event.type === 'mouseleave') {
+          limiter = Core$1.settings.dragDistance;
+        } else {
+          limiter = Core$1.settings.swipeDistance;
+        }
+
+        // While swipe is positive and greater than
+        // distance set in options move backward.
+        if (swipeDistance > limiter && swipeDeg < 45) {
+          Run$1.make('<');
+        }
+        // While swipe is negative and lower than negative
+        // distance set in options move forward.
+        else if (swipeDistance < -limiter && swipeDeg < 45) {
+            Run$1.make('>');
+          }
+          // While swipe don't reach distance apply previous transform.
+          else {
+              Animation$1.make();
+            }
+
+        // Remove dragging class and unbind events.
+        DOM$1.wrapper.classList.remove(Core$1.settings.classes.dragging);
+
+        this.unbindSwipeMove();
+        this.unbindSwipeEnd();
+      }
+    }
+
+    /**
+    * Binds swipe's starting event.
+    *
+    * @return {Void}
+    */
+
+  }, {
+    key: 'bindSwipeStart',
+    value: function bindSwipeStart() {
+      if (Core$1.settings.swipeDistance) {
+        this.on(START_EVENTS[0], DOM$1.wrapper, this.start.bind(this));
+      }
+
+      if (Core$1.settings.dragDistance) {
+        this.on(START_EVENTS[1], DOM$1.wrapper, this.start.bind(this));
+      }
+    }
+
+    /**
+     * Unbinds swipe's starting event.
+     *
+     * @return {Void}
+     */
+
+  }, {
+    key: 'unbindSwipeStart',
+    value: function unbindSwipeStart() {
+      this.off(START_EVENTS[0], DOM$1.wrapper);
+      this.off(START_EVENTS[1], DOM$1.wrapper);
+    }
+
+    /**
+     * Binds swipe's moving event.
+     *
+     * @return {Void}
+     */
+
+  }, {
+    key: 'bindSwipeMove',
+    value: function bindSwipeMove() {
+      this.on(MOVE_EVENTS, DOM$1.wrapper, this.move.bind(this));
+    }
+
+    /**
+     * Unbinds swipe's moving event.
+     *
+     * @return {Void}
+     */
+
+  }, {
+    key: 'unbindSwipeMove',
+    value: function unbindSwipeMove() {
+      this.off(MOVE_EVENTS, DOM$1.wrapper);
+    }
+
+    /**
+     * Binds swipe's ending event.
+     *
+     * @return {Void}
+     */
+
+  }, {
+    key: 'bindSwipeEnd',
+    value: function bindSwipeEnd() {
+      this.on(END_EVENTS, DOM$1.wrapper, this.end.bind(this));
+    }
+
+    /**
+     * Unbinds swipe's ending event.
+     *
+     * @return {Void}
+     */
+
+  }, {
+    key: 'unbindSwipeEnd',
+    value: function unbindSwipeEnd() {
+      this.off(END_EVENTS, DOM$1.wrapper);
+    }
+
+    /**
+     * Enables swipe event.
+     *
+     * @return {self}
+     */
+
+  }, {
+    key: 'enable',
+    value: function enable() {
+      this.dragging = false;
+
+      Transition$1.enable();
+
+      return self;
+    }
+
+    /**
+     * Disables swipe event.
+     *
+     * @return {self}
+     */
+
+  }, {
+    key: 'disable',
+    value: function disable() {
+      this.dragging = true;
+
+      Transition$1.disable();
+
+      return self;
+    }
+
+    /**
+     * Gets value of the dragging status.
+     *
+     * @return {Boolean}
+     */
+
+  }, {
+    key: 'enabled',
+    get: function get$$1() {
+      return !(Core$1.disabled && this.dragging);
+    }
+  }]);
+  return Swipe;
+}(Events);
+
+var Swipe$1 = new Swipe();
 
 var Arrows = function (_Binder) {
   inherits(Arrows, _Binder);
@@ -1264,71 +1596,6 @@ var Arrows = function (_Binder) {
 }(Events);
 
 var Arrows$1 = new Arrows();
-
-// Similar to ES6's rest param (http://ariya.ofilabs.com/2013/03/es6-and-rest-parameter.html)
-// This accumulates the arguments passed into an array, after a given index.
-var restArgs = function restArgs(func, startIndex) {
-  startIndex = startIndex == null ? func.length - 1 : +startIndex;
-  return function () {
-    var length = Math.max(arguments.length - startIndex, 0),
-        rest = Array(length),
-        index = 0;
-    for (; index < length; index++) {
-      rest[index] = arguments[index + startIndex];
-    }
-    switch (startIndex) {
-      case 0:
-        return func.call(this, rest);
-      case 1:
-        return func.call(this, arguments[0], rest);
-      case 2:
-        return func.call(this, arguments[0], arguments[1], rest);
-    }
-    var args = Array(startIndex + 1);
-    for (index = 0; index < startIndex; index++) {
-      args[index] = arguments[index];
-    }
-    args[startIndex] = rest;
-    return func.apply(this, args);
-  };
-};
-
-// Delays a function for the given number of milliseconds, and then calls
-// it with the arguments supplied.
-var delay = restArgs(function (func, wait, args) {
-  return setTimeout(function () {
-    return func.apply(null, args);
-  }, wait);
-});
-
-function debounce(func, wait, immediate) {
-  var timeout, result;
-
-  var later = function later(context, args) {
-    timeout = null;
-    if (args) result = func.apply(context, args);
-  };
-
-  var debounced = restArgs(function (args) {
-    if (timeout) clearTimeout(timeout);
-    if (immediate) {
-      var callNow = !timeout;
-      timeout = setTimeout(later, wait);
-      if (callNow) result = func.apply(this, args);
-    } else {
-      timeout = delay(later, wait, this, args);
-    }
-
-    return result;
-  });
-
-  debounced.cancel = function () {
-    clearTimeout(timeout);
-    timeout = null;
-  };
-
-  return debounced;
-}
 
 var Window = function (_Binder) {
   inherits(Window, _Binder);
@@ -1470,14 +1737,14 @@ var defaults$1 = {
   keyboard: true,
 
   /**
-   * Minimal touch-swipe distance needed to change slide. False for turning off touch.
+   * Minimal swipe distance needed to change slide, `false` for turning off touch.
    *
    * @type {Number}
    */
-  touchDistance: 80,
+  swipeDistance: 80,
 
   /**
-   * Minimal mouse drag distance needed to change slide. False for turning off mouse drag.
+   * Minimal mouse drag distance needed to change slide, `false` for turning off mouse drag.
    *
    * @type {Number}
    */
@@ -1639,6 +1906,7 @@ var Glide = function () {
     value: function init() {
       DOM$1.init(this.selector);
       Build$1.init();
+      Swipe$1.init();
       Arrows$1.init();
       Window$1.init();
       Run$1.init();

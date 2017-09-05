@@ -4,7 +4,7 @@
 <style>
   * { margin: 0; padding: 0; bottom: 0; }
   .glide__slide--active .box { border-color: green }
-  .box { border: 1px solid red }
+  .box { display: block; border: 1px solid red }
 </style>
 
 <div id="glide" class="glide">
@@ -15,12 +15,24 @@
 
   <div data-glide="track" class="glide__track">
     <ul class="glide__slides">
-      <li class="glide__slide"><div class="box">1</div></li>
-      <li class="glide__slide" data-glide-autoplay="3000"><div class="box">2</div></li>
-      <li class="glide__slide"><div class="box">3</div></li>
-      <li class="glide__slide"><div class="box">4</div></li>
-      <li class="glide__slide"><div class="box">5</div></li>
-      <li class="glide__slide"><div class="box">6</div></li>
+      <li class="glide__slide">
+        <a class="box" href="#">1</a>
+      </li>
+      <li class="glide__slide" data-glide-autoplay="3000">
+        <a class="box" href="#">2</a>
+      </li>
+      <li class="glide__slide">
+        <a class="box" href="#">3</a>
+      </li>
+      <li class="glide__slide">
+        <a class="box" href="#">4</a>
+      </li>
+      <li class="glide__slide">
+        <a class="box" href="#">5</a>
+      </li>
+      <li class="glide__slide">
+        <a class="box" href="#">6</a>
+      </li>
     </ul>
   </div>
 

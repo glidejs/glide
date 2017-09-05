@@ -5,6 +5,8 @@ import Build from './components/build'
 import Swipe from './components/swipe'
 import Arrows from './components/arrows'
 import Window from './components/window'
+import Anchors from './components/anchors'
+import Callbacks from './components/callbacks'
 
 import Trigger from './events/trigger'
 
@@ -26,11 +28,11 @@ export default class Glide {
     Core.settings = settings
     Core.index = settings.startAt
 
-    new Trigger(settings.beforeInit)
+    Callbacks.call(settings.beforeInit)
 
     this.init()
 
-    new Trigger(settings.afterInit)
+    Callbacks.call(settings.afterInit)
   }
 
   /**
@@ -41,6 +43,7 @@ export default class Glide {
   init() {
     DOM.init(this.selector)
     Build.init()
+    Anchors.init()
     Swipe.init()
     Arrows.init()
     Window.init()

@@ -1133,12 +1133,193 @@ var Events = function () {
       for (var i = 0; i < events.length; i++) {
         el.removeEventListener(events[i], this.listeners[events[i]]);
 
-        delete this.listeners[event];
+        delete this.listeners[events[i]];
       }
     }
   }]);
   return Events;
 }();
+
+var Anchors = function (_Binder) {
+  inherits(Anchors, _Binder);
+
+  /**
+   * Constructs anchors component.
+   */
+  function Anchors() {
+    classCallCheck(this, Anchors);
+
+    var _this = possibleConstructorReturn(this, (Anchors.__proto__ || Object.getPrototypeOf(Anchors)).call(this));
+
+    _this.detached = false;
+    _this.prevented = false;
+    return _this;
+  }
+
+  /**
+   * Binds listeners to all anchors inside glide.
+   *
+   * @return {Void}
+   */
+
+
+  createClass(Anchors, [{
+    key: 'init',
+    value: function init() {
+      this.links = DOM$1.wrapper.querySelectorAll('a');
+
+      this.bind();
+    }
+
+    /**
+     * Bind events to anchors inside track.
+     *
+     * @return {Void}
+     */
+
+  }, {
+    key: 'bind',
+    value: function bind() {
+      this.on('click', DOM$1.wrapper, this.click.bind(this));
+    }
+
+    /**
+     * Handler for click event. Prevents click
+     * when glide is in prevent status.
+     *
+     * @param  {Object} event
+     * @return {Void}
+     */
+
+  }, {
+    key: 'click',
+    value: function click(event) {
+      event.stopPropagation();
+
+      if (this.prevented) {
+        event.preventDefault();
+      }
+    }
+
+    /**
+     * Detaches anchors click event inside glide.
+     *
+     * @return {self}
+     */
+
+  }, {
+    key: 'detach',
+    value: function detach() {
+      if (!this.detached) {
+        for (var i = 0; i < this.links.length; i++) {
+          this.links[i].draggable = false;
+
+          this.links[i].dataset.href = this.links[i].getAttribute('href');
+
+          this.links[i].removeAttribute('href');
+        }
+
+        this.detached = true;
+      }
+
+      return this;
+    }
+
+    /**
+     * Attaches anchors click events inside glide.
+     *
+     * @return {self}
+     */
+
+  }, {
+    key: 'attach',
+    value: function attach() {
+      if (this.detached) {
+        for (var i = 0; i < this.links.length; i++) {
+          this.links[i].draggable = true;
+
+          this.links[i].setAttribute('href', this.links[i].dataset.href);
+
+          delete this.links[i].dataset.href;
+        }
+
+        this.detached = false;
+      }
+
+      return this;
+    }
+
+    /**
+     * Sets `prevented` status so anchors inside track are not clickable.
+     *
+     * @return {self}
+     */
+
+  }, {
+    key: 'prevent',
+    value: function prevent() {
+      this.prevented = true;
+
+      return this;
+    }
+
+    /**
+     * Unsets `prevented` status so anchors inside track are clickable.
+     *
+     * @return {self}
+     */
+
+  }, {
+    key: 'unprevent',
+    value: function unprevent() {
+      this.prevented = false;
+
+      return this;
+    }
+  }]);
+  return Anchors;
+}(Events);
+
+var Anchors$1 = new Anchors();
+
+var Callbacks = function () {
+  function Callbacks() {
+    classCallCheck(this, Callbacks);
+  }
+
+  createClass(Callbacks, [{
+    key: 'call',
+
+    /**
+     * Calls callback with attributes.
+     *
+     * @param {Function} closure
+     * @return {self}
+     */
+    value: function call(closure) {
+      if (closure !== 'undefined' && typeof closure === 'function') {
+        closure(this.attrs);
+      }
+    }
+
+    /**
+     * Gets attributes for events callback's parameter.
+     *
+     * @return {Object}
+     */
+
+  }, {
+    key: 'attrs',
+    get: function get$$1() {
+      return {
+        index: Core$1.index
+      };
+    }
+  }]);
+  return Callbacks;
+}();
+
+var Callbacks$1 = new Callbacks();
 
 // Similar to ES6's rest param (http://ariya.ofilabs.com/2013/03/es6-and-rest-parameter.html)
 // This accumulates the arguments passed into an array, after a given index.
@@ -1208,12 +1389,12 @@ function debounce(func, wait, immediate) {
 var START_EVENTS = ['touchstart', 'mousedown'];
 var MOVE_EVENTS = ['touchmove', 'mousemove'];
 var END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave'];
+var MOUSE_EVENTS = ['mousedown', 'mousemove', 'mouseup', 'mouseleave'];
 
+var distance = 0;
+var swipeSin = 0;
 var swipeStartX = 0;
 var swipeStartY = 0;
-var swipeSin = 0;
-var distance = 0;
-var limiter = 0;
 
 var Swipe = function (_Binder) {
   inherits(Swipe, _Binder);
@@ -1246,7 +1427,7 @@ var Swipe = function (_Binder) {
     key: 'start',
     value: function start(event) {
       if (this.enabled) {
-        var swipe = event.type === 'mousedown' ? event : event.touches[0] || event.changedTouches[0];
+        var swipe = this.touches(event);
 
         this.disable();
 
@@ -1256,13 +1437,16 @@ var Swipe = function (_Binder) {
 
         this.bindSwipeMove();
         this.bindSwipeEnd();
+
+        Run$1.stop();
+        Callbacks$1.call(Core$1.settings.swipeStart);
       }
     }
   }, {
     key: 'move',
     value: function move(event) {
       if (this.enabled) {
-        var swipe = event.type === 'mousemove' ? event : event.touches[0] || event.changedTouches[0];
+        var swipe = this.touches(event);
 
         var subExSx = parseInt(swipe.pageX) - swipeStartX;
         var subEySy = parseInt(swipe.pageY) - swipeStartY;
@@ -1286,49 +1470,31 @@ var Swipe = function (_Binder) {
         } else {
           return;
         }
+
+        Anchors$1.prevent().detach();
       }
     }
   }, {
     key: 'end',
     value: function end(event) {
       if (this.enabled) {
-        var swipe = event.type === 'mouseup' || event.type === 'mouseleave' ? event : event.touches[0] || event.changedTouches[0];
-
-        var swipeDistance = swipe.pageX - swipeStartX;
-        var swipeDeg = swipeSin * 180 / Math.PI;
+        var swipe = this.touches(event);
+        var _limiter = this.limiter(event);
 
         this.enable();
 
-        if (Core$1.isType('slider')) {
-          if (Run$1.isStart()) {
-            if (swipeDistance > 0) {
-              swipeDistance = 0;
-            }
-          }
-
-          if (Run$1.isEnd()) {
-            if (swipeDistance < 0) {
-              swipeDistance = 0;
-            }
-          }
-        }
-
-        if (event.type === 'mouseup' || event.type === 'mouseleave') {
-          limiter = Core$1.settings.dragDistance;
-        } else {
-          limiter = Core$1.settings.swipeDistance;
-        }
-
+        var swipeDistance = swipe.pageX - swipeStartX;
+        var swipeDeg = swipeSin * 180 / Math.PI;
         var steps = Math.round(swipeDistance / Dimensions$1.slideWidth);
 
         // While swipe is positive and greater than
         // distance set in options move backward.
-        if (swipeDistance > limiter && swipeDeg < 45) {
+        if (swipeDistance > _limiter && swipeDeg < 45) {
           Run$1.make('<' + steps);
         }
         // While swipe is negative and lower than negative
         // distance set in options move forward.
-        else if (swipeDistance < -limiter && swipeDeg < 45) {
+        else if (swipeDistance < -_limiter && swipeDeg < 45) {
             Run$1.make('>' + steps);
           }
           // While swipe don't reach distance apply previous transform.
@@ -1336,11 +1502,16 @@ var Swipe = function (_Binder) {
               Animation$1.make();
             }
 
-        // Remove dragging class and unbind events.
         DOM$1.wrapper.classList.remove(Core$1.settings.classes.dragging);
 
         this.unbindSwipeMove();
         this.unbindSwipeEnd();
+
+        Animation$1.after(function () {
+          Run$1.init();
+          Anchors$1.unprevent().attach();
+        });
+        Callbacks$1.call(Core$1.settings.swipeEnd);
       }
     }
 
@@ -1421,6 +1592,32 @@ var Swipe = function (_Binder) {
     key: 'unbindSwipeEnd',
     value: function unbindSwipeEnd() {
       this.off(END_EVENTS, DOM$1.wrapper);
+    }
+  }, {
+    key: 'touches',
+    value: function touches(event) {
+      if (MOUSE_EVENTS.includes(event.type)) {
+        return event;
+      }
+
+      return event.touches[0] || event.changedTouches[0];
+    }
+
+    /**
+     * Gets value of minimum swipe distance.
+     * Returns value based on event type.
+     *
+     * @return {Number}
+     */
+
+  }, {
+    key: 'limiter',
+    value: function limiter(event) {
+      if (MOUSE_EVENTS.includes(event.type)) {
+        return Core$1.settings.dragDistance;
+      }
+
+      return Core$1.settings.swipeDistance;
     }
 
     /**
@@ -1878,11 +2075,11 @@ var Glide = function () {
     Core$1.settings = settings;
     Core$1.index = settings.startAt;
 
-    new Trigger(settings.beforeInit);
+    Callbacks$1.call(settings.beforeInit);
 
     this.init();
 
-    new Trigger(settings.afterInit);
+    Callbacks$1.call(settings.afterInit);
   }
 
   /**
@@ -1897,6 +2094,7 @@ var Glide = function () {
     value: function init() {
       DOM$1.init(this.selector);
       Build$1.init();
+      Anchors$1.init();
       Swipe$1.init();
       Arrows$1.init();
       Window$1.init();

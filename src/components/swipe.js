@@ -2,6 +2,8 @@ import DOM from './dom'
 import Run from './run'
 import Core from './core'
 import Build from './build'
+import Anchors from './anchors'
+import Callbacks from './callbacks'
 import Animation from './animation'
 import Dimensions from './dimensions'
 import Transition from './transition'
@@ -13,6 +15,7 @@ import debounce from '../utils/debounce'
 const START_EVENTS = ['touchstart', 'mousedown']
 const MOVE_EVENTS = ['touchmove', 'mousemove']
 const END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave']
+const MOUSE_EVENTS = ['mousedown', 'mousemove', 'mouseup', 'mouseleave']
 
 let limiter = 0
 let distance = 0
@@ -41,7 +44,7 @@ class Swipe extends Binder {
 
   start(event) {
     if (this.enabled) {
-      let swipe = (event.type === 'mousedown') ? event : (event.touches[0] || event.changedTouches[0])
+      let swipe = this.touches(event)
 
       this.disable()
 
@@ -51,12 +54,15 @@ class Swipe extends Binder {
 
       this.bindSwipeMove()
       this.bindSwipeEnd()
+
+      Run.stop()
+      Callbacks.call(Core.settings.swipeStart)
     }
   }
 
   move(event) {
     if (this.enabled) {
-      let swipe = (event.type === 'mousemove') ? event : (event.touches[0] || event.changedTouches[0])
+      let swipe = this.touches(event)
 
       let subExSx = parseInt(swipe.pageX) - swipeStartX
       let subEySy = parseInt(swipe.pageY) - swipeStartY
@@ -80,38 +86,20 @@ class Swipe extends Binder {
       } else {
         return
       }
+
+      Anchors.prevent().detach()
     }
   }
 
   end(event) {
     if (this.enabled) {
-      let swipe = (event.type === 'mouseup' || event.type === 'mouseleave') ? event : (event.touches[0] || event.changedTouches[0])
-
-      let swipeDistance = swipe.pageX - swipeStartX
-      let swipeDeg = swipeSin * 180 / Math.PI
+      let swipe = this.touches(event)
+      let limiter = this.limiter(event)
 
       this.enable()
 
-      if (Core.isType('slider')) {
-        if (Run.isStart()) {
-          if (swipeDistance > 0) {
-              swipeDistance = 0
-          }
-        }
-
-        if (Run.isEnd()) {
-          if (swipeDistance < 0) {
-            swipeDistance = 0
-          }
-        }
-      }
-
-      if (event.type === 'mouseup' || event.type === 'mouseleave') {
-        limiter = Core.settings.dragDistance
-      } else {
-        limiter = Core.settings.swipeDistance
-      }
-
+      let swipeDistance = swipe.pageX - swipeStartX
+      let swipeDeg = swipeSin * 180 / Math.PI
       let steps = Math.round(swipeDistance/Dimensions.slideWidth)
 
       // While swipe is positive and greater than
@@ -129,11 +117,16 @@ class Swipe extends Binder {
         Animation.make()
       }
 
-      // Remove dragging class and unbind events.
       DOM.wrapper.classList.remove(Core.settings.classes.dragging)
 
       this.unbindSwipeMove()
       this.unbindSwipeEnd()
+
+      Animation.after(() => {
+        Run.init()
+        Anchors.unprevent().attach()
+      })
+      Callbacks.call(Core.settings.swipeEnd)
     }
   }
 
@@ -196,6 +189,28 @@ class Swipe extends Binder {
    */
   unbindSwipeEnd() {
     this.off(END_EVENTS, DOM.wrapper)
+  }
+
+  touches(event) {
+    if (MOUSE_EVENTS.includes(event.type)) {
+      return event
+    }
+
+    return event.touches[0] || event.changedTouches[0]
+  }
+
+  /**
+   * Gets value of minimum swipe distance.
+   * Returns value based on event type.
+   *
+   * @return {Number}
+   */
+  limiter(event) {
+    if (MOUSE_EVENTS.includes(event.type)) {
+      return Core.settings.dragDistance
+    }
+
+    return Core.settings.swipeDistance
   }
 
   /**

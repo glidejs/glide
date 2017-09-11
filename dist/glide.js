@@ -1826,6 +1826,67 @@ var Window = function (_Binder) {
 
 var Window$1 = new Window();
 
+var Images = function (_Binder) {
+  inherits(Images, _Binder);
+
+  function Images() {
+    classCallCheck(this, Images);
+    return possibleConstructorReturn(this, (Images.__proto__ || Object.getPrototypeOf(Images)).apply(this, arguments));
+  }
+
+  createClass(Images, [{
+    key: 'init',
+
+    /**
+     * Binds listener to glide wrapper.
+     *
+     * @return {Void}
+     */
+    value: function init() {
+      this.bind();
+    }
+
+    /**
+     * Binds `dragstart` event on wrapper to prevent dragging images.
+     *
+     * @return {Void}
+     */
+
+  }, {
+    key: 'bind',
+    value: function bind() {
+      this.on('dragstart', DOM$1.wrapper, this.dragstart);
+    }
+
+    /**
+     * Unbinds `dragstart` event on wrapper.
+     *
+     * @return {Void}
+     */
+
+  }, {
+    key: 'unbind',
+    value: function unbind() {
+      this.off('dragstart', DOM$1.wrapper, this.dragstart);
+    }
+
+    /**
+     * Event handler. Prevents dragging.
+     *
+     * @return {Void}
+     */
+
+  }, {
+    key: 'dragstart',
+    value: function dragstart(event) {
+      event.preventDefault();
+    }
+  }]);
+  return Images;
+}(Events);
+
+var Images$1 = new Images();
+
 var Trigger = function () {
   /**
    * Calls callback with attributes.
@@ -2095,6 +2156,7 @@ var Glide = function () {
       DOM$1.init(this.selector);
       Build$1.init();
       Anchors$1.init();
+      Images$1.init();
       Swipe$1.init();
       Arrows$1.init();
       Window$1.init();

@@ -5,6 +5,7 @@ import Build from './components/build'
 import Swipe from './components/swipe'
 import Arrows from './components/arrows'
 import Window from './components/window'
+import Images from './components/images'
 import Anchors from './components/anchors'
 import Callbacks from './components/callbacks'
 
@@ -44,6 +45,7 @@ export default class Glide {
     DOM.init(this.selector)
     Build.init()
     Anchors.init()
+    Images.init()
     Swipe.init()
     Arrows.init()
     Window.init()

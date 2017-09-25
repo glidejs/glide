@@ -4,11 +4,10 @@ import { exist } from '../utils/dom'
 class DOM {
   /**
    * Setup slider HTML nodes.
-   * 
+   *
    * @param {Glide} glide
    */
   init(glide) {
-    console.log(glide.selector)
     this.element = glide.selector
 
     this.track = this.element.querySelector('[data-glide="track"]')

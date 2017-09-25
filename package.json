@@ -27,7 +27,7 @@
     "build:css": "npm run build:css:core && npm run build:css:theme",
     "build:js": "rollup --config build/build.js && rollup --config build/build.compressed.js",
     "build": "npm run build:css && npm run build:js",
-    "test": "jest tests",
+    "test": "jest tests --coverage",
     "watch": "npm-watch"
   },
   "watch": {

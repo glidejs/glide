@@ -4,11 +4,19 @@ import Build from './build'
 import Animation from './animation'
 
 class Run {
+  /**
+   * Constructs run component.
+   */
   constructor() {
     this.flag = false
     this.running = false
   }
 
+  /**
+   * Initializes autorunning of the glide.
+   * 
+   * @return {self}
+   */
   init() {
     if (Core.settings.autoplay || this.running) {
       if (typeof this.interval === 'undefined') {
@@ -21,6 +29,11 @@ class Run {
     return this
   }
 
+  /**
+   * Stops autorunning of the glide.
+   * 
+   * @return {self}
+   */
   stop() {
     if (Core.settings.autoplay || this.running) {
       if (this.interval >= 0) {
@@ -31,6 +44,13 @@ class Run {
     return this
   }
 
+  /**
+   * Handles glide status. Calculates current index 
+   * based on passed move and slider type.
+   * 
+   * @param {String} move 
+   * @param {Function} callback 
+   */
   make(move, callback) {
     this.direction = move.substr(0, 1)
     this.steps = (move.substr(1)) ? parseInt(move.substr(1)) : 0

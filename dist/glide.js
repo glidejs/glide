@@ -310,7 +310,14 @@ var possibleConstructorReturn = function (self, call) {
   return call && (typeof call === "object" || typeof call === "function") ? call : self;
 };
 
-var Engine = function Engine(glide, components) {
+var Engine =
+/**
+ * Constructs the engine.
+ * 
+ * @param {Glide} glide 
+ * @param {Object} components 
+ */
+function Engine(glide, components) {
   classCallCheck(this, Engine);
 
   for (var component in components) {
@@ -606,12 +613,25 @@ var Dimensions = function () {
 
   createClass(Dimensions, [{
     key: 'apply',
+
+    /**
+     * Applys dimentions to the glide HTML elements.
+     * 
+     * @return {Void}
+     */
     value: function apply() {
       var dimention = this.dimention.size;
 
       this.setupSlides(dimention);
       this.setupWrapper(dimention);
     }
+
+    /**
+     * Setups dimentions of slides.
+     * 
+     * @return {Void}
+     */
+
   }, {
     key: 'setupSlides',
     value: function setupSlides(dimention) {
@@ -619,11 +639,25 @@ var Dimensions = function () {
         DOM$1.slides[i].style[dimention] = this.slideSize + 'px';
       }
     }
+
+    /**
+     * Setups dimentions of slides wrapper.
+     * 
+     * @return {Void}
+     */
+
   }, {
     key: 'setupWrapper',
     value: function setupWrapper(dimention) {
       DOM$1.wrapper.style[dimention] = this.wrapperSize + 'px';
     }
+
+    /**
+     * Gets dimentions map for current glide's mode.
+     * 
+     * @return {Object}
+     */
+
   }, {
     key: 'dimention',
     get: function get$$1() {
@@ -634,6 +668,13 @@ var Dimensions = function () {
         axis: MODE_TO_DIMENSIONS[settings.mode][1]
       };
     }
+
+    /**
+     * Gets size of the single slide.
+     * 
+     * @return {Number}
+     */
+
   }, {
     key: 'slideSize',
     get: function get$$1() {
@@ -645,26 +686,61 @@ var Dimensions = function () {
 
       return this.slideWidth;
     }
+
+    /**
+     * Gets size of the slides wrapper.
+     * 
+     * @return {Number}
+     */
+
   }, {
     key: 'wrapperSize',
     get: function get$$1() {
       return this.slideSize * this.length;
     }
+
+    /**
+     * Gets count number of the slides.
+     * 
+     * @return {Number}
+     */
+
   }, {
     key: 'length',
     get: function get$$1() {
       return DOM$1.slides.length;
     }
+
+    /**
+     * Gets width value of the glide.
+     * 
+     * @return {Number}
+     */
+
   }, {
     key: 'width',
     get: function get$$1() {
       return DOM$1.element.offsetWidth;
     }
+
+    /**
+     * Gets height value of the glide.
+     * 
+     * @return {Number}
+     */
+
   }, {
     key: 'height',
     get: function get$$1() {
       return DOM$1.element.offsetHeight;
     }
+
+    /**
+     * Gets width value of the single slide.
+     * 
+     * @return {Number}
+     */
+
   }, {
     key: 'slideWidth',
     get: function get$$1() {
@@ -672,6 +748,13 @@ var Dimensions = function () {
 
       return DOM$1.element.offsetWidth / perView - Peek$1.value / perView;
     }
+
+    /**
+     * Gets height value of the single slide.
+     * 
+     * @return {Number}
+     */
+
   }, {
     key: 'slideHeight',
     get: function get$$1() {
@@ -686,22 +769,42 @@ var Dimensions = function () {
 var Dimensions$1 = new Dimensions();
 
 var Peek = function () {
+  /**
+   * Construct peek component.
+   */
   function Peek() {
     classCallCheck(this, Peek);
 
     this.size = 0;
   }
 
+  /**
+   * Setups how much to peek based on settings.
+   * 
+   * @return {Void}
+   */
+
+
   createClass(Peek, [{
     key: 'init',
     value: function init() {
       this.value = Core$1.settings.peek;
     }
+
+    /**
+     * Gets value of the peek.
+     */
+
   }, {
     key: 'value',
     get: function get$$1() {
       return this.size;
-    },
+    }
+
+    /**
+     * Sets value of the peek.
+     */
+    ,
     set: function set$$1(value) {
       if (typeof value === 'string') {
         var normalized = parseInt(value, 10);
@@ -1142,12 +1245,22 @@ var Build = function () {
 var Build$1 = new Build();
 
 var Run = function () {
+  /**
+   * Constructs run component.
+   */
   function Run() {
     classCallCheck(this, Run);
 
     this.flag = false;
     this.running = false;
   }
+
+  /**
+   * Initializes autorunning of the glide.
+   * 
+   * @return {self}
+   */
+
 
   createClass(Run, [{
     key: 'init',
@@ -1164,6 +1277,13 @@ var Run = function () {
 
       return this;
     }
+
+    /**
+     * Stops autorunning of the glide.
+     * 
+     * @return {self}
+     */
+
   }, {
     key: 'stop',
     value: function stop() {
@@ -1175,6 +1295,15 @@ var Run = function () {
 
       return this;
     }
+
+    /**
+     * Handles glide status. Calculates current index 
+     * based on passed move and slider type.
+     * 
+     * @param {String} move 
+     * @param {Function} callback 
+     */
+
   }, {
     key: 'make',
     value: function make(move, callback) {
@@ -1627,7 +1756,7 @@ var Swipe = function (_Binder) {
   }
 
   /**
-   * Inits swipe bindings.
+   * Initializes swipe bindings.
    *
    * @return {Void}
    */
@@ -1638,6 +1767,15 @@ var Swipe = function (_Binder) {
     value: function init() {
       this.bindSwipeStart();
     }
+
+    /**
+     * Handler for `swipestart` event. 
+     * Calculates entry points of the user's tap.
+     * 
+     * @param {Object} event 
+     * @return {Void}
+     */
+
   }, {
     key: 'start',
     value: function start(event) {
@@ -1657,6 +1795,14 @@ var Swipe = function (_Binder) {
         Callbacks$1.call(Core$1.settings.swipeStart);
       }
     }
+
+    /**
+     * Handler for `swipemove` event. 
+     * Calculates user's tap angle and distance. 
+     * 
+     * @param {Object} event 
+     */
+
   }, {
     key: 'move',
     value: function move(event) {
@@ -1689,6 +1835,15 @@ var Swipe = function (_Binder) {
         Anchors$1.prevent().detach();
       }
     }
+
+    /**
+     * Handler for `swipeend` event. Finitializes 
+     * user's tap and decides about glide move.
+     * 
+     * @param {Object} event 
+     * @return {Void}
+     */
+
   }, {
     key: 'end',
     value: function end(event) {
@@ -2010,19 +2165,44 @@ var Window = function (_Binder) {
 
   createClass(Window, [{
     key: 'init',
+
+    /**
+     * Initializes window bindings.
+     */
     value: function init() {
       this.bind();
     }
+
+    /**
+     * Binds `rezsize` listener to the window. 
+     * It's a costly event, so we are debouncing it.
+     * 
+     * @return {Void}
+     */
+
   }, {
     key: 'bind',
     value: function bind() {
       this.on('resize', window, debounce(this.resize, Core$1.settings.debounce));
     }
+
+    /**
+     * Unbinds listeners from the window.
+     * 
+     * @return {Void}
+     */
+
   }, {
     key: 'unbind',
     value: function unbind() {
       this.off('resize', window);
     }
+
+    /**
+     * Handler for `resize` event. Rebuilds glide, 
+     * so its status matches new dimentions.
+     */
+
   }, {
     key: 'resize',
     value: function resize() {

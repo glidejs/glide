@@ -34,7 +34,7 @@ class Swipe extends Binder {
   }
 
   /**
-   * Inits swipe bindings.
+   * Initializes swipe bindings.
    *
    * @return {Void}
    */
@@ -42,6 +42,13 @@ class Swipe extends Binder {
     this.bindSwipeStart()
   }
 
+  /**
+   * Handler for `swipestart` event. 
+   * Calculates entry points of the user's tap.
+   * 
+   * @param {Object} event 
+   * @return {Void}
+   */
   start(event) {
     if (this.enabled) {
       let swipe = this.touches(event)
@@ -60,6 +67,12 @@ class Swipe extends Binder {
     }
   }
 
+  /**
+   * Handler for `swipemove` event. 
+   * Calculates user's tap angle and distance. 
+   * 
+   * @param {Object} event 
+   */
   move(event) {
     if (this.enabled) {
       let swipe = this.touches(event)
@@ -91,6 +104,13 @@ class Swipe extends Binder {
     }
   }
 
+  /**
+   * Handler for `swipeend` event. Finitializes 
+   * user's tap and decides about glide move.
+   * 
+   * @param {Object} event 
+   * @return {Void}
+   */
   end(event) {
     if (this.enabled) {
       let swipe = this.touches(event)

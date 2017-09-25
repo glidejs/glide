@@ -1,7 +1,7 @@
 import DOM from './dom'
 import Core from './core'
 
-import Binder from '../events/binder'
+import Binder from '../binder'
 
 class Images extends Binder {
   /**

@@ -3,7 +3,7 @@ import Core from './core'
 import Build from './build'
 import Transition from './transition'
 
-import Binder from '../events/binder'
+import Binder from '../binder'
 
 import debounce from '../utils/debounce'
 
@@ -21,7 +21,7 @@ class Window extends Binder {
   }
 
   resize() {
-    if(! Core.destroyed) {
+    if (!Core.destroyed) {
       Transition.disable()
 
       Build.init()

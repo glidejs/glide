@@ -32,9 +32,9 @@ class Translate {
    * @return {self}
    */
   set(value) {
-      DOM.wrapper.style.transform = this.get(value)
+    DOM.wrapper.style.transform = this.get(value)
 
-      return this
+    return this
   }
 }
 

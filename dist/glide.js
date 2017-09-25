@@ -10,48 +10,209 @@
 	(global.Glide = factory());
 }(this, (function () { 'use strict';
 
-/**
- * Outputs warning message to the boswer console.
- *
- * @param  {String} msg
- * @return {Void}
- */
-function warn(msg) {
-  console.error("[Glide warn]: " + msg);
-}
+var defaults = {
+  /**
+   * Type of the slides movements. Available types:
+   * `slider` - Rewinds slider to the start/end when it reaches first or last slide.
+   * `carousel` - Changes slides without starting over when it reaches first or last slide.
+   * `slideshow` - Changes slides with fade effect.
+   *
+   * @type {String}
+   */
+  type: 'slider',
 
-/**
- * Finds siblings elements of the passed node.
- *
- * @param  {HTMLElement} node
- * @return {Array}
- */
-function siblings(node) {
-  var n = node.parentNode.firstChild;
-  var matched = [];
+  /**
+   * Direction of the slider movements. Available modes:
+   * `horizontal` - Move slider on X axis.
+   * `vertical` - Move slider on Y axis.
+   *
+   * @type {String}
+   */
+  mode: 'horizontal',
 
-  for (; n; n = n.nextSibling) {
-    if (n.nodeType === 1 && n !== node) {
-      matched.push(n);
-    }
-  }
+  /**
+   * Start at specifed slide zero-based index.
+   *
+   * @type {Number}
+   */
+  startAt: 0,
 
-  return matched;
-}
+  /**
+   * Number of slides visible on viewport.
+   *
+   * @type {Number}
+   */
+  perView: 1,
 
-/**
- * Checks if precised node exist and is a valid element.
- *
- * @param  {HTMLElement} node
- * @return {Boolean}
- */
-function exist(node) {
-  if (node && node instanceof HTMLElement) {
-    return true;
-  }
+  /**
+   * Focus currently active slide at specifed position in the track. Available inputs:
+   * `center` - Current slide will be always focused at the center of track.
+   * `(1,2,3...)` - Current slide will be focused at the specifed position number.
+   *
+   * @type {String|Number}
+   */
+  focusAt: 'center',
 
-  return false;
-}
+  /**
+   * Change slides after specifed interval.
+   * Use false for turning off autoplay.
+   *
+   * @type {Number|Boolean}
+   */
+  autoplay: 4000,
+
+  /**
+   * Stop autoplay on mouseover.
+   *
+   * @type {Boolean}
+   */
+  hoverpause: true,
+
+  /**
+   * Allow for changing slides with keyboard left and right arrows.
+   *
+   * @type {Boolean}
+   */
+  keyboard: true,
+
+  /**
+   * Minimal swipe distance needed to change slide, `false` for turning off touch.
+   *
+   * @type {Number}
+   */
+  swipeDistance: 80,
+
+  /**
+   * Minimal mouse drag distance needed to change slide, `false` for turning off mouse drag.
+   *
+   * @type {Number}
+   */
+  dragDistance: 120,
+
+  /**
+   * Duration of the animation in milliseconds.
+   *
+   * @type {Number}
+   */
+  animationDuration: 400,
+
+  /**
+   * Easing function for animation.
+   *
+   * @type {String}
+   */
+  animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
+
+  /**
+   * Optimalize resize events. Call at most once per every wait in milliseconds.
+   *
+   * @type {Number}
+   */
+  debounce: 200,
+
+  /**
+   * Set height of the slider based on current slide content.
+   *
+   * @type {Boolean}
+   */
+  autoheight: false,
+
+  /**
+   * Distance value of the next and previous viewports which have to be
+   * peeked in current view. Can be number, percentage or pixels.
+   *
+   * @type {Number|String}
+   */
+  peek: 0,
+
+  /**
+   * List of internally used DOM classes.
+   *
+   * @type {Object}
+   */
+  classes: {
+    horizontal: 'glide--horizontal',
+    vertical: 'glide--vertical',
+    slider: 'glide--slider',
+    carousel: 'glide--carousel',
+    slideshow: 'glide--slideshow',
+    dragging: 'glide--dragging',
+    cloneSlide: 'glide__slide--clone',
+    activeSlide: 'glide__slide--active',
+    disabledArrow: 'glide__arrow--disabled',
+    activeBullet: 'glide__bullet--active'
+  },
+
+  /**
+   * Additional slider extension components.
+   * 
+   * @type {Object}
+   */
+  extensions: {},
+
+  /**
+   * Callback that fires before a slider initialization.
+   *
+   * @param {Object} event
+   */
+  beforeInit: function beforeInit(event) {},
+
+
+  /**
+   * Callback that fires after a slider initialization.
+   *
+   * @param {Object} event
+   */
+  afterInit: function afterInit(event) {},
+
+
+  /**
+   * Callback that fires before a slide change.
+   *
+   * @param {Object} event
+   */
+  beforeTransition: function beforeTransition(event) {},
+
+
+  /**
+   * Callback that fires during changing of a slide.
+   *
+   * @param {Object} event
+   */
+  duringTransition: function duringTransition(event) {},
+
+
+  /**
+   * Callback that fires after a slide change.
+   *
+   * @param {Object} event
+   */
+  afterTransition: function afterTransition(event) {},
+
+
+  /**
+   * Callback that fires on start of touch/drag interaction.
+   *
+   * @param {Object} event
+   */
+  swipeStart: function swipeStart(event) {},
+
+
+  /**
+   * Callback that fires during touch/drag interaction.
+   *
+   * @param {Object} event
+   */
+  swipeMove: function swipeMove(event) {},
+
+
+  /**
+   * Callback that fires on end of touch/drag interaction.
+   *
+   * @param {Object} event
+   */
+  swipeEnd: function swipeEnd(event) {}
+};
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
@@ -149,6 +310,57 @@ var possibleConstructorReturn = function (self, call) {
   return call && (typeof call === "object" || typeof call === "function") ? call : self;
 };
 
+var Engine = function Engine(glide, components) {
+  classCallCheck(this, Engine);
+
+  for (var component in components) {
+    components[component].init(glide);
+  }
+};
+
+/**
+ * Outputs warning message to the boswer console.
+ *
+ * @param  {String} msg
+ * @return {Void}
+ */
+function warn(msg) {
+  console.error("[Glide warn]: " + msg);
+}
+
+/**
+ * Finds siblings elements of the passed node.
+ *
+ * @param  {HTMLElement} node
+ * @return {Array}
+ */
+function siblings(node) {
+  var n = node.parentNode.firstChild;
+  var matched = [];
+
+  for (; n; n = n.nextSibling) {
+    if (n.nodeType === 1 && n !== node) {
+      matched.push(n);
+    }
+  }
+
+  return matched;
+}
+
+/**
+ * Checks if precised node exist and is a valid element.
+ *
+ * @param  {HTMLElement} node
+ * @return {Boolean}
+ */
+function exist(node) {
+  if (node && node instanceof HTMLElement) {
+    return true;
+  }
+
+  return false;
+}
+
 var DOM = function () {
   function DOM() {
     classCallCheck(this, DOM);
@@ -159,9 +371,12 @@ var DOM = function () {
 
     /**
      * Setup slider HTML nodes.
+     * 
+     * @param {Glide} glide
      */
-    value: function init(element) {
-      this.element = element;
+    value: function init(glide) {
+      console.log(glide.selector);
+      this.element = glide.selector;
 
       this.track = this.element.querySelector('[data-glide="track"]');
       this.arrows = this.element.querySelector('[data-glide="arrows"]');
@@ -1080,13 +1295,13 @@ var Run = function () {
 
 var Run$1 = new Run();
 
-var Events = function () {
+var Binder = function () {
   /**
    * Construct events.
    */
-  function Events() {
+  function Binder() {
     var listeners = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    classCallCheck(this, Events);
+    classCallCheck(this, Binder);
 
     this.listeners = listeners;
   }
@@ -1101,7 +1316,7 @@ var Events = function () {
    */
 
 
-  createClass(Events, [{
+  createClass(Binder, [{
     key: 'on',
     value: function on(events, el, closure) {
       if (typeof events === 'string') {
@@ -1137,7 +1352,7 @@ var Events = function () {
       }
     }
   }]);
-  return Events;
+  return Binder;
 }();
 
 var Anchors = function (_Binder) {
@@ -1278,7 +1493,7 @@ var Anchors = function (_Binder) {
     }
   }]);
   return Anchors;
-}(Events);
+}(Binder);
 
 var Anchors$1 = new Anchors();
 
@@ -1665,7 +1880,7 @@ var Swipe = function (_Binder) {
     }
   }]);
   return Swipe;
-}(Events);
+}(Binder);
 
 var Swipe$1 = new Swipe();
 
@@ -1781,7 +1996,7 @@ var Arrows = function (_Binder) {
     }
   }]);
   return Arrows;
-}(Events);
+}(Binder);
 
 var Arrows$1 = new Arrows();
 
@@ -1822,7 +2037,7 @@ var Window = function (_Binder) {
     }
   }]);
   return Window;
-}(Events);
+}(Binder);
 
 var Window$1 = new Window();
 
@@ -1883,238 +2098,19 @@ var Images = function (_Binder) {
     }
   }]);
   return Images;
-}(Events);
+}(Binder);
 
 var Images$1 = new Images();
 
-var Trigger = function () {
-  /**
-   * Calls callback with attributes.
-   *
-   * @param {Function} closure
-   * @return {self}
-   */
-  function Trigger(closure) {
-    classCallCheck(this, Trigger);
-
-    if (closure !== 'undefined' && typeof closure === 'function') {
-      closure(this.attrs);
-    }
-  }
-
-  /**
-   * Gets attributes for events callback's parameter.
-   *
-   * @return {Object}
-   */
-
-
-  createClass(Trigger, [{
-    key: 'attrs',
-    get: function get$$1() {
-      return {
-        index: Core$1.index
-      };
-    }
-  }]);
-  return Trigger;
-}();
-
-var defaults$1 = {
-  /**
-   * Type of the slides movements. Available types:
-   * `slider` - Rewinds slider to the start/end when it reaches first or last slide.
-   * `carousel` - Changes slides without starting over when it reaches first or last slide.
-   * `slideshow` - Changes slides with fade effect.
-   *
-   * @type {String}
-   */
-  type: 'slider',
-
-  /**
-   * Direction of the slider movements. Available modes:
-   * `horizontal` - Move slider on X axis.
-   * `vertical` - Move slider on Y axis.
-   *
-   * @type {String}
-   */
-  mode: 'horizontal',
-
-  /**
-   * Start at specifed slide zero-based index.
-   *
-   * @type {Number}
-   */
-  startAt: 0,
-
-  /**
-   * Number of slides visible on viewport.
-   *
-   * @type {Number}
-   */
-  perView: 1,
-
-  /**
-   * Focus currently active slide at specifed position in the track. Available inputs:
-   * `center` - Current slide will be always focused at the center of track.
-   * `(1,2,3...)` - Current slide will be focused at the specifed position number.
-   *
-   * @type {String|Number}
-   */
-  focusAt: 'center',
-
-  /**
-   * Change slides after specifed interval.
-   * Use false for turning off autoplay.
-   *
-   * @type {Number|Boolean}
-   */
-  autoplay: 4000,
-
-  /**
-   * Stop autoplay on mouseover.
-   *
-   * @type {Boolean}
-   */
-  hoverpause: true,
-
-  /**
-   * Allow for changing slides with keyboard left and right arrows.
-   *
-   * @type {Boolean}
-   */
-  keyboard: true,
-
-  /**
-   * Minimal swipe distance needed to change slide, `false` for turning off touch.
-   *
-   * @type {Number}
-   */
-  swipeDistance: 80,
-
-  /**
-   * Minimal mouse drag distance needed to change slide, `false` for turning off mouse drag.
-   *
-   * @type {Number}
-   */
-  dragDistance: 120,
-
-  /**
-   * Duration of the animation in milliseconds.
-   *
-   * @type {Number}
-   */
-  animationDuration: 400,
-
-  /**
-   * Easing function for animation.
-   *
-   * @type {String}
-   */
-  animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
-
-  /**
-   * Optimalize resize events. Call at most once per every wait in milliseconds.
-   *
-   * @type {Number}
-   */
-  debounce: 200,
-
-  /**
-   * Set height of the slider based on current slide content.
-   *
-   * @type {Boolean}
-   */
-  autoheight: false,
-
-  /**
-   * Distance value of the next and previous viewports which have to be
-   * peeked in current view. Can be number, percentage or pixels.
-   *
-   * @type {Number|String}
-   */
-  peek: 0,
-
-  /**
-   * List of internally used DOM classes.
-   *
-   * @type {Object}
-   */
-  classes: {
-    horizontal: 'glide--horizontal',
-    vertical: 'glide--vertical',
-    slider: 'glide--slider',
-    carousel: 'glide--carousel',
-    slideshow: 'glide--slideshow',
-    dragging: 'glide--dragging',
-    cloneSlide: 'glide__slide--clone',
-    activeSlide: 'glide__slide--active',
-    disabledArrow: 'glide__arrow--disabled',
-    activeBullet: 'glide__bullet--active'
-  },
-
-  /**
-   * Callback that fires before a slider initialization.
-   *
-   * @param {Object} event
-   */
-  beforeInit: function beforeInit(event) {},
-
-
-  /**
-   * Callback that fires after a slider initialization.
-   *
-   * @param {Object} event
-   */
-  afterInit: function afterInit(event) {},
-
-
-  /**
-   * Callback that fires before a slide change.
-   *
-   * @param {Object} event
-   */
-  beforeTransition: function beforeTransition(event) {},
-
-
-  /**
-   * Callback that fires during changing of a slide.
-   *
-   * @param {Object} event
-   */
-  duringTransition: function duringTransition(event) {},
-
-
-  /**
-   * Callback that fires after a slide change.
-   *
-   * @param {Object} event
-   */
-  afterTransition: function afterTransition(event) {},
-
-
-  /**
-   * Callback that fires on start of touch/drag interaction.
-   *
-   * @param {Object} event
-   */
-  swipeStart: function swipeStart(event) {},
-
-
-  /**
-   * Callback that fires during touch/drag interaction.
-   *
-   * @param {Object} event
-   */
-  swipeMove: function swipeMove(event) {},
-
-
-  /**
-   * Callback that fires on end of touch/drag interaction.
-   *
-   * @param {Object} event
-   */
-  swipeEnd: function swipeEnd(event) {}
+var COMPONENTS = {
+  DOM: DOM$1,
+  Anchors: Anchors$1,
+  Build: Build$1,
+  Images: Images$1,
+  Swipe: Swipe$1,
+  Arrows: Arrows$1,
+  Window: Window$1,
+  Run: Run$1
 };
 
 var Glide = function () {
@@ -2131,7 +2127,7 @@ var Glide = function () {
     this.selector = selector;
     this.options = options;
 
-    var settings = _extends(defaults$1, options);
+    var settings = _extends(defaults, options);
 
     Core$1.settings = settings;
     Core$1.index = settings.startAt;
@@ -2153,14 +2149,7 @@ var Glide = function () {
   createClass(Glide, [{
     key: 'init',
     value: function init() {
-      DOM$1.init(this.selector);
-      Build$1.init();
-      Anchors$1.init();
-      Images$1.init();
-      Swipe$1.init();
-      Arrows$1.init();
-      Window$1.init();
-      Run$1.init();
+      new Engine(this, _extends(COMPONENTS, Core$1.settings.extensions));
     }
 
     /**

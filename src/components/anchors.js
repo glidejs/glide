@@ -2,7 +2,7 @@ import DOM from './dom'
 import Core from './core'
 import Animation from './animation'
 
-import Binder from '../events/binder'
+import Binder from '../binder'
 
 class Anchors extends Binder {
   /**
@@ -56,7 +56,7 @@ class Anchors extends Binder {
    * @return {self}
    */
   detach() {
-    if (! this.detached) {
+    if (!this.detached) {
       for (var i = 0; i < this.links.length; i++) {
         this.links[i].draggable = false
 

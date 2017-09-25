@@ -2,7 +2,8 @@ import DOM from './dom'
 import Run from './run'
 import Core from './core'
 import Animation from './animation'
-import Binder from '../events/binder'
+
+import Binder from '../binder'
 
 class Arrows extends Binder {
   /**
@@ -53,7 +54,7 @@ class Arrows extends Binder {
   click(event) {
     event.preventDefault()
 
-    if (! Core.disabled) {
+    if (!Core.disabled) {
       Run.stop().make(event.target.dataset.glideDir)
 
       Animation.after(() => {
@@ -70,7 +71,7 @@ class Arrows extends Binder {
    * @return {Void}
    */
   hover(event) {
-    if (! Core.disabled) {
+    if (!Core.disabled) {
       if (event.type === 'mouseleave') {
         Run.init()
       }

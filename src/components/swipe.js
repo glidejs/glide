@@ -8,7 +8,7 @@ import Animation from './animation'
 import Dimensions from './dimensions'
 import Transition from './transition'
 
-import Binder from '../events/binder'
+import Binder from '../binder'
 
 import debounce from '../utils/debounce'
 
@@ -100,7 +100,7 @@ class Swipe extends Binder {
 
       let swipeDistance = swipe.pageX - swipeStartX
       let swipeDeg = swipeSin * 180 / Math.PI
-      let steps = Math.round(swipeDistance/Dimensions.slideWidth)
+      let steps = Math.round(swipeDistance / Dimensions.slideWidth)
 
       // While swipe is positive and greater than
       // distance set in options move backward.
@@ -130,11 +130,11 @@ class Swipe extends Binder {
     }
   }
 
-    /**
-   * Binds swipe's starting event.
-   *
-   * @return {Void}
-   */
+  /**
+ * Binds swipe's starting event.
+ *
+ * @return {Void}
+ */
   bindSwipeStart() {
     if (Core.settings.swipeDistance) {
       this.on(START_EVENTS[0], DOM.wrapper, this.start.bind(this))
@@ -245,7 +245,7 @@ class Swipe extends Binder {
    * @return {Boolean}
    */
   get enabled() {
-    return ! (Core.disabled && this.dragging)
+    return !(Core.disabled && this.dragging)
   }
 }
 

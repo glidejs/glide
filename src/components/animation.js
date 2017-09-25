@@ -50,9 +50,9 @@ class Animation {
    * @return {Integer}
    */
   after(callback) {
-      return setTimeout(() => {
-        callback()
-      }, Core.settings.animationDuration + 10)
+    return setTimeout(() => {
+      callback()
+    }, Core.settings.animationDuration + 10)
   }
 
   /**

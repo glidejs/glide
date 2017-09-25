@@ -18,7 +18,7 @@ class Transition {
   get(property = 'transform') {
     let settings = Core.settings
 
-    if (! this.disabled) {
+    if (!this.disabled) {
       return `${property} ${settings.animationDuration}ms ${settings.animationTimingFunc}`
     }
 

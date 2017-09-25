@@ -1,3 +1,7 @@
+import defaults from './defaults'
+
+import Engine from './engine'
+
 import DOM from './components/dom'
 import Run from './components/run'
 import Core from './components/core'
@@ -9,9 +13,16 @@ import Images from './components/images'
 import Anchors from './components/anchors'
 import Callbacks from './components/callbacks'
 
-import Trigger from './events/trigger'
-
-import defaults from './defaults'
+const COMPONENTS = {
+  DOM,
+  Anchors,
+  Build,
+  Images,
+  Swipe,
+  Arrows,
+  Window,
+  Run
+}
 
 export default class Glide {
   /**
@@ -42,14 +53,7 @@ export default class Glide {
    * @return {Void}
    */
   init() {
-    DOM.init(this.selector)
-    Build.init()
-    Anchors.init()
-    Images.init()
-    Swipe.init()
-    Arrows.init()
-    Window.init()
-    Run.init()
+    new Engine(this, Object.assign(COMPONENTS, Core.settings.extensions))
   }
 
   /**

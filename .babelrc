@@ -1,17 +1,17 @@
 {
   "presets": [
     [
-      "es2015", {
+      "env",
+      {
         "modules": false
       }
     ]
   ],
-
   "env": {
     "test": {
       "presets": [
         [
-          "es2015"
+          "env"
         ]
       ]
     }

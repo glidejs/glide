@@ -1,5 +1,5 @@
 import warn from '../utils/warn'
-import { timestamp } from '../utils/time'
+import { now } from '../utils/time'
 
 class Core {
   /**
@@ -84,4 +84,4 @@ class Core {
   }
 }
 
-export default new Core(timestamp())
+export default new Core(now())

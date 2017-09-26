@@ -11,14 +11,14 @@ describe('Binder should', () => {
     binder = new Binder()
   })
 
-  test('store created listeners', () => {
+  test('store created listeners when binding with `on`', () => {
     binder.on(event, element, callback)
 
     expect(binder.listeners).toHaveProperty(event)
     expect(binder.listeners[event]).toBe(callback)
   })
 
-  test('remove previously stored listeners', () => {
+  test('remove previously stored listeners when unbinding with `off`', () => {
     binder.on(event, element, callback)
 
     binder.off(event, element)

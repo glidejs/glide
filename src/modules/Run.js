@@ -198,6 +198,9 @@ var Run = function(Glide, Core) {
             // Set active flags.
             Core.Build.active();
 
+            // Reset touch distance
+            Core.Touch.distance = 0;
+
             // Enable events and call callbacks.
             if (callback !== false) {
                 Core.Events.enable()

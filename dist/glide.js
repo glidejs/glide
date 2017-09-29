@@ -1,6 +1,6 @@
 /*!
  * glidejs
- * Version: 2.0.9
+ * Version: 2.1.0
  * Glide is a responsive and touch-friendly jQuery slider. Based on CSS3 transitions with fallback to older broswers. It's simple, lightweight and fast.
  * Author: Jędrzej Chałubek <jedrzej.chalubek@gmail.com>
  * Site: http://http://glide.jedrzejchalubek.com/
@@ -1647,6 +1647,9 @@ var Run = function(Glide, Core) {
 
             // Set active flags.
             Core.Build.active();
+
+            // Reset touch distance
+            Core.Touch.distance = 0;
 
             // Enable events and call callbacks.
             if (callback !== false) {

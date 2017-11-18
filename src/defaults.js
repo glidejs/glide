@@ -92,7 +92,7 @@ export default {
   animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
 
   /**
-   * Optimalize resize events. Call at most once per every wait in milliseconds.
+   * Optimalize resize and swipemove events. Call at most once per every wait in milliseconds.
    *
    * @type {Number}
    */

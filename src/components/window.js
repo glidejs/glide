@@ -22,7 +22,7 @@ class Window extends Binder {
    * @return {Void}
    */
   bind () {
-    this.on('resize', window, debounce(this.resize, Core.settings.debounce))
+    this.on('resize', window, debounce(this.resize.bind(this), Core.settings.debounce.resize))
   }
 
   /**

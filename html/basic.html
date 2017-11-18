@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="../dist/css/glide.core.css">
-<!-- <link rel="stylesheet" href="../dist/css/glide.theme.css"> -->
+<link rel="stylesheet" href="../dist/css/glide.theme.css">
 
 <style>
   * { margin: 0; padding: 0; bottom: 0; }
@@ -7,13 +7,13 @@
   .box { display: block; border: 1px solid red }
 </style>
 
-<div id="glide" class="glide">
-  <div data-glide="arrows" class="glide__arrows">
+<div class="glide">
+  <div data-glide-el="arrows" class="glide__arrows">
     <button class="glide__arrow prev" data-glide-dir="<">prev</button>
     <button class="glide__arrow next" data-glide-dir=">">next</button>
   </div>
 
-  <div data-glide="track" class="glide__track">
+  <div data-glide-el="track" class="glide__track">
     <ul class="glide__slides">
       <li class="glide__slide">
         <a class="box" href="#">1</a>
@@ -36,13 +36,13 @@
     </ul>
   </div>
 
-  <div data-glide="bullets" class="glide__bullets"></div>
+  <div data-glide-el="bullets" class="glide__bullets"></div>
 </div>
 
 <script src="../dist/glide.js"></script>
 
 <script>
-  var glide = new Glide('#glide', {
+  var glide = new Glide('.glide', {
     perView: 4,
     startAt: 0,
     focusAt: 0,

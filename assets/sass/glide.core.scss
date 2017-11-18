@@ -1,15 +1,17 @@
-.glide {
+@import 'variables';
+
+#{$glide-selector} {
   $this: &;
 
   position: relative;
   width: 100%;
   height: 100%;
 
-  &__track {
+  &#{$glide-element-separator}track {
     overflow: hidden;
   }
 
-  &__slides {
+  &#{$glide-element-separator}slides {
     position: relative;
     width: 100%;
     height: 100%;
@@ -19,15 +21,19 @@
     touch-action: pan-Y;
     overflow: hidden;
     padding: 0;
+    white-space: nowrap;
+    display: flex;
+    flex-wrap: nowrap;
 
-    &--dragging {
-      cursor: grabbing;
+    &#{$glide-modifier-separator}dragging {
       user-select: none;
     }
   }
 
-  &__slide {
+  &#{$glide-element-separator}slide {
+    flex: 1 0 auto;
     width: 100%;
+    white-space: initial;
     user-select: none;
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent;
@@ -40,54 +46,39 @@
     }
   }
 
-  &__arrows {
+  &#{$glide-element-separator}arrows {
     -webkit-touch-callout: none;
     user-select: none;
   }
 
-  &__arrow {
-    cursor: pointer;
-  }
-
-  &__bullets {
+  &#{$glide-element-separator}bullets {
     -webkit-touch-callout: none;
     user-select: none;
   }
 
-  &--slider {
-    #{$this}__slide {
-      float: left;
-      clear: none;
-    }
-
-    #{$this}__arrow {}
-  }
-  &--carousel {
-    &#{$this}--vertical {
-      #{$this}__slides {
+  &#{$glide-modifier-separator}carousel {
+    &#{$this}#{$glide-modifier-separator}vertical {
+      #{$this}#{$glide-element-separator}slides {
         overflow: visible;
       }
     }
-
-    #{$this}__slide {
-      float: left;
-      clear: none;
-    }
   }
-  &--slideshow {
-    #{$this}__track {
+
+  &#{$glide-modifier-separator}slideshow {
+    #{$this}#{$glide-element-separator}track {
       height: 100%;
     }
 
-    #{$this}__slide {
+    #{$this}#{$glide-element-separator}slide {
       height: 100%;
       position: absolute;
-      top: 0; left: 0;
+      top: 0;
+      left: 0;
       z-index: -1;
       -webkit-transform-style: preserve-3d;
-      -webkit-transform: translate3d(0px, 0px, 0px);
+      -webkit-transform: translate3d(0, 0, 0);
 
-      &--active {
+      &#{$glide-modifier-separator}active {
         z-index: 1;
       }
     }

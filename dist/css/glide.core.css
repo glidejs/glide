@@ -13,12 +13,16 @@
     transform-style: preserve-3d;
     touch-action: pan-Y;
     overflow: hidden;
-    padding: 0; }
+    padding: 0;
+    white-space: nowrap;
+    display: flex;
+    flex-wrap: nowrap; }
     .glide__slides--dragging {
-      cursor: grabbing;
       user-select: none; }
   .glide__slide {
+    flex: 1 0 auto;
     width: 100%;
+    white-space: initial;
     user-select: none;
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent; }
@@ -30,19 +34,11 @@
   .glide__arrows {
     -webkit-touch-callout: none;
     user-select: none; }
-  .glide__arrow {
-    cursor: pointer; }
   .glide__bullets {
     -webkit-touch-callout: none;
     user-select: none; }
-  .glide--slider .glide__slide {
-    float: left;
-    clear: none; }
   .glide--carousel.glide--vertical .glide__slides {
     overflow: visible; }
-  .glide--carousel .glide__slide {
-    float: left;
-    clear: none; }
   .glide--slideshow .glide__track {
     height: 100%; }
   .glide--slideshow .glide__slide {
@@ -52,6 +48,6 @@
     left: 0;
     z-index: -1;
     -webkit-transform-style: preserve-3d;
-    -webkit-transform: translate3d(0px, 0px, 0px); }
+    -webkit-transform: translate3d(0, 0, 0); }
     .glide--slideshow .glide__slide--active {
       z-index: 1; }

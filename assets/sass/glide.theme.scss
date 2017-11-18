@@ -1,6 +1,10 @@
 .glide {
   $this: &;
 
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+
   &__arrows {
     position: absolute;
   }
@@ -17,6 +21,7 @@
     border-radius: 4px;
     opacity: 1;
     transition: opacity 150ms ease, border 300ms ease-in-out;
+    cursor: pointer;
 
     &:focus { outline: none; }
     &:hover { border-color: white; }
@@ -38,10 +43,10 @@
     width: 12px;
     height: 12px;
     padding: 0;
-    cursor: pointer;
     border-radius: 50%;
     border: 2px solid transparent;
     transition: all 300ms ease-in-out;
+    cursor: pointer;
 
     &.active {
       background-color: white;
@@ -56,6 +61,12 @@
       border: 2px solid white;
       background-color: rgba(255, 255, 255, 0.5);
     }
+  }
+
+  &--dragging {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
   }
 
   &--horizontal {
@@ -121,10 +132,4 @@
       vertical-align: middle;
     }
   }
-
-  &--slider {}
-
-  &--carousel {}
-
-  &--slideshow {}
 }

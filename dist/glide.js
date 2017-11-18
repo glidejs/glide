@@ -104,7 +104,7 @@ var defaults = {
   animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
 
   /**
-   * Optimalize resize events. Call at most once per every wait in milliseconds.
+   * Optimalize resize and swipemove events. Call at most once per every wait in milliseconds.
    *
    * @type {Number}
    */
@@ -368,6 +368,10 @@ function exist(node) {
   return false;
 }
 
+var TRACK_SELECTOR = '[data-glide-el="track"]';
+var ARROWS_SELECTOR = '[data-glide-el="arrows"]';
+var BULLETS_SELECTOR = '[data-glide-el="bullets"]';
+
 var DOM = function () {
   function DOM() {
     classCallCheck(this, DOM);
@@ -384,9 +388,9 @@ var DOM = function () {
     value: function init(glide) {
       this.element = glide.selector;
 
-      this.track = this.element.querySelector('[data-glide="track"]');
-      this.arrows = this.element.querySelector('[data-glide="arrows"]');
-      this.bullets = this.element.querySelector('[data-glide="bullets"]');
+      this.track = this.element.querySelector(TRACK_SELECTOR);
+      this.arrows = this.element.querySelector(ARROWS_SELECTOR);
+      this.bullets = this.element.querySelector(BULLETS_SELECTOR);
     }
 
     /**
@@ -420,7 +424,7 @@ var DOM = function () {
     }
 
     /**
-     * Gets node of the slides track.
+     * Gets node of the slides ARROWS_SELECTOR.
      *
      * @return {Object}
      */
@@ -441,7 +445,7 @@ var DOM = function () {
       if (exist(tr)) {
         this.tr = tr;
       } else {
-        warn('Could not find track element. Please use [data-glide="track"] attribute.');
+        warn('Could not find track element. Please use ' + TRACK_SELECTOR + ' attribute.');
       }
     }
 
@@ -2172,7 +2176,7 @@ var Window = function (_Binder) {
   }, {
     key: 'bind',
     value: function bind() {
-      this.on('resize', window, debounce(this.resize, Core$1.settings.debounce));
+      this.on('resize', window, debounce(this.resize.bind(this), Core$1.settings.debounce.resize));
     }
 
     /**

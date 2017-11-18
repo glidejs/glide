@@ -1,6 +1,10 @@
 import warn from '../utils/warn'
 import { exist } from '../utils/dom'
 
+const TRACK_SELECTOR = '[data-glide-el="track"]'
+const ARROWS_SELECTOR = '[data-glide-el="arrows"]'
+const BULLETS_SELECTOR = '[data-glide-el="bullets"]'
+
 class DOM {
   /**
    * Setup slider HTML nodes.
@@ -10,9 +14,9 @@ class DOM {
   init (glide) {
     this.element = glide.selector
 
-    this.track = this.element.querySelector('[data-glide="track"]')
-    this.arrows = this.element.querySelector('[data-glide="arrows"]')
-    this.bullets = this.element.querySelector('[data-glide="bullets"]')
+    this.track = this.element.querySelector(TRACK_SELECTOR)
+    this.arrows = this.element.querySelector(ARROWS_SELECTOR)
+    this.bullets = this.element.querySelector(BULLETS_SELECTOR)
   }
 
   /**
@@ -42,7 +46,7 @@ class DOM {
   }
 
   /**
-   * Gets node of the slides track.
+   * Gets node of the slides ARROWS_SELECTOR.
    *
    * @return {Object}
    */
@@ -59,7 +63,7 @@ class DOM {
     if (exist(tr)) {
       this.tr = tr
     } else {
-      warn(`Could not find track element. Please use [data-glide="track"] attribute.`)
+      warn(`Could not find track element. Please use ${TRACK_SELECTOR} attribute.`)
     }
   }
 

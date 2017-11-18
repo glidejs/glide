@@ -1,4 +1,3 @@
-import DOM from './dom'
 import Core from './core'
 import Translate from './translate'
 import Transition from './transition'
@@ -15,7 +14,7 @@ class Animation {
   /**
    * Constructs animation component.
    */
-  constructor() {
+  constructor () {
     this.displacement = 0
   }
 
@@ -25,7 +24,7 @@ class Animation {
    * @param  {Number} offset
    * @return {self}
    */
-  make(offset) {
+  make (offset) {
     this.offset = offset
 
     this.apply()
@@ -38,7 +37,7 @@ class Animation {
    *
    * @return {Void}
    */
-  apply() {
+  apply () {
     Transition.set()
     Translate.set(this.translate - this.offset)
   }
@@ -49,7 +48,7 @@ class Animation {
    * @param  {Closure} callback
    * @return {Integer}
    */
-  after(callback) {
+  after (callback) {
     return setTimeout(() => {
       callback()
     }, Core.settings.animationDuration + 10)
@@ -60,7 +59,7 @@ class Animation {
    *
    * @return {Integer}
    */
-  get offset() {
+  get offset () {
     return this.displacement
   }
 
@@ -70,8 +69,8 @@ class Animation {
    * @param  {Number} value
    * @return {self}
    */
-  set offset(value) {
-    this.displacement = (typeof value !== 'undefined') ? parseInt(value) : 0;
+  set offset (value) {
+    this.displacement = (typeof value !== 'undefined') ? parseInt(value) : 0
   }
 
   /**
@@ -79,7 +78,7 @@ class Animation {
    *
    * @return {Number}
    */
-  get translate() {
+  get translate () {
     return TYPES[ucfirst(Core.type)].translate()
   }
 }

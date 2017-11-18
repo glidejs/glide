@@ -2,7 +2,7 @@ export default class Binder {
   /**
    * Construct events.
    */
-  constructor(listeners = {}) {
+  constructor (listeners = {}) {
     this.listeners = listeners
   }
 
@@ -14,7 +14,7 @@ export default class Binder {
    * @param  {Closure} closure
    * @return {Void}
    */
-  on(events, el, closure) {
+  on (events, el, closure) {
     if (typeof events === 'string') {
       events = [events]
     }
@@ -33,7 +33,7 @@ export default class Binder {
    * @param  {HTMLElement} el
    * @return {Void}
    */
-  off(events, el) {
+  off (events, el) {
     if (typeof events === 'string') {
       events = [events]
     }

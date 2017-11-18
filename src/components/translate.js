@@ -19,7 +19,7 @@ class Translate {
    * @param  {Integer} value
    * @return {String}
    */
-  get(value) {
+  get (value) {
     AXES[Dimensions.dimention.axis] = parseInt(value)
 
     return 'translate3d(' + (-1 * AXES.x) + 'px, ' + (-1 * AXES.y) + 'px, ' + (-1 * AXES.z) + 'px)'
@@ -31,7 +31,7 @@ class Translate {
    * @param {HTMLElement} el
    * @return {self}
    */
-  set(value) {
+  set (value) {
     DOM.wrapper.style.transform = this.get(value)
 
     return this

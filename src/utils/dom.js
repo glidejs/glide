@@ -4,7 +4,7 @@
  * @param  {HTMLElement} node
  * @return {Array}
  */
-export function siblings(node) {
+export function siblings (node) {
   let n = node.parentNode.firstChild
   let matched = []
 
@@ -23,8 +23,8 @@ export function siblings(node) {
  * @param  {HTMLElement} node
  * @return {Boolean}
  */
-export function exist(node) {
-  if (node && node instanceof HTMLElement) {
+export function exist (node) {
+  if (node && node instanceof window.HTMLElement) {
     return true
   }
 

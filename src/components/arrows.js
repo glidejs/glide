@@ -12,7 +12,7 @@ class Arrows extends Binder {
    *
    * @return {Void}
    */
-  init() {
+  init () {
     this.bind()
   }
 
@@ -21,7 +21,7 @@ class Arrows extends Binder {
    *
    * @return {Void}
    */
-  bind() {
+  bind () {
     let items = this.items
 
     for (var i = 0; i < items.length; i++) {
@@ -35,7 +35,7 @@ class Arrows extends Binder {
    *
    * @return {Void}
    */
-  unbind() {
+  unbind () {
     let items = this.items
 
     for (var i = 0; i < items.length; i++) {
@@ -51,7 +51,7 @@ class Arrows extends Binder {
    * @param {Object} event
    * @return {Void}
    */
-  click(event) {
+  click (event) {
     event.preventDefault()
 
     if (!Core.disabled) {
@@ -70,7 +70,7 @@ class Arrows extends Binder {
    * @param {Object} event
    * @return {Void}
    */
-  hover(event) {
+  hover (event) {
     if (!Core.disabled) {
       if (event.type === 'mouseleave') {
         Run.init()
@@ -87,7 +87,7 @@ class Arrows extends Binder {
    *
    * @return {HTMLElement[]}
    */
-  get items() {
+  get items () {
     return DOM.arrows.children
   }
 }

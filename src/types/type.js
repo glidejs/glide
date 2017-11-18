@@ -3,13 +3,13 @@ import Focusing from './transformers/focusing'
 
 const TRANSFORMERS = [
   Peeking,
-  Focusing,
+  Focusing
 ]
 
 export default class Type {
-  applyTransforms(translate) {
+  applyTransforms (translate) {
     for (var i = 0; i < TRANSFORMERS.length; i++) {
-      let transformer = new TRANSFORMERS[i]
+      let transformer = new TRANSFORMERS[i]()
 
       translate = transformer.transform(translate)
     }

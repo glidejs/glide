@@ -7,30 +7,30 @@ class Peek {
   /**
    * Construct peek component.
    */
-  constructor() {
+  constructor () {
     this.size = 0
   }
 
   /**
    * Setups how much to peek based on settings.
-   * 
+   *
    * @return {Void}
    */
-  init() {
+  init () {
     this.value = Core.settings.peek
   }
 
   /**
    * Gets value of the peek.
    */
-  get value() {
+  get value () {
     return this.size
   }
 
   /**
    * Sets value of the peek.
    */
-  set value(value) {
+  set value (value) {
     if (typeof value === 'string') {
       let normalized = parseInt(value, 10)
       let isPercentage = value.indexOf('%') >= 0

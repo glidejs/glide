@@ -5,7 +5,7 @@ class Transition {
   /**
    * Construct transition.
    */
-  constructor() {
+  constructor () {
     this.disabled = false
   }
 
@@ -15,7 +15,7 @@ class Transition {
    * @param {String} property
    * @return {String}
    */
-  get(property = 'transform') {
+  get (property = 'transform') {
     let settings = Core.settings
 
     if (!this.disabled) {
@@ -31,7 +31,7 @@ class Transition {
    * @param {String} property
    * @return {self}
    */
-  set(property) {
+  set (property) {
     DOM.wrapper.style.transition = this.get(property)
 
     return this
@@ -42,7 +42,7 @@ class Transition {
    *
    * @return {self}
    */
-  enable() {
+  enable () {
     this.disabled = false
 
     return this
@@ -53,7 +53,7 @@ class Transition {
    *
    * @return {self}
    */
-  disable() {
+  disable () {
     this.disabled = true
 
     return this

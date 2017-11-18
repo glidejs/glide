@@ -7,17 +7,17 @@ class Run {
   /**
    * Constructs run component.
    */
-  constructor() {
+  constructor () {
     this.flag = false
     this.running = false
   }
 
   /**
    * Initializes autorunning of the glide.
-   * 
+   *
    * @return {self}
    */
-  init() {
+  init () {
     if (Core.settings.autoplay || this.running) {
       if (typeof this.interval === 'undefined') {
         this.interval = setInterval(() => {
@@ -31,10 +31,10 @@ class Run {
 
   /**
    * Stops autorunning of the glide.
-   * 
+   *
    * @return {self}
    */
-  stop() {
+  stop () {
     if (Core.settings.autoplay || this.running) {
       if (this.interval >= 0) {
         this.interval = clearInterval(this.interval)
@@ -45,13 +45,13 @@ class Run {
   }
 
   /**
-   * Handles glide status. Calculates current index 
+   * Handles glide status. Calculates current index
    * based on passed move and slider type.
-   * 
-   * @param {String} move 
-   * @param {Function} callback 
+   *
+   * @param {String} move
+   * @param {Function} callback
    */
-  make(move, callback) {
+  make (move, callback) {
     this.direction = move.substr(0, 1)
     this.steps = (move.substr(1)) ? parseInt(move.substr(1)) : 0
 
@@ -59,40 +59,34 @@ class Run {
       case '>':
         if (typeof this.steps === 'number' && this.steps !== 0) {
           Core.index += Math.min(this.length - Core.index, -this.steps)
-        }
-        else if (this.steps === '>') {
+        } else if (this.steps === '>') {
           Core.index = this.length
-        }
-        else if (this.isEnd()) {
+        } else if (this.isEnd()) {
           Core.index = 0
 
           this.flag = true
-        }
-        else {
+        } else {
           Core.index++
         }
-        break;
+        break
 
       case '<':
         if (typeof this.steps === 'number' && this.steps !== 0) {
           Core.index -= Math.min(Core.index, this.steps)
-        }
-        else if (this.steps === '<') {
+        } else if (this.steps === '<') {
           Core.index = 0
-        }
-        else if (this.isStart()) {
+        } else if (this.isStart()) {
           Core.index = this.length
 
           this.flag = true
-        }
-        else {
+        } else {
           Core.index--
         }
-        break;
+        break
 
       case '=':
         Core.index = this.steps
-        break;
+        break
     }
 
     Animation.make().after(() => {
@@ -107,7 +101,7 @@ class Run {
    *
    * @return {Boolean}
    */
-  isStart() {
+  isStart () {
     return Core.index === 0
   }
 
@@ -116,7 +110,7 @@ class Run {
    *
    * @return {Boolean}
    */
-  isEnd() {
+  isEnd () {
     return Core.index === this.length
   }
 
@@ -125,7 +119,7 @@ class Run {
    *
    * @return {Boolean}
    */
-  isOffset(direction) {
+  isOffset (direction) {
     return this.flag && this.direction === direction
   }
 
@@ -135,7 +129,7 @@ class Run {
    *
    * @return {Number}
    */
-  get period() {
+  get period () {
     let autoplay = DOM.slides[Core.index].getAttribute('data-glide-autoplay')
 
     if (autoplay) {
@@ -151,7 +145,7 @@ class Run {
    *
    * @return {Number}
    */
-  get length() {
+  get length () {
     return DOM.slides.length - 1
   }
 }

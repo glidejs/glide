@@ -1,6 +1,4 @@
 import DOM from './dom'
-import Core from './core'
-import Animation from './animation'
 
 import Binder from '../binder'
 
@@ -8,7 +6,7 @@ class Anchors extends Binder {
   /**
    * Constructs anchors component.
    */
-  constructor() {
+  constructor () {
     super()
 
     this.detached = false
@@ -20,7 +18,7 @@ class Anchors extends Binder {
    *
    * @return {Void}
    */
-  init() {
+  init () {
     this.links = DOM.wrapper.querySelectorAll('a')
 
     this.bind()
@@ -31,7 +29,7 @@ class Anchors extends Binder {
    *
    * @return {Void}
    */
-  bind() {
+  bind () {
     this.on('click', DOM.wrapper, this.click.bind(this))
   }
 
@@ -42,7 +40,7 @@ class Anchors extends Binder {
    * @param  {Object} event
    * @return {Void}
    */
-  click(event) {
+  click (event) {
     event.stopPropagation()
 
     if (this.prevented) {
@@ -55,7 +53,7 @@ class Anchors extends Binder {
    *
    * @return {self}
    */
-  detach() {
+  detach () {
     if (!this.detached) {
       for (var i = 0; i < this.links.length; i++) {
         this.links[i].draggable = false
@@ -76,7 +74,7 @@ class Anchors extends Binder {
    *
    * @return {self}
    */
-  attach() {
+  attach () {
     if (this.detached) {
       for (var i = 0; i < this.links.length; i++) {
         this.links[i].draggable = true
@@ -97,7 +95,7 @@ class Anchors extends Binder {
    *
    * @return {self}
    */
-  prevent() {
+  prevent () {
     this.prevented = true
 
     return this
@@ -108,7 +106,7 @@ class Anchors extends Binder {
    *
    * @return {self}
    */
-  unprevent() {
+  unprevent () {
     this.prevented = false
 
     return this

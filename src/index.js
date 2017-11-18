@@ -31,7 +31,7 @@ export default class Glide {
    * @param  {String} selector
    * @param  {Object} options
    */
-  constructor(selector, options = {}) {
+  constructor (selector, options = {}) {
     this.selector = selector
     this.options = options
 
@@ -52,7 +52,8 @@ export default class Glide {
    *
    * @return {Void}
    */
-  init() {
+  init () {
+    /* eslint-disable no-new */
     new Engine(this, Object.assign(COMPONENTS, Core.settings.extensions))
   }
 
@@ -61,7 +62,7 @@ export default class Glide {
    *
    * @return {Number}
    */
-  index() {
+  index () {
     return Core.index
   }
 }

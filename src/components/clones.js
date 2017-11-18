@@ -1,5 +1,5 @@
 class Clones {
-  constructor() {
+  constructor () {
     this.shift = 0
     this.items = []
     this.pattern = []
@@ -12,7 +12,7 @@ class Clones {
    *
    * @return {self}
    */
-  init() {
+  init () {
     this.map()
     this.collect()
 
@@ -24,7 +24,7 @@ class Clones {
    *
    * @return {Void}
    */
-  map() {
+  map () {
     for (let i = 0; i < this.length; i++) {
       this.pattern.push(-1 - i, i)
     }
@@ -35,7 +35,7 @@ class Clones {
    *
    * @return {Void}
    */
-  collect() {
+  collect () {
     for (let i = 0; i < this.pattern.length; i++) {
       let clone = DOM.slides[this.pattern[i]]
         .cloneNode(true)
@@ -50,7 +50,7 @@ class Clones {
    *
    * @return {Void}
    */
-  append() {
+  append () {
     for (let i = 0; i < this.items.length; i++) {
       let item = this.items[i]
 
@@ -67,7 +67,7 @@ class Clones {
    *
    * @return {self}
    */
-  remove() {
+  remove () {
     for (let i = 0; i < this.items.length; i++) {
       this.items[i].remove()
     }
@@ -80,11 +80,11 @@ class Clones {
    *
    * @return {Number}
    */
-  get growth() {
+  get growth () {
     return Dimentions.slideSize * this.items.length
   }
 
-  get length() {
+  get length () {
     return Core.settings.perView
   }
 }

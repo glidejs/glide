@@ -1,5 +1,4 @@
 import DOM from './dom'
-import Core from './core'
 
 import Binder from '../binder'
 
@@ -9,7 +8,7 @@ class Images extends Binder {
    *
    * @return {Void}
    */
-  init() {
+  init () {
     this.bind()
   }
 
@@ -18,7 +17,7 @@ class Images extends Binder {
    *
    * @return {Void}
    */
-  bind() {
+  bind () {
     this.on('dragstart', DOM.wrapper, this.dragstart)
   }
 
@@ -27,7 +26,7 @@ class Images extends Binder {
    *
    * @return {Void}
    */
-  unbind() {
+  unbind () {
     this.off('dragstart', DOM.wrapper, this.dragstart)
   }
 
@@ -36,7 +35,7 @@ class Images extends Binder {
    *
    * @return {Void}
    */
-  dragstart(event) {
+  dragstart (event) {
     event.preventDefault()
   }
 }

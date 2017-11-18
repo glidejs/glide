@@ -7,7 +7,7 @@ class Core {
    *
    * @param {Integer} id
    */
-  constructor(id) {
+  constructor (id) {
     this.id = id
     this.disabled = false
     this.destroyed = false
@@ -18,7 +18,7 @@ class Core {
    *
    * @return {Object}
    */
-  get settings() {
+  get settings () {
     return this.opt
   }
 
@@ -28,7 +28,7 @@ class Core {
    * @param  {Object} opt
    * @return {Void}
    */
-  set settings(opt) {
+  set settings (opt) {
     if (typeof opt === 'object') {
       this.opt = opt
     } else {
@@ -41,7 +41,7 @@ class Core {
    *
    * @return {Object}
    */
-  get index() {
+  get index () {
     return this.i
   }
 
@@ -50,7 +50,7 @@ class Core {
    *
    * @return {Object}
    */
-  set index(i) {
+  set index (i) {
     this.i = parseInt(i)
   }
 
@@ -59,7 +59,7 @@ class Core {
    *
    * @return {String}
    */
-  get type() {
+  get type () {
     return this.settings.type
   }
 
@@ -69,7 +69,7 @@ class Core {
    * @param  {String} name
    * @return {Boolean}
    */
-  isType(name) {
+  isType (name) {
     return this.settings.type === name
   }
 
@@ -79,7 +79,7 @@ class Core {
    * @param  {String} name
    * @return {Boolean}
    */
-  isMode(name) {
+  isMode (name) {
     return this.settings.mode === name
   }
 }

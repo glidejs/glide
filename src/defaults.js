@@ -128,12 +128,12 @@ export default {
     cloneSlide: 'glide__slide--clone',
     activeSlide: 'glide__slide--active',
     disabledArrow: 'glide__arrow--disabled',
-    activeBullet: 'glide__bullet--active',
+    activeBullet: 'glide__bullet--active'
   },
 
   /**
    * Additional slider extension components.
-   * 
+   *
    * @type {Object}
    */
   extensions: {},
@@ -143,54 +143,54 @@ export default {
    *
    * @param {Object} event
    */
-  beforeInit(event) { },
+  beforeInit (event) { },
 
   /**
    * Callback that fires after a slider initialization.
    *
    * @param {Object} event
    */
-  afterInit(event) { },
+  afterInit (event) { },
 
   /**
    * Callback that fires before a slide change.
    *
    * @param {Object} event
    */
-  beforeTransition(event) { },
+  beforeTransition (event) { },
 
   /**
    * Callback that fires during changing of a slide.
    *
    * @param {Object} event
    */
-  duringTransition(event) { },
+  duringTransition (event) { },
 
   /**
    * Callback that fires after a slide change.
    *
    * @param {Object} event
    */
-  afterTransition(event) { },
+  afterTransition (event) { },
 
   /**
    * Callback that fires on start of touch/drag interaction.
    *
    * @param {Object} event
    */
-  swipeStart(event) { },
+  swipeStart (event) { },
 
   /**
    * Callback that fires during touch/drag interaction.
    *
    * @param {Object} event
    */
-  swipeMove(event) { },
+  swipeMove (event) { },
 
   /**
    * Callback that fires on end of touch/drag interaction.
    *
    * @param {Object} event
    */
-  swipeEnd(event) { }
+  swipeEnd (event) { }
 }

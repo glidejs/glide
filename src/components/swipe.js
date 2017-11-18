@@ -1,7 +1,6 @@
 import DOM from './dom'
 import Run from './run'
 import Core from './core'
-import Build from './build'
 import Anchors from './anchors'
 import Callbacks from './callbacks'
 import Animation from './animation'
@@ -27,7 +26,7 @@ class Swipe extends Binder {
   /**
    * Constructs swipe component.
    */
-  constructor() {
+  constructor () {
     super()
 
     this.dragging = false
@@ -38,18 +37,18 @@ class Swipe extends Binder {
    *
    * @return {Void}
    */
-  init() {
+  init () {
     this.bindSwipeStart()
   }
 
   /**
-   * Handler for `swipestart` event. 
+   * Handler for `swipestart` event.
    * Calculates entry points of the user's tap.
-   * 
-   * @param {Object} event 
+   *
+   * @param {Object} event
    * @return {Void}
    */
-  start(event) {
+  start (event) {
     if (this.enabled) {
       let swipe = this.touches(event)
 
@@ -68,12 +67,12 @@ class Swipe extends Binder {
   }
 
   /**
-   * Handler for `swipemove` event. 
-   * Calculates user's tap angle and distance. 
-   * 
-   * @param {Object} event 
+   * Handler for `swipemove` event.
+   * Calculates user's tap angle and distance.
+   *
+   * @param {Object} event
    */
-  move(event) {
+  move (event) {
     if (this.enabled) {
       let swipe = this.touches(event)
 
@@ -88,7 +87,7 @@ class Swipe extends Binder {
       distance = swipe.pageX - swipeStartX
 
       if ((swipeSin * 180 / Math.PI) < 45) {
-        Animation.make(subExSx);
+        Animation.make(subExSx)
       }
 
       if ((swipeSin * 180 / Math.PI) < 45) {
@@ -105,13 +104,13 @@ class Swipe extends Binder {
   }
 
   /**
-   * Handler for `swipeend` event. Finitializes 
+   * Handler for `swipeend` event. Finitializes
    * user's tap and decides about glide move.
-   * 
-   * @param {Object} event 
+   *
+   * @param {Object} event
    * @return {Void}
    */
-  end(event) {
+  end (event) {
     if (this.enabled) {
       let swipe = this.touches(event)
       let limiter = this.limiter(event)
@@ -122,18 +121,16 @@ class Swipe extends Binder {
       let swipeDeg = swipeSin * 180 / Math.PI
       let steps = Math.round(swipeDistance / Dimensions.slideWidth)
 
-      // While swipe is positive and greater than
-      // distance set in options move backward.
       if (swipeDistance > limiter && swipeDeg < 45) {
+        // While swipe is positive and greater than
+        // distance set in options move backward.
         Run.make(`<${steps}`)
-      }
-      // While swipe is negative and lower than negative
-      // distance set in options move forward.
-      else if (swipeDistance < -limiter && swipeDeg < 45) {
+      } else if (swipeDistance < -limiter && swipeDeg < 45) {
+        // While swipe is negative and lower than negative
+        // distance set in options move forward.
         Run.make(`>${steps}`)
-      }
-      // While swipe don't reach distance apply previous transform.
-      else {
+      } else {
+        // While swipe don't reach distance apply previous transform.
         Animation.make()
       }
 
@@ -155,7 +152,7 @@ class Swipe extends Binder {
  *
  * @return {Void}
  */
-  bindSwipeStart() {
+  bindSwipeStart () {
     if (Core.settings.swipeDistance) {
       this.on(START_EVENTS[0], DOM.wrapper, this.start.bind(this))
     }
@@ -170,7 +167,7 @@ class Swipe extends Binder {
    *
    * @return {Void}
    */
-  unbindSwipeStart() {
+  unbindSwipeStart () {
     this.off(START_EVENTS[0], DOM.wrapper)
     this.off(START_EVENTS[1], DOM.wrapper)
   }
@@ -180,7 +177,7 @@ class Swipe extends Binder {
    *
    * @return {Void}
    */
-  bindSwipeMove() {
+  bindSwipeMove () {
     this.on(MOVE_EVENTS, DOM.wrapper, this.move.bind(this))
   }
 
@@ -189,7 +186,7 @@ class Swipe extends Binder {
    *
    * @return {Void}
    */
-  unbindSwipeMove() {
+  unbindSwipeMove () {
     this.off(MOVE_EVENTS, DOM.wrapper)
   }
 
@@ -198,7 +195,7 @@ class Swipe extends Binder {
    *
    * @return {Void}
    */
-  bindSwipeEnd() {
+  bindSwipeEnd () {
     this.on(END_EVENTS, DOM.wrapper, this.end.bind(this))
   }
 
@@ -207,11 +204,11 @@ class Swipe extends Binder {
    *
    * @return {Void}
    */
-  unbindSwipeEnd() {
+  unbindSwipeEnd () {
     this.off(END_EVENTS, DOM.wrapper)
   }
 
-  touches(event) {
+  touches (event) {
     if (MOUSE_EVENTS.includes(event.type)) {
       return event
     }
@@ -225,7 +222,7 @@ class Swipe extends Binder {
    *
    * @return {Number}
    */
-  limiter(event) {
+  limiter (event) {
     if (MOUSE_EVENTS.includes(event.type)) {
       return Core.settings.dragDistance
     }
@@ -238,12 +235,12 @@ class Swipe extends Binder {
    *
    * @return {self}
    */
-  enable() {
+  enable () {
     this.dragging = false
 
     Transition.enable()
 
-    return self
+    return this
   }
 
   /**
@@ -251,12 +248,12 @@ class Swipe extends Binder {
    *
    * @return {self}
    */
-  disable() {
+  disable () {
     this.dragging = true
 
     Transition.disable()
 
-    return self
+    return this
   }
 
   /**
@@ -264,7 +261,7 @@ class Swipe extends Binder {
    *
    * @return {Boolean}
    */
-  get enabled() {
+  get enabled () {
     return !(Core.disabled && this.dragging)
   }
 }

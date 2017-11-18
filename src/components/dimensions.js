@@ -2,8 +2,6 @@ import DOM from './dom'
 import Core from './core'
 import Peek from './peek'
 
-import { ucfirst } from '../utils/string'
-
 const MODE_TO_DIMENSIONS = {
   horizontal: ['width', 'x'],
   vertical: ['height', 'y']
@@ -12,10 +10,10 @@ const MODE_TO_DIMENSIONS = {
 class Dimensions {
   /**
    * Applys dimentions to the glide HTML elements.
-   * 
+   *
    * @return {Void}
    */
-  apply() {
+  apply () {
     let dimention = this.dimention.size
 
     this.setupSlides(dimention)
@@ -24,10 +22,10 @@ class Dimensions {
 
   /**
    * Setups dimentions of slides.
-   * 
+   *
    * @return {Void}
    */
-  setupSlides(dimention) {
+  setupSlides (dimention) {
     for (var i = 0; i < DOM.slides.length; i++) {
       DOM.slides[i].style[dimention] = `${this.slideSize}px`
     }
@@ -35,19 +33,19 @@ class Dimensions {
 
   /**
    * Setups dimentions of slides wrapper.
-   * 
+   *
    * @return {Void}
    */
-  setupWrapper(dimention) {
+  setupWrapper (dimention) {
     DOM.wrapper.style[dimention] = `${this.wrapperSize}px`
   }
 
   /**
    * Gets dimentions map for current glide's mode.
-   * 
+   *
    * @return {Object}
    */
-  get dimention() {
+  get dimention () {
     let settings = Core.settings
 
     return {
@@ -58,12 +56,10 @@ class Dimensions {
 
   /**
    * Gets size of the single slide.
-   * 
+   *
    * @return {Number}
    */
-  get slideSize() {
-    let dimention = this.dimention
-
+  get slideSize () {
     if (Core.isMode('vertical')) {
       return this.slideHeight
     }
@@ -73,46 +69,46 @@ class Dimensions {
 
   /**
    * Gets size of the slides wrapper.
-   * 
+   *
    * @return {Number}
    */
-  get wrapperSize() {
+  get wrapperSize () {
     return this.slideSize * this.length
   }
 
   /**
    * Gets count number of the slides.
-   * 
+   *
    * @return {Number}
    */
-  get length() {
+  get length () {
     return DOM.slides.length
   }
 
   /**
    * Gets width value of the glide.
-   * 
+   *
    * @return {Number}
    */
-  get width() {
+  get width () {
     return DOM.element.offsetWidth
   }
 
   /**
    * Gets height value of the glide.
-   * 
+   *
    * @return {Number}
    */
-  get height() {
+  get height () {
     return DOM.element.offsetHeight
   }
 
   /**
    * Gets width value of the single slide.
-   * 
+   *
    * @return {Number}
    */
-  get slideWidth() {
+  get slideWidth () {
     let perView = Core.settings.perView
 
     return (DOM.element.offsetWidth / perView) - (Peek.value / perView)
@@ -120,10 +116,10 @@ class Dimensions {
 
   /**
    * Gets height value of the single slide.
-   * 
+   *
    * @return {Number}
    */
-  get slideHeight() {
+  get slideHeight () {
     let perView = Core.settings.perView
 
     return (DOM.element.offsetHeight / perView) - (Peek.value / perView)

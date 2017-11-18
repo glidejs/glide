@@ -12,7 +12,7 @@ class Build {
    * Init glide building. Adds classes, sets
    * dimensions and setups initial state.
    */
-  init() {
+  init () {
     Transition.disable()
     Peek.init()
     Dimensions.apply()
@@ -31,7 +31,7 @@ class Build {
    *
    * @return {Void}
    */
-  setHeight() {
+  setHeight () {
     if (Core.settings.autoheight) {
       // Core.Height.set();
     }
@@ -42,7 +42,7 @@ class Build {
    *
    * @return {Void}
    */
-  typeClass() {
+  typeClass () {
     const settings = Core.settings
 
     let type = settings.classes[settings.type]
@@ -55,7 +55,7 @@ class Build {
    *
    * @return {Void}
    */
-  modeClass() {
+  modeClass () {
     const settings = Core.settings
 
     let mode = settings.classes[settings.mode]
@@ -68,7 +68,7 @@ class Build {
    *
    * @return {Void}
    */
-  activeClass() {
+  activeClass () {
     const settings = Core.settings
 
     let slide = DOM.slides[Core.index]

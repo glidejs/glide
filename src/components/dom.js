@@ -7,7 +7,7 @@ class DOM {
    *
    * @param {Glide} glide
    */
-  init(glide) {
+  init (glide) {
     this.element = glide.selector
 
     this.track = this.element.querySelector('[data-glide="track"]')
@@ -20,7 +20,7 @@ class DOM {
    *
    * @return {Object}
    */
-  get element() {
+  get element () {
     return this.el
   }
 
@@ -29,7 +29,7 @@ class DOM {
    *
    * @return {Object}
    */
-  set element(el) {
+  set element (el) {
     if (typeof el === 'string') {
       el = document.querySelector(el)
     }
@@ -46,7 +46,7 @@ class DOM {
    *
    * @return {Object}
    */
-  get track() {
+  get track () {
     return this.tr
   }
 
@@ -55,11 +55,11 @@ class DOM {
    *
    * @return {Void}
    */
-  set track(tr) {
+  set track (tr) {
     if (exist(tr)) {
       this.tr = tr
     } else {
-      warn(`Could not find track element. Please use [${TRACK_ATTRIBUTE}] attribute.`)
+      warn(`Could not find track element. Please use [data-glide="track"] attribute.`)
     }
   }
 
@@ -68,7 +68,7 @@ class DOM {
    *
    * @return {Object}
    */
-  get wrapper() {
+  get wrapper () {
     return this.track.children[0]
   }
 
@@ -77,7 +77,7 @@ class DOM {
    *
    * @return {Array}
    */
-  get slides() {
+  get slides () {
     return this.wrapper.children
   }
 }

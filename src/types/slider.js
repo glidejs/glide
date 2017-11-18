@@ -3,7 +3,7 @@ import Core from '../components/core'
 import Dimensions from '../components/dimensions'
 
 class Slider extends Type {
-  translate() {
+  translate () {
     let translate = (Dimensions.slideSize * Core.index)
 
     return this.applyTransforms(translate)

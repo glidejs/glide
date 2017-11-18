@@ -7,7 +7,7 @@ class Callbacks {
    * @param {Function} closure
    * @return {self}
    */
-  call(closure) {
+  call (closure) {
     if ((closure !== 'undefined') && (typeof closure === 'function')) {
       closure(this.attrs)
     }
@@ -18,7 +18,7 @@ class Callbacks {
    *
    * @return {Object}
    */
-  get attrs() {
+  get attrs () {
     return {
       index: Core.index
     }

@@ -145,7 +145,7 @@ var defaults = {
 
   /**
    * Additional slider extension components.
-   * 
+   *
    * @type {Object}
    */
   extensions: {},
@@ -313,9 +313,9 @@ var possibleConstructorReturn = function (self, call) {
 var Engine =
 /**
  * Constructs the engine.
- * 
- * @param {Glide} glide 
- * @param {Object} components 
+ *
+ * @param {Glide} glide
+ * @param {Object} components
  */
 function Engine(glide, components) {
   classCallCheck(this, Engine);
@@ -361,7 +361,7 @@ function siblings(node) {
  * @return {Boolean}
  */
 function exist(node) {
-  if (node && node instanceof HTMLElement) {
+  if (node && node instanceof window.HTMLElement) {
     return true;
   }
 
@@ -378,11 +378,10 @@ var DOM = function () {
 
     /**
      * Setup slider HTML nodes.
-     * 
+     *
      * @param {Glide} glide
      */
     value: function init(glide) {
-      console.log(glide.selector);
       this.element = glide.selector;
 
       this.track = this.element.querySelector('[data-glide="track"]');
@@ -442,7 +441,7 @@ var DOM = function () {
       if (exist(tr)) {
         this.tr = tr;
       } else {
-        warn('Could not find track element. Please use [' + TRACK_ATTRIBUTE + '] attribute.');
+        warn('Could not find track element. Please use [data-glide="track"] attribute.');
       }
     }
 
@@ -476,19 +475,13 @@ var DOM = function () {
 var DOM$1 = new DOM();
 
 /**
- * Returns current time in timestamp format.
- *
- * @return {Number}
- */
-function timestamp() {
-  return new Date().valueOf();
-}
-
-/**
  * Returns current time.
  *
  * @return {Number}
  */
+function now() {
+  return new Date().getTime();
+}
 
 var Core = function () {
   /**
@@ -595,11 +588,7 @@ var Core = function () {
   return Core;
 }();
 
-var Core$1 = new Core(timestamp());
-
-function ucfirst(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
+var Core$1 = new Core(now());
 
 var MODE_TO_DIMENSIONS = {
   horizontal: ['width', 'x'],
@@ -616,7 +605,7 @@ var Dimensions = function () {
 
     /**
      * Applys dimentions to the glide HTML elements.
-     * 
+     *
      * @return {Void}
      */
     value: function apply() {
@@ -628,7 +617,7 @@ var Dimensions = function () {
 
     /**
      * Setups dimentions of slides.
-     * 
+     *
      * @return {Void}
      */
 
@@ -642,7 +631,7 @@ var Dimensions = function () {
 
     /**
      * Setups dimentions of slides wrapper.
-     * 
+     *
      * @return {Void}
      */
 
@@ -654,7 +643,7 @@ var Dimensions = function () {
 
     /**
      * Gets dimentions map for current glide's mode.
-     * 
+     *
      * @return {Object}
      */
 
@@ -671,15 +660,13 @@ var Dimensions = function () {
 
     /**
      * Gets size of the single slide.
-     * 
+     *
      * @return {Number}
      */
 
   }, {
     key: 'slideSize',
     get: function get$$1() {
-      var dimention = this.dimention;
-
       if (Core$1.isMode('vertical')) {
         return this.slideHeight;
       }
@@ -689,7 +676,7 @@ var Dimensions = function () {
 
     /**
      * Gets size of the slides wrapper.
-     * 
+     *
      * @return {Number}
      */
 
@@ -701,7 +688,7 @@ var Dimensions = function () {
 
     /**
      * Gets count number of the slides.
-     * 
+     *
      * @return {Number}
      */
 
@@ -713,7 +700,7 @@ var Dimensions = function () {
 
     /**
      * Gets width value of the glide.
-     * 
+     *
      * @return {Number}
      */
 
@@ -725,7 +712,7 @@ var Dimensions = function () {
 
     /**
      * Gets height value of the glide.
-     * 
+     *
      * @return {Number}
      */
 
@@ -737,7 +724,7 @@ var Dimensions = function () {
 
     /**
      * Gets width value of the single slide.
-     * 
+     *
      * @return {Number}
      */
 
@@ -751,7 +738,7 @@ var Dimensions = function () {
 
     /**
      * Gets height value of the single slide.
-     * 
+     *
      * @return {Number}
      */
 
@@ -780,7 +767,7 @@ var Peek = function () {
 
   /**
    * Setups how much to peek based on settings.
-   * 
+   *
    * @return {Void}
    */
 
@@ -959,6 +946,10 @@ var Transition = function () {
 }();
 
 var Transition$1 = new Transition();
+
+function ucfirst(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 var Peeking = function () {
   function Peeking() {
@@ -1257,7 +1248,7 @@ var Run = function () {
 
   /**
    * Initializes autorunning of the glide.
-   * 
+   *
    * @return {self}
    */
 
@@ -1280,7 +1271,7 @@ var Run = function () {
 
     /**
      * Stops autorunning of the glide.
-     * 
+     *
      * @return {self}
      */
 
@@ -1297,11 +1288,11 @@ var Run = function () {
     }
 
     /**
-     * Handles glide status. Calculates current index 
+     * Handles glide status. Calculates current index
      * based on passed move and slider type.
-     * 
-     * @param {String} move 
-     * @param {Function} callback 
+     *
+     * @param {String} move
+     * @param {Function} callback
      */
 
   }, {
@@ -1670,9 +1661,9 @@ var Callbacks$1 = new Callbacks();
 var restArgs = function restArgs(func, startIndex) {
   startIndex = startIndex == null ? func.length - 1 : +startIndex;
   return function () {
-    var length = Math.max(arguments.length - startIndex, 0),
-        rest = Array(length),
-        index = 0;
+    var length = Math.max(arguments.length - startIndex, 0);
+    var rest = Array(length);
+    var index = 0;
     for (; index < length; index++) {
       rest[index] = arguments[index + startIndex];
     }
@@ -1769,10 +1760,10 @@ var Swipe = function (_Binder) {
     }
 
     /**
-     * Handler for `swipestart` event. 
+     * Handler for `swipestart` event.
      * Calculates entry points of the user's tap.
-     * 
-     * @param {Object} event 
+     *
+     * @param {Object} event
      * @return {Void}
      */
 
@@ -1797,10 +1788,10 @@ var Swipe = function (_Binder) {
     }
 
     /**
-     * Handler for `swipemove` event. 
-     * Calculates user's tap angle and distance. 
-     * 
-     * @param {Object} event 
+     * Handler for `swipemove` event.
+     * Calculates user's tap angle and distance.
+     *
+     * @param {Object} event
      */
 
   }, {
@@ -1837,10 +1828,10 @@ var Swipe = function (_Binder) {
     }
 
     /**
-     * Handler for `swipeend` event. Finitializes 
+     * Handler for `swipeend` event. Finitializes
      * user's tap and decides about glide move.
-     * 
-     * @param {Object} event 
+     *
+     * @param {Object} event
      * @return {Void}
      */
 
@@ -1857,20 +1848,18 @@ var Swipe = function (_Binder) {
         var swipeDeg = swipeSin * 180 / Math.PI;
         var steps = Math.round(swipeDistance / Dimensions$1.slideWidth);
 
-        // While swipe is positive and greater than
-        // distance set in options move backward.
         if (swipeDistance > _limiter && swipeDeg < 45) {
+          // While swipe is positive and greater than
+          // distance set in options move backward.
           Run$1.make('<' + steps);
-        }
-        // While swipe is negative and lower than negative
-        // distance set in options move forward.
-        else if (swipeDistance < -_limiter && swipeDeg < 45) {
-            Run$1.make('>' + steps);
-          }
+        } else if (swipeDistance < -_limiter && swipeDeg < 45) {
+          // While swipe is negative and lower than negative
+          // distance set in options move forward.
+          Run$1.make('>' + steps);
+        } else {
           // While swipe don't reach distance apply previous transform.
-          else {
-              Animation$1.make();
-            }
+          Animation$1.make();
+        }
 
         DOM$1.wrapper.classList.remove(Core$1.settings.classes.dragging);
 
@@ -2003,7 +1992,7 @@ var Swipe = function (_Binder) {
 
       Transition$1.enable();
 
-      return self;
+      return this;
     }
 
     /**
@@ -2019,7 +2008,7 @@ var Swipe = function (_Binder) {
 
       Transition$1.disable();
 
-      return self;
+      return this;
     }
 
     /**
@@ -2174,9 +2163,9 @@ var Window = function (_Binder) {
     }
 
     /**
-     * Binds `rezsize` listener to the window. 
+     * Binds `rezsize` listener to the window.
      * It's a costly event, so we are debouncing it.
-     * 
+     *
      * @return {Void}
      */
 
@@ -2188,7 +2177,7 @@ var Window = function (_Binder) {
 
     /**
      * Unbinds listeners from the window.
-     * 
+     *
      * @return {Void}
      */
 
@@ -2199,7 +2188,7 @@ var Window = function (_Binder) {
     }
 
     /**
-     * Handler for `resize` event. Rebuilds glide, 
+     * Handler for `resize` event. Rebuilds glide,
      * so its status matches new dimentions.
      */
 
@@ -2329,6 +2318,7 @@ var Glide = function () {
   createClass(Glide, [{
     key: 'init',
     value: function init() {
+      /* eslint-disable no-new */
       new Engine(this, _extends(COMPONENTS, Core$1.settings.extensions));
     }
 

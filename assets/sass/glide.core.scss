@@ -1,97 +1,95 @@
 .glide {
-	$this: &;
+  $this: &;
 
-	position: relative;
-	width: 100%;
-	height: 100%;
+  position: relative;
+  width: 100%;
+  height: 100%;
 
-	&__track {
-		overflow: hidden;
-	}
+  &__track {
+    overflow: hidden;
+  }
 
-	&__slides {
-		position: relative;
-		width: 100%;
-		height: 100%;
-		list-style: none;
-		backface-visibility: hidden;
-		transform-style: preserve-3d;
-		touch-action: pan-Y;
-		overflow: hidden;
-		padding: 0;
+  &__slides {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    list-style: none;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    touch-action: pan-Y;
+    overflow: hidden;
+    padding: 0;
 
-		&--dragging {
-			cursor: grabbing;
-			user-select: none;
-		}
-	}
+    &--dragging {
+      cursor: grabbing;
+      user-select: none;
+    }
+  }
 
-	&__slide {
-		width: 100%;
-		user-select: none;
-		-webkit-touch-callout: none;
-		-webkit-tap-highlight-color: transparent;
+  &__slide {
+    width: 100%;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
 
-		a {
-			user-select: none;
-			-webkit-user-drag: none;
-			-moz-user-select: none;
-			-ms-user-select: none;
-		}
-	}
+    a {
+      user-select: none;
+      -webkit-user-drag: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+    }
+  }
 
-	&__arrows {
-		-webkit-touch-callout: none;
-		user-select: none;
-	}
+  &__arrows {
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
 
-	&__arrow {
-		cursor: pointer;
-	}
+  &__arrow {
+    cursor: pointer;
+  }
 
-	&__bullets {
-		-webkit-touch-callout: none;
-		user-select: none;
-	}
+  &__bullets {
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
 
-	&--slider {
-		#{$this}__slide {
-			float: left;
-			clear: none;
-		}
+  &--slider {
+    #{$this}__slide {
+      float: left;
+      clear: none;
+    }
 
-		#{$this}__arrow {}
-	}
+    #{$this}__arrow {}
+  }
+  &--carousel {
+    &#{$this}--vertical {
+      #{$this}__slides {
+        overflow: visible;
+      }
+    }
 
-	&--carousel {
-		&#{$this}--vertical {
-			#{$this}__slides {
-				overflow: visible;
-			}
-		}
+    #{$this}__slide {
+      float: left;
+      clear: none;
+    }
+  }
+  &--slideshow {
+    #{$this}__track {
+      height: 100%;
+    }
 
-		#{$this}__slide {
-			float: left;
-			clear: none;
-		}
-	}
+    #{$this}__slide {
+      height: 100%;
+      position: absolute;
+      top: 0; left: 0;
+      z-index: -1;
+      -webkit-transform-style: preserve-3d;
+      -webkit-transform: translate3d(0px, 0px, 0px);
 
-	&--slideshow {
-		#{$this}__track {
-			height: 100%;
-		}
-
-		#{$this}__slide {
-			height: 100%;
-			position: absolute;
-			top: 0; left: 0;
-			z-index: -1;
-			-webkit-transform-style: preserve-3d;
-			-webkit-transform: translate3d(0px, 0px, 0px);
-
-			&--active {
-				z-index: 1;
-			}
-		}
-	}
+      &--active {
+        z-index: 1;
+      }
+    }
+  }
 }

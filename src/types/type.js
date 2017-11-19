@@ -1,10 +1,7 @@
 import Peeking from './transformers/peeking'
 import Focusing from './transformers/focusing'
 
-const TRANSFORMERS = [
-  Peeking,
-  Focusing
-]
+const TRANSFORMERS = [Peeking, Focusing]
 
 export default class Type {
   applyTransforms (translate) {

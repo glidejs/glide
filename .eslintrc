@@ -1,7 +1,11 @@
 {
   "extends": "standard",
+  "plugins": ["flowtype"],
   "parserOptions": {
     "ecmaVersion": 6,
     "sourceType": "module"
+  },
+  "env": {
+    "jest": true
   }
 }

@@ -1,7 +1,7 @@
 import warn from '../../../src/utils/warn'
 
 describe('Warn should', () => {
-  test('log an error to console', () => {
+  test('log an error to the console with suffix', () => {
     let fn = jest.fn()
     let msg = 'Message content'
 

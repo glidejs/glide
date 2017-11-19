@@ -1,4 +1,3 @@
-import Glide from '../../src/index'
 import Engine from '../../src/engine'
 
 describe('Engine should', () => {
@@ -7,6 +6,7 @@ describe('Engine should', () => {
 
     let stub = { init: fn }
 
+    /* eslint-disable no-new */
     new Engine('glide', { stub })
 
     expect(fn).toHaveBeenCalledWith('glide')

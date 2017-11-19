@@ -8,11 +8,11 @@ export default class Focusing {
     let slideSize = Dimensions.slideSize
 
     if (focusAt === 'center') {
-      translate -= (width / 2 - slideSize / 2)
+      translate -= width / 2 - slideSize / 2
     }
 
     if (focusAt >= 0) {
-      translate -= (slideSize * focusAt)
+      translate -= slideSize * focusAt
     }
 
     return translate

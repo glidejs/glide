@@ -16,6 +16,7 @@ describe('On slider instantiation', () => {
   })
 
   test('passed `options` should be extended by defaults', () => {
+    /* eslint-disable no-new */
     new Glide('#glide', { type: 'slider' })
 
     let settings = Object.assign(defaults, { type: 'slider' })
@@ -27,6 +28,7 @@ describe('On slider instantiation', () => {
     let beforeCallback = jest.fn()
     let afterCallback = jest.fn()
 
+    /* eslint-disable no-new */
     new Glide('#glide', {
       beforeInit: beforeCallback,
       afterInit: afterCallback

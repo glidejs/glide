@@ -47,14 +47,14 @@
     "eslint-plugin-node": ">=4.2.2",
     "eslint-plugin-promise": ">=3.5.0",
     "eslint-plugin-standard": ">=3.0.0",
-    "stylelint": "^8.2.0",
-    "stylelint-config-standard": "^17.0.0",
-    "stylelint-scss": "^2.1.0",
     "jest": "^20.0.4",
     "node-sass": "^4.5.3",
     "npm-watch": "^0.2.0",
     "rollup": "^0.48.2",
     "rollup-plugin-babel": "^3.0.2",
-    "rollup-plugin-uglify": "^2.0.1"
+    "rollup-plugin-uglify": "^2.0.1",
+    "stylelint": "^8.2.0",
+    "stylelint-config-standard": "^17.0.0",
+    "stylelint-scss": "^2.1.0"
   }
 }

@@ -1,4 +1,4 @@
-import DOM from './dom'
+import Html from './html'
 import Core from './core'
 import Build from './build'
 import Animation from './animation'
@@ -130,7 +130,7 @@ class Run {
    * @return {Number}
    */
   get period () {
-    let autoplay = DOM.slides[Core.index].getAttribute('data-glide-autoplay')
+    let autoplay = Html.slides[Core.index].getAttribute('data-glide-autoplay')
 
     if (autoplay) {
       return parseInt(autoplay)
@@ -146,7 +146,7 @@ class Run {
    * @return {Number}
    */
   get length () {
-    return DOM.slides.length - 1
+    return Html.slides.length - 1
   }
 }
 

@@ -2,8 +2,8 @@ import defaults from './defaults'
 
 import Engine from './engine'
 
-import DOM from './components/dom'
 import Run from './components/run'
+import Html from './components/html'
 import Core from './components/core'
 import Build from './components/build'
 import Swipe from './components/swipe'
@@ -14,7 +14,7 @@ import Anchors from './components/anchors'
 import Callbacks from './components/callbacks'
 
 const COMPONENTS = {
-  DOM,
+  Html,
   Anchors,
   Build,
   Images,

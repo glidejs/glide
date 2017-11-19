@@ -1,4 +1,4 @@
-import DOM from './dom'
+import Html from './html'
 import Core from './core'
 
 class Transition {
@@ -32,7 +32,7 @@ class Transition {
    * @return {self}
    */
   set (property) {
-    DOM.wrapper.style.transition = this.get(property)
+    Html.wrapper.style.transition = this.get(property)
 
     return this
   }

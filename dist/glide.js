@@ -126,7 +126,7 @@ var defaults = {
   peek: 0,
 
   /**
-   * List of internally used DOM classes.
+   * List of internally used Html classes.
    *
    * @type {Object}
    */
@@ -369,15 +369,13 @@ function exist(node) {
 }
 
 var TRACK_SELECTOR = '[data-glide-el="track"]';
-var ARROWS_SELECTOR = '[data-glide-el="arrows"]';
-var BULLETS_SELECTOR = '[data-glide-el="bullets"]';
 
-var DOM = function () {
-  function DOM() {
-    classCallCheck(this, DOM);
+var Html = function () {
+  function Html() {
+    classCallCheck(this, Html);
   }
 
-  createClass(DOM, [{
+  createClass(Html, [{
     key: 'init',
 
     /**
@@ -386,11 +384,8 @@ var DOM = function () {
      * @param {Glide} glide
      */
     value: function init(glide) {
-      this.element = glide.selector;
-
-      this.track = this.element.querySelector(TRACK_SELECTOR);
-      this.arrows = this.element.querySelector(ARROWS_SELECTOR);
-      this.bullets = this.element.querySelector(BULLETS_SELECTOR);
+      this.root = glide.selector;
+      this.track = this.root.querySelector(TRACK_SELECTOR);
     }
 
     /**
@@ -400,7 +395,7 @@ var DOM = function () {
      */
 
   }, {
-    key: 'element',
+    key: 'root',
     get: function get$$1() {
       return this.el;
     }
@@ -473,10 +468,10 @@ var DOM = function () {
       return this.wrapper.children;
     }
   }]);
-  return DOM;
+  return Html;
 }();
 
-var DOM$1 = new DOM();
+var Html$1 = new Html();
 
 /**
  * Returns current time.
@@ -628,8 +623,8 @@ var Dimensions = function () {
   }, {
     key: 'setupSlides',
     value: function setupSlides(dimention) {
-      for (var i = 0; i < DOM$1.slides.length; i++) {
-        DOM$1.slides[i].style[dimention] = this.slideSize + 'px';
+      for (var i = 0; i < Html$1.slides.length; i++) {
+        Html$1.slides[i].style[dimention] = this.slideSize + 'px';
       }
     }
 
@@ -642,7 +637,7 @@ var Dimensions = function () {
   }, {
     key: 'setupWrapper',
     value: function setupWrapper(dimention) {
-      DOM$1.wrapper.style[dimention] = this.wrapperSize + 'px';
+      Html$1.wrapper.style[dimention] = this.wrapperSize + 'px';
     }
 
     /**
@@ -699,7 +694,7 @@ var Dimensions = function () {
   }, {
     key: 'length',
     get: function get$$1() {
-      return DOM$1.slides.length;
+      return Html$1.slides.length;
     }
 
     /**
@@ -711,7 +706,7 @@ var Dimensions = function () {
   }, {
     key: 'width',
     get: function get$$1() {
-      return DOM$1.element.offsetWidth;
+      return Html$1.root.offsetWidth;
     }
 
     /**
@@ -723,7 +718,7 @@ var Dimensions = function () {
   }, {
     key: 'height',
     get: function get$$1() {
-      return DOM$1.element.offsetHeight;
+      return Html$1.root.offsetHeight;
     }
 
     /**
@@ -737,7 +732,7 @@ var Dimensions = function () {
     get: function get$$1() {
       var perView = Core$1.settings.perView;
 
-      return DOM$1.element.offsetWidth / perView - Peek$1.value / perView;
+      return Html$1.root.offsetWidth / perView - Peek$1.value / perView;
     }
 
     /**
@@ -751,7 +746,7 @@ var Dimensions = function () {
     get: function get$$1() {
       var perView = Core$1.settings.perView;
 
-      return DOM$1.element.offsetHeight / perView - Peek$1.value / perView;
+      return Html$1.root.offsetHeight / perView - Peek$1.value / perView;
     }
   }]);
   return Dimensions;
@@ -861,7 +856,7 @@ var Translate = function () {
   }, {
     key: 'set',
     value: function set$$1(value) {
-      DOM$1.wrapper.style.transform = this.get(value);
+      Html$1.wrapper.style.transform = this.get(value);
 
       return this;
     }
@@ -913,7 +908,7 @@ var Transition = function () {
   }, {
     key: 'set',
     value: function set$$1(property) {
-      DOM$1.wrapper.style.transition = this.get(property);
+      Html$1.wrapper.style.transition = this.get(property);
 
       return this;
     }
@@ -1193,9 +1188,7 @@ var Build = function () {
     value: function typeClass() {
       var settings = Core$1.settings;
 
-      var type = settings.classes[settings.type];
-
-      DOM$1.element.classList.add(type);
+      Html$1.root.classList.add(settings.classes[settings.type]);
     }
 
     /**
@@ -1209,9 +1202,7 @@ var Build = function () {
     value: function modeClass() {
       var settings = Core$1.settings;
 
-      var mode = settings.classes[settings.mode];
-
-      DOM$1.element.classList.add(mode);
+      Html$1.root.classList.add(settings.classes[settings.mode]);
     }
 
     /**
@@ -1224,8 +1215,7 @@ var Build = function () {
     key: 'activeClass',
     value: function activeClass() {
       var settings = Core$1.settings;
-
-      var slide = DOM$1.slides[Core$1.index];
+      var slide = Html$1.slides[Core$1.index];
 
       slide.classList.add(settings.classes.activeSlide);
 
@@ -1392,7 +1382,7 @@ var Run = function () {
   }, {
     key: 'period',
     get: function get$$1() {
-      var autoplay = DOM$1.slides[Core$1.index].getAttribute('data-glide-autoplay');
+      var autoplay = Html$1.slides[Core$1.index].getAttribute('data-glide-autoplay');
 
       if (autoplay) {
         return parseInt(autoplay);
@@ -1411,7 +1401,7 @@ var Run = function () {
   }, {
     key: 'length',
     get: function get$$1() {
-      return DOM$1.slides.length - 1;
+      return Html$1.slides.length - 1;
     }
   }]);
   return Run;
@@ -1505,7 +1495,7 @@ var Anchors = function (_Binder) {
   createClass(Anchors, [{
     key: 'init',
     value: function init() {
-      this.links = DOM$1.wrapper.querySelectorAll('a');
+      this.links = Html$1.wrapper.querySelectorAll('a');
 
       this.bind();
     }
@@ -1519,7 +1509,7 @@ var Anchors = function (_Binder) {
   }, {
     key: 'bind',
     value: function bind() {
-      this.on('click', DOM$1.wrapper, this.click.bind(this));
+      this.on('click', Html$1.wrapper, this.click.bind(this));
     }
 
     /**
@@ -1822,7 +1812,7 @@ var Swipe = function (_Binder) {
           event.stopPropagation();
           event.preventDefault();
 
-          DOM$1.wrapper.classList.add(Core$1.settings.classes.dragging);
+          Html$1.wrapper.classList.add(Core$1.settings.classes.dragging);
         } else {
           return;
         }
@@ -1865,7 +1855,7 @@ var Swipe = function (_Binder) {
           Animation$1.make();
         }
 
-        DOM$1.wrapper.classList.remove(Core$1.settings.classes.dragging);
+        Html$1.wrapper.classList.remove(Core$1.settings.classes.dragging);
 
         this.unbindSwipeMove();
         this.unbindSwipeEnd();
@@ -1888,11 +1878,11 @@ var Swipe = function (_Binder) {
     key: 'bindSwipeStart',
     value: function bindSwipeStart() {
       if (Core$1.settings.swipeDistance) {
-        this.on(START_EVENTS[0], DOM$1.wrapper, this.start.bind(this));
+        this.on(START_EVENTS[0], Html$1.wrapper, this.start.bind(this));
       }
 
       if (Core$1.settings.dragDistance) {
-        this.on(START_EVENTS[1], DOM$1.wrapper, this.start.bind(this));
+        this.on(START_EVENTS[1], Html$1.wrapper, this.start.bind(this));
       }
     }
 
@@ -1905,8 +1895,8 @@ var Swipe = function (_Binder) {
   }, {
     key: 'unbindSwipeStart',
     value: function unbindSwipeStart() {
-      this.off(START_EVENTS[0], DOM$1.wrapper);
-      this.off(START_EVENTS[1], DOM$1.wrapper);
+      this.off(START_EVENTS[0], Html$1.wrapper);
+      this.off(START_EVENTS[1], Html$1.wrapper);
     }
 
     /**
@@ -1918,7 +1908,7 @@ var Swipe = function (_Binder) {
   }, {
     key: 'bindSwipeMove',
     value: function bindSwipeMove() {
-      this.on(MOVE_EVENTS, DOM$1.wrapper, this.move.bind(this));
+      this.on(MOVE_EVENTS, Html$1.wrapper, this.move.bind(this));
     }
 
     /**
@@ -1930,7 +1920,7 @@ var Swipe = function (_Binder) {
   }, {
     key: 'unbindSwipeMove',
     value: function unbindSwipeMove() {
-      this.off(MOVE_EVENTS, DOM$1.wrapper);
+      this.off(MOVE_EVENTS, Html$1.wrapper);
     }
 
     /**
@@ -1942,7 +1932,7 @@ var Swipe = function (_Binder) {
   }, {
     key: 'bindSwipeEnd',
     value: function bindSwipeEnd() {
-      this.on(END_EVENTS, DOM$1.wrapper, this.end.bind(this));
+      this.on(END_EVENTS, Html$1.wrapper, this.end.bind(this));
     }
 
     /**
@@ -1954,7 +1944,7 @@ var Swipe = function (_Binder) {
   }, {
     key: 'unbindSwipeEnd',
     value: function unbindSwipeEnd() {
-      this.off(END_EVENTS, DOM$1.wrapper);
+      this.off(END_EVENTS, Html$1.wrapper);
     }
   }, {
     key: 'touches',
@@ -2032,6 +2022,8 @@ var Swipe = function (_Binder) {
 
 var Swipe$1 = new Swipe();
 
+var ARROWS_SELECTOR = '[data-glide-el="arrows"]';
+
 var Arrows = function (_Binder) {
   inherits(Arrows, _Binder);
 
@@ -2050,6 +2042,8 @@ var Arrows = function (_Binder) {
      * @return {Void}
      */
     value: function init() {
+      this.element = Html$1.root.querySelector(ARROWS_SELECTOR);
+
       this.bind();
     }
 
@@ -2140,7 +2134,7 @@ var Arrows = function (_Binder) {
   }, {
     key: 'items',
     get: function get$$1() {
-      return DOM$1.arrows.children;
+      return this.element.children;
     }
   }]);
   return Arrows;
@@ -2243,7 +2237,7 @@ var Images = function (_Binder) {
   }, {
     key: 'bind',
     value: function bind() {
-      this.on('dragstart', DOM$1.wrapper, this.dragstart);
+      this.on('dragstart', Html$1.wrapper, this.dragstart);
     }
 
     /**
@@ -2255,7 +2249,7 @@ var Images = function (_Binder) {
   }, {
     key: 'unbind',
     value: function unbind() {
-      this.off('dragstart', DOM$1.wrapper, this.dragstart);
+      this.off('dragstart', Html$1.wrapper, this.dragstart);
     }
 
     /**
@@ -2276,7 +2270,7 @@ var Images = function (_Binder) {
 var Images$1 = new Images();
 
 var COMPONENTS = {
-  DOM: DOM$1,
+  Html: Html$1,
   Anchors: Anchors$1,
   Build: Build$1,
   Images: Images$1,

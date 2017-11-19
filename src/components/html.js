@@ -2,21 +2,16 @@ import warn from '../utils/warn'
 import { exist } from '../utils/dom'
 
 const TRACK_SELECTOR = '[data-glide-el="track"]'
-const ARROWS_SELECTOR = '[data-glide-el="arrows"]'
-const BULLETS_SELECTOR = '[data-glide-el="bullets"]'
 
-class DOM {
+class Html {
   /**
    * Setup slider HTML nodes.
    *
    * @param {Glide} glide
    */
   init (glide) {
-    this.element = glide.selector
-
-    this.track = this.element.querySelector(TRACK_SELECTOR)
-    this.arrows = this.element.querySelector(ARROWS_SELECTOR)
-    this.bullets = this.element.querySelector(BULLETS_SELECTOR)
+    this.root = glide.selector
+    this.track = this.root.querySelector(TRACK_SELECTOR)
   }
 
   /**
@@ -24,7 +19,7 @@ class DOM {
    *
    * @return {Object}
    */
-  get element () {
+  get root () {
     return this.el
   }
 
@@ -33,7 +28,7 @@ class DOM {
    *
    * @return {Object}
    */
-  set element (el) {
+  set root (el) {
     if (typeof el === 'string') {
       el = document.querySelector(el)
     }
@@ -86,4 +81,4 @@ class DOM {
   }
 }
 
-export default new DOM()
+export default new Html()

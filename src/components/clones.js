@@ -37,7 +37,7 @@ class Clones {
    */
   collect () {
     for (let i = 0; i < this.pattern.length; i++) {
-      let clone = DOM.slides[this.pattern[i]]
+      let clone = Html.slides[this.pattern[i]]
         .cloneNode(true)
         .classList.add(Core.settings.classes.clone)
 
@@ -55,9 +55,9 @@ class Clones {
       let item = this.items[i]
 
       if (this.pattern[i] >= 0) {
-        DOM.wrapper.appendChild(item)
+        Html.wrapper.appendChild(item)
       } else {
-        DOM.wrapper.insertBefore(item)
+        Html.wrapper.insertBefore(item)
       }
     }
   }

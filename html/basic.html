@@ -42,7 +42,9 @@
 <script src="../dist/glide.js"></script>
 
 <script>
-  var glide = new Glide('.glide', {
+  var el = document.querySelector('.glide')
+
+  var glide = new Glide(el, {
     perView: 4,
     startAt: 0,
     focusAt: 0,

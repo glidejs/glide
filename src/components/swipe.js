@@ -1,4 +1,4 @@
-import DOM from './dom'
+import Html from './html'
 import Run from './run'
 import Core from './core'
 import Anchors from './anchors'
@@ -94,7 +94,7 @@ class Swipe extends Binder {
         event.stopPropagation()
         event.preventDefault()
 
-        DOM.wrapper.classList.add(Core.settings.classes.dragging)
+        Html.wrapper.classList.add(Core.settings.classes.dragging)
       } else {
         return
       }
@@ -134,7 +134,7 @@ class Swipe extends Binder {
         Animation.make()
       }
 
-      DOM.wrapper.classList.remove(Core.settings.classes.dragging)
+      Html.wrapper.classList.remove(Core.settings.classes.dragging)
 
       this.unbindSwipeMove()
       this.unbindSwipeEnd()
@@ -154,11 +154,11 @@ class Swipe extends Binder {
  */
   bindSwipeStart () {
     if (Core.settings.swipeDistance) {
-      this.on(START_EVENTS[0], DOM.wrapper, this.start.bind(this))
+      this.on(START_EVENTS[0], Html.wrapper, this.start.bind(this))
     }
 
     if (Core.settings.dragDistance) {
-      this.on(START_EVENTS[1], DOM.wrapper, this.start.bind(this))
+      this.on(START_EVENTS[1], Html.wrapper, this.start.bind(this))
     }
   }
 
@@ -168,8 +168,8 @@ class Swipe extends Binder {
    * @return {Void}
    */
   unbindSwipeStart () {
-    this.off(START_EVENTS[0], DOM.wrapper)
-    this.off(START_EVENTS[1], DOM.wrapper)
+    this.off(START_EVENTS[0], Html.wrapper)
+    this.off(START_EVENTS[1], Html.wrapper)
   }
 
   /**
@@ -178,7 +178,7 @@ class Swipe extends Binder {
    * @return {Void}
    */
   bindSwipeMove () {
-    this.on(MOVE_EVENTS, DOM.wrapper, this.move.bind(this))
+    this.on(MOVE_EVENTS, Html.wrapper, this.move.bind(this))
   }
 
   /**
@@ -187,7 +187,7 @@ class Swipe extends Binder {
    * @return {Void}
    */
   unbindSwipeMove () {
-    this.off(MOVE_EVENTS, DOM.wrapper)
+    this.off(MOVE_EVENTS, Html.wrapper)
   }
 
   /**
@@ -196,7 +196,7 @@ class Swipe extends Binder {
    * @return {Void}
    */
   bindSwipeEnd () {
-    this.on(END_EVENTS, DOM.wrapper, this.end.bind(this))
+    this.on(END_EVENTS, Html.wrapper, this.end.bind(this))
   }
 
   /**
@@ -205,7 +205,7 @@ class Swipe extends Binder {
    * @return {Void}
    */
   unbindSwipeEnd () {
-    this.off(END_EVENTS, DOM.wrapper)
+    this.off(END_EVENTS, Html.wrapper)
   }
 
   touches (event) {

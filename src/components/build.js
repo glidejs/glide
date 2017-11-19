@@ -1,4 +1,4 @@
-import DOM from './dom'
+import Html from './html'
 import Core from './core'
 import Peek from './peek'
 import Animation from './animation'
@@ -43,11 +43,9 @@ class Build {
    * @return {Void}
    */
   typeClass () {
-    const settings = Core.settings
+    let settings = Core.settings
 
-    let type = settings.classes[settings.type]
-
-    DOM.element.classList.add(type)
+    Html.root.classList.add(settings.classes[settings.type])
   }
 
   /**
@@ -56,11 +54,9 @@ class Build {
    * @return {Void}
    */
   modeClass () {
-    const settings = Core.settings
+    let settings = Core.settings
 
-    let mode = settings.classes[settings.mode]
-
-    DOM.element.classList.add(mode)
+    Html.root.classList.add(settings.classes[settings.mode])
   }
 
   /**
@@ -69,9 +65,8 @@ class Build {
    * @return {Void}
    */
   activeClass () {
-    const settings = Core.settings
-
-    let slide = DOM.slides[Core.index]
+    let settings = Core.settings
+    let slide = Html.slides[Core.index]
 
     slide.classList.add(settings.classes.activeSlide)
 

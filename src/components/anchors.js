@@ -1,4 +1,4 @@
-import DOM from './dom'
+import Html from './html'
 
 import Binder from '../binder'
 
@@ -19,7 +19,7 @@ class Anchors extends Binder {
    * @return {Void}
    */
   init () {
-    this.links = DOM.wrapper.querySelectorAll('a')
+    this.links = Html.wrapper.querySelectorAll('a')
 
     this.bind()
   }
@@ -30,7 +30,7 @@ class Anchors extends Binder {
    * @return {Void}
    */
   bind () {
-    this.on('click', DOM.wrapper, this.click.bind(this))
+    this.on('click', Html.wrapper, this.click.bind(this))
   }
 
   /**

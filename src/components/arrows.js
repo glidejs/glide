@@ -1,9 +1,11 @@
-import DOM from './dom'
+import Html from './html'
 import Run from './run'
 import Core from './core'
 import Animation from './animation'
 
 import Binder from '../binder'
+
+const ARROWS_SELECTOR = '[data-glide-el="arrows"]'
 
 class Arrows extends Binder {
   /**
@@ -13,6 +15,8 @@ class Arrows extends Binder {
    * @return {Void}
    */
   init () {
+    this.element = Html.root.querySelector(ARROWS_SELECTOR)
+
     this.bind()
   }
 
@@ -88,7 +92,7 @@ class Arrows extends Binder {
    * @return {HTMLElement[]}
    */
   get items () {
-    return DOM.arrows.children
+    return this.element.children
   }
 }
 

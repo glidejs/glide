@@ -1,4 +1,4 @@
-import DOM from './dom'
+import Html from './html'
 
 import Binder from '../binder'
 
@@ -18,7 +18,7 @@ class Images extends Binder {
    * @return {Void}
    */
   bind () {
-    this.on('dragstart', DOM.wrapper, this.dragstart)
+    this.on('dragstart', Html.wrapper, this.dragstart)
   }
 
   /**
@@ -27,7 +27,7 @@ class Images extends Binder {
    * @return {Void}
    */
   unbind () {
-    this.off('dragstart', DOM.wrapper, this.dragstart)
+    this.off('dragstart', Html.wrapper, this.dragstart)
   }
 
   /**

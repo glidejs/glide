@@ -1,4 +1,4 @@
-import DOM from './dom'
+import Html from './html'
 import Core from './core'
 import Peek from './peek'
 
@@ -26,8 +26,8 @@ class Dimensions {
    * @return {Void}
    */
   setupSlides (dimention) {
-    for (var i = 0; i < DOM.slides.length; i++) {
-      DOM.slides[i].style[dimention] = `${this.slideSize}px`
+    for (var i = 0; i < Html.slides.length; i++) {
+      Html.slides[i].style[dimention] = `${this.slideSize}px`
     }
   }
 
@@ -37,7 +37,7 @@ class Dimensions {
    * @return {Void}
    */
   setupWrapper (dimention) {
-    DOM.wrapper.style[dimention] = `${this.wrapperSize}px`
+    Html.wrapper.style[dimention] = `${this.wrapperSize}px`
   }
 
   /**
@@ -82,7 +82,7 @@ class Dimensions {
    * @return {Number}
    */
   get length () {
-    return DOM.slides.length
+    return Html.slides.length
   }
 
   /**
@@ -91,7 +91,7 @@ class Dimensions {
    * @return {Number}
    */
   get width () {
-    return DOM.element.offsetWidth
+    return Html.root.offsetWidth
   }
 
   /**
@@ -100,7 +100,7 @@ class Dimensions {
    * @return {Number}
    */
   get height () {
-    return DOM.element.offsetHeight
+    return Html.root.offsetHeight
   }
 
   /**
@@ -111,7 +111,7 @@ class Dimensions {
   get slideWidth () {
     let perView = Core.settings.perView
 
-    return (DOM.element.offsetWidth / perView) - (Peek.value / perView)
+    return (Html.root.offsetWidth / perView) - (Peek.value / perView)
   }
 
   /**
@@ -122,7 +122,7 @@ class Dimensions {
   get slideHeight () {
     let perView = Core.settings.perView
 
-    return (DOM.element.offsetHeight / perView) - (Peek.value / perView)
+    return (Html.root.offsetHeight / perView) - (Peek.value / perView)
   }
 }
 

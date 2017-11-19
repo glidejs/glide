@@ -114,7 +114,7 @@ export default {
   peek: 0,
 
   /**
-   * List of internally used DOM classes.
+   * List of internally used Html classes.
    *
    * @type {Object}
    */

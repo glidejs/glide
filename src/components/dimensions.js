@@ -111,7 +111,7 @@ class Dimensions {
   get slideWidth () {
     let perView = Core.settings.perView
 
-    return (Html.root.offsetWidth / perView) - (Peek.value / perView)
+    return Html.root.offsetWidth / perView - Peek.value / perView
   }
 
   /**
@@ -122,7 +122,7 @@ class Dimensions {
   get slideHeight () {
     let perView = Core.settings.perView
 
-    return (Html.root.offsetHeight / perView) - (Peek.value / perView)
+    return Html.root.offsetHeight / perView - Peek.value / perView
   }
 }
 

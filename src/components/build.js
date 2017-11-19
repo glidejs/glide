@@ -70,7 +70,7 @@ class Build {
 
     slide.classList.add(settings.classes.activeSlide)
 
-    siblings(slide).forEach((sibling) => {
+    siblings(slide).forEach(sibling => {
       sibling.classList.remove(settings.classes.activeSlide)
     })
   }

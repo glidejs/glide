@@ -21,7 +21,9 @@ class Run {
     if (Core.settings.autoplay || this.running) {
       if (typeof this.interval === 'undefined') {
         this.interval = setInterval(() => {
-          this.stop().make('>').init()
+          this.stop()
+            .make('>')
+            .init()
         }, this.period)
       }
     }
@@ -53,7 +55,7 @@ class Run {
    */
   make (move, callback) {
     this.direction = move.substr(0, 1)
-    this.steps = (move.substr(1)) ? parseInt(move.substr(1)) : 0
+    this.steps = move.substr(1) ? parseInt(move.substr(1)) : 0
 
     switch (this.direction) {
       case '>':

@@ -68,14 +68,35 @@ export default {
    *
    * @type {Number}
    */
-  swipeDistance: 80,
+  swipeThreshold: 80,
 
   /**
    * Minimal mouse drag distance needed to change slide, `false` for turning off mouse drag.
    *
    * @type {Number}
    */
-  dragDistance: 120,
+  dragThreshold: 120,
+
+  /**
+   * A maximum number of slides to whom movement is maked on swiping or dragging, `false` for unlimited.
+   *
+   * @type {Number}
+   */
+  perTouch: false,
+
+  /**
+   * Moving ratio of the slides on a swiping and dragging.
+   *
+   * @type {Number}
+   */
+  touchRatio: 0.75,
+
+  /**
+   * Angle required to activate slides moving on swiping or dragging.
+   *
+   * @type {Number}
+   */
+  touchAngle: 45,
 
   /**
    * Duration of the animation in milliseconds.
@@ -143,54 +164,54 @@ export default {
    *
    * @param {Object} event
    */
-  beforeInit (event) { },
+  beforeInit (event) {},
 
   /**
    * Callback that fires after a slider initialization.
    *
    * @param {Object} event
    */
-  afterInit (event) { },
+  afterInit (event) {},
 
   /**
    * Callback that fires before a slide change.
    *
    * @param {Object} event
    */
-  beforeTransition (event) { },
+  beforeTransition (event) {},
 
   /**
    * Callback that fires during changing of a slide.
    *
    * @param {Object} event
    */
-  duringTransition (event) { },
+  duringTransition (event) {},
 
   /**
    * Callback that fires after a slide change.
    *
    * @param {Object} event
    */
-  afterTransition (event) { },
+  afterTransition (event) {},
 
   /**
    * Callback that fires on start of touch/drag interaction.
    *
    * @param {Object} event
    */
-  swipeStart (event) { },
+  swipeStart (event) {},
 
   /**
    * Callback that fires during touch/drag interaction.
    *
    * @param {Object} event
    */
-  swipeMove (event) { },
+  swipeMove (event) {},
 
   /**
    * Callback that fires on end of touch/drag interaction.
    *
    * @param {Object} event
    */
-  swipeEnd (event) { }
+  swipeEnd (event) {}
 }

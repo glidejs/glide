@@ -80,14 +80,35 @@ var defaults = {
    *
    * @type {Number}
    */
-  swipeDistance: 80,
+  swipeThreshold: 80,
 
   /**
    * Minimal mouse drag distance needed to change slide, `false` for turning off mouse drag.
    *
    * @type {Number}
    */
-  dragDistance: 120,
+  dragThreshold: 120,
+
+  /**
+   * A maximum number of slides to whom movement is maked on swiping or dragging, `false` for unlimited.
+   *
+   * @type {Number}
+   */
+  perTouch: false,
+
+  /**
+   * Moving ratio of the slides on a swiping and dragging.
+   *
+   * @type {Number}
+   */
+  touchRatio: 0.75,
+
+  /**
+   * Angle required to activate slides moving on swiping or dragging.
+   *
+   * @type {Number}
+   */
+  touchAngle: 45,
 
   /**
    * Duration of the animation in milliseconds.
@@ -1650,77 +1671,11 @@ var Callbacks = function () {
 
 var Callbacks$1 = new Callbacks();
 
-// Similar to ES6's rest param (http://ariya.ofilabs.com/2013/03/es6-and-rest-parameter.html)
-// This accumulates the arguments passed into an array, after a given index.
-var restArgs = function restArgs(func, startIndex) {
-  startIndex = startIndex == null ? func.length - 1 : +startIndex;
-  return function () {
-    var length = Math.max(arguments.length - startIndex, 0);
-    var rest = Array(length);
-    var index = 0;
-    for (; index < length; index++) {
-      rest[index] = arguments[index + startIndex];
-    }
-    switch (startIndex) {
-      case 0:
-        return func.call(this, rest);
-      case 1:
-        return func.call(this, arguments[0], rest);
-      case 2:
-        return func.call(this, arguments[0], arguments[1], rest);
-    }
-    var args = Array(startIndex + 1);
-    for (index = 0; index < startIndex; index++) {
-      args[index] = arguments[index];
-    }
-    args[startIndex] = rest;
-    return func.apply(this, args);
-  };
-};
-
-// Delays a function for the given number of milliseconds, and then calls
-// it with the arguments supplied.
-var delay = restArgs(function (func, wait, args) {
-  return setTimeout(function () {
-    return func.apply(null, args);
-  }, wait);
-});
-
-function debounce(func, wait, immediate) {
-  var timeout, result;
-
-  var later = function later(context, args) {
-    timeout = null;
-    if (args) result = func.apply(context, args);
-  };
-
-  var debounced = restArgs(function (args) {
-    if (timeout) clearTimeout(timeout);
-    if (immediate) {
-      var callNow = !timeout;
-      timeout = setTimeout(later, wait);
-      if (callNow) result = func.apply(this, args);
-    } else {
-      timeout = delay(later, wait, this, args);
-    }
-
-    return result;
-  });
-
-  debounced.cancel = function () {
-    clearTimeout(timeout);
-    timeout = null;
-  };
-
-  return debounced;
-}
-
 var START_EVENTS = ['touchstart', 'mousedown'];
 var MOVE_EVENTS = ['touchmove', 'mousemove'];
 var END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave'];
 var MOUSE_EVENTS = ['mousedown', 'mousemove', 'mouseup', 'mouseleave'];
 
-var distance = 0;
 var swipeSin = 0;
 var swipeStartX = 0;
 var swipeStartY = 0;
@@ -1802,13 +1757,12 @@ var Swipe = function (_Binder) {
         var swipeCathetus = Math.sqrt(powEY);
 
         swipeSin = Math.asin(swipeCathetus / swipeHypotenuse);
-        distance = swipe.pageX - swipeStartX;
 
-        if (swipeSin * 180 / Math.PI < 45) {
-          Animation$1.make(subExSx);
+        if (swipeSin * 180 / Math.PI < Core$1.settings.touchAngle) {
+          Animation$1.make(subExSx * parseFloat(Core$1.settings.touchRatio));
         }
 
-        if (swipeSin * 180 / Math.PI < 45) {
+        if (swipeSin * 180 / Math.PI < Core$1.settings.touchAngle) {
           event.stopPropagation();
           event.preventDefault();
 
@@ -1834,7 +1788,7 @@ var Swipe = function (_Binder) {
     value: function end(event) {
       if (this.enabled) {
         var swipe = this.touches(event);
-        var _limiter = this.limiter(event);
+        var threshold = this.threshold(event);
 
         this.enable();
 
@@ -1842,13 +1796,19 @@ var Swipe = function (_Binder) {
         var swipeDeg = swipeSin * 180 / Math.PI;
         var steps = Math.round(swipeDistance / Dimensions$1.slideWidth);
 
-        if (swipeDistance > _limiter && swipeDeg < 45) {
-          // While swipe is positive and greater than
-          // distance set in options move backward.
+        if (swipeDistance > threshold && swipeDeg < Core$1.settings.touchAngle) {
+          // While swipe is positive and greater than threshold move backward.
+          if (Core$1.settings.perTouch) {
+            steps = Math.min(steps, parseInt(Core$1.settings.perTouch));
+          }
+
           Run$1.make('<' + steps);
-        } else if (swipeDistance < -_limiter && swipeDeg < 45) {
-          // While swipe is negative and lower than negative
-          // distance set in options move forward.
+        } else if (swipeDistance < -threshold && swipeDeg < Core$1.settings.touchAngle) {
+          // While swipe is negative and lower than negative threshold move forward.
+          if (Core$1.settings.perTouch) {
+            steps = Math.max(steps, -parseInt(Core$1.settings.perTouch));
+          }
+
           Run$1.make('>' + steps);
         } else {
           // While swipe don't reach distance apply previous transform.
@@ -1877,11 +1837,11 @@ var Swipe = function (_Binder) {
   }, {
     key: 'bindSwipeStart',
     value: function bindSwipeStart() {
-      if (Core$1.settings.swipeDistance) {
+      if (Core$1.settings.swipeThreshold) {
         this.on(START_EVENTS[0], Html$1.wrapper, this.start.bind(this));
       }
 
-      if (Core$1.settings.dragDistance) {
+      if (Core$1.settings.dragThreshold) {
         this.on(START_EVENTS[1], Html$1.wrapper, this.start.bind(this));
       }
     }
@@ -1964,13 +1924,13 @@ var Swipe = function (_Binder) {
      */
 
   }, {
-    key: 'limiter',
-    value: function limiter(event) {
+    key: 'threshold',
+    value: function threshold(event) {
       if (MOUSE_EVENTS.includes(event.type)) {
-        return Core$1.settings.dragDistance;
+        return Core$1.settings.dragThreshold;
       }
 
-      return Core$1.settings.swipeDistance;
+      return Core$1.settings.swipeThreshold;
     }
 
     /**
@@ -2141,6 +2101,71 @@ var Arrows = function (_Binder) {
 }(Binder);
 
 var Arrows$1 = new Arrows();
+
+// Similar to ES6's rest param (http://ariya.ofilabs.com/2013/03/es6-and-rest-parameter.html)
+// This accumulates the arguments passed into an array, after a given index.
+var restArgs = function restArgs(func, startIndex) {
+  startIndex = startIndex == null ? func.length - 1 : +startIndex;
+  return function () {
+    var length = Math.max(arguments.length - startIndex, 0);
+    var rest = Array(length);
+    var index = 0;
+    for (; index < length; index++) {
+      rest[index] = arguments[index + startIndex];
+    }
+    switch (startIndex) {
+      case 0:
+        return func.call(this, rest);
+      case 1:
+        return func.call(this, arguments[0], rest);
+      case 2:
+        return func.call(this, arguments[0], arguments[1], rest);
+    }
+    var args = Array(startIndex + 1);
+    for (index = 0; index < startIndex; index++) {
+      args[index] = arguments[index];
+    }
+    args[startIndex] = rest;
+    return func.apply(this, args);
+  };
+};
+
+// Delays a function for the given number of milliseconds, and then calls
+// it with the arguments supplied.
+var delay = restArgs(function (func, wait, args) {
+  return setTimeout(function () {
+    return func.apply(null, args);
+  }, wait);
+});
+
+function debounce(func, wait, immediate) {
+  var timeout, result;
+
+  var later = function later(context, args) {
+    timeout = null;
+    if (args) result = func.apply(context, args);
+  };
+
+  var debounced = restArgs(function (args) {
+    if (timeout) clearTimeout(timeout);
+    if (immediate) {
+      var callNow = !timeout;
+      timeout = setTimeout(later, wait);
+      if (callNow) result = func.apply(this, args);
+    } else {
+      timeout = delay(later, wait, this, args);
+    }
+
+    return result;
+  });
+
+  debounced.cancel = function () {
+    clearTimeout(timeout);
+    timeout = null;
+  };
+
+  return debounced;
+}
 
 var Window = function (_Binder) {
   inherits(Window, _Binder);

@@ -8,7 +8,7 @@ class Callbacks {
    * @return {self}
    */
   call (closure) {
-    if ((closure !== 'undefined') && (typeof closure === 'function')) {
+    if (closure !== 'undefined' && typeof closure === 'function') {
       closure(this.attrs)
     }
   }

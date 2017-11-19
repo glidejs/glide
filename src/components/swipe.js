@@ -9,15 +9,11 @@ import Transition from './transition'
 
 import Binder from '../binder'
 
-import debounce from '../utils/debounce'
-
 const START_EVENTS = ['touchstart', 'mousedown']
 const MOVE_EVENTS = ['touchmove', 'mousemove']
 const END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave']
 const MOUSE_EVENTS = ['mousedown', 'mousemove', 'mouseup', 'mouseleave']
 
-let limiter = 0
-let distance = 0
 let swipeSin = 0
 let swipeStartX = 0
 let swipeStartY = 0
@@ -84,13 +80,12 @@ class Swipe extends Binder {
       let swipeCathetus = Math.sqrt(powEY)
 
       swipeSin = Math.asin(swipeCathetus / swipeHypotenuse)
-      distance = swipe.pageX - swipeStartX
 
-      if ((swipeSin * 180 / Math.PI) < 45) {
-        Animation.make(subExSx)
+      if (swipeSin * 180 / Math.PI < Core.settings.touchAngle) {
+        Animation.make(subExSx * parseFloat(Core.settings.touchRatio))
       }
 
-      if ((swipeSin * 180 / Math.PI) < 45) {
+      if (swipeSin * 180 / Math.PI < Core.settings.touchAngle) {
         event.stopPropagation()
         event.preventDefault()
 
@@ -113,7 +108,7 @@ class Swipe extends Binder {
   end (event) {
     if (this.enabled) {
       let swipe = this.touches(event)
-      let limiter = this.limiter(event)
+      let threshold = this.threshold(event)
 
       this.enable()
 
@@ -121,13 +116,22 @@ class Swipe extends Binder {
       let swipeDeg = swipeSin * 180 / Math.PI
       let steps = Math.round(swipeDistance / Dimensions.slideWidth)
 
-      if (swipeDistance > limiter && swipeDeg < 45) {
-        // While swipe is positive and greater than
-        // distance set in options move backward.
+      if (swipeDistance > threshold && swipeDeg < Core.settings.touchAngle) {
+        // While swipe is positive and greater than threshold move backward.
+        if (Core.settings.perTouch) {
+          steps = Math.min(steps, parseInt(Core.settings.perTouch))
+        }
+
         Run.make(`<${steps}`)
-      } else if (swipeDistance < -limiter && swipeDeg < 45) {
-        // While swipe is negative and lower than negative
-        // distance set in options move forward.
+      } else if (
+        swipeDistance < -threshold &&
+        swipeDeg < Core.settings.touchAngle
+      ) {
+        // While swipe is negative and lower than negative threshold move forward.
+        if (Core.settings.perTouch) {
+          steps = Math.max(steps, -parseInt(Core.settings.perTouch))
+        }
+
         Run.make(`>${steps}`)
       } else {
         // While swipe don't reach distance apply previous transform.
@@ -153,11 +157,11 @@ class Swipe extends Binder {
  * @return {Void}
  */
   bindSwipeStart () {
-    if (Core.settings.swipeDistance) {
+    if (Core.settings.swipeThreshold) {
       this.on(START_EVENTS[0], Html.wrapper, this.start.bind(this))
     }
 
-    if (Core.settings.dragDistance) {
+    if (Core.settings.dragThreshold) {
       this.on(START_EVENTS[1], Html.wrapper, this.start.bind(this))
     }
   }
@@ -222,12 +226,12 @@ class Swipe extends Binder {
    *
    * @return {Number}
    */
-  limiter (event) {
+  threshold (event) {
     if (MOUSE_EVENTS.includes(event.type)) {
-      return Core.settings.dragDistance
+      return Core.settings.dragThreshold
     }
 
-    return Core.settings.swipeDistance
+    return Core.settings.swipeThreshold
   }
 
   /**

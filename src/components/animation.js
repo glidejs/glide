@@ -70,7 +70,7 @@ class Animation {
    * @return {self}
    */
   set offset (value) {
-    this.displacement = (typeof value !== 'undefined') ? parseInt(value) : 0
+    this.displacement = typeof value !== 'undefined' ? parseInt(value) : 0
   }
 
   /**

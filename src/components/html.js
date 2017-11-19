@@ -58,7 +58,9 @@ class Html {
     if (exist(tr)) {
       this.tr = tr
     } else {
-      warn(`Could not find track element. Please use ${TRACK_SELECTOR} attribute.`)
+      warn(
+        `Could not find track element. Please use ${TRACK_SELECTOR} attribute.`
+      )
     }
   }
 

@@ -22,7 +22,7 @@ class Translate {
   get (value) {
     AXES[Dimensions.dimention.axis] = parseInt(value)
 
-    return 'translate3d(' + (-1 * AXES.x) + 'px, ' + (-1 * AXES.y) + 'px, ' + (-1 * AXES.z) + 'px)'
+    return `translate3d(${-1 * AXES.x}px, ${-1 * AXES.y}px, ${-1 * AXES.z}px)`
   }
 
   /**

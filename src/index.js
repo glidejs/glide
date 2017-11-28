@@ -1,5 +1,7 @@
-import { Core } from './core'
 import defaults from './defaults'
+import { warn } from './utils/log'
+
+import { init } from './core/index'
 
 // import Run from './components/run'
 import Html from './components/html'
@@ -10,8 +12,6 @@ import Html from './components/html'
 // import Images from './components/images'
 import Anchors from './components/anchors'
 // import Callbacks from './components/callbacks'
-
-import { warn } from './utils/log'
 
 const COMPONENTS = {
   Html,
@@ -36,7 +36,7 @@ export default class Glide {
     this.settings = Object.assign(defaults, options)
     this.index = this.settings.startAt
 
-    this.init()
+    this.mount()
   }
 
   /**
@@ -44,8 +44,8 @@ export default class Glide {
    *
    * @return {Void}
    */
-  init () {
-    new Core(this).init(Object.assign(this.settings.extensions, COMPONENTS))
+  mount () {
+    init(this, Object.assign(this.settings.extensions, COMPONENTS))
   }
 
   /**
@@ -96,25 +96,5 @@ export default class Glide {
    */
   get type () {
     return this.settings.type
-  }
-
-  /**
-   * Checks if slider is a precised type.
-   *
-   * @param  {String} name
-   * @return {Boolean}
-   */
-  isType (name) {
-    return this.settings.type === name
-  }
-
-  /**
-   * Checks if slider is in precised mode.
-   *
-   * @param  {String} name
-   * @return {Boolean}
-   */
-  isMode (name) {
-    return this.settings.mode === name
   }
 }

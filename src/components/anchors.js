@@ -1,12 +1,17 @@
-import Binder from '../binder'
+import { EventBus } from '../core/event/index'
 
 export default function (Glide, Components) {
-  const Events = new Binder()
+  const Events = new EventBus()
 
   let detached = false
   let prevented = false
 
   return {
+    /**
+     * Setups a initial state of anchors component.
+     *
+     * @returns {Void}
+     */
     init () {
       this.links = Components.Html.wrapper.querySelectorAll('a')
 
@@ -14,7 +19,7 @@ export default function (Glide, Components) {
     },
 
     /**
-     * Bind events to anchors inside track.
+     * Binds events to anchors inside a track.
      *
      * @return {Void}
      */
@@ -23,8 +28,7 @@ export default function (Glide, Components) {
     },
 
     /**
-     * Handler for click event. Prevents click
-     * when glide is in prevent status.
+     * Handler for click event. Prevents clicks when glide is in `prevent` status.
      *
      * @param  {Object} event
      * @return {Void}

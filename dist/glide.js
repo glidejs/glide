@@ -10,113 +10,7 @@
 	(global.Glide = factory());
 }(this, (function () { 'use strict';
 
-/**
- * Outputs warning message to the boswer console.
- *
- * @param  {String} msg
- * @return {Void}
- */
-function warn(msg) {
-  console.error("[Glide warn]: " + msg);
-}
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-  return typeof obj;
-} : function (obj) {
-  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-};
-
-
-
-
-
-
-
-
-
-
-
-var classCallCheck = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
-
-var createClass = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-}();
-
-
-
-
-
-
-
-var _extends = Object.assign || function (target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i];
-
-    for (var key in source) {
-      if (Object.prototype.hasOwnProperty.call(source, key)) {
-        target[key] = source[key];
-      }
-    }
-  }
-
-  return target;
-};
-
-var Core = function () {
-  function Core(glide) {
-    classCallCheck(this, Core);
-
-    this.glide = glide;
-  }
-
-  /**
-   * Initializes all registered components.
-   *
-   * @param {Object} extensions
-   * @returns {Void}
-   */
-
-
-  createClass(Core, [{
-    key: 'init',
-    value: function init(extensions) {
-      var components = {};
-
-      for (var name in extensions) {
-        components[name] = extensions[name](this.glide, components);
-      }
-
-      for (var _name in components) {
-        if (typeof components[_name].init === 'function') {
-          components[_name].init();
-        } else {
-          warn('Extension [' + _name + '] must implement a init() method');
-        }
-      }
-    }
-  }]);
-  return Core;
-}();
-
-var defaults$1 = {
+var defaults = {
   /**
    * Type of the slides movements. Available types:
    * `slider` - Rewinds slider to the start/end when it reaches first or last slide.
@@ -342,6 +236,41 @@ var defaults$1 = {
 };
 
 /**
+ * Outputs warning message to the boswer console.
+ *
+ * @param  {String} msg
+ * @return {Void}
+ */
+function warn(msg) {
+  console.error("[Glide warn]: " + msg);
+}
+
+/**
+ * Creates and initializes specified collection of extensions.
+ * Each extension receives access to instance of glide and rest of components.
+ *
+ * @param {Glide} glide
+ * @param {Object} extensions
+ *
+ * @returns {Void}
+ */
+function init(glide, extensions) {
+  var components = {};
+
+  for (var name in extensions) {
+    components[name] = extensions[name](glide, components);
+  }
+
+  for (var _name in components) {
+    if (typeof components[_name].init === 'function') {
+      components[_name].init();
+    } else {
+      warn('Extension [' + _name + '] must implement a init() method');
+    }
+  }
+}
+
+/**
  * Finds siblings elements of the passed node.
  *
  * @param  {HTMLElement} node
@@ -461,13 +390,73 @@ var Html = function (Glide, Components) {
   return HTML;
 };
 
-var Binder = function () {
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+};
+
+
+
+
+
+
+
+
+
+
+
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+
+
+
+
+
+
+var _extends = Object.assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
+
+var EventBus = function () {
   /**
    * Construct events.
    */
-  function Binder() {
+  function EventBus() {
     var listeners = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    classCallCheck(this, Binder);
+    classCallCheck(this, EventBus);
 
     this.listeners = listeners;
   }
@@ -482,7 +471,7 @@ var Binder = function () {
    */
 
 
-  createClass(Binder, [{
+  createClass(EventBus, [{
     key: 'on',
     value: function on(events, el, closure) {
       if (typeof events === 'string') {
@@ -518,16 +507,21 @@ var Binder = function () {
       }
     }
   }]);
-  return Binder;
+  return EventBus;
 }();
 
 var Anchors = function (Glide, Components) {
-  var Events = new Binder();
+  var Events = new EventBus();
 
   var detached = false;
   var prevented = false;
 
   return {
+    /**
+     * Setups a initial state of anchors component.
+     *
+     * @returns {Void}
+     */
     init: function init() {
       this.links = Components.Html.wrapper.querySelectorAll('a');
 
@@ -536,7 +530,7 @@ var Anchors = function (Glide, Components) {
 
 
     /**
-     * Bind events to anchors inside track.
+     * Binds events to anchors inside a track.
      *
      * @return {Void}
      */
@@ -546,8 +540,7 @@ var Anchors = function (Glide, Components) {
 
 
     /**
-     * Handler for click event. Prevents click
-     * when glide is in prevent status.
+     * Handler for click event. Prevents clicks when glide is in `prevent` status.
      *
      * @param  {Object} event
      * @return {Void}
@@ -661,10 +654,10 @@ var Glide = function () {
     classCallCheck(this, Glide);
 
     this.selector = selector;
-    this.settings = _extends(defaults$1, options);
+    this.settings = _extends(defaults, options);
     this.index = this.settings.startAt;
 
-    this.init();
+    this.mount();
   }
 
   /**
@@ -675,9 +668,9 @@ var Glide = function () {
 
 
   createClass(Glide, [{
-    key: 'init',
-    value: function init() {
-      new Core(this).init(_extends(this.settings.extensions, COMPONENTS));
+    key: 'mount',
+    value: function mount() {
+      init(this, _extends(this.settings.extensions, COMPONENTS));
     }
 
     /**
@@ -686,32 +679,6 @@ var Glide = function () {
      * @return {Object}
      */
 
-  }, {
-    key: 'isType',
-
-
-    /**
-     * Checks if slider is a precised type.
-     *
-     * @param  {String} name
-     * @return {Boolean}
-     */
-    value: function isType(name) {
-      return this.settings.type === name;
-    }
-
-    /**
-     * Checks if slider is in precised mode.
-     *
-     * @param  {String} name
-     * @return {Boolean}
-     */
-
-  }, {
-    key: 'isMode',
-    value: function isMode(name) {
-      return this.settings.mode === name;
-    }
   }, {
     key: 'settings',
     get: function get$$1() {

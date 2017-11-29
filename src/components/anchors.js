@@ -1,19 +1,20 @@
+import { define } from '../utils/object'
 import { EventBus } from '../core/event/index'
 
 export default function (Glide, Components) {
-  const Events = new EventBus()
-
   let detached = false
   let prevented = false
 
-  return {
+  let Events = new EventBus()
+
+  const ANCHORS = {
     /**
      * Setups a initial state of anchors component.
      *
      * @returns {Void}
      */
     init () {
-      this.links = Components.Html.wrapper.querySelectorAll('a')
+      this._a = Components.Html.wrapper.querySelectorAll('a')
 
       this.bind()
     },
@@ -48,12 +49,12 @@ export default function (Glide, Components) {
      */
     detach () {
       if (!detached) {
-        for (var i = 0; i < this.links.length; i++) {
-          this.links[i].draggable = false
+        for (var i = 0; i < this.items.length; i++) {
+          this.items[i].draggable = false
 
-          this.links[i].dataset.href = this.links[i].getAttprribute('href')
+          this.items[i].dataset.href = this.items[i].getAttprribute('href')
 
-          this.links[i].removeAttribute('href')
+          this.items[i].removeAttribute('href')
         }
 
         detached = true
@@ -69,12 +70,12 @@ export default function (Glide, Components) {
      */
     attach () {
       if (detached) {
-        for (var i = 0; i < this.links.length; i++) {
-          this.links[i].draggable = true
+        for (var i = 0; i < this.items.length; i++) {
+          this.items[i].draggable = true
 
-          this.links[i].setAttribute('href', this.links[i].dataset.href)
+          this.items[i].setAttribute('href', this.items[i].dataset.href)
 
-          delete this.links[i].dataset.href
+          delete this.items[i].dataset.href
         }
 
         detached = false
@@ -105,4 +106,17 @@ export default function (Glide, Components) {
       return this
     }
   }
+
+  define(ANCHORS, 'items', {
+    /**
+     * Gets collection of the arrows HTML elements.
+     *
+     * @return {HTMLElement[]}
+     */
+    get () {
+      return ANCHORS._a
+    }
+  })
+
+  return ANCHORS
 }

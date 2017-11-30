@@ -1,99 +1,99 @@
-import Html from './html'
-import Run from './run'
-import Core from './core'
-import Animation from './animation'
+import { define } from '../utils/object'
+import { EventBus } from '../core/event/index'
 
-import Binder from '../binder'
+export default function (Glide, Components) {
+  let Events = new EventBus()
 
-const BULLETS_SELECTOR = '[data-glide-el="bullets"]'
+  const BULLETS_SELECTOR = '[data-glide-el="bullets"]'
 
-class Bullets extends Binder {
-  /**
-   * Inits bullets. Binds events listeners
-   * to the bullets HTML elements.
-   *
-   * @return {Void}
-   */
-  init () {
-    this.element = Html.root.querySelector(BULLETS_SELECTOR)
+  const BULLETS = {
+    /**
+     * Inits bullets. Binds events listeners
+     * to the bullets HTML elements.
+     *
+     * @return {Void}
+     */
+    init () {
+      this._el = Components.Html.root.querySelector(BULLETS_SELECTOR)
 
-    this.bind()
-  }
+      this.bind()
+    },
 
-  /**
-   * Binds events to bullets HTML elements.
-   *
-   * @return {Void}
-   */
-  bind () {
-    let items = this.items
+    /**
+     * Binds events to bullets HTML elements.
+     *
+     * @return {Void}
+     */
+    bind () {
+      let items = this.items
 
-    for (var i = 0; i < items.length; i++) {
-      this.on(['click', 'touchstart'], items[i], this.click)
-      this.on(['mouseenter', 'mouseleave'], items[i], this.hover)
-    }
-  }
-
-  /**
-   * Unbinds events binded to the bullets HTML elements.
-   *
-   * @return {Void}
-   */
-  unbind () {
-    let items = this.items
-
-    for (var i = 0; i < items.length; i++) {
-      this.off(['click', 'touchstart', 'mouseenter', 'mouseleave'], items[i])
-    }
-  }
-
-  /**
-   * Handles `click` event on the bullets HTML elements.
-   * Moves slider in driection precised in
-   * `data-glide-dir` attribute.
-   *
-   * @param {Object} event
-   * @return {Void}
-   */
-  click (event) {
-    event.preventDefault()
-
-    if (!Core.disabled) {
-      Run.stop().make(event.target.dataset.glideDir)
-
-      Animation.after(() => {
-        Run.init()
-      })
-    }
-  }
-
-  /**
-   * Handles `hover` event on the bullets HTML elements.
-   * Plays and pauses autoplay running.
-   *
-   * @param {Object} event
-   * @return {Void}
-   */
-  hover (event) {
-    if (!Core.disabled) {
-      if (event.type === 'mouseleave') {
-        Run.init()
+      for (let i = 0; i < items.length; i++) {
+        Events.on(['click', 'touchstart'], items[i], this.click)
+        Events.on(['mouseenter', 'mouseleave'], items[i], this.hover)
       }
+    },
 
-      if (event.type === 'mouseenter') {
-        Run.stop()
+    /**
+     * Unbinds events binded to the bullets HTML elements.
+     *
+     * @return {Void}
+     */
+    unbind () {
+      for (let i = 0; i < this.items.length; i++) {
+        Events.off(['click', 'touchstart', 'mouseenter', 'mouseleave'], this.items[i])
+      }
+    },
+
+    /**
+     * Handles `click` event on the bullets HTML elements.
+     * Moves slider in driection precised in
+     * `data-glide-dir` attribute.
+     *
+     * @param {Object} event
+     * @return {Void}
+     */
+    click (event) {
+      event.preventDefault()
+
+      if (!Glide.disabled) {
+        Components.Run.stop().make(event.target.dataset.glideDir)
+
+        Components.Animation.after(() => {
+          Components.Run.init()
+        })
+      }
+    },
+
+    /**
+     * Handles `hover` event on the bullets HTML elements.
+     * Plays and pauses autoplay running.
+     *
+     * @param {Object} event
+     * @return {Void}
+     */
+    hover (event) {
+      if (!Glide.disabled) {
+        if (event.type === 'mouseleave') {
+          Components.Run.init()
+        }
+
+        if (event.type === 'mouseenter') {
+          Components.Run.stop()
+        }
       }
     }
   }
 
-  /**
-   * Gets collection of the bullets HTML elements.
+  define(BULLETS, 'items', {
+    /**
+   * Gets collection of the arrows HTML elements.
    *
    * @return {HTMLElement[]}
    */
-  get items () {
-    return this.element.children
-  }
-}
+    get () {
+      return this._el.children
+    }
+  })
 
-export default new Bullets()
+  return BULLETS
+}

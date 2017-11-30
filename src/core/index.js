@@ -19,8 +19,6 @@ export function init (glide, extensions) {
   for (let name in components) {
     if (typeof components[name].init === 'function') {
       components[name].init()
-    } else {
-      warn(`Extension [${name}] must implement a init() method`)
     }
   }
 }

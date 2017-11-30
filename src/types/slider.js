@@ -1,12 +1,10 @@
 import Type from './type'
-import Core from '../components/core'
-import Dimensions from '../components/dimensions'
 
 class Slider extends Type {
-  translate () {
-    let translate = Dimensions.slideSize * Core.index
+  translate (Glide, Components) {
+    let translate = Components.Dimensions.slideSize * Glide.index
 
-    return this.applyTransforms(translate)
+    return this.applyTransforms(translate, Glide, Components)
   }
 }
 

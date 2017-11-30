@@ -1,41 +1,38 @@
-import Html from './html'
-import Dimensions from './dimensions'
-
-/**
- * Collection of available translate axes.
- *
- * @type {Object}
- */
-const AXES = {
-  x: 0,
-  y: 0,
-  z: 0
-}
-
-class Translate {
+export default function (Glide, Components) {
   /**
-   * Gets value of translate.
+   * Collection of available translate axes.
    *
-   * @param  {Integer} value
-   * @return {String}
+   * @type {Object}
    */
-  get (value) {
-    AXES[Dimensions.dimention.axis] = parseInt(value)
-
-    return `translate3d(${-1 * AXES.x}px, ${-1 * AXES.y}px, ${-1 * AXES.z}px)`
+  const AXES = {
+    x: 0,
+    y: 0,
+    z: 0
   }
 
-  /**
-   * Sets value of translate.
-   *
-   * @param {HTMLElement} el
-   * @return {self}
-   */
-  set (value) {
-    Html.wrapper.style.transform = this.get(value)
+  return {
+    /**
+     * Gets value of translate.
+     *
+     * @param  {Integer} value
+     * @return {String}
+     */
+    get (value) {
+      AXES[Components.Dimensions.dimention.axis] = parseInt(value)
 
-    return this
+      return `translate3d(${-1 * AXES.x}px, ${-1 * AXES.y}px, ${-1 * AXES.z}px)`
+    },
+
+    /**
+     * Sets value of translate.
+     *
+     * @param {HTMLElement} el
+     * @return {self}
+     */
+    set (value) {
+      Components.Html.wrapper.style.transform = this.get(value)
+
+      return this
+    }
   }
 }
-
-export default new Translate()

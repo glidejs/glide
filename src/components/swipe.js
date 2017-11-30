@@ -1,273 +1,264 @@
-import Html from './html'
-import Run from './run'
-import Core from './core'
-import Anchors from './anchors'
-import Callbacks from './callbacks'
-import Animation from './animation'
-import Dimensions from './dimensions'
-import Transition from './transition'
+import { define } from '../utils/object'
+import { EventBus } from '../core/event/index'
 
-import Binder from '../binder'
+export default function (Glide, Components) {
+  const START_EVENTS = ['touchstart', 'mousedown']
+  const MOVE_EVENTS = ['touchmove', 'mousemove']
+  const END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave']
+  const MOUSE_EVENTS = ['mousedown', 'mousemove', 'mouseup', 'mouseleave']
 
-const START_EVENTS = ['touchstart', 'mousedown']
-const MOVE_EVENTS = ['touchmove', 'mousemove']
-const END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave']
-const MOUSE_EVENTS = ['mousedown', 'mousemove', 'mouseup', 'mouseleave']
+  let swipeSin = 0
+  let swipeStartX = 0
+  let swipeStartY = 0
+  let dragging = false
 
-let swipeSin = 0
-let swipeStartX = 0
-let swipeStartY = 0
+  let Events = new EventBus()
 
-class Swipe extends Binder {
-  /**
-   * Constructs swipe component.
-   */
-  constructor () {
-    super()
+  const SWIPE = {
+    /**
+     * Initializes swipe bindings.
+     *
+     * @return {Void}
+     */
+    init () {
+      this.bindSwipeStart()
+    },
 
-    this.dragging = false
-  }
+    /**
+     * Handler for `swipestart` event.
+     * Calculates entry points of the user's tap.
+     *
+     * @param {Object} event
+     * @return {Void}
+     */
+    start (event) {
+      if (this.enabled) {
+        let swipe = this.touches(event)
 
-  /**
-   * Initializes swipe bindings.
-   *
-   * @return {Void}
-   */
-  init () {
-    this.bindSwipeStart()
-  }
+        this.disable()
 
-  /**
-   * Handler for `swipestart` event.
-   * Calculates entry points of the user's tap.
-   *
-   * @param {Object} event
-   * @return {Void}
-   */
-  start (event) {
-    if (this.enabled) {
-      let swipe = this.touches(event)
+        swipeSin = null
+        swipeStartX = parseInt(swipe.pageX)
+        swipeStartY = parseInt(swipe.pageY)
 
-      this.disable()
+        this.bindSwipeMove()
+        this.bindSwipeEnd()
 
-      swipeSin = null
-      swipeStartX = parseInt(swipe.pageX)
-      swipeStartY = parseInt(swipe.pageY)
-
-      this.bindSwipeMove()
-      this.bindSwipeEnd()
-
-      Run.stop()
-      Callbacks.call(Core.settings.swipeStart)
-    }
-  }
-
-  /**
-   * Handler for `swipemove` event.
-   * Calculates user's tap angle and distance.
-   *
-   * @param {Object} event
-   */
-  move (event) {
-    if (this.enabled) {
-      let swipe = this.touches(event)
-
-      let subExSx = parseInt(swipe.pageX) - swipeStartX
-      let subEySy = parseInt(swipe.pageY) - swipeStartY
-      let powEX = Math.abs(subExSx << 2)
-      let powEY = Math.abs(subEySy << 2)
-      let swipeHypotenuse = Math.sqrt(powEX + powEY)
-      let swipeCathetus = Math.sqrt(powEY)
-
-      swipeSin = Math.asin(swipeCathetus / swipeHypotenuse)
-
-      if (swipeSin * 180 / Math.PI < Core.settings.touchAngle) {
-        Animation.make(subExSx * parseFloat(Core.settings.touchRatio))
+        Components.Run.stop()
+        Components.Callbacks.call(Glide.settings.swipeStart)
       }
+    },
 
-      if (swipeSin * 180 / Math.PI < Core.settings.touchAngle) {
-        event.stopPropagation()
-        event.preventDefault()
+    /**
+     * Handler for `swipemove` event.
+     * Calculates user's tap angle and distance.
+     *
+     * @param {Object} event
+     */
+    move (event) {
+      if (this.enabled) {
+        let swipe = this.touches(event)
 
-        Html.wrapper.classList.add(Core.settings.classes.dragging)
-      } else {
-        return
-      }
+        let subExSx = parseInt(swipe.pageX) - swipeStartX
+        let subEySy = parseInt(swipe.pageY) - swipeStartY
+        let powEX = Math.abs(subExSx << 2)
+        let powEY = Math.abs(subEySy << 2)
+        let swipeHypotenuse = Math.sqrt(powEX + powEY)
+        let swipeCathetus = Math.sqrt(powEY)
 
-      Anchors.prevent().detach()
-    }
-  }
+        swipeSin = Math.asin(swipeCathetus / swipeHypotenuse)
 
-  /**
-   * Handler for `swipeend` event. Finitializes
-   * user's tap and decides about glide move.
-   *
-   * @param {Object} event
-   * @return {Void}
-   */
-  end (event) {
-    if (this.enabled) {
-      let swipe = this.touches(event)
-      let threshold = this.threshold(event)
-
-      this.enable()
-
-      let swipeDistance = swipe.pageX - swipeStartX
-      let swipeDeg = swipeSin * 180 / Math.PI
-      let steps = Math.round(swipeDistance / Dimensions.slideWidth)
-
-      if (swipeDistance > threshold && swipeDeg < Core.settings.touchAngle) {
-        // While swipe is positive and greater than threshold move backward.
-        if (Core.settings.perTouch) {
-          steps = Math.min(steps, parseInt(Core.settings.perTouch))
+        if (swipeSin * 180 / Math.PI < Glide.settings.touchAngle) {
+          Components.Animation.make(subExSx * parseFloat(Glide.settings.touchRatio))
         }
 
-        Run.make(`<${steps}`)
-      } else if (
-        swipeDistance < -threshold &&
-        swipeDeg < Core.settings.touchAngle
-      ) {
-        // While swipe is negative and lower than negative threshold move forward.
-        if (Core.settings.perTouch) {
-          steps = Math.max(steps, -parseInt(Core.settings.perTouch))
+        if (swipeSin * 180 / Math.PI < Glide.settings.touchAngle) {
+          event.stopPropagation()
+          event.preventDefault()
+
+          Components.Html.wrapper.classList.add(Glide.settings.classes.dragging)
+        } else {
+          return
         }
 
-        Run.make(`>${steps}`)
-      } else {
-        // While swipe don't reach distance apply previous transform.
-        Animation.make()
+        Components.Anchors.prevent().detach()
+      }
+    },
+
+    /**
+     * Handler for `swipeend` event. Finitializes
+     * user's tap and decides about glide move.
+     *
+     * @param {Object} event
+     * @return {Void}
+     */
+    end (event) {
+      if (this.enabled) {
+        let swipe = this.touches(event)
+        let threshold = this.threshold(event)
+
+        this.enable()
+
+        let swipeDistance = swipe.pageX - swipeStartX
+        let swipeDeg = swipeSin * 180 / Math.PI
+        let steps = Math.round(swipeDistance / Components.Dimensions.slideWidth)
+
+        if (swipeDistance > threshold && swipeDeg < Glide.settings.touchAngle) {
+          // While swipe is positive and greater than threshold move backward.
+          if (Glide.settings.perTouch) {
+            steps = Math.min(steps, parseInt(Glide.settings.perTouch))
+          }
+
+          Components.Run.make(`<${steps}`)
+        } else if (
+          swipeDistance < -threshold &&
+          swipeDeg < Glide.settings.touchAngle
+        ) {
+          // While swipe is negative and lower than negative threshold move forward.
+          if (Glide.settings.perTouch) {
+            steps = Math.max(steps, -parseInt(Glide.settings.perTouch))
+          }
+
+          Components.Run.make(`>${steps}`)
+        } else {
+          // While swipe don't reach distance apply previous transform.
+          Components.Animation.make()
+        }
+
+        Components.Html.wrapper.classList.remove(Glide.settings.classes.dragging)
+
+        this.unbindSwipeMove()
+        this.unbindSwipeEnd()
+
+        Components.Animation.after(() => {
+          Components.Run.init()
+          Components.Anchors.unprevent().attach()
+        })
+
+        Components.Callbacks.call(Glide.settings.swipeEnd)
+      }
+    },
+
+    /**
+   * Binds swipe's starting event.
+   *
+   * @return {Void}
+   */
+    bindSwipeStart () {
+      if (Glide.settings.swipeThreshold) {
+        Events.on(START_EVENTS[0], Components.Html.wrapper, this.start.bind(this))
       }
 
-      Html.wrapper.classList.remove(Core.settings.classes.dragging)
+      if (Glide.settings.dragThreshold) {
+        Events.on(START_EVENTS[1], Components.Html.wrapper, this.start.bind(this))
+      }
+    },
 
-      this.unbindSwipeMove()
-      this.unbindSwipeEnd()
+    /**
+     * Unbinds swipe's starting event.
+     *
+     * @return {Void}
+     */
+    unbindSwipeStart () {
+      Events.off(START_EVENTS[0], Components.Html.wrapper)
+      Events.off(START_EVENTS[1], Components.Html.wrapper)
+    },
 
-      Animation.after(() => {
-        Run.init()
-        Anchors.unprevent().attach()
-      })
-      Callbacks.call(Core.settings.swipeEnd)
+    /**
+     * Binds swipe's moving event.
+     *
+     * @return {Void}
+     */
+    bindSwipeMove () {
+      Events.on(MOVE_EVENTS, Components.Html.wrapper, this.move.bind(this))
+    },
+
+    /**
+     * Unbinds swipe's moving event.
+     *
+     * @return {Void}
+     */
+    unbindSwipeMove () {
+      Events.off(MOVE_EVENTS, Components.Html.wrapper)
+    },
+
+    /**
+     * Binds swipe's ending event.
+     *
+     * @return {Void}
+     */
+    bindSwipeEnd () {
+      Events.on(END_EVENTS, Components.Html.wrapper, this.end.bind(this))
+    },
+
+    /**
+     * Unbinds swipe's ending event.
+     *
+     * @return {Void}
+     */
+    unbindSwipeEnd () {
+      Events.off(END_EVENTS, Components.Html.wrapper)
+    },
+
+    touches (event) {
+      if (MOUSE_EVENTS.includes(event.type)) {
+        return event
+      }
+
+      return event.touches[0] || event.changedTouches[0]
+    },
+
+    /**
+     * Gets value of minimum swipe distance.
+     * Returns value based on event type.
+     *
+     * @return {Number}
+     */
+    threshold (event) {
+      if (MOUSE_EVENTS.includes(event.type)) {
+        return Glide.settings.dragThreshold
+      }
+
+      return Glide.settings.swipeThreshold
+    },
+
+    /**
+     * Enables swipe event.
+     *
+     * @return {self}
+     */
+    enable () {
+      dragging = false
+
+      Components.Transition.enable()
+
+      return this
+    },
+
+    /**
+     * Disables swipe event.
+     *
+     * @return {self}
+     */
+    disable () {
+      dragging = true
+
+      Components.Transition.disable()
+
+      return this
     }
   }
 
-  /**
- * Binds swipe's starting event.
- *
- * @return {Void}
- */
-  bindSwipeStart () {
-    if (Core.settings.swipeThreshold) {
-      this.on(START_EVENTS[0], Html.wrapper, this.start.bind(this))
+  define(SWIPE, 'enabled', {
+    /**
+     * Gets value of the peek.
+     *
+     * @returns {Number}
+     */
+    get () {
+      return !(Glide.disabled && dragging)
     }
+  })
 
-    if (Core.settings.dragThreshold) {
-      this.on(START_EVENTS[1], Html.wrapper, this.start.bind(this))
-    }
-  }
-
-  /**
-   * Unbinds swipe's starting event.
-   *
-   * @return {Void}
-   */
-  unbindSwipeStart () {
-    this.off(START_EVENTS[0], Html.wrapper)
-    this.off(START_EVENTS[1], Html.wrapper)
-  }
-
-  /**
-   * Binds swipe's moving event.
-   *
-   * @return {Void}
-   */
-  bindSwipeMove () {
-    this.on(MOVE_EVENTS, Html.wrapper, this.move.bind(this))
-  }
-
-  /**
-   * Unbinds swipe's moving event.
-   *
-   * @return {Void}
-   */
-  unbindSwipeMove () {
-    this.off(MOVE_EVENTS, Html.wrapper)
-  }
-
-  /**
-   * Binds swipe's ending event.
-   *
-   * @return {Void}
-   */
-  bindSwipeEnd () {
-    this.on(END_EVENTS, Html.wrapper, this.end.bind(this))
-  }
-
-  /**
-   * Unbinds swipe's ending event.
-   *
-   * @return {Void}
-   */
-  unbindSwipeEnd () {
-    this.off(END_EVENTS, Html.wrapper)
-  }
-
-  touches (event) {
-    if (MOUSE_EVENTS.includes(event.type)) {
-      return event
-    }
-
-    return event.touches[0] || event.changedTouches[0]
-  }
-
-  /**
-   * Gets value of minimum swipe distance.
-   * Returns value based on event type.
-   *
-   * @return {Number}
-   */
-  threshold (event) {
-    if (MOUSE_EVENTS.includes(event.type)) {
-      return Core.settings.dragThreshold
-    }
-
-    return Core.settings.swipeThreshold
-  }
-
-  /**
-   * Enables swipe event.
-   *
-   * @return {self}
-   */
-  enable () {
-    this.dragging = false
-
-    Transition.enable()
-
-    return this
-  }
-
-  /**
-   * Disables swipe event.
-   *
-   * @return {self}
-   */
-  disable () {
-    this.dragging = true
-
-    Transition.disable()
-
-    return this
-  }
-
-  /**
-   * Gets value of the dragging status.
-   *
-   * @return {Boolean}
-   */
-  get enabled () {
-    return !(Core.disabled && this.dragging)
-  }
+  return SWIPE
 }
-
-export default new Swipe()

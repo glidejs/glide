@@ -1,53 +1,53 @@
-import Core from './core'
-import Dimensions from './dimensions'
+import { warn } from '../utils/log'
+import { define } from '../utils/object'
 
-import warn from '../utils/warn'
-
-class Peek {
-  /**
-   * Construct peek component.
-   */
-  constructor () {
-    this.size = 0
+export default function (Glide, Components) {
+  const PEEK = {
+    /**
+     * Setups how much to peek based on settings.
+     *
+     * @return {Void}
+     */
+    init () {
+      this.value = Glide.settings.peek
+    }
   }
 
-  /**
-   * Setups how much to peek based on settings.
-   *
-   * @return {Void}
-   */
-  init () {
-    this.value = Core.settings.peek
-  }
+  define(PEEK, 'value', {
+    /**
+     * Gets value of the peek.
+     *
+     * @returns {Number}
+     */
+    get () {
+      return PEEK._s
+    },
 
-  /**
-   * Gets value of the peek.
-   */
-  get value () {
-    return this.size
-  }
+    /**
+     * Sets node of the glide track with slides.
+     *
+     * @param {Number} value
+     * @return {Void}
+     */
+    set (value) {
+      if (typeof value === 'string') {
+        let normalized = parseInt(value, 10)
+        let isPercentage = value.indexOf('%') >= 0
 
-  /**
-   * Sets value of the peek.
-   */
-  set value (value) {
-    if (typeof value === 'string') {
-      let normalized = parseInt(value, 10)
-      let isPercentage = value.indexOf('%') >= 0
+        if (isPercentage) {
+          value = parseInt(Components.Dimensions.width * (normalized / 100))
+        } else {
+          value = normalized
+        }
+      }
 
-      if (isPercentage) {
-        value = parseInt(Dimensions.width * (normalized / 100))
+      if (typeof value === 'number') {
+        this._s = value
       } else {
-        value = normalized
+        warn('Invalid peek value')
       }
     }
+  })
 
-    if (typeof value === 'number') {
-      this.size = value
-    } else {
-      warn('Invalid peek value')
-    }
-  }
+  return PEEK
 }
-
-export default new Peek()

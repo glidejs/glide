@@ -52,7 +52,7 @@ export default function (Glide, Components) {
         for (var i = 0; i < this.items.length; i++) {
           this.items[i].draggable = false
 
-          this.items[i].dataset.href = this.items[i].getAttprribute('href')
+          this.items[i].dataset.href = this.items[i].getAttribute('href')
 
           this.items[i].removeAttribute('href')
         }

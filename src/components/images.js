@@ -1,43 +1,43 @@
-import Html from './html'
+import { EventBus } from '../core/event/index'
 
-import Binder from '../binder'
+export default function (Glide, Components) {
+  let Events = new EventBus()
 
-class Images extends Binder {
-  /**
-   * Binds listener to glide wrapper.
-   *
-   * @return {Void}
-   */
-  init () {
-    this.bind()
-  }
+  return {
+    /**
+     * Binds listener to glide wrapper.
+     *
+     * @return {Void}
+     */
+    init () {
+      this.bind()
+    },
 
-  /**
-   * Binds `dragstart` event on wrapper to prevent dragging images.
-   *
-   * @return {Void}
-   */
-  bind () {
-    this.on('dragstart', Html.wrapper, this.dragstart)
-  }
+    /**
+     * Binds `dragstart` event on wrapper to prevent dragging images.
+     *
+     * @return {Void}
+     */
+    bind () {
+      Events.on('dragstart', Components.Html.wrapper, this.dragstart)
+    },
 
-  /**
-   * Unbinds `dragstart` event on wrapper.
-   *
-   * @return {Void}
-   */
-  unbind () {
-    this.off('dragstart', Html.wrapper, this.dragstart)
-  }
+    /**
+     * Unbinds `dragstart` event on wrapper.
+     *
+     * @return {Void}
+     */
+    unbind () {
+      Events.off('dragstart', Components.Html.wrapper, this.dragstart)
+    },
 
-  /**
-   * Event handler. Prevents dragging.
-   *
-   * @return {Void}
-   */
-  dragstart (event) {
-    event.preventDefault()
+    /**
+     * Event handler. Prevents dragging.
+     *
+     * @return {Void}
+     */
+    dragstart (event) {
+      event.preventDefault()
+    }
   }
 }
-
-export default new Images()

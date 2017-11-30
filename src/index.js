@@ -1,27 +1,40 @@
-import defaults from './defaults'
 import { warn } from './utils/log'
-
 import { init } from './core/index'
 
-// import Run from './components/run'
+import defaults from './defaults'
+
+import Run from './components/run'
 import Html from './components/html'
-// import Build from './components/build'
-// import Swipe from './components/swipe'
-// import Arrows from './components/arrows'
-// import Window from './components/window'
-// import Images from './components/images'
+import Build from './components/build'
+import Swipe from './components/swipe'
+import Arrows from './components/arrows'
+import Window from './components/window'
+import Images from './components/images'
+import Bullets from './components/bullets'
 import Anchors from './components/anchors'
-// import Callbacks from './components/callbacks'
+import Callbacks from './components/callbacks'
+import Animation from './components/animation'
+import Transition from './components/transition'
+import Translate from './components/translate'
+import Dimensions from './components/dimensions'
+import Peek from './components/peek'
 
 const COMPONENTS = {
   Html,
-  Anchors
-  // Build,
-  // Images,
-  // Swipe,
-  // Arrows,
-  // Window,
-  // Run
+  Build,
+  Arrows,
+  Bullets,
+  Anchors,
+  Callbacks,
+  Animation,
+  Images,
+  Window,
+  Swipe,
+  Run,
+  Transition,
+  Dimensions,
+  Translate,
+  Peek
 }
 
 export default class Glide {
@@ -96,5 +109,25 @@ export default class Glide {
    */
   get type () {
     return this.settings.type
+  }
+
+  /**
+   * Checks if slider is a precised type.
+   *
+   * @param  {String} name
+   * @return {Boolean}
+   */
+  isType (name) {
+    return this.settings.type === name
+  }
+
+  /**
+   * Checks if slider is in precised mode.
+   *
+   * @param  {String} name
+   * @return {Boolean}
+   */
+  isMode (name) {
+    return this.settings.mode === name
   }
 }

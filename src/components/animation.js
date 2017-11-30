@@ -82,7 +82,7 @@ export default function (Glide, Components) {
      * @return {Number}
      */
     get () {
-      return TYPES[ucfirst(Glide.type)].translate()
+      return TYPES[ucfirst(Glide.type)].translate(Glide, Components)
     }
   })
 

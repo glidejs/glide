@@ -1,11 +1,8 @@
-import Core from '../../components/core'
-import Dimensions from '../../components/dimensions'
-
 export default class Focusing {
-  transform (translate) {
-    let width = Dimensions.width
-    let focusAt = Core.settings.focusAt
-    let slideSize = Dimensions.slideSize
+  transform (translate, Glide, Components) {
+    let width = Components.Dimensions.width
+    let focusAt = Glide.settings.focusAt
+    let slideSize = Components.Dimensions.slideSize
 
     if (focusAt === 'center') {
       translate -= width / 2 - slideSize / 2

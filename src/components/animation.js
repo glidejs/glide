@@ -3,11 +3,11 @@ import { ucfirst } from '../utils/string'
 
 import Slider from '../types/slider'
 
-export default function (Glide, Components) {
-  const TYPES = {
-    Slider
-  }
+const TYPES = {
+  Slider
+}
 
+export default function (Glide, Components) {
   const ANIMATION = {
     /**
      * Constructs animation component.

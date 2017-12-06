@@ -174,8 +174,10 @@ var defaults = {
   /**
    * Distance value of the next and previous viewports which have to be
    * peeked in current view. Can be number, percentage or pixels.
+   * Left and right peeking can be setup separetly with a
+   * object `{ left: 100, right: 100 }`
    *
-   * @type {Number|String}
+   * @type {Number|String|Object}
    */
   peek: 0,
 
@@ -556,6 +558,77 @@ var Html = function (Glide, Components) {
   return HTML;
 };
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+};
+
+
+
+
+
+
+
+
+
+
+
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+
+
+
+
+
+
+var _extends = Object.assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
+
+function normalize(value, dimension) {
+  var normalized = parseInt(value, 10);
+  var isPercentage = value.indexOf('%') >= 0;
+
+  if (isPercentage) {
+    return parseInt(dimension * (normalized / 100));
+  }
+
+  return normalized;
+}
+
 var Peek = function (Glide, Components) {
   var PEEK = {
     /**
@@ -574,7 +647,7 @@ var Peek = function (Glide, Components) {
      *
      * @returns {Number}
      */
-    get: function get() {
+    get: function get$$1() {
       return PEEK._s;
     },
 
@@ -585,23 +658,25 @@ var Peek = function (Glide, Components) {
      * @param {Number} value
      * @return {Void}
      */
-    set: function set(value) {
-      if (typeof value === 'string') {
-        var normalized = parseInt(value, 10);
-        var isPercentage = value.indexOf('%') >= 0;
+    set: function set$$1(value) {
+      if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object') {
+        if (typeof value.before === 'string') {
+          value.before = normalize(value.before, Components.Dimensions.width);
+        }
+        if (typeof value.after === 'string') {
+          value.after = normalize(value.after, Components.Dimensions.width);
+        }
+      } else {
+        if (typeof value === 'string') {
+          value = normalize(value, Components.Dimensions.width);
+        }
 
-        if (isPercentage) {
-          value = parseInt(Components.Dimensions.width * (normalized / 100));
-        } else {
-          value = normalized;
+        if (typeof value !== 'number') {
+          warn('Invalid peek value');
         }
       }
 
-      if (typeof value === 'number') {
-        this._s = value;
-      } else {
-        warn('Invalid peek value');
-      }
+      PEEK._s = value;
     }
   });
 
@@ -677,66 +752,6 @@ var Build = function (Glide, Components) {
       });
     }
   };
-};
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-  return typeof obj;
-} : function (obj) {
-  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-};
-
-
-
-
-
-
-
-
-
-
-
-var classCallCheck = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
-
-var createClass = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-}();
-
-
-
-
-
-
-
-var _extends = Object.assign || function (target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i];
-
-    for (var key in source) {
-      if (Object.prototype.hasOwnProperty.call(source, key)) {
-        target[key] = source[key];
-      }
-    }
-  }
-
-  return target;
 };
 
 var EventBus = function () {
@@ -1594,7 +1609,13 @@ var Peeking = function (Glide, Components) {
   return {
     translate: function translate(_translate) {
       if (Glide.settings.focusAt >= 0) {
-        _translate -= Components.Peek.value / 2;
+        var peek = Components.Peek.value;
+
+        if ((typeof peek === 'undefined' ? 'undefined' : _typeof(peek)) === 'object') {
+          _translate -= peek.before;
+        } else {
+          _translate -= peek;
+        }
       }
 
       return _translate;
@@ -1881,7 +1902,7 @@ var Dimensions = function (Glide, Components) {
      *
      * @return {Object}
      */
-    get: function get() {
+    get: function get$$1() {
       return {
         size: MODE_TO_DIMENSIONS[Glide.settings.mode][0],
         axis: MODE_TO_DIMENSIONS[Glide.settings.mode][1]
@@ -1895,7 +1916,7 @@ var Dimensions = function (Glide, Components) {
      *
      * @return {Object}
      */
-    get: function get() {
+    get: function get$$1() {
       if (Glide.isMode('vertical')) {
         return this.slideHeight;
       }
@@ -1910,7 +1931,7 @@ var Dimensions = function (Glide, Components) {
      *
      * @return {Number}
      */
-    get: function get() {
+    get: function get$$1() {
       return this.slideSize * this.length;
     }
   });
@@ -1921,7 +1942,7 @@ var Dimensions = function (Glide, Components) {
      *
      * @return {Number}
      */
-    get: function get() {
+    get: function get$$1() {
       return Components.Html.slides.length;
     }
   });
@@ -1932,7 +1953,7 @@ var Dimensions = function (Glide, Components) {
      *
      * @return {Number}
      */
-    get: function get() {
+    get: function get$$1() {
       return Components.Html.root.offsetWidth;
     }
   });
@@ -1943,7 +1964,7 @@ var Dimensions = function (Glide, Components) {
      *
      * @return {Number}
      */
-    get: function get() {
+    get: function get$$1() {
       return Components.Html.root.offsetHeight;
     }
   });
@@ -1954,10 +1975,16 @@ var Dimensions = function (Glide, Components) {
      *
      * @return {Number}
      */
-    get: function get() {
+    get: function get$$1() {
+      var peek = Components.Peek.value;
       var perView = Glide.settings.perView;
+      var rootWidth = Components.Html.root.offsetWidth;
 
-      return Components.Html.root.offsetWidth / perView - Components.Peek.value / perView;
+      if ((typeof peek === 'undefined' ? 'undefined' : _typeof(peek)) === 'object') {
+        return rootWidth / perView - peek.before / perView - peek.after / perView;
+      }
+
+      return rootWidth / perView - peek * 2 / perView;
     }
   });
 
@@ -1967,10 +1994,16 @@ var Dimensions = function (Glide, Components) {
      *
      * @return {Number}
      */
-    get: function get() {
+    get: function get$$1() {
+      var peek = Components.Peek.value;
       var perView = Glide.settings.perView;
+      var rootWidth = Components.Html.root.offsetHeight;
 
-      return Components.Html.root.offsetHeight / perView - Components.Peek.value / perView;
+      if ((typeof peek === 'undefined' ? 'undefined' : _typeof(peek)) === 'object') {
+        return rootWidth / perView - peek.before / perView - peek.after / perView;
+      }
+
+      return rootWidth / perView - peek * 2 / perView;
     }
   });
 

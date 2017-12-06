@@ -33,7 +33,7 @@
         <a class="box" href="#">2</a>
       </li>
       <li class="glide__slide">
-        <a class="box" href="#">
+        <a class="box" href="https://www.google.pl">
           <img src="https://www.google.pl/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="google">
         </a>
       </li>
@@ -59,7 +59,10 @@
     perView: 4,
     startAt: 1,
     focusAt: 1,
-    peek: '15%',
+    peek: {
+      before: 0,
+      after: 100
+    },
     autoplay: false,
     extensions: {
       Nav: function (Glide, Components) {

@@ -120,9 +120,15 @@ export default function (Glide, Components) {
      * @return {Number}
      */
     get () {
+      let peek = Components.Peek.value
       let perView = Glide.settings.perView
+      let rootWidth = Components.Html.root.offsetWidth
 
-      return (Components.Html.root.offsetWidth / perView) - (Components.Peek.value / perView)
+      if (typeof peek === 'object') {
+        return (rootWidth / perView) - (peek.before / perView) - (peek.after / perView)
+      }
+
+      return (rootWidth / perView) - (peek * 2 / perView)
     }
   })
 
@@ -133,9 +139,15 @@ export default function (Glide, Components) {
      * @return {Number}
      */
     get () {
+      let peek = Components.Peek.value
       let perView = Glide.settings.perView
+      let rootWidth = Components.Html.root.offsetHeight
 
-      return (Components.Html.root.offsetHeight / perView) - (Components.Peek.value / perView)
+      if (typeof peek === 'object') {
+        return (rootWidth / perView) - (peek.before / perView) - (peek.after / perView)
+      }
+
+      return (rootWidth / perView) - (peek * 2 / perView)
     }
   })
 

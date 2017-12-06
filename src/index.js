@@ -5,6 +5,7 @@ import defaults from './defaults'
 
 import Run from './components/run'
 import Html from './components/html'
+import Peek from './components/peek'
 import Build from './components/build'
 import Swipe from './components/swipe'
 import Arrows from './components/arrows'
@@ -17,7 +18,6 @@ import Animation from './components/animation'
 import Transition from './components/transition'
 import Translate from './components/translate'
 import Dimensions from './components/dimensions'
-import Peek from './components/peek'
 
 const COMPONENTS = {
   Html,

@@ -1,5 +1,3 @@
-import { warn } from '../utils/log'
-
 /**
  * Creates and initializes specified collection of extensions.
  * Each extension receives access to instance of glide and rest of components.

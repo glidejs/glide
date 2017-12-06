@@ -1,9 +1,11 @@
-export default class Peeking {
-  transform (translate, Glide, Components) {
-    if (Glide.settings.focusAt >= 0) {
-      translate -= Components.Peek.value / 2
-    }
+export default function (Glide, Components) {
+  return {
+    translate (translate) {
+      if (Glide.settings.focusAt >= 0) {
+        translate -= Components.Peek.value / 2
+      }
 
-    return translate
+      return translate
+    }
   }
 }

@@ -16,7 +16,8 @@
     padding: 0;
     white-space: nowrap;
     display: flex;
-    flex-wrap: nowrap; }
+    flex-wrap: nowrap;
+    will-change: transform; }
     .glide__slides--dragging {
       user-select: none; }
   .glide__slide {

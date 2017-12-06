@@ -52,40 +52,6 @@
   <div data-glide-el="bullets" class="glide__bullets"></div>
 </div>
 
-<div class="glide2">
-  <div data-glide-el="arrows" class="glide__arrows">
-    <button class="glide__arrow prev" data-glide-dir="<">prev</button>
-    <button class="glide__arrow next" data-glide-dir=">">next</button>
-  </div>
-
-  <div data-glide-el="track" class="glide__track">
-    <ul class="glide__slides">
-      <li class="glide__slide">
-        <a class="box" href="#">1</a>
-      </li>
-      <li class="glide__slide" data-glide-autoplay="3000">
-        <a class="box" href="#">2</a>
-      </li>
-      <li class="glide__slide">
-        <a class="box" href="#">
-          <img src="https://www.google.pl/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="google">
-        </a>
-      </li>
-      <li class="glide__slide">
-        <a class="box" href="#">4</a>
-      </li>
-      <li class="glide__slide">
-        <a class="box" href="#">5</a>
-      </li>
-      <li class="glide__slide">
-        <a class="box" href="#">6</a>
-      </li>
-    </ul>
-  </div>
-
-  <div data-glide-el="bullets" class="glide__bullets"></div>
-</div>
-
 <script src="../dist/glide.js"></script>
 
 <script>
@@ -100,23 +66,6 @@
         return {
           init: function () {
             console.log('Nav', { Glide, Components })
-          }
-        }
-      }
-    }
-  })
-
-  new Glide(document.querySelector('.glide2'), {
-    perView: 4,
-    startAt: 1,
-    focusAt: 0,
-    peek: '15%',
-    autoplay: false,
-    extensions: {
-      Dots: function (Glide, Components) {
-        return {
-          init: function () {
-            console.log('Dots', { Glide, Components })
           }
         }
       }

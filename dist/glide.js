@@ -556,6 +556,58 @@ var Html = function (Glide, Components) {
   return HTML;
 };
 
+var Peek = function (Glide, Components) {
+  var PEEK = {
+    /**
+     * Setups how much to peek based on settings.
+     *
+     * @return {Void}
+     */
+    init: function init() {
+      this.value = Glide.settings.peek;
+    }
+  };
+
+  define(PEEK, 'value', {
+    /**
+     * Gets value of the peek.
+     *
+     * @returns {Number}
+     */
+    get: function get() {
+      return PEEK._s;
+    },
+
+
+    /**
+     * Sets node of the glide track with slides.
+     *
+     * @param {Number} value
+     * @return {Void}
+     */
+    set: function set(value) {
+      if (typeof value === 'string') {
+        var normalized = parseInt(value, 10);
+        var isPercentage = value.indexOf('%') >= 0;
+
+        if (isPercentage) {
+          value = parseInt(Components.Dimensions.width * (normalized / 100));
+        } else {
+          value = normalized;
+        }
+      }
+
+      if (typeof value === 'number') {
+        this._s = value;
+      } else {
+        warn('Invalid peek value');
+      }
+    }
+  });
+
+  return PEEK;
+};
+
 var Build = function (Glide, Components) {
   return {
     /**
@@ -685,42 +737,6 @@ var _extends = Object.assign || function (target) {
   }
 
   return target;
-};
-
-
-
-var inherits = function (subClass, superClass) {
-  if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
-  }
-
-  subClass.prototype = Object.create(superClass && superClass.prototype, {
-    constructor: {
-      value: subClass,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    }
-  });
-  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
-};
-
-
-
-
-
-
-
-
-
-
-
-var possibleConstructorReturn = function (self, call) {
-  if (!self) {
-    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-  }
-
-  return call && (typeof call === "object" || typeof call === "function") ? call : self;
 };
 
 var EventBus = function () {
@@ -1574,96 +1590,61 @@ function ucfirst(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-var Peeking = function () {
-  function Peeking() {
-    classCallCheck(this, Peeking);
-  }
-
-  createClass(Peeking, [{
-    key: "transform",
-    value: function transform(translate, Glide, Components) {
+var Peeking = function (Glide, Components) {
+  return {
+    translate: function translate(_translate) {
       if (Glide.settings.focusAt >= 0) {
-        translate -= Components.Peek.value / 2;
+        _translate -= Components.Peek.value / 2;
       }
 
-      return translate;
+      return _translate;
     }
-  }]);
-  return Peeking;
-}();
+  };
+};
 
-var Focusing = function () {
-  function Focusing() {
-    classCallCheck(this, Focusing);
-  }
-
-  createClass(Focusing, [{
-    key: 'transform',
-    value: function transform(translate, Glide, Components) {
+var Focusing = function (Glide, Components) {
+  return {
+    translate: function translate(_translate) {
       var width = Components.Dimensions.width;
       var focusAt = Glide.settings.focusAt;
       var slideSize = Components.Dimensions.slideSize;
 
       if (focusAt === 'center') {
-        translate -= width / 2 - slideSize / 2;
+        _translate -= width / 2 - slideSize / 2;
       }
 
       if (focusAt >= 0) {
-        translate -= slideSize * focusAt;
+        _translate -= slideSize * focusAt;
       }
 
-      return translate;
+      return _translate;
     }
-  }]);
-  return Focusing;
-}();
+  };
+};
 
 var TRANSFORMERS = [Peeking, Focusing];
 
-var Type = function () {
-  function Type() {
-    classCallCheck(this, Type);
-  }
-
-  createClass(Type, [{
-    key: 'applyTransforms',
-    value: function applyTransforms(translate, Glide, Components) {
+var transformer = function (Glide, Components) {
+  return {
+    transform: function transform(translate) {
       for (var i = 0; i < TRANSFORMERS.length; i++) {
-        var transformer = new TRANSFORMERS[i]();
-
-        translate = transformer.transform(translate, Glide, Components);
+        translate = TRANSFORMERS[i](Glide, Components).translate(translate);
       }
 
       return translate;
     }
-  }]);
-  return Type;
-}();
+  };
+};
 
-var Slider = function (_Type) {
-  inherits(Slider, _Type);
+var Slider = function (Glide, Components) {
+  var translate = Components.Dimensions.slideSize * Glide.index;
 
-  function Slider() {
-    classCallCheck(this, Slider);
-    return possibleConstructorReturn(this, (Slider.__proto__ || Object.getPrototypeOf(Slider)).apply(this, arguments));
-  }
-
-  createClass(Slider, [{
-    key: 'translate',
-    value: function translate(Glide, Components) {
-      var translate = Components.Dimensions.slideSize * Glide.index;
-
-      return this.applyTransforms(translate, Glide, Components);
-    }
-  }]);
-  return Slider;
-}(Type);
-
-var Slider$1 = new Slider();
+  return transformer(Glide, Components).transform(translate);
+};
 
 var Animation = function (Glide, Components) {
   var TYPES = {
-    Slider: Slider$1
+    Slider: Slider
   };
 
   var ANIMATION = {
@@ -1744,7 +1725,7 @@ var Animation = function (Glide, Components) {
      * @return {Number}
      */
     get: function get() {
-      return TYPES[ucfirst(Glide.type)].translate(Glide, Components);
+      return TYPES[ucfirst(Glide.type)](Glide, Components);
     }
   });
 
@@ -1994,58 +1975,6 @@ var Dimensions = function (Glide, Components) {
   });
 
   return DIMENSIONS;
-};
-
-var Peek = function (Glide, Components) {
-  var PEEK = {
-    /**
-     * Setups how much to peek based on settings.
-     *
-     * @return {Void}
-     */
-    init: function init() {
-      this.value = Glide.settings.peek;
-    }
-  };
-
-  define(PEEK, 'value', {
-    /**
-     * Gets value of the peek.
-     *
-     * @returns {Number}
-     */
-    get: function get() {
-      return PEEK._s;
-    },
-
-
-    /**
-     * Sets node of the glide track with slides.
-     *
-     * @param {Number} value
-     * @return {Void}
-     */
-    set: function set(value) {
-      if (typeof value === 'string') {
-        var normalized = parseInt(value, 10);
-        var isPercentage = value.indexOf('%') >= 0;
-
-        if (isPercentage) {
-          value = parseInt(Components.Dimensions.width * (normalized / 100));
-        } else {
-          value = normalized;
-        }
-      }
-
-      if (typeof value === 'number') {
-        this._s = value;
-      } else {
-        warn('Invalid peek value');
-      }
-    }
-  });
-
-  return PEEK;
 };
 
 var COMPONENTS = {

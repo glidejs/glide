@@ -62,10 +62,10 @@ export default function (Glide, Components) {
      */
     get () {
       if (Glide.isMode('vertical')) {
-        return this.slideHeight
+        return DIMENSIONS.slideHeight
       }
 
-      return this.slideWidth
+      return DIMENSIONS.slideWidth
     }
   })
 
@@ -76,7 +76,7 @@ export default function (Glide, Components) {
      * @return {Number}
      */
     get () {
-      return this.slideSize * this.length
+      return DIMENSIONS.slideSize * DIMENSIONS.length
     }
   })
 

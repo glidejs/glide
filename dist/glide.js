@@ -1176,7 +1176,7 @@ var Arrows = function (Glide, Components) {
     * @return {HTMLElement[]}
     */
     get: function get() {
-      return this._el.children;
+      return ARROWS._el.children;
     }
   });
 
@@ -1437,7 +1437,7 @@ var Bullets = function (Glide, Components) {
     * @return {HTMLElement[]}
     */
     get: function get() {
-      return this._el.children;
+      return BULLETS._el.children;
     }
   });
 
@@ -1663,11 +1663,11 @@ var Slider = function (Glide, Components) {
   return transformer(Glide, Components).transform(translate);
 };
 
-var Animation = function (Glide, Components) {
-  var TYPES = {
-    Slider: Slider
-  };
+var TYPES = {
+  Slider: Slider
+};
 
+var Animation = function (Glide, Components) {
   var ANIMATION = {
     /**
      * Constructs animation component.
@@ -1918,10 +1918,10 @@ var Dimensions = function (Glide, Components) {
      */
     get: function get$$1() {
       if (Glide.isMode('vertical')) {
-        return this.slideHeight;
+        return DIMENSIONS.slideHeight;
       }
 
-      return this.slideWidth;
+      return DIMENSIONS.slideWidth;
     }
   });
 
@@ -1932,7 +1932,7 @@ var Dimensions = function (Glide, Components) {
      * @return {Number}
      */
     get: function get$$1() {
-      return this.slideSize * this.length;
+      return DIMENSIONS.slideSize * DIMENSIONS.length;
     }
   });
 

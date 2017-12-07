@@ -89,7 +89,7 @@ export default function (Glide, Components) {
    * @return {HTMLElement[]}
    */
     get () {
-      return this._el.children
+      return ARROWS._el.children
     }
   })
 

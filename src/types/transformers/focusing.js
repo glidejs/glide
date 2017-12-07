@@ -1,5 +1,18 @@
+/**
+ * Updates glide movement with a `peek` settings.
+ *
+ * @param  {Glide} Glide
+ * @param  {Array} Components
+ * @return {Object}
+ */
 export default function (Glide, Components) {
   return {
+    /**
+     * Modifies passed translate value with according to the `focusAt` setting.
+     *
+     * @param  {Number} translate
+     * @return {Number}
+     */
     translate (translate) {
       let width = Components.Dimensions.width
       let focusAt = Glide.settings.focusAt

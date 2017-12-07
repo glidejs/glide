@@ -37,6 +37,7 @@ export default function (Glide, Components) {
     /**
      * Sets node of the glide track with slides.
      *
+     * @todo  refactor
      * @param {Number} value
      * @return {Void}
      */

@@ -1,5 +1,5 @@
 /**
- * Updates glide movement with a `peek` settings.
+ * Updates glide movement with a `focusAt` settings.
  *
  * @param  {Glide} Glide
  * @param  {Array} Components

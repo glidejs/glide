@@ -655,6 +655,7 @@ var Peek = function (Glide, Components) {
     /**
      * Sets node of the glide track with slides.
      *
+     * @todo  refactor
      * @param {Number} value
      * @return {Void}
      */
@@ -1084,105 +1085,6 @@ var Swipe = function (Glide, Components) {
   return SWIPE;
 };
 
-var Arrows = function (Glide, Components) {
-  var Events = new EventBus();
-
-  var ARROWS_SELECTOR = '[data-glide-el="arrows"]';
-
-  var ARROWS = {
-    /**
-     * Inits arrows. Binds events listeners
-     * to the arrows HTML elements.
-     *
-     * @return {Void}
-     */
-    init: function init() {
-      this._el = Components.Html.root.querySelector(ARROWS_SELECTOR);
-
-      this.bind();
-    },
-
-
-    /**
-     * Binds events to arrows HTML elements.
-     *
-     * @return {Void}
-     */
-    bind: function bind() {
-      for (var i = 0; i < this.items.length; i++) {
-        Events.on(['click', 'touchstart'], this.items[i], this.click);
-        Events.on(['mouseenter', 'mouseleave'], this.items[i], this.hover);
-      }
-    },
-
-
-    /**
-     * Unbinds events binded to the arrows HTML elements.
-     *
-     * @return {Void}
-     */
-    unbind: function unbind() {
-      for (var i = 0; i < this.items.length; i++) {
-        Events.off(['click', 'touchstart', 'mouseenter', 'mouseleave'], this.items[i]);
-      }
-    },
-
-
-    /**
-     * Handles `click` event on the arrows HTML elements.
-     * Moves slider in driection precised in
-     * `data-glide-dir` attribute.
-     *
-     * @param {Object} event
-     * @return {Void}
-     */
-    click: function click(event) {
-      event.preventDefault();
-
-      if (!Glide.disabled) {
-        Components.Run.stop().make(event.target.dataset.glideDir);
-
-        Components.Animation.after(function () {
-          Components.Run.init();
-        });
-      }
-    },
-
-
-    /**
-     * Handles `hover` event on the arrows HTML elements.
-     * Plays and pauses autoplay running.
-     *
-     * @param {Object} event
-     * @return {Void}
-     */
-    hover: function hover(event) {
-      if (!Glide.disabled) {
-        if (event.type === 'mouseleave') {
-          Components.Run.init();
-        }
-
-        if (event.type === 'mouseenter') {
-          Components.Run.stop();
-        }
-      }
-    }
-  };
-
-  define(ARROWS, 'items', {
-    /**
-    * Gets collection of the arrows HTML elements.
-    *
-    * @return {HTMLElement[]}
-    */
-    get: function get() {
-      return ARROWS._el.children;
-    }
-  });
-
-  return ARROWS;
-};
-
 // Similar to ES6's rest param (http://ariya.ofilabs.com/2013/03/es6-and-rest-parameter.html)
 // This accumulates the arguments passed into an array, after a given index.
 var restArgs = function restArgs(func, startIndex) {
@@ -1343,107 +1245,6 @@ var Images = function (Glide, Components) {
   };
 };
 
-var Bullets = function (Glide, Components) {
-  var Events = new EventBus();
-
-  var BULLETS_SELECTOR = '[data-glide-el="bullets"]';
-
-  var BULLETS = {
-    /**
-     * Inits bullets. Binds events listeners
-     * to the bullets HTML elements.
-     *
-     * @return {Void}
-     */
-    init: function init() {
-      this._el = Components.Html.root.querySelector(BULLETS_SELECTOR);
-
-      this.bind();
-    },
-
-
-    /**
-     * Binds events to bullets HTML elements.
-     *
-     * @return {Void}
-     */
-    bind: function bind() {
-      var items = this.items;
-
-      for (var i = 0; i < items.length; i++) {
-        Events.on(['click', 'touchstart'], items[i], this.click);
-        Events.on(['mouseenter', 'mouseleave'], items[i], this.hover);
-      }
-    },
-
-
-    /**
-     * Unbinds events binded to the bullets HTML elements.
-     *
-     * @return {Void}
-     */
-    unbind: function unbind() {
-      for (var i = 0; i < this.items.length; i++) {
-        Events.off(['click', 'touchstart', 'mouseenter', 'mouseleave'], this.items[i]);
-      }
-    },
-
-
-    /**
-     * Handles `click` event on the bullets HTML elements.
-     * Moves slider in driection precised in
-     * `data-glide-dir` attribute.
-     *
-     * @param {Object} event
-     * @return {Void}
-     */
-    click: function click(event) {
-      event.preventDefault();
-
-      if (!Glide.disabled) {
-        Components.Run.stop().make(event.target.dataset.glideDir);
-
-        Components.Animation.after(function () {
-          Components.Run.init();
-        });
-      }
-    },
-
-
-    /**
-     * Handles `hover` event on the bullets HTML elements.
-     * Plays and pauses autoplay running.
-     *
-     * @param {Object} event
-     * @return {Void}
-     */
-    hover: function hover(event) {
-      if (!Glide.disabled) {
-        if (event.type === 'mouseleave') {
-          Components.Run.init();
-        }
-
-        if (event.type === 'mouseenter') {
-          Components.Run.stop();
-        }
-      }
-    }
-  };
-
-  define(BULLETS, 'items', {
-    /**
-    * Gets collection of the arrows HTML elements.
-    *
-    * @return {HTMLElement[]}
-    */
-    get: function get() {
-      return BULLETS._el.children;
-    }
-  });
-
-  return BULLETS;
-};
-
 var Anchors = function (Glide, Components) {
   var detached = false;
   var prevented = false;
@@ -1570,6 +1371,98 @@ var Anchors = function (Glide, Components) {
   return ANCHORS;
 };
 
+var Controls = function (Glide, Components) {
+  var Events = new EventBus();
+
+  var CONTROLS_SELECTOR = '[data-glide-el="controls"]';
+
+  return {
+    /**
+     * Inits arrows. Binds events listeners
+     * to the arrows HTML elements.
+     *
+     * @return {Void}
+     */
+    init: function init() {
+      this._els = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR);
+
+      for (var i = 0; i < this._els.length; i++) {
+        this.bind(this._els[i]);
+      }
+    },
+
+
+    /**
+     * Binds events to arrows HTML elements.
+     *
+     * @return {Void}
+     */
+    bind: function bind(wrapper) {
+      var children = wrapper.children;
+
+      for (var i = 0; i < children.length; i++) {
+        Events.on(['click', 'touchstart'], children[i], this.click);
+        Events.on(['mouseenter', 'mouseleave'], children[i], this.hover);
+      }
+    },
+
+
+    /**
+     * Unbinds events binded to the arrows HTML elements.
+     *
+     * @return {Void}
+     */
+    unbind: function unbind(wrapper) {
+      var children = wrapper.children;
+
+      for (var i = 0; i < children.length; i++) {
+        Events.off(['click', 'touchstart', 'mouseenter', 'mouseleave'], children[i]);
+      }
+    },
+
+
+    /**
+     * Handles `click` event on the arrows HTML elements.
+     * Moves slider in driection precised in
+     * `data-glide-dir` attribute.
+     *
+     * @param {Object} event
+     * @return {Void}
+     */
+    click: function click(event) {
+      event.preventDefault();
+
+      if (!Glide.disabled) {
+        Components.Run.stop().make(event.target.dataset.glideDir);
+
+        Components.Animation.after(function () {
+          Components.Run.init();
+        });
+      }
+    },
+
+
+    /**
+     * Handles `hover` event on the arrows HTML elements.
+     * Plays and pauses autoplay running.
+     *
+     * @param {Object} event
+     * @return {Void}
+     */
+    hover: function hover(event) {
+      if (!Glide.disabled) {
+        if (event.type === 'mouseleave') {
+          Components.Run.init();
+        }
+
+        if (event.type === 'mouseenter') {
+          Components.Run.stop();
+        }
+      }
+    }
+  };
+};
+
 var Callbacks = function (Glide, Components) {
   var CALLBACKS = {
     /**
@@ -1605,8 +1498,21 @@ function ucfirst(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+/**
+ * Updates glide movement with a `peek` settings.
+ *
+ * @param  {Glide} Glide
+ * @param  {Array} Components
+ * @return {Object}
+ */
 var Peeking = function (Glide, Components) {
   return {
+    /**
+     * Modifies passed translate value with a `peek` setting.
+     *
+     * @param  {Number} translate
+     * @return {Number}
+     */
     translate: function translate(_translate) {
       if (Glide.settings.focusAt >= 0) {
         var peek = Components.Peek.value;
@@ -1623,8 +1529,21 @@ var Peeking = function (Glide, Components) {
   };
 };
 
+/**
+ * Updates glide movement with a `focusAt` settings.
+ *
+ * @param  {Glide} Glide
+ * @param  {Array} Components
+ * @return {Object}
+ */
 var Focusing = function (Glide, Components) {
   return {
+    /**
+     * Modifies passed translate value with according to the `focusAt` setting.
+     *
+     * @param  {Number} translate
+     * @return {Number}
+     */
     translate: function translate(_translate) {
       var width = Components.Dimensions.width;
       var focusAt = Glide.settings.focusAt;
@@ -1643,10 +1562,28 @@ var Focusing = function (Glide, Components) {
   };
 };
 
+/**
+ * Collection of transformers.
+ *
+ * @type {Array}
+ */
 var TRANSFORMERS = [Peeking, Focusing];
 
+/**
+ * Applies diffrent transformers on glide translate value.
+ *
+ * @param  {Glide} Glide
+ * @param  {Components} Components
+ * @return {Object}
+ */
 var transformer = function (Glide, Components) {
   return {
+    /**
+     * Pipline translate value registered transformers.
+     *
+     * @param  {Number} translate
+     * @return {Number}
+     */
     transform: function transform(translate) {
       for (var i = 0; i < TRANSFORMERS.length; i++) {
         translate = TRANSFORMERS[i](Glide, Components).translate(translate);
@@ -2013,8 +1950,7 @@ var Dimensions = function (Glide, Components) {
 var COMPONENTS = {
   Html: Html,
   Build: Build,
-  Arrows: Arrows,
-  Bullets: Bullets,
+  Controls: Controls,
   Anchors: Anchors,
   Callbacks: Callbacks,
   Animation: Animation,
@@ -2039,8 +1975,10 @@ var Glide = function () {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     classCallCheck(this, Glide);
 
-    this.selector = selector;
     this.settings = _extends(defaults, options);
+
+    this.disabled = false;
+    this.selector = selector;
     this.index = this.settings.startAt;
 
     this.mount();

@@ -1,12 +1,11 @@
-import { define } from '../utils/object'
 import { EventBus } from '../core/event/index'
 
 export default function (Glide, Components) {
   let Events = new EventBus()
 
-  const ARROWS_SELECTOR = '[data-glide-el="arrows"]'
+  const CONTROLS_SELECTOR = '[data-glide-el="controls"]'
 
-  const ARROWS = {
+  return {
     /**
      * Inits arrows. Binds events listeners
      * to the arrows HTML elements.
@@ -14,9 +13,11 @@ export default function (Glide, Components) {
      * @return {Void}
      */
     init () {
-      this._el = Components.Html.root.querySelector(ARROWS_SELECTOR)
+      this._els = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR)
 
-      this.bind()
+      for (let i = 0; i < this._els.length; i++) {
+        this.bind(this._els[i])
+      }
     },
 
     /**
@@ -24,10 +25,12 @@ export default function (Glide, Components) {
      *
      * @return {Void}
      */
-    bind () {
-      for (var i = 0; i < this.items.length; i++) {
-        Events.on(['click', 'touchstart'], this.items[i], this.click)
-        Events.on(['mouseenter', 'mouseleave'], this.items[i], this.hover)
+    bind (wrapper) {
+      let children = wrapper.children
+
+      for (var i = 0; i < children.length; i++) {
+        Events.on(['click', 'touchstart'], children[i], this.click)
+        Events.on(['mouseenter', 'mouseleave'], children[i], this.hover)
       }
     },
 
@@ -36,9 +39,11 @@ export default function (Glide, Components) {
      *
      * @return {Void}
      */
-    unbind () {
-      for (var i = 0; i < this.items.length; i++) {
-        Events.off(['click', 'touchstart', 'mouseenter', 'mouseleave'], this.items[i])
+    unbind (wrapper) {
+      let children = wrapper.children
+
+      for (var i = 0; i < children.length; i++) {
+        Events.off(['click', 'touchstart', 'mouseenter', 'mouseleave'], children[i])
       }
     },
 
@@ -81,17 +86,4 @@ export default function (Glide, Components) {
       }
     }
   }
-
-  define(ARROWS, 'items', {
-    /**
-   * Gets collection of the arrows HTML elements.
-   *
-   * @return {HTMLElement[]}
-   */
-    get () {
-      return ARROWS._el.children
-    }
-  })
-
-  return ARROWS
 }

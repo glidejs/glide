@@ -8,11 +8,10 @@ import Html from './components/html'
 import Peek from './components/peek'
 import Build from './components/build'
 import Swipe from './components/swipe'
-import Arrows from './components/arrows'
 import Window from './components/window'
 import Images from './components/images'
-import Bullets from './components/bullets'
 import Anchors from './components/anchors'
+import Controls from './components/controls'
 import Callbacks from './components/callbacks'
 import Animation from './components/animation'
 import Transition from './components/transition'
@@ -22,8 +21,7 @@ import Dimensions from './components/dimensions'
 const COMPONENTS = {
   Html,
   Build,
-  Arrows,
-  Bullets,
+  Controls,
   Anchors,
   Callbacks,
   Animation,
@@ -45,8 +43,10 @@ export default class Glide {
    * @param  {Object} options
    */
   constructor (selector, options = {}) {
-    this.selector = selector
     this.settings = Object.assign(defaults, options)
+
+    this.disabled = false
+    this.selector = selector
     this.index = this.settings.startAt
 
     this.mount()

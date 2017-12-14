@@ -1,11 +1,6 @@
 import { define } from '../utils/object'
 
 export default function (Glide, Components) {
-  const MODE_TO_DIMENSIONS = {
-    horizontal: ['width', 'x'],
-    vertical: ['height', 'y']
-  }
-
   const DIMENSIONS = {
     /**
      * Applys dimentions to the glide HTML elements.
@@ -13,10 +8,8 @@ export default function (Glide, Components) {
      * @return {Void}
      */
     apply () {
-      let dimention = this.dimention.size
-
-      this.setupSlides(dimention)
-      this.setupWrapper(dimention)
+      this.setupSlides()
+      this.setupWrapper()
     },
 
     /**
@@ -26,7 +19,7 @@ export default function (Glide, Components) {
      */
     setupSlides (dimention) {
       for (var i = 0; i < Components.Html.slides.length; i++) {
-        Components.Html.slides[i].style[dimention] = `${this.slideSize}px`
+        Components.Html.slides[i].style.width = `${this.slideWidth}px`
       }
     },
 
@@ -36,38 +29,9 @@ export default function (Glide, Components) {
      * @return {Void}
      */
     setupWrapper (dimention) {
-      Components.Html.wrapper.style[dimention] = `${this.wrapperSize}px`
+      Components.Html.wrapper.style.width = `${this.wrapperSize}px`
     }
   }
-
-  define(DIMENSIONS, 'dimention', {
-    /**
-     * Gets dimentions map for current glide's mode.
-     *
-     * @return {Object}
-     */
-    get () {
-      return {
-        size: MODE_TO_DIMENSIONS[Glide.settings.mode][0],
-        axis: MODE_TO_DIMENSIONS[Glide.settings.mode][1]
-      }
-    }
-  })
-
-  define(DIMENSIONS, 'slideSize', {
-    /**
-     * Gets dimentions map for current glide's mode.
-     *
-     * @return {Object}
-     */
-    get () {
-      if (Glide.isMode('vertical')) {
-        return DIMENSIONS.slideHeight
-      }
-
-      return DIMENSIONS.slideWidth
-    }
-  })
 
   define(DIMENSIONS, 'wrapperSize', {
     /**
@@ -76,7 +40,7 @@ export default function (Glide, Components) {
      * @return {Number}
      */
     get () {
-      return DIMENSIONS.slideSize * DIMENSIONS.length
+      return DIMENSIONS.slideWidth * DIMENSIONS.length
     }
   })
 
@@ -102,17 +66,6 @@ export default function (Glide, Components) {
     }
   })
 
-  define(DIMENSIONS, 'height', {
-    /**
-     * Gets height value of the glide.
-     *
-     * @return {Number}
-     */
-    get () {
-      return Components.Html.root.offsetHeight
-    }
-  })
-
   define(DIMENSIONS, 'slideWidth', {
     /**
      * Gets width value of the single slide.
@@ -123,25 +76,6 @@ export default function (Glide, Components) {
       let peek = Components.Peek.value
       let perView = Glide.settings.perView
       let rootWidth = Components.Html.root.offsetWidth
-
-      if (typeof peek === 'object') {
-        return (rootWidth / perView) - (peek.before / perView) - (peek.after / perView)
-      }
-
-      return (rootWidth / perView) - (peek * 2 / perView)
-    }
-  })
-
-  define(DIMENSIONS, 'slideHeight', {
-    /**
-     * Gets height value of the single slide.
-     *
-     * @return {Number}
-     */
-    get () {
-      let peek = Components.Peek.value
-      let perView = Glide.settings.perView
-      let rootWidth = Components.Html.root.offsetHeight
 
       if (typeof peek === 'object') {
         return (rootWidth / perView) - (peek.before / perView) - (peek.after / perView)

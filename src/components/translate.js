@@ -1,15 +1,4 @@
 export default function (Glide, Components) {
-  /**
-   * Collection of available translate axes.
-   *
-   * @type {Object}
-   */
-  const AXES = {
-    x: 0,
-    y: 0,
-    z: 0
-  }
-
   return {
     /**
      * Gets value of translate.
@@ -18,9 +7,7 @@ export default function (Glide, Components) {
      * @return {String}
      */
     get (value) {
-      AXES[Components.Dimensions.dimention.axis] = parseInt(value)
-
-      return `translate3d(${-1 * AXES.x}px, ${-1 * AXES.y}px, ${-1 * AXES.z}px)`
+      return `translate3d(${-1 * value}px, 0px, 0px)`
     },
 
     /**
@@ -30,6 +17,7 @@ export default function (Glide, Components) {
      * @return {self}
      */
     set (value) {
+      console.log(this.get(value))
       Components.Html.wrapper.style.transform = this.get(value)
 
       return this

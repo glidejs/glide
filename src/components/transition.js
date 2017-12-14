@@ -4,12 +4,12 @@ export default function (Glide, Components) {
 
   return {
     /**
-     * Gets value of transition.
+     * Composes string of the CSS transition.
      *
      * @param {String} property
      * @return {String}
      */
-    get (property = 'transform') {
+    compose (property = 'transform') {
       let settings = Glide.settings
 
       if (!disabled) {
@@ -26,7 +26,7 @@ export default function (Glide, Components) {
      * @return {self}
      */
     set (property) {
-      Components.Html.wrapper.style.transition = this.get(property)
+      Components.Html.wrapper.style.transition = this.compose(property)
 
       return this
     },

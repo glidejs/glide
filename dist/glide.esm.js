@@ -354,6 +354,8 @@ var Run = function (Glide, Components) {
           break;
       }
 
+      Components.Height.set();
+
       Components.Animation.make().after(function () {
         Components.Build.activeClass();
       });
@@ -1079,6 +1081,47 @@ var Swipe = function (Glide, Components) {
   return SWIPE;
 };
 
+var Height = function (Glide, Components) {
+  var HEIGHT = {
+    /**
+     * Inits height. Adds `height` transition to the root.
+     *
+     * @return {Void}
+     */
+    init: function init() {
+      if (Glide.settings.autoheight) {
+        Components.Html.root.style.transition = Components.Transition.compose('height');
+      }
+    },
+
+
+    /**
+     * Sets height of the slider.
+     *
+     * @param {Boolean} force Force height setting even if option is turn off.
+     * @return {Void}
+     */
+    set: function set(force) {
+      if (Glide.settings.autoheight || force) {
+        Components.Html.root.style.height = this.value;
+      }
+    }
+  };
+
+  define(HEIGHT, 'value', {
+    /**
+     * Gets height of the current slide.
+     *
+     * @return {Number}
+     */
+    get: function get() {
+      return Components.Html.slides[Glide.index].offsetHeight;
+    }
+  });
+
+  return HEIGHT;
+};
+
 // Similar to ES6's rest param (http://ariya.ofilabs.com/2013/03/es6-and-rest-parameter.html)
 // This accumulates the arguments passed into an array, after a given index.
 var restArgs = function restArgs(func, startIndex) {
@@ -1541,14 +1584,14 @@ var Focusing = function (Glide, Components) {
     translate: function translate(_translate) {
       var width = Components.Dimensions.width;
       var focusAt = Glide.settings.focusAt;
-      var slideSize = Components.Dimensions.slideSize;
+      var slideWidth = Components.Dimensions.slideWidth;
 
       if (focusAt === 'center') {
-        _translate -= width / 2 - slideSize / 2;
+        _translate -= width / 2 - slideWidth / 2;
       }
 
       if (focusAt >= 0) {
-        _translate -= slideSize * focusAt;
+        _translate -= slideWidth * focusAt;
       }
 
       return _translate;
@@ -1589,7 +1632,7 @@ var transformer = function (Glide, Components) {
 };
 
 var Slider = function (Glide, Components) {
-  var translate = Components.Dimensions.slideSize * Glide.index;
+  var translate = Components.Dimensions.slideWidth * Glide.index;
 
   return transformer(Glide, Components).transform(translate);
 };
@@ -1689,12 +1732,12 @@ var Transition = function (Glide, Components) {
 
   return {
     /**
-     * Gets value of transition.
+     * Composes string of the CSS transition.
      *
      * @param {String} property
      * @return {String}
      */
-    get: function get() {
+    compose: function compose() {
       var property = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'transform';
 
       var settings = Glide.settings;
@@ -1714,7 +1757,7 @@ var Transition = function (Glide, Components) {
      * @return {self}
      */
     set: function set(property) {
-      Components.Html.wrapper.style.transition = this.get(property);
+      Components.Html.wrapper.style.transition = this.compose(property);
 
       return this;
     },
@@ -1746,17 +1789,6 @@ var Transition = function (Glide, Components) {
 };
 
 var Translate = function (Glide, Components) {
-  /**
-   * Collection of available translate axes.
-   *
-   * @type {Object}
-   */
-  var AXES = {
-    x: 0,
-    y: 0,
-    z: 0
-  };
-
   return {
     /**
      * Gets value of translate.
@@ -1765,9 +1797,7 @@ var Translate = function (Glide, Components) {
      * @return {String}
      */
     get: function get(value) {
-      AXES[Components.Dimensions.dimention.axis] = parseInt(value);
-
-      return "translate3d(" + -1 * AXES.x + "px, " + -1 * AXES.y + "px, " + -1 * AXES.z + "px)";
+      return "translate3d(" + -1 * value + "px, 0px, 0px)";
     },
 
 
@@ -1778,6 +1808,7 @@ var Translate = function (Glide, Components) {
      * @return {self}
      */
     set: function set(value) {
+      console.log(this.get(value));
       Components.Html.wrapper.style.transform = this.get(value);
 
       return this;
@@ -1786,11 +1817,6 @@ var Translate = function (Glide, Components) {
 };
 
 var Dimensions = function (Glide, Components) {
-  var MODE_TO_DIMENSIONS = {
-    horizontal: ['width', 'x'],
-    vertical: ['height', 'y']
-  };
-
   var DIMENSIONS = {
     /**
      * Applys dimentions to the glide HTML elements.
@@ -1798,10 +1824,8 @@ var Dimensions = function (Glide, Components) {
      * @return {Void}
      */
     apply: function apply() {
-      var dimention = this.dimention.size;
-
-      this.setupSlides(dimention);
-      this.setupWrapper(dimention);
+      this.setupSlides();
+      this.setupWrapper();
     },
 
 
@@ -1812,7 +1836,7 @@ var Dimensions = function (Glide, Components) {
      */
     setupSlides: function setupSlides(dimention) {
       for (var i = 0; i < Components.Html.slides.length; i++) {
-        Components.Html.slides[i].style[dimention] = this.slideSize + 'px';
+        Components.Html.slides[i].style.width = this.slideWidth + 'px';
       }
     },
 
@@ -1823,38 +1847,9 @@ var Dimensions = function (Glide, Components) {
      * @return {Void}
      */
     setupWrapper: function setupWrapper(dimention) {
-      Components.Html.wrapper.style[dimention] = this.wrapperSize + 'px';
+      Components.Html.wrapper.style.width = this.wrapperSize + 'px';
     }
   };
-
-  define(DIMENSIONS, 'dimention', {
-    /**
-     * Gets dimentions map for current glide's mode.
-     *
-     * @return {Object}
-     */
-    get: function get$$1() {
-      return {
-        size: MODE_TO_DIMENSIONS[Glide.settings.mode][0],
-        axis: MODE_TO_DIMENSIONS[Glide.settings.mode][1]
-      };
-    }
-  });
-
-  define(DIMENSIONS, 'slideSize', {
-    /**
-     * Gets dimentions map for current glide's mode.
-     *
-     * @return {Object}
-     */
-    get: function get$$1() {
-      if (Glide.isMode('vertical')) {
-        return DIMENSIONS.slideHeight;
-      }
-
-      return DIMENSIONS.slideWidth;
-    }
-  });
 
   define(DIMENSIONS, 'wrapperSize', {
     /**
@@ -1863,7 +1858,7 @@ var Dimensions = function (Glide, Components) {
      * @return {Number}
      */
     get: function get$$1() {
-      return DIMENSIONS.slideSize * DIMENSIONS.length;
+      return DIMENSIONS.slideWidth * DIMENSIONS.length;
     }
   });
 
@@ -1889,17 +1884,6 @@ var Dimensions = function (Glide, Components) {
     }
   });
 
-  define(DIMENSIONS, 'height', {
-    /**
-     * Gets height value of the glide.
-     *
-     * @return {Number}
-     */
-    get: function get$$1() {
-      return Components.Html.root.offsetHeight;
-    }
-  });
-
   define(DIMENSIONS, 'slideWidth', {
     /**
      * Gets width value of the single slide.
@@ -1919,30 +1903,12 @@ var Dimensions = function (Glide, Components) {
     }
   });
 
-  define(DIMENSIONS, 'slideHeight', {
-    /**
-     * Gets height value of the single slide.
-     *
-     * @return {Number}
-     */
-    get: function get$$1() {
-      var peek = Components.Peek.value;
-      var perView = Glide.settings.perView;
-      var rootWidth = Components.Html.root.offsetHeight;
-
-      if ((typeof peek === 'undefined' ? 'undefined' : _typeof(peek)) === 'object') {
-        return rootWidth / perView - peek.before / perView - peek.after / perView;
-      }
-
-      return rootWidth / perView - peek * 2 / perView;
-    }
-  });
-
   return DIMENSIONS;
 };
 
 var COMPONENTS = {
   Html: Html,
+  Height: Height,
   Build: Build,
   Controls: Controls,
   Anchors: Anchors,

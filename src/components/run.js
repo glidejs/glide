@@ -84,6 +84,8 @@ export default function (Glide, Components) {
           break
       }
 
+      Components.Height.set()
+
       Components.Animation.make().after(() => {
         Components.Build.activeClass()
       })

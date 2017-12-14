@@ -324,12 +324,12 @@ var Run = function (Glide, Components) {
      */
     make: function make(move, callback) {
       this.direction = move.substr(0, 1);
-      this.steps = move.substr(1) ? parseInt(move.substr(1)) : 0;
+      this.steps = move.substr(1) ? move.substr(1) : 0;
 
       switch (this.direction) {
         case '>':
-          if (typeof this.steps === 'number' && this.steps !== 0) {
-            Glide.index += Math.min(this.length - Glide.index, -this.steps);
+          if (typeof this.steps === 'number' && parseInt(this.steps) !== 0) {
+            Glide.index += Math.min(this.length - Glide.index, -parseInt(this.steps));
           } else if (this.steps === '>') {
             Glide.index = this.length;
           } else if (this.isEnd()) {
@@ -342,8 +342,8 @@ var Run = function (Glide, Components) {
           break;
 
         case '<':
-          if (typeof this.steps === 'number' && this.steps !== 0) {
-            Glide.index -= Math.min(Glide.index, this.steps);
+          if (typeof this.steps === 'number' && parseInt(this.steps) !== 0) {
+            Glide.index -= Math.min(Glide.index, parseInt(this.steps));
           } else if (this.steps === '<') {
             Glide.index = 0;
           } else if (this.isStart()) {

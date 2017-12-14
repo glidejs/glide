@@ -20,21 +20,21 @@ import Translate from './components/translate'
 import Dimensions from './components/dimensions'
 
 const COMPONENTS = {
+  Run,
+  Peek,
   Html,
-  Height,
   Build,
-  Controls,
-  Anchors,
-  Callbacks,
-  Animation,
+  Swipe,
+  Height,
   Images,
   Window,
-  Swipe,
-  Run,
-  Transition,
-  Dimensions,
+  Anchors,
+  Controls,
+  Callbacks,
+  Animation,
   Translate,
-  Peek
+  Transition,
+  Dimensions
 }
 
 export default class Glide {

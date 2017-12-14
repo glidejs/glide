@@ -1907,21 +1907,21 @@ var Dimensions = function (Glide, Components) {
 };
 
 var COMPONENTS = {
+  Run: Run,
+  Peek: Peek,
   Html: Html,
-  Height: Height,
   Build: Build,
-  Controls: Controls,
-  Anchors: Anchors,
-  Callbacks: Callbacks,
-  Animation: Animation,
+  Swipe: Swipe,
+  Height: Height,
   Images: Images,
   Window: Window,
-  Swipe: Swipe,
-  Run: Run,
-  Transition: Transition,
-  Dimensions: Dimensions,
+  Anchors: Anchors,
+  Controls: Controls,
+  Callbacks: Callbacks,
+  Animation: Animation,
   Translate: Translate,
-  Peek: Peek
+  Transition: Transition,
+  Dimensions: Dimensions
 };
 
 var Glide = function () {

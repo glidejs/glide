@@ -2,10 +2,10 @@
   "name": "glidejs",
   "version": "3.0.0",
   "description": "Glide.js is a responsive and touch-friendly JavaScript slider/carousel. It’s simple, lightweight and fast. Designed to slide. No less, no more.",
-  "author": "Jędrzej Chałubek <jedrzej.chalubek@gmail.com>",
+  "author": "Jędrzej Chałubek <jedrzej.chalubek@gmail.com> (http://jedrzejchalubek.com/)",
   "homepage": "https://glide.jedrzejchalubek.com",
   "main": "dist/glide.js",
-  "module": "dist/glide.js",
+  "module": "dist/glide.esm.js",
   "unpkg": "dist/glide.js",
   "repository": {
     "type": "git",

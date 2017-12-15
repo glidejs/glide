@@ -6,6 +6,11 @@
   position: relative;
   width: 100%;
   height: 100%;
+  box-sizing: border-box;
+
+  & > * {
+    box-sizing: inherit;
+  }
 
   &#{$glide-element-separator}track {
     overflow: hidden;
@@ -22,8 +27,11 @@
     overflow: hidden;
     padding: 0;
     white-space: nowrap;
-    display: flex;
+    display: inline-flex;
+    align-items: flex-start;
+    align-content: flex-start;
     flex-wrap: nowrap;
+    will-change: transform;
 
     &#{$glide-modifier-separator}dragging {
       user-select: none;

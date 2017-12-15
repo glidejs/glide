@@ -1,6 +1,4 @@
 import build from './build'
-import banner from './banner'
-import babel from 'rollup-plugin-babel'
 import uglify from 'rollup-plugin-uglify'
 
 const settings = {

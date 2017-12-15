@@ -1,28 +1,32 @@
-import Core from '../components/core'
+import { define } from '../utils/object'
 
-class Callbacks {
-  /**
-   * Calls callback with attributes.
-   *
-   * @param {Function} closure
-   * @return {self}
-   */
-  call (closure) {
-    if (closure !== 'undefined' && typeof closure === 'function') {
-      closure(this.attrs)
+export default function (Glide, Components) {
+  const CALLBACKS = {
+    /**
+     * Calls callback with attributes.
+     *
+     * @param {Function} closure
+     * @return {self}
+     */
+    call (closure) {
+      if (closure !== 'undefined' && typeof closure === 'function') {
+        closure(this.params)
+      }
     }
   }
 
-  /**
-   * Gets attributes for events callback's parameter.
-   *
-   * @return {Object}
-   */
-  get attrs () {
-    return {
-      index: Core.index
+  define(CALLBACKS, 'params', {
+    /**
+     * Gets attributes for events callback's parameter.
+     *
+     * @return {Object}
+     */
+    get () {
+      return {
+        index: Glide.index
+      }
     }
-  }
+  })
+
+  return CALLBACKS
 }
-
-export default new Callbacks()

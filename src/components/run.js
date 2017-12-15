@@ -1,155 +1,155 @@
-import Html from './html'
-import Core from './core'
-import Build from './build'
-import Animation from './animation'
+import { define } from '../utils/object'
 
-class Run {
-  /**
-   * Constructs run component.
-   */
-  constructor () {
-    this.flag = false
-    this.running = false
-  }
+export default function (Glide, Components) {
+  let flag = false
+  let running = false
 
-  /**
-   * Initializes autorunning of the glide.
-   *
-   * @return {self}
-   */
-  init () {
-    if (Core.settings.autoplay || this.running) {
-      if (typeof this.interval === 'undefined') {
-        this.interval = setInterval(() => {
-          this.stop()
-            .make('>')
-            .init()
-        }, this.period)
-      }
-    }
-
-    return this
-  }
-
-  /**
-   * Stops autorunning of the glide.
-   *
-   * @return {self}
-   */
-  stop () {
-    if (Core.settings.autoplay || this.running) {
-      if (this.interval >= 0) {
-        this.interval = clearInterval(this.interval)
-      }
-    }
-
-    return this
-  }
-
-  /**
-   * Handles glide status. Calculates current index
-   * based on passed move and slider type.
-   *
-   * @param {String} move
-   * @param {Function} callback
-   */
-  make (move, callback) {
-    this.direction = move.substr(0, 1)
-    this.steps = move.substr(1) ? parseInt(move.substr(1)) : 0
-
-    switch (this.direction) {
-      case '>':
-        if (typeof this.steps === 'number' && this.steps !== 0) {
-          Core.index += Math.min(this.length - Core.index, -this.steps)
-        } else if (this.steps === '>') {
-          Core.index = this.length
-        } else if (this.isEnd()) {
-          Core.index = 0
-
-          this.flag = true
-        } else {
-          Core.index++
+  const RUN = {
+    /**
+     * Initializes autorunning of the glide.
+     *
+     * @return {self}
+     */
+    init () {
+      if (Glide.settings.autoplay || running) {
+        if (typeof this.interval === 'undefined') {
+          this.interval = setInterval(() => {
+            this.stop()
+              .make('>')
+              .init()
+          }, this.period)
         }
-        break
+      }
 
-      case '<':
-        if (typeof this.steps === 'number' && this.steps !== 0) {
-          Core.index -= Math.min(Core.index, this.steps)
-        } else if (this.steps === '<') {
-          Core.index = 0
-        } else if (this.isStart()) {
-          Core.index = this.length
+      return this
+    },
 
-          this.flag = true
-        } else {
-          Core.index--
+    /**
+     * Stops autorunning of the glide.
+     *
+     * @return {self}
+     */
+    stop () {
+      if (Glide.settings.autoplay || running) {
+        if (this.interval >= 0) {
+          this.interval = clearInterval(this.interval)
         }
-        break
+      }
 
-      case '=':
-        Core.index = this.steps
-        break
+      return this
+    },
+
+    /**
+     * Handles glide status. Calculates current index
+     * based on passed move and slider type.
+     *
+     * @param {String} move
+     * @param {Function} callback
+     */
+    make (move, callback) {
+      this.direction = move.substr(0, 1)
+      this.steps = move.substr(1) ? move.substr(1) : 0
+
+      switch (this.direction) {
+        case '>':
+          if (typeof this.steps === 'number' && parseInt(this.steps) !== 0) {
+            Glide.index += Math.min(this.length - Glide.index, -parseInt(this.steps))
+          } else if (this.steps === '>') {
+            Glide.index = this.length
+          } else if (this.isEnd()) {
+            Glide.index = 0
+
+            this.flag = true
+          } else {
+            Glide.index++
+          }
+          break
+
+        case '<':
+          if (typeof this.steps === 'number' && parseInt(this.steps) !== 0) {
+            Glide.index -= Math.min(Glide.index, parseInt(this.steps))
+          } else if (this.steps === '<') {
+            Glide.index = 0
+          } else if (this.isStart()) {
+            Glide.index = this.length
+
+            this.flag = true
+          } else {
+            Glide.index--
+          }
+          break
+
+        case '=':
+          Glide.index = this.steps
+          break
+      }
+
+      Components.Height.set()
+
+      Components.Animation.make().after(() => {
+        Components.Build.activeClass()
+      })
+
+      return this
+    },
+
+    /**
+     * Checks if we are on the first slide.
+     *
+     * @return {Boolean}
+     */
+    isStart () {
+      return Glide.index === 0
+    },
+
+    /**
+     * Checks if we are on the last slide.
+     *
+     * @return {Boolean}
+     */
+    isEnd () {
+      return Glide.index === this.length
+    },
+
+    /**
+     * Checks if we are making offset run.
+     *
+     * @return {Boolean}
+     */
+    isOffset (direction) {
+      return flag && this.direction === direction
     }
-
-    Animation.make().after(() => {
-      Build.activeClass()
-    })
-
-    return this
   }
 
-  /**
-   * Checks if we are on the first slide.
-   *
-   * @return {Boolean}
-   */
-  isStart () {
-    return Core.index === 0
-  }
-
-  /**
-   * Checks if we are on the last slide.
-   *
-   * @return {Boolean}
-   */
-  isEnd () {
-    return Core.index === this.length
-  }
-
-  /**
-   * Checks if we are making offset run.
-   *
-   * @return {Boolean}
-   */
-  isOffset (direction) {
-    return this.flag && this.direction === direction
-  }
-
-  /**
-   * Gets time period value for the autoplay interval. Prioritizes
-   * times in `data-glide-autoplay` attrubutes over options.
-   *
-   * @return {Number}
-   */
-  get period () {
-    let autoplay = Html.slides[Core.index].getAttribute('data-glide-autoplay')
-
-    if (autoplay) {
-      return parseInt(autoplay)
+  define(RUN, 'length', {
+    /**
+     * Gets value of the running distance based
+     * on zero-indexing number of slides.
+     *
+     * @return {Number}
+     */
+    get () {
+      return Components.Html.slides.length - 1
     }
+  })
 
-    return Core.settings.autoplay
-  }
+  define(RUN, 'period', {
+    /**
+     * Gets time period value for the autoplay interval. Prioritizes
+     * times in `data-glide-autoplay` attrubutes over options.
+     *
+     * @return {Number}
+     */
+    get () {
+      let autoplay = Components.Html.slides[Glide.index].getAttribute('data-glide-autoplay')
 
-  /**
-   * Gets value of the running distance based
-   * on zero-indexing number of slides.
-   *
-   * @return {Number}
-   */
-  get length () {
-    return Html.slides.length - 1
-  }
+      if (autoplay) {
+        return parseInt(autoplay)
+      }
+
+      return Glide.settings.autoplay
+    }
+  })
+
+  return RUN
 }
-
-export default new Run()

@@ -1,6 +1,6 @@
 [![glide.js](http://glide.jedrzejchalubek.com/images/glide-logotype.png)](http://glide.jedrzejchalubek.com)
 
-[Glide.js](http://glide.jedrzejchalubek.com) is a responsive and touch-friendly JavaScript slider/carousel. It’s simple, lightweight and fast. Designed to slide. No less, no more.
+[Glide.js](http://glide.jedrzejchalubek.com) is a responsive and touch-friendly vanilla JavaScript slider/carousel. It’s simple, lightweight and fast. Designed to slide. No less, no more.
 
 [![Build Status](https://api.travis-ci.org/jedrzejchalubek/glidejs.svg?branch=master)](https://travis-ci.org/jedrzejchalubek/glidejs)
 

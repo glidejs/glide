@@ -8,62 +8,81 @@
     bottom: 0;
   }
 
-  .glide__slide--active .box {
-    border-color: green
+  .box {
+    background-color: grey;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
   }
 
-  .box {
-    display: block;
-    border: 1px solid red
+  .box.glide__slide--active {
+    background-color: navajowhite;
   }
 </style>
 
 <div class="glide">
-  <div data-glide-el="arrows" class="glide__arrows">
+  <div data-glide-el="controls" class="glide__arrows">
+    <button class="glide__arrow start" data-glide-dir="<<">start</button>
     <button class="glide__arrow prev" data-glide-dir="<">prev</button>
     <button class="glide__arrow next" data-glide-dir=">">next</button>
+    <button class="glide__arrow end" data-glide-dir=">>">end</button>
+  </div>
+
+  <div data-glide-el="controls" class="glide__bullets">
+    <button data-glide-dir="=0">1</button>
+    <button data-glide-dir="=1">2</button>
+    <button data-glide-dir="=2">3</button>
+    <button data-glide-dir="=3">4</button>
+    <button data-glide-dir="=4">5</button>
+    <button data-glide-dir="=5">6</button>
   </div>
 
   <div data-glide-el="track" class="glide__track">
     <ul class="glide__slides">
-      <li class="glide__slide">
-        <a class="box" href="#">1</a>
+      <li class="glide__slide box">
+        <a href="#" style="display: block; width: 100%; height: 200px;">1</a>
       </li>
-      <li class="glide__slide" data-glide-autoplay="3000">
-        <a class="box" href="#">2</a>
+      <li class="glide__slide box" data-glide-autoplay="3000">
+        <a href="#" style="display: block; width: 100%; height: 300px;">2</a>
       </li>
-      <li class="glide__slide">
-        <a class="box" href="#">
+      <li class="glide__slide box">
+        <a href="https://www.google.pl">
           <img src="https://www.google.pl/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="google">
         </a>
       </li>
-      <li class="glide__slide">
-        <a class="box" href="#">4</a>
+      <li class="glide__slide box">
+        <a href="#">4</a>
       </li>
-      <li class="glide__slide">
-        <a class="box" href="#">5</a>
+      <li class="glide__slide box">
+        <a href="#">5</a>
       </li>
-      <li class="glide__slide">
-        <a class="box" href="#">6</a>
+      <li class="glide__slide box">
+        <a href="#">6</a>
       </li>
     </ul>
   </div>
-
-  <div data-glide-el="bullets" class="glide__bullets"></div>
 </div>
 
 <script src="../dist/glide.js"></script>
 
 <script>
-  var el = document.querySelector('.glide')
-
-  var glide = new Glide(el, {
+  new Glide(document.querySelector('.glide'), {
     perView: 4,
-    startAt: 0,
-    focusAt: 0,
-    peek: '15%',
-    autoplay: false
+    startAt: 1,
+    focusAt: 1,
+    autoheight: true,
+    peek: {
+      before: 0,
+      after: 100
+    },
+    autoplay: false,
+    extensions: {
+      Nav: function (Glide, Components) {
+        return {
+          init: function () {
+            console.log('Nav', { Glide, Components })
+          }
+        }
+      }
+    }
   })
-
-  console.log(glide)
 </script>

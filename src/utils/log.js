@@ -4,6 +4,6 @@
  * @param  {String} msg
  * @return {Void}
  */
-export default function warn (msg) {
+export function warn (msg) {
   console.error(`[Glide warn]: ${msg}`)
 }

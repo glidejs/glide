@@ -1,57 +1,49 @@
-import Run from './run'
-import Core from './core'
-import Build from './build'
-import Transition from './transition'
-
-import Binder from '../binder'
-
 import debounce from '../utils/debounce'
+import { EventBus } from '../core/event/index'
 
-class Window extends Binder {
-  /**
-   * Initializes window bindings.
-   */
-  init () {
-    this.bind()
-  }
+export default function (Glide, Components) {
+  let Events = new EventBus()
 
-  /**
-   * Binds `rezsize` listener to the window.
-   * It's a costly event, so we are debouncing it.
-   *
-   * @return {Void}
-   */
-  bind () {
-    this.on(
-      'resize',
-      window,
-      debounce(this.resize.bind(this), Core.settings.debounce.resize)
-    )
-  }
+  return {
+    /**
+     * Initializes window bindings.
+     */
+    init () {
+      this.bind()
+    },
 
-  /**
-   * Unbinds listeners from the window.
-   *
-   * @return {Void}
-   */
-  unbind () {
-    this.off('resize', window)
-  }
+    /**
+     * Binds `rezsize` listener to the window.
+     * It's a costly event, so we are debouncing it.
+     *
+     * @return {Void}
+     */
+    bind () {
+      Events.on('resize', window, debounce(this.resize.bind(this), Glide.settings.debounce.resize))
+    },
 
-  /**
-   * Handler for `resize` event. Rebuilds glide,
-   * so its status matches new dimentions.
-   */
-  resize () {
-    if (!Core.destroyed) {
-      Transition.disable()
+    /**
+     * Unbinds listeners from the window.
+     *
+     * @return {Void}
+     */
+    unbind () {
+      Events.off('resize', window)
+    },
 
-      Build.init()
-      Run.make(`=${Core.index}`).init()
+    /**
+     * Handler for `resize` event. Rebuilds glide,
+     * so its status matches new dimentions.
+     */
+    resize () {
+      if (!Glide.destroyed) {
+        Components.Transition.disable()
 
-      Transition.enable()
+        Components.Build.init()
+        Components.Run.make(`=${Glide.index}`).init()
+
+        Components.Transition.enable()
+      }
     }
   }
 }
-
-export default new Window()

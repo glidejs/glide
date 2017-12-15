@@ -1,86 +1,95 @@
-import warn from '../utils/warn'
+import { warn } from '../utils/log'
 import { exist } from '../utils/dom'
+import { define } from '../utils/object'
 
-const TRACK_SELECTOR = '[data-glide-el="track"]'
+export default function (Glide, Components) {
+  const TRACK_SELECTOR = '[data-glide-el="track"]'
 
-class Html {
-  /**
-   * Setup slider HTML nodes.
-   *
-   * @param {Glide} glide
-   */
-  init (glide) {
-    this.root = glide.selector
-    this.track = this.root.querySelector(TRACK_SELECTOR)
-  }
-
-  /**
-   * Gets node of the slider main element.
-   *
-   * @return {Object}
-   */
-  get root () {
-    return this.el
-  }
-
-  /**
-   * Sets node of the slider main element.
-   *
-   * @return {Object}
-   */
-  set root (el) {
-    if (typeof el === 'string') {
-      el = document.querySelector(el)
-    }
-
-    if (exist(el)) {
-      this.el = el
-    } else {
-      warn('Main element must be a existing HTML node')
+  const HTML = {
+    /**
+     * Setup slider HTML nodes.
+     *
+     * @param {Glide} glide
+     */
+    init () {
+      this.root = Glide.selector
+      this.track = this.root.querySelector(TRACK_SELECTOR)
     }
   }
 
-  /**
-   * Gets node of the slides ARROWS_SELECTOR.
-   *
-   * @return {Object}
-   */
-  get track () {
-    return this.tr
-  }
+  define(HTML, 'root', {
+    /**
+     * Gets node of the glide main element.
+     *
+     * @return {Object}
+     */
+    get () {
+      return HTML._el
+    },
 
-  /**
-   * Sets node of the slides track.
-   *
-   * @return {Void}
-   */
-  set track (tr) {
-    if (exist(tr)) {
-      this.tr = tr
-    } else {
-      warn(
-        `Could not find track element. Please use ${TRACK_SELECTOR} attribute.`
-      )
+    /**
+     * Sets node of the glide main element.
+     *
+     * @return {Object}
+     */
+    set (el) {
+      if (typeof el === 'string') {
+        el = document.querySelector(el)
+      }
+
+      if (exist(el)) {
+        HTML._el = el
+      } else {
+        warn('Main element must be a existing HTML node')
+      }
     }
-  }
+  })
 
-  /**
-   * Gets node of the slides wrapper.
-   *
-   * @return {Object}
-   */
-  get wrapper () {
-    return this.track.children[0]
-  }
+  define(HTML, 'track', {
+    /**
+     * Gets node of the glide track with slides.
+     *
+     * @return {Object}
+     */
+    get () {
+      return HTML._tr
+    },
 
-  /**
-   * Gets collection of the slide nodes.
-   *
-   * @return {Array}
-   */
-  get slides () {
-    return this.wrapper.children
-  }
+    /**
+     * Sets node of the glide track with slides.
+     *
+     * @return {Object}
+     */
+    set (tr) {
+      if (exist(tr)) {
+        HTML._tr = tr
+      } else {
+        warn(`Could not find track element. Please use ${TRACK_SELECTOR} attribute.`)
+      }
+    }
+  })
+
+  define(HTML, 'wrapper', {
+    /**
+     * Gets node of the slides wrapper.
+     *
+     * @return {Object}
+     */
+    get () {
+      return HTML.track.children[0]
+    }
+  })
+
+  define(HTML, 'slides', {
+    /**
+     * Gets collection of the slides nodes.
+     *
+     * @return {Array}
+     */
+    get () {
+      return HTML.wrapper.children
+    }
+  })
+
+  return HTML
 }
-
-export default new Html()

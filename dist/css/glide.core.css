@@ -1,7 +1,10 @@
 .glide {
   position: relative;
   width: 100%;
-  height: 100%; }
+  height: 100%;
+  box-sizing: border-box; }
+  .glide > * {
+    box-sizing: inherit; }
   .glide__track {
     overflow: hidden; }
   .glide__slides {
@@ -15,8 +18,11 @@
     overflow: hidden;
     padding: 0;
     white-space: nowrap;
-    display: flex;
-    flex-wrap: nowrap; }
+    display: inline-flex;
+    align-items: flex-start;
+    align-content: flex-start;
+    flex-wrap: nowrap;
+    will-change: transform; }
     .glide__slides--dragging {
       user-select: none; }
   .glide__slide {

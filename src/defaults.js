@@ -129,8 +129,10 @@ export default {
   /**
    * Distance value of the next and previous viewports which have to be
    * peeked in current view. Can be number, percentage or pixels.
+   * Left and right peeking can be setup separetly with a
+   * object `{ left: 100, right: 100 }`
    *
-   * @type {Number|String}
+   * @type {Number|String|Object}
    */
   peek: 0,
 

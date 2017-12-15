@@ -1,27 +1,40 @@
-import defaults from './defaults'
+import { warn } from './utils/log'
+import { init } from './core/index'
 
-import Engine from './engine'
+import defaults from './defaults'
 
 import Run from './components/run'
 import Html from './components/html'
-import Core from './components/core'
+import Peek from './components/peek'
 import Build from './components/build'
 import Swipe from './components/swipe'
-import Arrows from './components/arrows'
+import Height from './components/height'
 import Window from './components/window'
 import Images from './components/images'
 import Anchors from './components/anchors'
+import Controls from './components/controls'
 import Callbacks from './components/callbacks'
+import Animation from './components/animation'
+import Transition from './components/transition'
+import Translate from './components/translate'
+import Dimensions from './components/dimensions'
 
 const COMPONENTS = {
+  Run,
+  Peek,
   Html,
-  Anchors,
   Build,
-  Images,
   Swipe,
-  Arrows,
+  Height,
+  Images,
   Window,
-  Run
+  Anchors,
+  Controls,
+  Callbacks,
+  Animation,
+  Translate,
+  Transition,
+  Dimensions
 }
 
 export default class Glide {
@@ -32,19 +45,13 @@ export default class Glide {
    * @param  {Object} options
    */
   constructor (selector, options = {}) {
+    this.settings = Object.assign(defaults, options)
+
+    this.disabled = false
     this.selector = selector
-    this.options = options
+    this.index = this.settings.startAt
 
-    let settings = Object.assign(defaults, options)
-
-    Core.settings = settings
-    Core.index = settings.startAt
-
-    Callbacks.call(settings.beforeInit)
-
-    this.init()
-
-    Callbacks.call(settings.afterInit)
+    this.mount()
   }
 
   /**
@@ -52,17 +59,77 @@ export default class Glide {
    *
    * @return {Void}
    */
-  init () {
-    /* eslint-disable no-new */
-    new Engine(this, Object.assign(COMPONENTS, Core.settings.extensions))
+  mount () {
+    init(this, Object.assign(this.settings.extensions, COMPONENTS))
   }
 
   /**
-   * Gets current slide index.
+   * Gets value of the core options.
    *
-   * @return {Number}
+   * @return {Object}
    */
-  index () {
-    return Core.index
+  get settings () {
+    return this.opt
+  }
+
+  /**
+   * Sets value of the core options.
+   *
+   * @param  {Object} opt
+   * @return {Void}
+   */
+  set settings (opt) {
+    if (typeof opt === 'object') {
+      this.opt = opt
+    } else {
+      warn('Options must be an `object` instance.')
+    }
+  }
+
+  /**
+   * Gets current index of the slider.
+   *
+   * @return {Object}
+   */
+  get index () {
+    return this.i
+  }
+
+  /**
+   * Sets current index a slider.
+   *
+   * @return {Object}
+   */
+  set index (i) {
+    this.i = parseInt(i)
+  }
+
+  /**
+   * Gets type name of the slider.
+   *
+   * @return {String}
+   */
+  get type () {
+    return this.settings.type
+  }
+
+  /**
+   * Checks if slider is a precised type.
+   *
+   * @param  {String} name
+   * @return {Boolean}
+   */
+  isType (name) {
+    return this.settings.type === name
+  }
+
+  /**
+   * Checks if slider is in precised mode.
+   *
+   * @param  {String} name
+   * @return {Boolean}
+   */
+  isMode (name) {
+    return this.settings.mode === name
   }
 }

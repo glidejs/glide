@@ -1,7 +1,4 @@
-import Core from './core'
-import Translate from './translate'
-import Transition from './transition'
-
+import { define } from '../utils/object'
 import { ucfirst } from '../utils/string'
 
 import Slider from '../types/slider'
@@ -10,77 +7,84 @@ const TYPES = {
   Slider
 }
 
-class Animation {
-  /**
-   * Constructs animation component.
-   */
-  constructor () {
-    this.displacement = 0
+export default function (Glide, Components) {
+  const ANIMATION = {
+    /**
+     * Constructs animation component.
+     *
+     * @returns {Void}
+     */
+    init () {
+      this._d = 0
+    },
+
+    /**
+     * Makes configured animation type on slider.
+     *
+     * @param  {Number} offset
+     * @return {self}
+     */
+    make (offset) {
+      this.offset = offset
+
+      this.apply()
+
+      return this
+    },
+
+    /**
+     * Applies an animation.
+     *
+     * @return {Void}
+     */
+    apply () {
+      Components.Transition.set()
+      Components.Translate.set(this.translate - this.offset)
+    },
+
+    /**
+     * Runs callback after animation.
+     *
+     * @param  {Closure} callback
+     * @return {Integer}
+     */
+    after (callback) {
+      return setTimeout(() => {
+        callback()
+      }, Glide.settings.animationDuration + 10)
+    }
   }
 
-  /**
-   * Makes configured animation type on slider.
-   *
-   * @param  {Number} offset
-   * @return {self}
-   */
-  make (offset) {
-    this.offset = offset
+  define(ANIMATION, 'offset', {
+    /**
+     * Gets node of the glide track with slides.
+     *
+     * @return {Object}
+     */
+    get () {
+      return ANIMATION._d
+    },
 
-    this.apply()
+    /**
+     * Sets node of the glide track with slides.
+     *
+     * @return {Object}
+     */
+    set (value) {
+      ANIMATION._d = typeof value !== 'undefined' ? parseInt(value) : 0
+    }
+  })
 
-    return this
-  }
+  define(ANIMATION, 'translate', {
+    /**
+     * Gets translate value based on configured glide type.
+     *
+     * @return {Number}
+     */
+    get () {
+      return TYPES[ucfirst(Glide.type)](Glide, Components)
+    }
+  })
 
-  /**
-   * Applies an animation.
-   *
-   * @return {Void}
-   */
-  apply () {
-    Transition.set()
-    Translate.set(this.translate - this.offset)
-  }
-
-  /**
-   * Runs callback after animation.
-   *
-   * @param  {Closure} callback
-   * @return {Integer}
-   */
-  after (callback) {
-    return setTimeout(() => {
-      callback()
-    }, Core.settings.animationDuration + 10)
-  }
-
-  /**
-   * Gets value of the additional animation displacement.
-   *
-   * @return {Integer}
-   */
-  get offset () {
-    return this.displacement
-  }
-
-  /**
-   * Sets value of the additional animation displacement.
-   *
-   * @param  {Number} value
-   * @return {self}
-   */
-  set offset (value) {
-    this.displacement = typeof value !== 'undefined' ? parseInt(value) : 0
-  }
-
-  /**
-   * Gets translate value based on configured glide type.
-   *
-   * @return {Number}
-   */
-  get translate () {
-    return TYPES[ucfirst(Core.type)].translate()
-  }
+  return ANIMATION
 }
-
-export default new Animation()

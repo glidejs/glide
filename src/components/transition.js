@@ -1,63 +1,56 @@
-import Html from './html'
-import Core from './core'
 
-class Transition {
-  /**
-   * Construct transition.
-   */
-  constructor () {
-    this.disabled = false
-  }
+export default function (Glide, Components) {
+  let disabled = false
 
-  /**
-   * Gets value of transition.
-   *
-   * @param {String} property
-   * @return {String}
-   */
-  get (property = 'transform') {
-    let settings = Core.settings
+  return {
+    /**
+     * Composes string of the CSS transition.
+     *
+     * @param {String} property
+     * @return {String}
+     */
+    compose (property = 'transform') {
+      let settings = Glide.settings
 
-    if (!this.disabled) {
-      return `${property} ${settings.animationDuration}ms ${settings.animationTimingFunc}`
+      if (!disabled) {
+        return `${property} ${settings.animationDuration}ms ${settings.animationTimingFunc}`
+      }
+
+      return `${property} 0ms ${settings.animationTimingFunc}`
+    },
+
+    /**
+     * Sets value of transition.
+     *
+     * @param {String} property
+     * @return {self}
+     */
+    set (property) {
+      Components.Html.wrapper.style.transition = this.compose(property)
+
+      return this
+    },
+
+    /**
+     * Enable transition.
+     *
+     * @return {self}
+     */
+    enable () {
+      disabled = false
+
+      return this
+    },
+
+    /**
+     * Disable transition.
+     *
+     * @return {self}
+     */
+    disable () {
+      disabled = true
+
+      return this
     }
-
-    return `${property} 0ms ${settings.animationTimingFunc}`
-  }
-
-  /**
-   * Sets value of transition.
-   *
-   * @param {String} property
-   * @return {self}
-   */
-  set (property) {
-    Html.wrapper.style.transition = this.get(property)
-
-    return this
-  }
-
-  /**
-   * Enable transition.
-   *
-   * @return {self}
-   */
-  enable () {
-    this.disabled = false
-
-    return this
-  }
-
-  /**
-   * Disable transition.
-   *
-   * @return {self}
-   */
-  disable () {
-    this.disabled = true
-
-    return this
   }
 }
-
-export default new Transition()

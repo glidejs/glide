@@ -1,14 +1,13 @@
-import Binder from '../../src/binder'
+import { EventBus } from '../../src/core/event/index'
 
-let binder
-
+let events = null
 let event = 'click'
 let callback = jest.fn()
 let element = document.createElement('div')
 
-describe('Binder should', () => {
+describe('EventBus should', () => {
   beforeEach(() => {
-    binder = new Binder()
+    events = new EventBus()
   })
 
   test('create and remove event listener from element', () => {
@@ -18,24 +17,24 @@ describe('Binder should', () => {
     element.addEventListener = addFn
     element.removeEventListener = rmFn
 
-    binder.on(event, element, callback)
+    events.on(event, element, callback)
     expect(addFn).toHaveBeenCalledWith(event, callback)
 
-    binder.off(event, element)
+    events.off(event, element)
     expect(rmFn).toHaveBeenCalledWith(event, callback)
   })
 
   test('store created listeners when binding with `on`', () => {
-    binder.on(event, element, callback)
+    events.on(event, element, callback)
 
-    expect(binder.listeners).toHaveProperty(event)
-    expect(binder.listeners[event]).toBe(callback)
+    expect(events.listeners).toHaveProperty(event)
+    expect(events.listeners[event]).toBe(callback)
   })
 
   test('remove previously stored listeners when unbinding with `off`', () => {
-    binder.on(event, element, callback)
-    binder.off(event, element)
+    events.on(event, element, callback)
+    events.off(event, element)
 
-    expect(binder.listeners).not.toHaveProperty(event)
+    expect(events.listeners).not.toHaveProperty(event)
   })
 })

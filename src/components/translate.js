@@ -17,7 +17,6 @@ export default function (Glide, Components) {
      * @return {self}
      */
     set (value) {
-      console.log(this.get(value))
       Components.Html.wrapper.style.transform = this.get(value)
 
       return this

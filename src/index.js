@@ -20,7 +20,6 @@ import Translate from './components/translate'
 import Dimensions from './components/dimensions'
 
 const COMPONENTS = {
-  Run,
   Peek,
   Html,
   Build,
@@ -34,7 +33,8 @@ const COMPONENTS = {
   Animation,
   Translate,
   Transition,
-  Dimensions
+  Dimensions,
+  Run
 }
 
 export default class Glide {
@@ -51,16 +51,17 @@ export default class Glide {
     this.selector = selector
     this.index = this.settings.startAt
 
-    this.mount()
+    this.mount(this.settings.extensions)
   }
 
   /**
    * Initializes glide components.
    *
+   * @param {Object} extensions Collection of extensions to initialize.
    * @return {Void}
    */
-  mount () {
-    init(this, Object.assign(this.settings.extensions, COMPONENTS))
+  mount (extensions) {
+    init(this, Object.assign(extensions, COMPONENTS))
   }
 
   /**
@@ -69,7 +70,7 @@ export default class Glide {
    * @return {Object}
    */
   get settings () {
-    return this.opt
+    return this._opt
   }
 
   /**
@@ -80,7 +81,7 @@ export default class Glide {
    */
   set settings (opt) {
     if (typeof opt === 'object') {
-      this.opt = opt
+      this._opt = opt
     } else {
       warn('Options must be an `object` instance.')
     }
@@ -92,7 +93,7 @@ export default class Glide {
    * @return {Object}
    */
   get index () {
-    return this.i
+    return this._i
   }
 
   /**
@@ -101,7 +102,7 @@ export default class Glide {
    * @return {Object}
    */
   set index (i) {
-    this.i = parseInt(i)
+    this._i = parseInt(i)
   }
 
   /**
@@ -121,15 +122,5 @@ export default class Glide {
    */
   isType (name) {
     return this.settings.type === name
-  }
-
-  /**
-   * Checks if slider is in precised mode.
-   *
-   * @param  {String} name
-   * @return {Boolean}
-   */
-  isMode (name) {
-    return this.settings.mode === name
   }
 }

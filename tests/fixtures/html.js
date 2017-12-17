@@ -1,8 +1,14 @@
 export default `
 <div id="glide" class="glide">
-  <div data-glide-el="arrows" class="glide__arrows">
+  <div data-glide-el="controls" class="glide__arrows">
     <button class="glide__arrow prev" data-glide-dir="<">prev</button>
     <button class="glide__arrow next" data-glide-dir=">">next</button>
+  </div>
+
+  <div data-glide-el="controls" class="glide__bullets">
+    <button data-glide-dir="=0">1</button>
+    <button data-glide-dir="=1">2</button>
+    <button data-glide-dir="=2">3</button>
   </div>
 
   <div data-glide-el="track" class="glide__track">
@@ -12,7 +18,5 @@ export default `
       <li class="glide__slide">3</li>
     </ul>
   </div>
-
-  <div data-glide-el="bullets" class="glide__bullets"></div>
 </div>
 `

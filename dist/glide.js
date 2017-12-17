@@ -1,6 +1,6 @@
 /*!
  * Glide.js v3.0.0
- * (c) 2013-2017 Jędrzej Chałubek <jedrzej.chalubek@gmail.com>
+ * (c) 2013-2017 Jędrzej Chałubek <jedrzej.chalubek@gmail.com> (http://jedrzejchalubek.com/)
  * Released under the MIT License.
  */
 
@@ -1814,7 +1814,6 @@ var Translate = function (Glide, Components) {
      * @return {self}
      */
     set: function set(value) {
-      console.log(this.get(value));
       Components.Html.wrapper.style.transform = this.get(value);
 
       return this;
@@ -1981,19 +1980,6 @@ var Glide = function () {
      */
     value: function isType(name) {
       return this.settings.type === name;
-    }
-
-    /**
-     * Checks if slider is in precised mode.
-     *
-     * @param  {String} name
-     * @return {Boolean}
-     */
-
-  }, {
-    key: 'isMode',
-    value: function isMode(name) {
-      return this.settings.mode === name;
     }
   }, {
     key: 'settings',

@@ -142,8 +142,6 @@ export default {
    * @type {Object}
    */
   classes: {
-    horizontal: 'glide--horizontal',
-    vertical: 'glide--vertical',
     slider: 'glide--slider',
     carousel: 'glide--carousel',
     slideshow: 'glide--slideshow',

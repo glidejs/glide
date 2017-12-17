@@ -1,3 +1,4 @@
+import Grow from './grow'
 import Peeking from './peeking'
 import Focusing from './focusing'
 
@@ -7,6 +8,7 @@ import Focusing from './focusing'
  * @type {Array}
  */
 const TRANSFORMERS = [
+  Grow,
   Peeking,
   Focusing
 ]

@@ -2,9 +2,11 @@ import { define } from '../utils/object'
 import { ucfirst } from '../utils/string'
 
 import Slider from '../types/slider'
+import Carousel from '../types/carousel'
 
 const TYPES = {
-  Slider
+  Slider,
+  Carousel
 }
 
 export default function (Glide, Components) {

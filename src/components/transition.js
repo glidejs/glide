@@ -39,7 +39,7 @@ export default function (Glide, Components) {
     enable () {
       disabled = false
 
-      return this
+      return this.set()
     },
 
     /**
@@ -50,7 +50,7 @@ export default function (Glide, Components) {
     disable () {
       disabled = true
 
-      return this
+      return this.set()
     }
   }
 }

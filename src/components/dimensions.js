@@ -40,7 +40,7 @@ export default function (Glide, Components) {
      * @return {Number}
      */
     get () {
-      return DIMENSIONS.slideWidth * DIMENSIONS.length
+      return (DIMENSIONS.slideWidth * DIMENSIONS.length) + Components.Clones.grow
     }
   })
 
@@ -78,10 +78,10 @@ export default function (Glide, Components) {
       let rootWidth = Components.Html.root.offsetWidth
 
       if (typeof peek === 'object') {
-        return (rootWidth / perView) - (peek.before / perView) - (peek.after / perView)
+        return Math.ceil((rootWidth / perView) - (peek.before / perView) - (peek.after / perView))
       }
 
-      return (rootWidth / perView) - (peek * 2 / perView)
+      return Math.ceil((rootWidth / perView) - (peek * 2 / perView))
     }
   })
 

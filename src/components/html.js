@@ -4,6 +4,7 @@ import { define } from '../utils/object'
 
 export default function (Glide, Components) {
   const TRACK_SELECTOR = '[data-glide-el="track"]'
+  const SLIDE_SELECTOR = '[data-glide-el="slide"]'
 
   const HTML = {
     /**
@@ -14,6 +15,7 @@ export default function (Glide, Components) {
     init () {
       this.root = Glide.selector
       this.track = this.root.querySelector(TRACK_SELECTOR)
+      this.slides = this.wrapper.querySelectorAll(SLIDE_SELECTOR)
     }
   }
 
@@ -77,17 +79,6 @@ export default function (Glide, Components) {
      */
     get () {
       return HTML.track.children[0]
-    }
-  })
-
-  define(HTML, 'slides', {
-    /**
-     * Gets collection of the slides nodes.
-     *
-     * @return {Array}
-     */
-    get () {
-      return HTML.wrapper.children
     }
   })
 

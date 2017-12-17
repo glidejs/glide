@@ -1,9 +1,6 @@
 import { define } from '../utils/object'
 
 export default function (Glide, Components) {
-  let flag = false
-  let running = false
-
   const RUN = {
     /**
      * Initializes autorunning of the glide.
@@ -11,7 +8,10 @@ export default function (Glide, Components) {
      * @return {self}
      */
     init () {
-      if (Glide.settings.autoplay || running) {
+      this.flag = false
+      this.running = false
+
+      if (Glide.settings.autoplay || this.running) {
         if (typeof this.interval === 'undefined') {
           this.interval = setInterval(() => {
             this.stop()
@@ -30,7 +30,7 @@ export default function (Glide, Components) {
      * @return {self}
      */
     stop () {
-      if (Glide.settings.autoplay || running) {
+      if (Glide.settings.autoplay || this.running) {
         if (this.interval >= 0) {
           this.interval = clearInterval(this.interval)
         }
@@ -85,7 +85,7 @@ export default function (Glide, Components) {
       }
 
       Components.Height.set()
-
+      Components.Transition.enable()
       Components.Animation.make().after(() => {
         Components.Build.activeClass()
       })
@@ -117,7 +117,7 @@ export default function (Glide, Components) {
      * @return {Boolean}
      */
     isOffset (direction) {
-      return flag && this.direction === direction
+      return this.flag && this.direction === direction
     }
   }
 

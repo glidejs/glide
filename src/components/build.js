@@ -8,15 +8,18 @@ export default function (Glide, Components) {
      */
     init () {
       Components.Transition.disable()
-      Components.Peek.init()
       Components.Dimensions.apply()
+      Components.Peek.init()
+      Components.Animation.make()
+
+      if (Glide.isType('carousel')) {
+        Components.Clones.append()
+      }
 
       this.typeClass()
-      this.modeClass()
       this.activeClass()
       this.setHeight()
 
-      Components.Animation.make()
       Components.Transition.enable()
     },
 
@@ -38,15 +41,6 @@ export default function (Glide, Components) {
      */
     typeClass () {
       Components.Html.root.classList.add(Glide.settings.classes[Glide.settings.type])
-    },
-
-    /**
-     * Adds `mode` class to the glide element.
-     *
-     * @return {Void}
-     */
-    modeClass () {
-      Components.Html.root.classList.add(Glide.settings.classes[Glide.settings.mode])
     },
 
     /**

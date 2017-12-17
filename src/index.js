@@ -8,6 +8,7 @@ import Html from './components/html'
 import Peek from './components/peek'
 import Build from './components/build'
 import Swipe from './components/swipe'
+import Clones from './components/clones'
 import Height from './components/height'
 import Window from './components/window'
 import Images from './components/images'
@@ -20,20 +21,21 @@ import Translate from './components/translate'
 import Dimensions from './components/dimensions'
 
 const COMPONENTS = {
-  Peek,
   Html,
-  Build,
-  Swipe,
+  Translate,
+  Transition,
+  Dimensions,
+  Animation,
+  Peek,
   Height,
+  Clones,
   Images,
   Window,
   Anchors,
   Controls,
   Callbacks,
-  Animation,
-  Translate,
-  Transition,
-  Dimensions,
+  Swipe,
+  Build,
   Run
 }
 

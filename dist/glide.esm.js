@@ -181,8 +181,6 @@ var defaults = {
    * @type {Object}
    */
   classes: {
-    horizontal: 'glide--horizontal',
-    vertical: 'glide--vertical',
     slider: 'glide--slider',
     carousel: 'glide--carousel',
     slideshow: 'glide--slideshow',
@@ -269,9 +267,6 @@ function define(obj, prop, definition) {
 }
 
 var Run = function (Glide, Components) {
-  var flag = false;
-  var running = false;
-
   var RUN = {
     /**
      * Initializes autorunning of the glide.
@@ -281,7 +276,10 @@ var Run = function (Glide, Components) {
     init: function init() {
       var _this = this;
 
-      if (Glide.settings.autoplay || running) {
+      this.flag = false;
+      this.running = false;
+
+      if (Glide.settings.autoplay || this.running) {
         if (typeof this.interval === 'undefined') {
           this.interval = setInterval(function () {
             _this.stop().make('>').init();
@@ -299,7 +297,7 @@ var Run = function (Glide, Components) {
      * @return {self}
      */
     stop: function stop() {
-      if (Glide.settings.autoplay || running) {
+      if (Glide.settings.autoplay || this.running) {
         if (this.interval >= 0) {
           this.interval = clearInterval(this.interval);
         }
@@ -355,7 +353,7 @@ var Run = function (Glide, Components) {
       }
 
       Components.Height.set();
-
+      Components.Transition.enable();
       Components.Animation.make().after(function () {
         Components.Build.activeClass();
       });
@@ -390,7 +388,7 @@ var Run = function (Glide, Components) {
      * @return {Boolean}
      */
     isOffset: function isOffset(direction) {
-      return flag && this.direction === direction;
+      return this.flag && this.direction === direction;
     }
   };
 
@@ -462,6 +460,7 @@ function exist(node) {
 
 var Html = function (Glide, Components) {
   var TRACK_SELECTOR = '[data-glide-el="track"]';
+  var SLIDE_SELECTOR = '[data-glide-el="slide"]';
 
   var HTML = {
     /**
@@ -472,6 +471,7 @@ var Html = function (Glide, Components) {
     init: function init() {
       this.root = Glide.selector;
       this.track = this.root.querySelector(TRACK_SELECTOR);
+      this.slides = this.wrapper.querySelectorAll(SLIDE_SELECTOR);
     }
   };
 
@@ -537,17 +537,6 @@ var Html = function (Glide, Components) {
      */
     get: function get() {
       return HTML.track.children[0];
-    }
-  });
-
-  define(HTML, 'slides', {
-    /**
-     * Gets collection of the slides nodes.
-     *
-     * @return {Array}
-     */
-    get: function get() {
-      return HTML.wrapper.children;
     }
   });
 
@@ -688,15 +677,18 @@ var Build = function (Glide, Components) {
      */
     init: function init() {
       Components.Transition.disable();
-      Components.Peek.init();
       Components.Dimensions.apply();
+      Components.Peek.init();
+      Components.Animation.make();
+
+      if (Glide.isType('carousel')) {
+        Components.Clones.append();
+      }
 
       this.typeClass();
-      this.modeClass();
       this.activeClass();
       this.setHeight();
 
-      Components.Animation.make();
       Components.Transition.enable();
     },
 
@@ -720,16 +712,6 @@ var Build = function (Glide, Components) {
      */
     typeClass: function typeClass() {
       Components.Html.root.classList.add(Glide.settings.classes[Glide.settings.type]);
-    },
-
-
-    /**
-     * Adds `mode` class to the glide element.
-     *
-     * @return {Void}
-     */
-    modeClass: function modeClass() {
-      Components.Html.root.classList.add(Glide.settings.classes[Glide.settings.mode]);
     },
 
 
@@ -1079,6 +1061,103 @@ var Swipe = function (Glide, Components) {
   });
 
   return SWIPE;
+};
+
+var Clones = function (Glide, Components) {
+  var pattern = [];
+
+  var CLONES = {
+    init: function init() {
+      this.items = [];
+
+      this.map();
+      this.collect();
+    },
+
+
+    /**
+     * Generate pattern of the cloning.
+     *
+     * @return {Void}
+     */
+    map: function map() {
+      for (var i = 0; i < Glide.settings.perView; i++) {
+        pattern.push(i);
+      }
+
+      for (var _i = Glide.settings.perView - 1; _i >= 0; _i--) {
+        pattern.push(-(Components.Html.slides.length - 1) + _i);
+      }
+    },
+
+
+    /**
+     * Collect clones with pattern.
+     *
+     * @return {Void}
+     */
+    collect: function collect() {
+      var clone = null;
+
+      for (var i = 0; i < pattern.length; i++) {
+        clone = Components.Html.slides[Math.abs(pattern[i])].cloneNode(true);
+
+        clone.classList.add(Glide.settings.classes.cloneSlide);
+
+        this.items.push(clone);
+      }
+    },
+
+
+    /**
+     * Append cloned slides with generated pattern.
+     *
+     * @return {Void}
+     */
+    append: function append() {
+      var item = null;
+
+      for (var i = 0; i < this.items.length; i++) {
+        item = this.items[i];
+
+        item.style.width = Components.Dimensions.slideWidth;
+
+        if (pattern[i] >= 0) {
+          // Append clone if pattern position is positive.
+          Components.Html.wrapper.appendChild(item);
+        } else {
+          // Prepend clone if pattern position is negative.
+          Components.Html.wrapper.insertBefore(item, Components.Html.slides[0]);
+        }
+      }
+    },
+
+
+    /**
+     * Remove all cloned slides.
+     *
+     * @return {self}
+     */
+    remove: function remove() {
+      for (var i = 0; i < this.items.length; i++) {
+        this.items[i].remove();
+      }
+
+      return this;
+    }
+  };
+
+  define(CLONES, 'grow', {
+    get: function get() {
+      if (Glide.isType('carousel')) {
+        return Components.Dimensions.slideWidth * CLONES.items.length;
+      }
+
+      return 0;
+    }
+  });
+
+  return CLONES;
 };
 
 var Height = function (Glide, Components) {
@@ -1536,6 +1615,31 @@ function ucfirst(string) {
 }
 
 /**
+ * Updates glide movement with a `focusAt` settings.
+ *
+ * @param  {Glide} Glide
+ * @param  {Array} Components
+ * @return {Object}
+ */
+var Grow = function (Glide, Components) {
+  return {
+    /**
+     * Modifies passed translate value with according to the `focusAt` setting.
+     *
+     * @param  {Number} translate
+     * @return {Number}
+     */
+    translate: function translate(_translate) {
+      if (Glide.isType('carousel')) {
+        return _translate + Components.Clones.grow / 2;
+      }
+
+      return _translate;
+    }
+  };
+};
+
+/**
  * Updates glide movement with a `peek` settings.
  *
  * @param  {Glide} Glide
@@ -1604,7 +1708,7 @@ var Focusing = function (Glide, Components) {
  *
  * @type {Array}
  */
-var TRANSFORMERS = [Peeking, Focusing];
+var TRANSFORMERS = [Grow, Peeking, Focusing];
 
 /**
  * Applies diffrent transformers on glide translate value.
@@ -1637,8 +1741,41 @@ var Slider = function (Glide, Components) {
   return transformer(Glide, Components).transform(translate);
 };
 
+var Carousel = function (Glide, Components) {
+  var mutator = transformer(Glide, Components);
+
+  var index = Glide.index;
+  var slideWidth = Components.Dimensions.slideWidth;
+  var slidesLength = Components.Html.slides.length;
+
+  if (Components.Run.isOffset('<')) {
+    Components.Run.flag = false;
+
+    Components.Animation.after(function () {
+      Components.Transition.disable();
+      Components.Translate.set(mutator.transform(slideWidth * (slidesLength - 1)));
+    });
+
+    return mutator.transform(-slideWidth);
+  }
+
+  if (Components.Run.isOffset('>')) {
+    Components.Run.flag = false;
+
+    Components.Animation.after(function () {
+      Components.Transition.disable();
+      Components.Translate.set(mutator.transform(0));
+    });
+
+    return mutator.transform(slideWidth * slidesLength);
+  }
+
+  return mutator.transform(slideWidth * index);
+};
+
 var TYPES = {
-  Slider: Slider
+  Slider: Slider,
+  Carousel: Carousel
 };
 
 var Animation = function (Glide, Components) {
@@ -1771,7 +1908,7 @@ var Transition = function (Glide, Components) {
     enable: function enable() {
       disabled = false;
 
-      return this;
+      return this.set();
     },
 
 
@@ -1783,7 +1920,7 @@ var Transition = function (Glide, Components) {
     disable: function disable() {
       disabled = true;
 
-      return this;
+      return this.set();
     }
   };
 };
@@ -1857,7 +1994,7 @@ var Dimensions = function (Glide, Components) {
      * @return {Number}
      */
     get: function get$$1() {
-      return DIMENSIONS.slideWidth * DIMENSIONS.length;
+      return DIMENSIONS.slideWidth * DIMENSIONS.length + Components.Clones.grow;
     }
   });
 
@@ -1895,10 +2032,10 @@ var Dimensions = function (Glide, Components) {
       var rootWidth = Components.Html.root.offsetWidth;
 
       if ((typeof peek === 'undefined' ? 'undefined' : _typeof(peek)) === 'object') {
-        return rootWidth / perView - peek.before / perView - peek.after / perView;
+        return Math.ceil(rootWidth / perView - peek.before / perView - peek.after / perView);
       }
 
-      return rootWidth / perView - peek * 2 / perView;
+      return Math.ceil(rootWidth / perView - peek * 2 / perView);
     }
   });
 
@@ -1906,20 +2043,21 @@ var Dimensions = function (Glide, Components) {
 };
 
 var COMPONENTS = {
-  Peek: Peek,
   Html: Html,
-  Build: Build,
-  Swipe: Swipe,
+  Translate: Translate,
+  Transition: Transition,
+  Dimensions: Dimensions,
+  Animation: Animation,
+  Peek: Peek,
   Height: Height,
+  Clones: Clones,
   Images: Images,
   Window: Window,
   Anchors: Anchors,
   Controls: Controls,
   Callbacks: Callbacks,
-  Animation: Animation,
-  Translate: Translate,
-  Transition: Transition,
-  Dimensions: Dimensions,
+  Swipe: Swipe,
+  Build: Build,
   Run: Run
 };
 

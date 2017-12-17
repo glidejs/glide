@@ -17,9 +17,7 @@ describe('On slider instantiation', () => {
   test('passed `options` should be extended by defaults', () => {
     let glide = new Glide('#glide', { type: 'slider' })
 
-    let settings = Object.assign(defaults, { type: 'slider' })
-
-    expect(glide.settings).toEqual(settings)
+    expect(glide.settings).toEqual(Object.assign(defaults, { type: 'slider' }))
   })
 
   test('`beforeInit` and `afterInit` events should be called', () => {

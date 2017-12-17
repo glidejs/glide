@@ -10,7 +10,7 @@ describe('Function', () => {
       get () {
         return this._prop
       },
-  
+
       set (value) {
         this._prop = value
       }

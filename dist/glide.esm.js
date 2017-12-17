@@ -1906,7 +1906,6 @@ var Dimensions = function (Glide, Components) {
 };
 
 var COMPONENTS = {
-  Run: Run,
   Peek: Peek,
   Html: Html,
   Build: Build,
@@ -1920,7 +1919,8 @@ var COMPONENTS = {
   Animation: Animation,
   Translate: Translate,
   Transition: Transition,
-  Dimensions: Dimensions
+  Dimensions: Dimensions,
+  Run: Run
 };
 
 var Glide = function () {
@@ -1940,20 +1940,25 @@ var Glide = function () {
     this.selector = selector;
     this.index = this.settings.startAt;
 
-    this.mount();
+    this.settings.beforeInit(this);
+
+    this.mount(this.settings.extensions);
+
+    this.settings.afterInit(this);
   }
 
   /**
    * Initializes glide components.
    *
+   * @param {Object} extensions Collection of extensions to initialize.
    * @return {Void}
    */
 
 
   createClass(Glide, [{
     key: 'mount',
-    value: function mount() {
-      init(this, _extends(this.settings.extensions, COMPONENTS));
+    value: function mount(extensions) {
+      init(this, _extends(extensions, COMPONENTS));
     }
 
     /**
@@ -1978,7 +1983,7 @@ var Glide = function () {
   }, {
     key: 'settings',
     get: function get$$1() {
-      return this.opt;
+      return this._opt;
     }
 
     /**
@@ -1990,7 +1995,7 @@ var Glide = function () {
     ,
     set: function set$$1(opt) {
       if ((typeof opt === 'undefined' ? 'undefined' : _typeof(opt)) === 'object') {
-        this.opt = opt;
+        this._opt = opt;
       } else {
         warn('Options must be an `object` instance.');
       }
@@ -2005,7 +2010,7 @@ var Glide = function () {
   }, {
     key: 'index',
     get: function get$$1() {
-      return this.i;
+      return this._i;
     }
 
     /**
@@ -2015,7 +2020,7 @@ var Glide = function () {
      */
     ,
     set: function set$$1(i) {
-      this.i = parseInt(i);
+      this._i = parseInt(i);
     }
 
     /**

@@ -51,7 +51,11 @@ export default class Glide {
     this.selector = selector
     this.index = this.settings.startAt
 
+    this.settings.beforeInit(this)
+
     this.mount(this.settings.extensions)
+
+    this.settings.afterInit(this)
   }
 
   /**

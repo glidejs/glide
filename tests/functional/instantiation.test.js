@@ -26,14 +26,12 @@ describe('On slider instantiation', () => {
     let beforeCallback = jest.fn()
     let afterCallback = jest.fn()
 
-    /* eslint-disable no-new */
-    new Glide('#glide', {
+    let glide = new Glide('#glide', {
       beforeInit: beforeCallback,
       afterInit: afterCallback
     })
 
-    // @todo
-    // expect(beforeCallback).toBeCalled()
-    // expect(afterCallback).toBeCalled()
+    expect(beforeCallback).toHaveBeenCalledWith(glide)
+    expect(afterCallback).toHaveBeenCalledWith(glide)
   })
 })

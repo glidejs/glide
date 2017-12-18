@@ -3,7 +3,6 @@ import transformer from './transformers/index'
 export default function (Glide, Components) {
   const mutator = transformer(Glide, Components)
 
-  let index = Glide.index
   let slideWidth = Components.Dimensions.slideWidth
   let slidesLength = Components.Html.slides.length
 
@@ -29,5 +28,5 @@ export default function (Glide, Components) {
     return mutator.transform(slideWidth * slidesLength)
   }
 
-  return mutator.transform(slideWidth * index)
+  return mutator.transform(slideWidth * Glide.index)
 }

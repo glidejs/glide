@@ -1122,11 +1122,11 @@ var Clones = function (Glide, Components) {
 
         item.style.width = Components.Dimensions.slideWidth;
 
+        // Append clone if pattern position is positive.
+        // Prepend clone if pattern position is negative.
         if (pattern[i] >= 0) {
-          // Append clone if pattern position is positive.
           Components.Html.wrapper.appendChild(item);
         } else {
-          // Prepend clone if pattern position is negative.
           Components.Html.wrapper.insertBefore(item, Components.Html.slides[0]);
         }
       }
@@ -1169,7 +1169,7 @@ var Height = function (Glide, Components) {
      */
     init: function init() {
       if (Glide.settings.autoheight) {
-        Components.Html.root.style.transition = Components.Transition.compose('height');
+        Components.Html.track.style.transition = Components.Transition.compose('height');
       }
     },
 
@@ -1182,7 +1182,7 @@ var Height = function (Glide, Components) {
      */
     set: function set(force) {
       if (Glide.settings.autoheight || force) {
-        Components.Html.root.style.height = this.value;
+        Components.Html.track.style.height = this.value;
       }
     }
   };
@@ -1615,7 +1615,7 @@ function ucfirst(string) {
 }
 
 /**
- * Updates glide movement with a `focusAt` settings.
+ * Updates glide movement with width of additional clones width.
  *
  * @param  {Glide} Glide
  * @param  {Array} Components
@@ -1624,7 +1624,7 @@ function ucfirst(string) {
 var Grow = function (Glide, Components) {
   return {
     /**
-     * Modifies passed translate value with according to the `focusAt` setting.
+     * Adds to the passed translate width of the half of clones. 
      *
      * @param  {Number} translate
      * @return {Number}
@@ -1744,7 +1744,6 @@ var Slider = function (Glide, Components) {
 var Carousel = function (Glide, Components) {
   var mutator = transformer(Glide, Components);
 
-  var index = Glide.index;
   var slideWidth = Components.Dimensions.slideWidth;
   var slidesLength = Components.Html.slides.length;
 
@@ -1770,7 +1769,7 @@ var Carousel = function (Glide, Components) {
     return mutator.transform(slideWidth * slidesLength);
   }
 
-  return mutator.transform(slideWidth * index);
+  return mutator.transform(slideWidth * Glide.index);
 };
 
 var TYPES = {
@@ -2032,10 +2031,10 @@ var Dimensions = function (Glide, Components) {
       var rootWidth = Components.Html.root.offsetWidth;
 
       if ((typeof peek === 'undefined' ? 'undefined' : _typeof(peek)) === 'object') {
-        return Math.ceil(rootWidth / perView - peek.before / perView - peek.after / perView);
+        return rootWidth / perView - peek.before / perView - peek.after / perView;
       }
 
-      return Math.ceil(rootWidth / perView - peek * 2 / perView);
+      return rootWidth / perView - peek * 2 / perView;
     }
   });
 

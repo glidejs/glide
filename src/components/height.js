@@ -9,7 +9,7 @@ export default function (Glide, Components) {
      */
     init () {
       if (Glide.settings.autoheight) {
-        Components.Html.root.style.transition = Components.Transition.compose('height')
+        Components.Html.track.style.transition = Components.Transition.compose('height')
       }
     },
 
@@ -21,7 +21,7 @@ export default function (Glide, Components) {
      */
     set (force) {
       if (Glide.settings.autoheight || force) {
-        Components.Html.root.style.height = this.value
+        Components.Html.track.style.height = this.value
       }
     }
   }

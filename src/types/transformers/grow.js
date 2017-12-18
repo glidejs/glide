@@ -1,5 +1,5 @@
 /**
- * Updates glide movement with a `focusAt` settings.
+ * Updates glide movement with width of additional clones width.
  *
  * @param  {Glide} Glide
  * @param  {Array} Components
@@ -8,7 +8,7 @@
 export default function (Glide, Components) {
   return {
     /**
-     * Modifies passed translate value with according to the `focusAt` setting.
+     * Adds to the passed translate width of the half of clones. 
      *
      * @param  {Number} translate
      * @return {Number}
@@ -17,7 +17,7 @@ export default function (Glide, Components) {
       if (Glide.isType('carousel')) {
         return translate + (Components.Clones.grow / 2)
       }
-      
+
       return translate
     }
   }

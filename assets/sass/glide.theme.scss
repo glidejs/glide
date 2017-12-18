@@ -1,15 +1,17 @@
-.glide {
+@import "variables";
+
+.#{$glide-class} {
   $this: &;
 
   cursor: grab;
   cursor: -moz-grab;
   cursor: -webkit-grab;
 
-  &__arrows {
+  &#{$glide-element-separator}arrows {
     position: absolute;
   }
 
-  &__arrow {
+  &#{$glide-element-separator}arrow {
     position: absolute;
     z-index: 2;
     color: white;
@@ -26,18 +28,18 @@
     &:focus { outline: none; }
     &:hover { border-color: white; }
 
-    &--disabled {
+    &#{$glide-modifier-separator}disabled {
       opacity: 0.33;
     }
   }
 
-  &__bullets {
+  &#{$glide-element-separator}bullets {
     position: absolute;
     z-index: 2;
     list-style: none;
   }
 
-  &__bullet {
+  &#{$glide-element-separator}bullet {
     display: inline-block;
     background-color: rgba(255, 255, 255, 0.5);
     width: 12px;
@@ -63,32 +65,32 @@
     }
   }
 
-  &--dragging {
+  &#{$glide-modifier-separator}dragging {
     cursor: grabbing;
     cursor: -moz-grabbing;
     cursor: -webkit-grabbing;
   }
 
-  &--horizontal {
-    #{$this}__arrows {
+  &#{$glide-modifier-separator}horizontal {
+    #{$this}#{$glide-element-separator}arrows {
       top: 50%;
       width: 92%;
       margin-left: 4%;
     }
 
-    #{$this}__arrow {
+    #{$this}#{$glide-element-separator}arrow {
       transform: translateY(-50%);
 
-      &--prev {
+      &#{$glide-modifier-separator}prev {
         left: 0;
       }
 
-      &--next {
+      &#{$glide-modifier-separator}next {
         right: 0;
       }
     }
 
-    #{$this}__bullets {
+    #{$this}#{$glide-element-separator}bullets {
       bottom: 8%;
       left: 0;
       width: 100%;
@@ -96,31 +98,31 @@
       text-align: center;
     }
 
-    #{$this}__bullet {
+    #{$this}#{$glide-element-separator}bullet {
       margin: 0 5px;
     }
   }
 
-  &--vertical {
-    #{$this}__arrows {
+  &#{$glide-modifier-separator}vertical {
+    #{$this}#{$glide-element-separator}arrows {
       left: 50%;
       height: 88%;
       margin-top: 6%;
     }
 
-    #{$this}__arrow {
+    #{$this}#{$glide-element-separator}arrow {
       transform: translateX(-50%);
 
-      &--prev {
+      &#{$glide-modifier-separator}prev {
         top: 0;
       }
 
-      &--next {
+      &#{$glide-modifier-separator}next {
         bottom: 0;
       }
     }
 
-    #{$this}__bullets {
+    #{$this}#{$glide-element-separator}bullets {
       top: 50%;
       right: 8%;
       width: 12px;
@@ -128,7 +130,7 @@
       transform: translateY(-50%);
     }
 
-    #{$this}__bullet {
+    #{$this}#{$glide-element-separator}bullet {
       vertical-align: middle;
     }
   }

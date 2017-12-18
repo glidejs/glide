@@ -56,11 +56,11 @@ export default function (Glide, Components) {
 
         item.style.width = Components.Dimensions.slideWidth
 
+        // Append clone if pattern position is positive.
+        // Prepend clone if pattern position is negative.
         if (pattern[i] >= 0) {
-          // Append clone if pattern position is positive.
           Components.Html.wrapper.appendChild(item)
         } else {
-          // Prepend clone if pattern position is negative.
           Components.Html.wrapper.insertBefore(item, Components.Html.slides[0])
         }
       }

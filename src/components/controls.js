@@ -30,7 +30,6 @@ export default function (Glide, Components) {
 
       for (var i = 0; i < children.length; i++) {
         Events.on(['click', 'touchstart'], children[i], this.click)
-        Events.on(['mouseenter', 'mouseleave'], children[i], this.hover)
       }
     },
 
@@ -43,7 +42,7 @@ export default function (Glide, Components) {
       let children = wrapper.children
 
       for (var i = 0; i < children.length; i++) {
-        Events.off(['click', 'touchstart', 'mouseenter', 'mouseleave'], children[i])
+        Events.off(['click', 'touchstart'], children[i])
       }
     },
 
@@ -58,32 +57,7 @@ export default function (Glide, Components) {
     click (event) {
       event.preventDefault()
 
-      if (!Glide.disabled) {
-        Components.Run.stop().make(event.target.dataset.glideDir)
-
-        Components.Animation.after(() => {
-          Components.Run.init()
-        })
-      }
-    },
-
-    /**
-     * Handles `hover` event on the arrows HTML elements.
-     * Plays and pauses autoplay running.
-     *
-     * @param {Object} event
-     * @return {Void}
-     */
-    hover (event) {
-      if (!Glide.disabled) {
-        if (event.type === 'mouseleave') {
-          Components.Run.init()
-        }
-
-        if (event.type === 'mouseenter') {
-          Components.Run.stop()
-        }
-      }
+      Components.Run.make(event.target.dataset.glideDir)
     }
   }
 }

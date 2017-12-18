@@ -14,6 +14,7 @@ import Window from './components/window'
 import Images from './components/images'
 import Anchors from './components/anchors'
 import Controls from './components/controls'
+import Autoplay from './components/autoplay'
 import Callbacks from './components/callbacks'
 import Animation from './components/animation'
 import Transition from './components/transition'
@@ -36,7 +37,8 @@ const COMPONENTS = {
   Callbacks,
   Swipe,
   Build,
-  Run
+  Run,
+  Autoplay
 }
 
 export default class Glide {

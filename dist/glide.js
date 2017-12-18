@@ -280,36 +280,8 @@ var Run = function (Glide, Components) {
      * @return {self}
      */
     init: function init() {
-      var _this = this;
-
       this.flag = false;
       this.running = false;
-
-      if (Glide.settings.autoplay || this.running) {
-        if (typeof this.interval === 'undefined') {
-          this.interval = setInterval(function () {
-            _this.stop().make('>').init();
-          }, this.period);
-        }
-      }
-
-      return this;
-    },
-
-
-    /**
-     * Stops autorunning of the glide.
-     *
-     * @return {self}
-     */
-    stop: function stop() {
-      if (Glide.settings.autoplay || this.running) {
-        if (this.interval >= 0) {
-          this.interval = clearInterval(this.interval);
-        }
-      }
-
-      return this;
     },
 
 
@@ -407,24 +379,6 @@ var Run = function (Glide, Components) {
      */
     get: function get() {
       return Components.Html.slides.length - 1;
-    }
-  });
-
-  define(RUN, 'period', {
-    /**
-     * Gets time period value for the autoplay interval. Prioritizes
-     * times in `data-glide-autoplay` attrubutes over options.
-     *
-     * @return {Number}
-     */
-    get: function get() {
-      var autoplay = Components.Html.slides[Glide.index].getAttribute('data-glide-autoplay');
-
-      if (autoplay) {
-        return parseInt(autoplay);
-      }
-
-      return Glide.settings.autoplay;
     }
   });
 
@@ -843,7 +797,6 @@ var Swipe = function (Glide, Components) {
         this.bindSwipeMove();
         this.bindSwipeEnd();
 
-        Components.Run.stop();
         Components.Callbacks.call(Glide.settings.swipeStart);
       }
     },
@@ -928,12 +881,11 @@ var Swipe = function (Glide, Components) {
         this.unbindSwipeMove();
         this.unbindSwipeEnd();
 
+        Components.Callbacks.call(Glide.settings.swipeEnd);
+
         Components.Animation.after(function () {
-          Components.Run.init();
           Components.Anchors.unprevent().attach();
         });
-
-        Components.Callbacks.call(Glide.settings.swipeEnd);
       }
     },
 
@@ -1524,7 +1476,6 @@ var Controls = function (Glide, Components) {
 
       for (var i = 0; i < children.length; i++) {
         Events.on(['click', 'touchstart'], children[i], this.click);
-        Events.on(['mouseenter', 'mouseleave'], children[i], this.hover);
       }
     },
 
@@ -1538,7 +1489,7 @@ var Controls = function (Glide, Components) {
       var children = wrapper.children;
 
       for (var i = 0; i < children.length; i++) {
-        Events.off(['click', 'touchstart', 'mouseenter', 'mouseleave'], children[i]);
+        Events.off(['click', 'touchstart'], children[i]);
       }
     },
 
@@ -1554,35 +1505,81 @@ var Controls = function (Glide, Components) {
     click: function click(event) {
       event.preventDefault();
 
-      if (!Glide.disabled) {
-        Components.Run.stop().make(event.target.dataset.glideDir);
+      Components.Run.make(event.target.dataset.glideDir);
+    }
+  };
+};
 
-        Components.Animation.after(function () {
-          Components.Run.init();
-        });
+var Autoplay = function (Glide, Components) {
+  var Events = new EventBus();
+
+  var AUTOPLAY = {
+    init: function init() {
+      this.start();
+
+      if (Glide.settings.hoverpause) {
+        this.events();
+      }
+    },
+    start: function start() {
+      var _this = this;
+
+      if (Glide.settings.autoplay) {
+        if (typeof this._i === 'undefined') {
+          this._i = setInterval(function () {
+            _this.stop();
+
+            Components.Run.make('>');
+
+            _this.start();
+          }, this.time);
+        }
       }
     },
 
 
     /**
-     * Handles `hover` event on the arrows HTML elements.
-     * Plays and pauses autoplay running.
+     * Stops autorunning of the glide.
      *
-     * @param {Object} event
-     * @return {Void}
+     * @return {self}
      */
-    hover: function hover(event) {
-      if (!Glide.disabled) {
-        if (event.type === 'mouseleave') {
-          Components.Run.init();
-        }
-
-        if (event.type === 'mouseenter') {
-          Components.Run.stop();
-        }
+    stop: function stop() {
+      if (Glide.settings.autoplay) {
+        this._i = clearInterval(this._i);
       }
+    },
+    events: function events() {
+      var _this2 = this;
+
+      Events.on('mouseover', Components.Html.root, function () {
+        _this2.stop();
+      });
+
+      Events.on('mouseout', Components.Html.root, function () {
+        _this2.start();
+      });
     }
   };
+
+  define(AUTOPLAY, 'time', {
+    /**
+     * Gets time period value for the autoplay interval. Prioritizes
+     * times in `data-glide-autoplay` attrubutes over options.
+     *
+     * @return {Number}
+     */
+    get: function get() {
+      var autoplay = Components.Html.slides[Glide.index].getAttribute('data-glide-autoplay');
+
+      if (autoplay) {
+        return parseInt(autoplay);
+      }
+
+      return Glide.settings.autoplay;
+    }
+  });
+
+  return AUTOPLAY;
 };
 
 var Callbacks = function (Glide, Components) {
@@ -2063,7 +2060,8 @@ var COMPONENTS = {
   Callbacks: Callbacks,
   Swipe: Swipe,
   Build: Build,
-  Run: Run
+  Run: Run,
+  Autoplay: Autoplay
 };
 
 var Glide = function () {

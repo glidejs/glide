@@ -44,7 +44,6 @@ export default function (Glide, Components) {
         this.bindSwipeMove()
         this.bindSwipeEnd()
 
-        Components.Run.stop()
         Components.Callbacks.call(Glide.settings.swipeStart)
       }
     },
@@ -130,12 +129,12 @@ export default function (Glide, Components) {
         this.unbindSwipeMove()
         this.unbindSwipeEnd()
 
-        Components.Animation.after(() => {
-          Components.Run.init()
-          Components.Anchors.unprevent().attach()
-        })
 
         Components.Callbacks.call(Glide.settings.swipeEnd)
+
+        Components.Animation.after(() => {
+          Components.Anchors.unprevent().attach()
+        })
       }
     },
 

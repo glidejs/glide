@@ -10,33 +10,6 @@ export default function (Glide, Components) {
     init () {
       this.flag = false
       this.running = false
-
-      if (Glide.settings.autoplay || this.running) {
-        if (typeof this.interval === 'undefined') {
-          this.interval = setInterval(() => {
-            this.stop()
-              .make('>')
-              .init()
-          }, this.period)
-        }
-      }
-
-      return this
-    },
-
-    /**
-     * Stops autorunning of the glide.
-     *
-     * @return {self}
-     */
-    stop () {
-      if (Glide.settings.autoplay || this.running) {
-        if (this.interval >= 0) {
-          this.interval = clearInterval(this.interval)
-        }
-      }
-
-      return this
     },
 
     /**
@@ -130,24 +103,6 @@ export default function (Glide, Components) {
      */
     get () {
       return Components.Html.slides.length - 1
-    }
-  })
-
-  define(RUN, 'period', {
-    /**
-     * Gets time period value for the autoplay interval. Prioritizes
-     * times in `data-glide-autoplay` attrubutes over options.
-     *
-     * @return {Number}
-     */
-    get () {
-      let autoplay = Components.Html.slides[Glide.index].getAttribute('data-glide-autoplay')
-
-      if (autoplay) {
-        return parseInt(autoplay)
-      }
-
-      return Glide.settings.autoplay
     }
   })
 

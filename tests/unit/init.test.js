@@ -10,12 +10,12 @@ describe('`init()` function should', () => {
       return stub
     })
 
-    init('glide', { mock })
+    init('glide', { mock }, 'events')
 
     // `init()` method of the component should be called
     expect(fn).toHaveBeenCalled()
     
     // component should be initialized with glide and other components as arguments
-    expect(mock).toHaveBeenCalledWith('glide', { mock: stub })
+    expect(mock).toHaveBeenCalledWith('glide', { mock: stub }, 'events')
   })
 })

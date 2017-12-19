@@ -1,30 +1,19 @@
 import { siblings } from '../utils/dom'
+import { listen, emit } from '../core/event/events-bus'
 
 export default function (Glide, Components, Events) {
-  return {
+  const BUILD = {
     /**
      * Init glide building. Adds classes, sets
      * dimensions and setups initial state.
      */
     init () {
-      Events.emit('build.init.before')
+      emit('build.init.before')
 
       this.typeClass()
       this.activeClass()
-      this.setHeight()
 
-      Events.emit('build.init.after')
-    },
-
-    /**
-     * Sets height of the slides track.
-     *
-     * @return {Void}
-     */
-    setHeight () {
-      if (Glide.settings.autoheight) {
-        Components.Height.set()
-      }
+      emit('build.init.after')
     },
 
     /**
@@ -52,4 +41,14 @@ export default function (Glide, Components, Events) {
       })
     }
   }
+
+  listen('window.resize', () => {
+    BUILD.init()
+  })
+
+  listen('animation.make.after', () => {
+    BUILD.activeClass()
+  })
+
+  return BUILD
 }

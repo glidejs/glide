@@ -2,10 +2,10 @@ import { warn } from '../utils/log'
 import { exist } from '../utils/dom'
 import { define } from '../utils/object'
 
-export default function (Glide, Components) {
-  const TRACK_SELECTOR = '[data-glide-el="track"]'
-  const SLIDE_SELECTOR = '[data-glide-el="slide"]'
+const TRACK_SELECTOR = '[data-glide-el="track"]'
+const SLIDE_SELECTOR = '[data-glide-el="slide"]'
 
+export default function (Glide, Components) {
   const HTML = {
     /**
      * Setup slider HTML nodes.

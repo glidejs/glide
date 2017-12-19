@@ -1,4 +1,5 @@
 import { define } from '../utils/object'
+import { listen, emit } from '../core/event/events-bus'
 
 export default function (Glide, Components) {
   const RUN = {
@@ -56,10 +57,9 @@ export default function (Glide, Components) {
           break
       }
 
-      Components.Height.set()
-      Components.Transition.enable()
-      Components.Animation.make().after(() => {
-        Components.Build.activeClass()
+      emit('run.make.after', {
+        direction: this.direction,
+        steps: this.steps
       })
 
       return this
@@ -103,6 +103,10 @@ export default function (Glide, Components) {
     get () {
       return Components.Html.slides.length - 1
     }
+  })
+
+  listen('window.resize', () => {
+    RUN.make(`=${Glide.index}`).init()
   })
 
   return RUN

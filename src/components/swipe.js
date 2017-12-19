@@ -1,18 +1,20 @@
 import { define } from '../utils/object'
-import { EventsBinder } from '../core/event/index'
+import { emit } from '../core/event/events-bus'
+
+import EventsBinder from '../core/event/events-binder'
+
+const START_EVENTS = ['touchstart', 'mousedown']
+const MOVE_EVENTS = ['touchmove', 'mousemove']
+const END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave']
+const MOUSE_EVENTS = ['mousedown', 'mousemove', 'mouseup', 'mouseleave']
 
 export default function (Glide, Components) {
-  const START_EVENTS = ['touchstart', 'mousedown']
-  const MOVE_EVENTS = ['touchmove', 'mousemove']
-  const END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave']
-  const MOUSE_EVENTS = ['mousedown', 'mousemove', 'mouseup', 'mouseleave']
+  const Binder = new EventsBinder()
 
   let swipeSin = 0
   let swipeStartX = 0
   let swipeStartY = 0
   let dragging = false
-
-  let Binder = new EventsBinder()
 
   const SWIPE = {
     /**
@@ -44,7 +46,8 @@ export default function (Glide, Components) {
         this.bindSwipeMove()
         this.bindSwipeEnd()
 
-        Components.Callbacks.call(Glide.settings.swipeStart)
+        emit('swipe.start')
+        // Components.Callbacks.call(Glide.settings.swipeStart)
       }
     },
 
@@ -80,7 +83,7 @@ export default function (Glide, Components) {
           return
         }
 
-        Components.Anchors.prevent().detach()
+        emit('swipe.move')
       }
     },
 
@@ -129,12 +132,8 @@ export default function (Glide, Components) {
         this.unbindSwipeMove()
         this.unbindSwipeEnd()
 
-
-        Components.Callbacks.call(Glide.settings.swipeEnd)
-
-        Components.Animation.after(() => {
-          Components.Anchors.unprevent().attach()
-        })
+        // Components.Callbacks.call(Glide.settings.swipeEnd)
+        emit('swipe.end')
       }
     },
 

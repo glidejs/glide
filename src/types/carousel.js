@@ -7,7 +7,7 @@ export default function (Glide, Components) {
   let slidesLength = Components.Html.slides.length
 
   if (Components.Run.isOffset('<')) {
-    Components.Run.flag = false
+    Components.Run._f = false
 
     Components.Animation.after(() => {
       Components.Transition.disable()
@@ -18,7 +18,7 @@ export default function (Glide, Components) {
   }
 
   if (Components.Run.isOffset('>')) {
-    Components.Run.flag = false
+    Components.Run._f = false
 
     Components.Animation.after(() => {
       Components.Transition.disable()

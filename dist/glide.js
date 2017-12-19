@@ -10,204 +10,7 @@
 	(global.Glide = factory());
 }(this, (function () { 'use strict';
 
-/**
- * Outputs warning message to the boswer console.
- *
- * @param  {String} msg
- * @return {Void}
- */
-function warn(msg) {
-  console.error("[Glide warn]: " + msg);
-}
-
-/**
- * Creates and initializes specified collection of extensions.
- * Each extension receives access to instance of glide and rest of components.
- *
- * @param {Glide} glide
- * @param {Object} extensions
- *
- * @returns {Void}
- */
-function init(glide, extensions, events) {
-  var components = {};
-
-  for (var name in extensions) {
-    components[name] = extensions[name](glide, components, events);
-  }
-
-  for (var _name in components) {
-    if (typeof components[_name].init === 'function') {
-      components[_name].init();
-    }
-  }
-}
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-  return typeof obj;
-} : function (obj) {
-  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-};
-
-
-
-
-
-
-
-
-
-
-
-var classCallCheck = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
-
-var createClass = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-}();
-
-
-
-
-
-
-
-var _extends = Object.assign || function (target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i];
-
-    for (var key in source) {
-      if (Object.prototype.hasOwnProperty.call(source, key)) {
-        target[key] = source[key];
-      }
-    }
-  }
-
-  return target;
-};
-
-var EventsBinder = function () {
-  /**
-   * Construct events.
-   */
-  function EventsBinder() {
-    var listeners = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    classCallCheck(this, EventsBinder);
-
-    this.listeners = listeners;
-  }
-
-  /**
-   * Adds events listeners to arrows HTML elements.
-   *
-   * @param  {Array} events
-   * @param  {HTMLElement} el
-   * @param  {Closure} closure
-   * @return {Void}
-   */
-
-
-  createClass(EventsBinder, [{
-    key: 'on',
-    value: function on(events, el, closure) {
-      if (typeof events === 'string') {
-        events = [events];
-      }
-
-      for (var i = 0; i < events.length; i++) {
-        this.listeners[events[i]] = closure;
-
-        el.addEventListener(events[i], this.listeners[events[i]]);
-      }
-    }
-
-    /**
-     * Removes event listeners from arrows HTML elements.
-     *
-     * @param  {Array} events
-     * @param  {HTMLElement} el
-     * @return {Void}
-     */
-
-  }, {
-    key: 'off',
-    value: function off(events, el) {
-      if (typeof events === 'string') {
-        events = [events];
-      }
-
-      for (var i = 0; i < events.length; i++) {
-        el.removeEventListener(events[i], this.listeners[events[i]]);
-
-        delete this.listeners[events[i]];
-      }
-    }
-  }]);
-  return EventsBinder;
-}();
-
-var EventsBus = function () {
-  function EventsBus() {
-    var topics = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    classCallCheck(this, EventsBus);
-
-    this.topics = topics;
-    this.hOP = topics.hasOwnProperty;
-  }
-
-  createClass(EventsBus, [{
-    key: 'listen',
-    value: function listen(topic, listener) {
-      // Create the topic's object if not yet created
-      if (!this.hOP.call(this.topics, topic)) {
-        this.topics[topic] = [];
-      }
-
-      // Add the listener to queue
-      var index = this.topics[topic].push(listener) - 1;
-
-      // Provide handle back for removal of topic
-      return {
-        remove: function remove() {
-          delete this.topics[topic][index];
-        }
-      };
-    }
-  }, {
-    key: 'emit',
-    value: function emit(topic, info) {
-      // If the topic doesn't exist, or there's no listeners in queue, just leave
-      if (!this.hOP.call(this.topics, topic)) {
-        return;
-      }
-
-      // Cycle through topics queue, fire!
-      this.topics[topic].forEach(function (item) {
-        item(info || {});
-      });
-    }
-  }]);
-  return EventsBus;
-}();
-
-var defaults$1 = {
+var defaults = {
   /**
    * Type of the slides movements. Available types:
    * `slider` - Rewinds slider to the start/end when it reaches first or last slide.
@@ -432,6 +235,159 @@ var defaults$1 = {
   swipeEnd: function swipeEnd(event) {}
 };
 
+/**
+ * Outputs warning message to the boswer console.
+ *
+ * @param  {String} msg
+ * @return {Void}
+ */
+function warn(msg) {
+  console.error("[Glide warn]: " + msg);
+}
+
+/**
+ * Creates and initializes specified collection of extensions.
+ * Each extension receives access to instance of glide and rest of components.
+ *
+ * @param {Glide} glide
+ * @param {Object} extensions
+ *
+ * @returns {Void}
+ */
+function init(glide, extensions, events) {
+  var components = {};
+
+  for (var name in extensions) {
+    components[name] = extensions[name](glide, components, events);
+  }
+
+  for (var _name in components) {
+    if (typeof components[_name].init === 'function') {
+      components[_name].init();
+    }
+  }
+}
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+};
+
+
+
+
+
+
+
+
+
+
+
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+
+
+
+
+
+
+var _extends = Object.assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
+
+var EventsBus = function () {
+  function EventsBus() {
+    var topics = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    classCallCheck(this, EventsBus);
+
+    this.topics = topics;
+    this.hOP = topics.hasOwnProperty;
+  }
+
+  createClass(EventsBus, [{
+    key: "listen",
+    value: function listen(topic, listener) {
+      // Create the topic's object if not yet created
+      if (!this.hOP.call(this.topics, topic)) {
+        this.topics[topic] = [];
+      }
+
+      // Add the listener to queue
+      var index = this.topics[topic].push(listener) - 1;
+
+      // Provide handle back for removal of topic
+      return {
+        remove: function remove() {
+          delete this.topics[topic][index];
+        }
+      };
+    }
+  }, {
+    key: "emit",
+    value: function emit(topic, info) {
+      // If the topic doesn't exist, or there's no listeners in queue, just leave
+      if (!this.hOP.call(this.topics, topic)) {
+        return;
+      }
+
+      // Cycle through topics queue, fire!
+      this.topics[topic].forEach(function (item) {
+        item(info || {});
+      });
+    }
+  }]);
+  return EventsBus;
+}();
+
+var Events = new EventsBus();
+
+function listen(event, handler) {
+  if (event.constructor === Array) {
+    for (var i = 0; i < event.length; i++) {
+      listen(event[i], handler);
+    }
+  }
+
+  return Events.listen(event, handler);
+}
+
+function emit(event, context) {
+  return Events.emit(event, context);
+}
+
 function define(obj, prop, definition) {
   Object.defineProperty(obj, prop, definition);
 }
@@ -493,10 +449,9 @@ var Run = function (Glide, Components) {
           break;
       }
 
-      Components.Height.set();
-      Components.Transition.enable();
-      Components.Animation.make().after(function () {
-        Components.Build.activeClass();
+      emit('run.make.after', {
+        direction: this.direction,
+        steps: this.steps
       });
 
       return this;
@@ -545,6 +500,10 @@ var Run = function (Glide, Components) {
     }
   });
 
+  listen('window.resize', function () {
+    RUN.make('=' + Glide.index).init();
+  });
+
   return RUN;
 };
 
@@ -581,10 +540,10 @@ function exist(node) {
   return false;
 }
 
-var Html = function (Glide, Components) {
-  var TRACK_SELECTOR = '[data-glide-el="track"]';
-  var SLIDE_SELECTOR = '[data-glide-el="slide"]';
+var TRACK_SELECTOR = '[data-glide-el="track"]';
+var SLIDE_SELECTOR = '[data-glide-el="slide"]';
 
+var Html = function (Glide, Components) {
   var HTML = {
     /**
      * Setup slider HTML nodes.
@@ -741,32 +700,19 @@ var Peek = function (Glide, Components, Events) {
   return PEEK;
 };
 
-var Build = function (Glide, Components, Events) {
-  return {
+var Build = function (Glide, Components, Events$$1) {
+  var BUILD = {
     /**
      * Init glide building. Adds classes, sets
      * dimensions and setups initial state.
      */
     init: function init() {
-      Events.emit('build.init.before');
+      emit('build.init.before');
 
       this.typeClass();
       this.activeClass();
-      this.setHeight();
 
-      Events.emit('build.init.after');
-    },
-
-
-    /**
-     * Sets height of the slides track.
-     *
-     * @return {Void}
-     */
-    setHeight: function setHeight() {
-      if (Glide.settings.autoheight) {
-        Components.Height.set();
-      }
+      emit('build.init.after');
     },
 
 
@@ -796,20 +742,90 @@ var Build = function (Glide, Components, Events) {
       });
     }
   };
+
+  listen('window.resize', function () {
+    BUILD.init();
+  });
+
+  listen('animation.make.after', function () {
+    BUILD.activeClass();
+  });
+
+  return BUILD;
 };
 
+var EventsBinder = function () {
+  /**
+   * Construct events.
+   */
+  function EventsBinder() {
+    var listeners = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    classCallCheck(this, EventsBinder);
+
+    this.listeners = listeners;
+  }
+
+  /**
+   * Adds events listeners to arrows HTML elements.
+   *
+   * @param  {Array} events
+   * @param  {HTMLElement} el
+   * @param  {Closure} closure
+   * @return {Void}
+   */
+
+
+  createClass(EventsBinder, [{
+    key: 'on',
+    value: function on(events, el, closure) {
+      if (typeof events === 'string') {
+        events = [events];
+      }
+
+      for (var i = 0; i < events.length; i++) {
+        this.listeners[events[i]] = closure;
+
+        el.addEventListener(events[i], this.listeners[events[i]]);
+      }
+    }
+
+    /**
+     * Removes event listeners from arrows HTML elements.
+     *
+     * @param  {Array} events
+     * @param  {HTMLElement} el
+     * @return {Void}
+     */
+
+  }, {
+    key: 'off',
+    value: function off(events, el) {
+      if (typeof events === 'string') {
+        events = [events];
+      }
+
+      for (var i = 0; i < events.length; i++) {
+        el.removeEventListener(events[i], this.listeners[events[i]]);
+
+        delete this.listeners[events[i]];
+      }
+    }
+  }]);
+  return EventsBinder;
+}();
+
+var START_EVENTS = ['touchstart', 'mousedown'];
+var MOVE_EVENTS = ['touchmove', 'mousemove'];
+var END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave'];
+var MOUSE_EVENTS = ['mousedown', 'mousemove', 'mouseup', 'mouseleave'];
+
 var Swipe = function (Glide, Components) {
-  var START_EVENTS = ['touchstart', 'mousedown'];
-  var MOVE_EVENTS = ['touchmove', 'mousemove'];
-  var END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave'];
-  var MOUSE_EVENTS = ['mousedown', 'mousemove', 'mouseup', 'mouseleave'];
+  var Binder = new EventsBinder();
 
   var swipeSin = 0;
   var swipeStartX = 0;
   var swipeStartY = 0;
   var dragging = false;
-
-  var Binder = new EventsBinder();
 
   var SWIPE = {
     /**
@@ -842,7 +858,8 @@ var Swipe = function (Glide, Components) {
         this.bindSwipeMove();
         this.bindSwipeEnd();
 
-        Components.Callbacks.call(Glide.settings.swipeStart);
+        emit('swipe.start');
+        // Components.Callbacks.call(Glide.settings.swipeStart)
       }
     },
 
@@ -879,7 +896,7 @@ var Swipe = function (Glide, Components) {
           return;
         }
 
-        Components.Anchors.prevent().detach();
+        emit('swipe.move');
       }
     },
 
@@ -926,11 +943,8 @@ var Swipe = function (Glide, Components) {
         this.unbindSwipeMove();
         this.unbindSwipeEnd();
 
-        Components.Callbacks.call(Glide.settings.swipeEnd);
-
-        Components.Animation.after(function () {
-          Components.Anchors.unprevent().attach();
-        });
+        // Components.Callbacks.call(Glide.settings.swipeEnd)
+        emit('swipe.end');
       }
     },
 
@@ -1066,7 +1080,7 @@ var Swipe = function (Glide, Components) {
   return SWIPE;
 };
 
-var Clones = function (Glide, Components, Events) {
+var Clones = function (Glide, Components, Events$$1) {
   var pattern = [];
 
   var CLONES = {
@@ -1075,12 +1089,6 @@ var Clones = function (Glide, Components, Events) {
 
       this.map();
       this.collect();
-
-      if (Glide.isType('carousel')) {
-        Events.listen('build.init.before', function () {
-          Components.Clones.append();
-        });
-      }
     },
 
 
@@ -1166,10 +1174,16 @@ var Clones = function (Glide, Components, Events) {
     }
   });
 
+  listen('build.init.before', function () {
+    if (Glide.isType('carousel')) {
+      CLONES.append();
+    }
+  });
+
   return CLONES;
 };
 
-var Height = function (Glide, Components) {
+var Height = function (Glide, Components, Events$$1) {
   var HEIGHT = {
     /**
      * Inits height. Adds `height` transition to the root.
@@ -1205,6 +1219,10 @@ var Height = function (Glide, Components) {
     get: function get() {
       return Components.Html.slides[Glide.index].offsetHeight;
     }
+  });
+
+  listen(['build.init.after', 'run.make.after'], function () {
+    HEIGHT.set();
   });
 
   return HEIGHT;
@@ -1294,7 +1312,15 @@ var Window = function (Glide, Components) {
      * @return {Void}
      */
     bind: function bind() {
-      Binder.on('resize', window, debounce(this.resize.bind(this), Glide.settings.debounce.resize));
+      var _this = this;
+
+      Binder.on('resize', window, debounce(function () {
+        emit('window.resize.before');
+
+        _this.resize();
+
+        emit('window.resize.after');
+      }, Glide.settings.debounce.resize));
     },
 
 
@@ -1315,10 +1341,7 @@ var Window = function (Glide, Components) {
      * @returns {Void}
      */
     resize: function resize() {
-      Components.Transition.disable();
-      Components.Build.init();
-      Components.Run.make('=' + Glide.index).init();
-      Components.Transition.enable();
+      emit('window.resize');
     }
   };
 };
@@ -1369,10 +1392,10 @@ var Images = function (Glide, Components) {
 };
 
 var Anchors = function (Glide, Components) {
+  var Binder = new EventsBinder();
+
   var detached = false;
   var prevented = false;
-
-  var Binder = new EventsBinder();
 
   var ANCHORS = {
     /**
@@ -1491,13 +1514,21 @@ var Anchors = function (Glide, Components) {
     }
   });
 
+  listen('swipe.move', function () {
+    ANCHORS.prevent().detach();
+  });
+
+  listen('swipe.end', function () {
+    ANCHORS.unprevent().attach();
+  });
+
   return ANCHORS;
 };
 
+var CONTROLS_SELECTOR = '[data-glide-el="controls"]';
+
 var Controls = function (Glide, Components) {
   var Binder = new EventsBinder();
-
-  var CONTROLS_SELECTOR = '[data-glide-el="controls"]';
 
   return {
     /**
@@ -1826,7 +1857,7 @@ var Carousel = function (Glide, Components) {
   var slidesLength = Components.Html.slides.length;
 
   if (Components.Run.isOffset('<')) {
-    Components.Run.flag = false;
+    Components.Run._f = false;
 
     Components.Animation.after(function () {
       Components.Transition.disable();
@@ -1837,7 +1868,7 @@ var Carousel = function (Glide, Components) {
   }
 
   if (Components.Run.isOffset('>')) {
-    Components.Run.flag = false;
+    Components.Run._f = false;
 
     Components.Animation.after(function () {
       Components.Transition.disable();
@@ -1855,7 +1886,7 @@ var TYPES = {
   Carousel: Carousel
 };
 
-var Animation = function (Glide, Components, Events) {
+var Animation = function (Glide, Components, Events$$1) {
   var ANIMATION = {
     /**
      * Constructs animation component.
@@ -1863,13 +1894,7 @@ var Animation = function (Glide, Components, Events) {
      * @returns {Void}
      */
     init: function init() {
-      var _this = this;
-
       this._o = 0;
-
-      Events.listen('build.init.before', function () {
-        _this.make();
-      });
     },
 
 
@@ -1879,23 +1904,18 @@ var Animation = function (Glide, Components, Events) {
      * @param  {Number} offset
      * @return {self}
      */
-    make: function make(offset) {
+    make: function make() {
+      var offset = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+
       this.offset = offset;
 
-      this.apply();
+      emit('animation.make', {
+        movement: this.movement
+      });
 
-      return this;
-    },
-
-
-    /**
-     * Applies an animation.
-     *
-     * @return {Void}
-     */
-    apply: function apply() {
-      Components.Transition.set();
-      Components.Translate.set(this.translate - this.offset);
+      this.after(function () {
+        emit('animation.make.after');
+      });
     },
 
 
@@ -1906,7 +1926,7 @@ var Animation = function (Glide, Components, Events) {
      * @return {Integer}
      */
     after: function after(callback) {
-      return setTimeout(function () {
+      setTimeout(function () {
         callback();
       }, Glide.settings.animationDuration + 10);
     }
@@ -1944,26 +1964,28 @@ var Animation = function (Glide, Components, Events) {
     }
   });
 
+  define(ANIMATION, 'movement', {
+    /**
+     * Gets translate value based on configured glide type.
+     *
+     * @return {Number}
+     */
+    get: function get() {
+      return this.translate - this.offset;
+    }
+  });
+
+  listen(['build.init.before', 'run.make.after'], function () {
+    ANIMATION.make();
+  });
+
   return ANIMATION;
 };
 
-var Transition = function (Glide, Components, Events) {
+var Transition = function (Glide, Components, Events$$1) {
   var disabled = false;
 
-  return {
-    init: function init() {
-      var _this = this;
-
-      Events.listen('build.init.before', function () {
-        _this.disable();
-      });
-
-      Events.listen('build.init.after', function () {
-        _this.enable();
-      });
-    },
-
-
+  var TRANSITION = {
     /**
      * Composes string of the CSS transition.
      *
@@ -2019,10 +2041,24 @@ var Transition = function (Glide, Components, Events) {
       return this.set();
     }
   };
+
+  listen('animation.make', function () {
+    TRANSITION.set();
+  });
+
+  listen(['build.init.before', 'window.resize.before'], function () {
+    TRANSITION.disable();
+  });
+
+  listen(['build.init.after', 'window.resize.after'], function () {
+    TRANSITION.enable();
+  });
+
+  return TRANSITION;
 };
 
 var Translate = function (Glide, Components) {
-  return {
+  var TRANSLATE = {
     /**
      * Gets value of translate.
      *
@@ -2030,7 +2066,7 @@ var Translate = function (Glide, Components) {
      * @return {String}
      */
     get: function get(value) {
-      return "translate3d(" + -1 * value + "px, 0px, 0px)";
+      return 'translate3d(' + -1 * value + 'px, 0px, 0px)';
     },
 
 
@@ -2046,19 +2082,16 @@ var Translate = function (Glide, Components) {
       return this;
     }
   };
+
+  listen('animation.make', function (data) {
+    TRANSLATE.set(data.movement);
+  });
+
+  return TRANSLATE;
 };
 
-var Dimensions = function (Glide, Components, Events) {
+var Dimensions = function (Glide, Components, Events$$1) {
   var DIMENSIONS = {
-    init: function init() {
-      var _this = this;
-
-      Events.listen('build.init.before', function () {
-        _this.apply();
-      });
-    },
-
-
     /**
      * Applys dimentions to the glide HTML elements.
      *
@@ -2144,6 +2177,10 @@ var Dimensions = function (Glide, Components, Events) {
     }
   });
 
+  listen('build.init.before', function () {
+    DIMENSIONS.apply();
+  });
+
   return DIMENSIONS;
 };
 
@@ -2181,7 +2218,7 @@ var Glide = function () {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     classCallCheck(this, Glide);
 
-    this.settings = _extends(defaults$1, options);
+    this.settings = _extends(defaults, options);
 
     this.disabled = false;
     this.selector = selector;
@@ -2205,7 +2242,7 @@ var Glide = function () {
   createClass(Glide, [{
     key: 'mount',
     value: function mount(extensions) {
-      init(this, _extends(extensions, COMPONENTS), new EventsBus());
+      init(this, _extends(extensions, COMPONENTS), Events);
     }
 
     /**

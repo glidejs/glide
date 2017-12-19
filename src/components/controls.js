@@ -1,9 +1,9 @@
-import { EventsBinder } from '../core/event/index'
+import EventsBinder from '../core/event/events-binder'
+
+const CONTROLS_SELECTOR = '[data-glide-el="controls"]'
 
 export default function (Glide, Components) {
-  let Binder = new EventsBinder()
-
-  const CONTROLS_SELECTOR = '[data-glide-el="controls"]'
+  const Binder = new EventsBinder()
 
   return {
     /**

@@ -1,5 +1,7 @@
+import { listen } from '../core/event/events-bus'
+
 export default function (Glide, Components) {
-  return {
+  const TRANSLATE = {
     /**
      * Gets value of translate.
      *
@@ -22,4 +24,10 @@ export default function (Glide, Components) {
       return this
     }
   }
+
+  listen('animation.make', (data) => {
+    TRANSLATE.set(data.movement)
+  })
+
+  return TRANSLATE
 }

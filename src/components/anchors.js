@@ -1,11 +1,13 @@
 import { define } from '../utils/object'
-import { EventsBinder } from '../core/event/index'
+import { listen } from '../core/event/events-bus'
+
+import EventsBinder from '../core/event/events-binder'
 
 export default function (Glide, Components) {
+  const Binder = new EventsBinder()
+
   let detached = false
   let prevented = false
-
-  let Binder = new EventsBinder()
 
   const ANCHORS = {
     /**
@@ -116,6 +118,14 @@ export default function (Glide, Components) {
     get () {
       return ANCHORS._a
     }
+  })
+
+  listen('swipe.move', () => {
+    ANCHORS.prevent().detach()
+  })
+
+  listen('swipe.end', () => {
+    ANCHORS.unprevent().attach()
   })
 
   return ANCHORS

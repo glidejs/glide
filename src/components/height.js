@@ -1,6 +1,7 @@
 import { define } from '../utils/object'
+import { listen } from '../core/event/events-bus'
 
-export default function (Glide, Components) {
+export default function (Glide, Components, Events) {
   const HEIGHT = {
     /**
      * Inits height. Adds `height` transition to the root.
@@ -35,6 +36,10 @@ export default function (Glide, Components) {
     get () {
       return Components.Html.slides[Glide.index].offsetHeight
     }
+  })
+
+  listen(['build.init.after', 'run.make.after'], () => {
+    HEIGHT.set()
   })
 
   return HEIGHT

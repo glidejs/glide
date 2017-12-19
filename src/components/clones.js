@@ -1,4 +1,5 @@
 import { define } from '../utils/object'
+import { listen } from '../core/event/events-bus'
 
 export default function (Glide, Components, Events) {
   let pattern = []
@@ -9,12 +10,6 @@ export default function (Glide, Components, Events) {
 
       this.map()
       this.collect()
-
-      if (Glide.isType('carousel')) {
-        Events.listen('build.init.before', () => {
-          Components.Clones.append()
-        })
-      }
     },
 
     /**
@@ -93,6 +88,12 @@ export default function (Glide, Components, Events) {
       }
 
       return 0
+    }
+  })
+
+  listen('build.init.before', () => {
+    if (Glide.isType('carousel')) {
+      CLONES.append()
     }
   })
 

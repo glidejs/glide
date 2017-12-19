@@ -1,7 +1,7 @@
-import { EventsBinder } from '../core/event/index'
+import EventsBinder from '../core/event/events-binder'
 
 export default function (Glide, Components) {
-  let Binder = new EventsBinder()
+  const Binder = new EventsBinder()
 
   return {
     /**

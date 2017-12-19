@@ -1,18 +1,9 @@
+import { listen } from '../core/event/events-bus'
 
 export default function (Glide, Components, Events) {
   let disabled = false
 
-  return {
-    init () {
-      Events.listen('build.init.before', () => {
-        this.disable()
-      })
-
-      Events.listen('build.init.after', () => {
-        this.enable()
-      })
-    },
-
+  const TRANSITION = {
     /**
      * Composes string of the CSS transition.
      *
@@ -63,4 +54,18 @@ export default function (Glide, Components, Events) {
       return this.set()
     }
   }
+
+  listen('animation.make', () => {
+    TRANSITION.set()
+  })
+
+  listen(['build.init.before', 'window.resize.before'], () => {
+    TRANSITION.disable()
+  })
+
+  listen(['build.init.after', 'window.resize.after'], () => {
+    TRANSITION.enable()
+  })
+
+  return TRANSITION
 }

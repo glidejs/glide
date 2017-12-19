@@ -1,5 +1,6 @@
 import { define } from '../utils/object'
 import { ucfirst } from '../utils/string'
+import { listen, emit } from '../core/event/events-bus'
 
 import Slider from '../types/slider'
 import Carousel from '../types/carousel'
@@ -18,10 +19,6 @@ export default function (Glide, Components, Events) {
      */
     init () {
       this._o = 0
-
-      Events.listen('build.init.before', () => {
-        this.make()
-      })
     },
 
     /**
@@ -30,22 +27,16 @@ export default function (Glide, Components, Events) {
      * @param  {Number} offset
      * @return {self}
      */
-    make (offset) {
+    make (offset = 0) {
       this.offset = offset
 
-      this.apply()
+      emit('animation.make', {
+        movement: this.movement
+      })
 
-      return this
-    },
-
-    /**
-     * Applies an animation.
-     *
-     * @return {Void}
-     */
-    apply () {
-      Components.Transition.set()
-      Components.Translate.set(this.translate - this.offset)
+      this.after(() => {
+        emit('animation.make.after')
+      })
     },
 
     /**
@@ -55,7 +46,7 @@ export default function (Glide, Components, Events) {
      * @return {Integer}
      */
     after (callback) {
-      return setTimeout(() => {
+      setTimeout(() => {
         callback()
       }, Glide.settings.animationDuration + 10)
     }
@@ -90,6 +81,21 @@ export default function (Glide, Components, Events) {
     get () {
       return TYPES[ucfirst(Glide.type)](Glide, Components)
     }
+  })
+
+  define(ANIMATION, 'movement', {
+    /**
+     * Gets translate value based on configured glide type.
+     *
+     * @return {Number}
+     */
+    get () {
+      return this.translate - this.offset
+    }
+  })
+
+  listen(['build.init.before', 'run.make.after'], () => {
+    ANIMATION.make()
   })
 
   return ANIMATION

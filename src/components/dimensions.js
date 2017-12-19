@@ -1,13 +1,8 @@
 import { define } from '../utils/object'
+import { listen } from '../core/event/events-bus'
 
 export default function (Glide, Components, Events) {
   const DIMENSIONS = {
-    init () {
-      Events.listen('build.init.before', () => {
-        this.apply()
-      })
-    },
-
     /**
      * Applys dimentions to the glide HTML elements.
      *
@@ -89,6 +84,10 @@ export default function (Glide, Components, Events) {
 
       return (rootWidth / perView) - (peek * 2 / perView)
     }
+  })
+
+  listen('build.init.before', () => {
+    DIMENSIONS.apply()
   })
 
   return DIMENSIONS

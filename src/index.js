@@ -1,8 +1,8 @@
+import defaults from './defaults'
 import { warn } from './utils/log'
 import { init } from './core/index'
-import { EventsBus } from './core/event/index'
 
-import defaults from './defaults'
+import { Events } from './core/event/events-bus'
 
 import Run from './components/run'
 import Html from './components/html'
@@ -74,7 +74,7 @@ export default class Glide {
    * @return {Void}
    */
   mount (extensions) {
-    init(this, Object.assign(extensions, COMPONENTS), new EventsBus())
+    init(this, Object.assign(extensions, COMPONENTS), Events)
   }
 
   /**

@@ -1,8 +1,10 @@
 import debounce from '../utils/debounce'
-import { EventsBinder } from '../core/event/index'
+import { emit } from '../core/event/events-bus'
+
+import EventsBinder from '../core/event/events-binder'
 
 export default function (Glide, Components) {
-  let Binder = new EventsBinder()
+  const Binder = new EventsBinder()
 
   return {
     /**
@@ -19,7 +21,13 @@ export default function (Glide, Components) {
      * @return {Void}
      */
     bind () {
-      Binder.on('resize', window, debounce(this.resize.bind(this), Glide.settings.debounce.resize))
+      Binder.on('resize', window, debounce(() => {
+        emit('window.resize.before')
+
+        this.resize()
+
+        emit('window.resize.after')
+      }, Glide.settings.debounce.resize))
     },
 
     /**
@@ -38,10 +46,7 @@ export default function (Glide, Components) {
      * @returns {Void}
      */
     resize () {
-      Components.Transition.disable()
-      Components.Build.init()
-      Components.Run.make(`=${Glide.index}`).init()
-      Components.Transition.enable()
+      emit('window.resize')
     }
   }
 }

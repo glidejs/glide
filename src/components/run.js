@@ -8,8 +8,7 @@ export default function (Glide, Components) {
      * @return {self}
      */
     init () {
-      this.flag = false
-      this.running = false
+      this._f = false
     },
 
     /**
@@ -32,7 +31,7 @@ export default function (Glide, Components) {
           } else if (this.isEnd()) {
             Glide.index = 0
 
-            this.flag = true
+            this._f = true
           } else {
             Glide.index++
           }
@@ -46,7 +45,7 @@ export default function (Glide, Components) {
           } else if (this.isStart()) {
             Glide.index = this.length
 
-            this.flag = true
+            this._f = true
           } else {
             Glide.index--
           }
@@ -90,7 +89,7 @@ export default function (Glide, Components) {
      * @return {Boolean}
      */
     isOffset (direction) {
-      return this.flag && this.direction === direction
+      return this._f && this.direction === direction
     }
   }
 

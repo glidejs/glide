@@ -274,8 +274,7 @@ var Run = function (Glide, Components) {
      * @return {self}
      */
     init: function init() {
-      this.flag = false;
-      this.running = false;
+      this._f = false;
     },
 
 
@@ -299,7 +298,7 @@ var Run = function (Glide, Components) {
           } else if (this.isEnd()) {
             Glide.index = 0;
 
-            this.flag = true;
+            this._f = true;
           } else {
             Glide.index++;
           }
@@ -313,7 +312,7 @@ var Run = function (Glide, Components) {
           } else if (this.isStart()) {
             Glide.index = this.length;
 
-            this.flag = true;
+            this._f = true;
           } else {
             Glide.index--;
           }
@@ -360,7 +359,7 @@ var Run = function (Glide, Components) {
      * @return {Boolean}
      */
     isOffset: function isOffset(direction) {
-      return this.flag && this.direction === direction;
+      return this._f && this.direction === direction;
     }
   };
 
@@ -436,7 +435,7 @@ var Html = function (Glide, Components) {
      * @return {Object}
      */
     get: function get() {
-      return HTML._el;
+      return HTML._e;
     },
 
 
@@ -451,7 +450,7 @@ var Html = function (Glide, Components) {
       }
 
       if (exist(el)) {
-        HTML._el = el;
+        HTML._e = el;
       } else {
         warn('Main element must be a existing HTML node');
       }
@@ -465,7 +464,7 @@ var Html = function (Glide, Components) {
      * @return {Object}
      */
     get: function get() {
-      return HTML._tr;
+      return HTML._t;
     },
 
 
@@ -476,7 +475,7 @@ var Html = function (Glide, Components) {
      */
     set: function set(tr) {
       if (exist(tr)) {
-        HTML._tr = tr;
+        HTML._t = tr;
       } else {
         warn('Could not find track element. Please use ' + TRACK_SELECTOR + ' attribute.');
       }
@@ -496,6 +495,25 @@ var Html = function (Glide, Components) {
 
   return HTML;
 };
+
+/**
+ * Converts value entered as number, string 
+ * or procentage to actual width value.
+ * 
+ * @param {Number|String} value 
+ * @param {Number} width 
+ * @returns {Number}
+ */
+function converter(value, width) {
+  var coverted = parseInt(value, 10);
+  var isPercentage = value.indexOf('%') >= 0;
+
+  if (isPercentage) {
+    return parseInt(width * (coverted / 100));
+  }
+
+  return coverted;
+}
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
@@ -557,17 +575,6 @@ var _extends = Object.assign || function (target) {
   return target;
 };
 
-function normalize(value, dimension) {
-  var normalized = parseInt(value, 10);
-  var isPercentage = value.indexOf('%') >= 0;
-
-  if (isPercentage) {
-    return parseInt(dimension * (normalized / 100));
-  }
-
-  return normalized;
-}
-
 var Peek = function (Glide, Components) {
   var PEEK = {
     /**
@@ -587,7 +594,7 @@ var Peek = function (Glide, Components) {
      * @returns {Number}
      */
     get: function get$$1() {
-      return PEEK._s;
+      return PEEK._v;
     },
 
 
@@ -601,14 +608,14 @@ var Peek = function (Glide, Components) {
     set: function set$$1(value) {
       if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object') {
         if (typeof value.before === 'string') {
-          value.before = normalize(value.before, Components.Dimensions.width);
+          value.before = converter(value.before, Components.Dimensions.width);
         }
         if (typeof value.after === 'string') {
-          value.after = normalize(value.after, Components.Dimensions.width);
+          value.after = converter(value.after, Components.Dimensions.width);
         }
       } else {
         if (typeof value === 'string') {
-          value = normalize(value, Components.Dimensions.width);
+          value = converter(value, Components.Dimensions.width);
         }
 
         if (typeof value !== 'number') {
@@ -616,7 +623,7 @@ var Peek = function (Glide, Components) {
         }
       }
 
-      PEEK._s = value;
+      PEEK._v = value;
     }
   });
 
@@ -1254,16 +1261,14 @@ var Window = function (Glide, Components) {
     /**
      * Handler for `resize` event. Rebuilds glide,
      * so its status matches new dimentions.
+     * 
+     * @returns {Void}
      */
     resize: function resize() {
-      if (!Glide.destroyed) {
-        Components.Transition.disable();
-
-        Components.Build.init();
-        Components.Run.make('=' + Glide.index).init();
-
-        Components.Transition.enable();
-      }
+      Components.Transition.disable();
+      Components.Build.init();
+      Components.Run.make('=' + Glide.index).init();
+      Components.Transition.enable();
     }
   };
 };
@@ -1452,10 +1457,10 @@ var Controls = function (Glide, Components) {
      * @return {Void}
      */
     init: function init() {
-      this._els = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR);
+      this._e = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR);
 
-      for (var i = 0; i < this._els.length; i++) {
-        this.bind(this._els[i]);
+      for (var i = 0; i < this._e.length; i++) {
+        this.bind(this._e[i]);
       }
     },
 
@@ -1808,7 +1813,7 @@ var Animation = function (Glide, Components) {
      * @returns {Void}
      */
     init: function init() {
-      this._d = 0;
+      this._o = 0;
     },
 
 
@@ -1858,7 +1863,7 @@ var Animation = function (Glide, Components) {
      * @return {Object}
      */
     get: function get() {
-      return ANIMATION._d;
+      return ANIMATION._o;
     },
 
 
@@ -1868,7 +1873,7 @@ var Animation = function (Glide, Components) {
      * @return {Object}
      */
     set: function set(value) {
-      ANIMATION._d = typeof value !== 'undefined' ? parseInt(value) : 0;
+      ANIMATION._o = typeof value !== 'undefined' ? parseInt(value) : 0;
     }
   });
 

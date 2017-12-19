@@ -17,7 +17,7 @@ export default function (Glide, Components) {
      * @returns {Void}
      */
     init () {
-      this._d = 0
+      this._o = 0
     },
 
     /**
@@ -64,7 +64,7 @@ export default function (Glide, Components) {
      * @return {Object}
      */
     get () {
-      return ANIMATION._d
+      return ANIMATION._o
     },
 
     /**
@@ -73,7 +73,7 @@ export default function (Glide, Components) {
      * @return {Object}
      */
     set (value) {
-      ANIMATION._d = typeof value !== 'undefined' ? parseInt(value) : 0
+      ANIMATION._o = typeof value !== 'undefined' ? parseInt(value) : 0
     }
   })
 

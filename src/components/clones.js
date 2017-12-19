@@ -85,7 +85,7 @@ export default function (Glide, Components) {
       if (Glide.isType('carousel')) {
         return Components.Dimensions.slideWidth * CLONES.items.length
       }
-      
+
       return 0
     }
   })

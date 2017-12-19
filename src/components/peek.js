@@ -1,16 +1,6 @@
 import { warn } from '../utils/log'
 import { define } from '../utils/object'
-
-function normalize (value, dimension) {
-  let normalized = parseInt(value, 10)
-  let isPercentage = value.indexOf('%') >= 0
-
-  if (isPercentage) {
-    return parseInt(dimension * (normalized / 100))
-  }
-
-  return normalized
-}
+import { dimension } from '../utils/unit'
 
 export default function (Glide, Components) {
   const PEEK = {
@@ -31,7 +21,7 @@ export default function (Glide, Components) {
      * @returns {Number}
      */
     get () {
-      return PEEK._s
+      return PEEK._v
     },
 
     /**
@@ -44,14 +34,14 @@ export default function (Glide, Components) {
     set (value) {
       if (typeof value === 'object') {
         if (typeof value.before === 'string') {
-          value.before = normalize(value.before, Components.Dimensions.width)
+          value.before = dimension(value.before, Components.Dimensions.width)
         }
         if (typeof value.after === 'string') {
-          value.after = normalize(value.after, Components.Dimensions.width)
+          value.after = dimension(value.after, Components.Dimensions.width)
         }
       } else {
         if (typeof value === 'string') {
-          value = normalize(value, Components.Dimensions.width)
+          value = dimension(value, Components.Dimensions.width)
         }
 
         if (typeof value !== 'number') {
@@ -59,7 +49,7 @@ export default function (Glide, Components) {
         }
       }
 
-      PEEK._s = value
+      PEEK._v = value
     }
   })
 

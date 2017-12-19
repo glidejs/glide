@@ -26,7 +26,7 @@ export default function (Glide, Components) {
      * @return {Object}
      */
     get () {
-      return HTML._el
+      return HTML._e
     },
 
     /**
@@ -40,7 +40,7 @@ export default function (Glide, Components) {
       }
 
       if (exist(el)) {
-        HTML._el = el
+        HTML._e = el
       } else {
         warn('Main element must be a existing HTML node')
       }
@@ -54,7 +54,7 @@ export default function (Glide, Components) {
      * @return {Object}
      */
     get () {
-      return HTML._tr
+      return HTML._t
     },
 
     /**
@@ -64,7 +64,7 @@ export default function (Glide, Components) {
      */
     set (tr) {
       if (exist(tr)) {
-        HTML._tr = tr
+        HTML._t = tr
       } else {
         warn(`Could not find track element. Please use ${TRACK_SELECTOR} attribute.`)
       }

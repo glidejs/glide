@@ -34,16 +34,14 @@ export default function (Glide, Components) {
     /**
      * Handler for `resize` event. Rebuilds glide,
      * so its status matches new dimentions.
+     * 
+     * @returns {Void}
      */
     resize () {
-      if (!Glide.destroyed) {
-        Components.Transition.disable()
-
-        Components.Build.init()
-        Components.Run.make(`=${Glide.index}`).init()
-
-        Components.Transition.enable()
-      }
+      Components.Transition.disable()
+      Components.Build.init()
+      Components.Run.make(`=${Glide.index}`).init()
+      Components.Transition.enable()
     }
   }
 }

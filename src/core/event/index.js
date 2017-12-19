@@ -1,4 +1,4 @@
-export class EventBus {
+export class EventsBinder {
   /**
    * Construct events.
    */

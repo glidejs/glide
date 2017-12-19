@@ -1,5 +1,5 @@
 import { define } from '../utils/object'
-import { EventBus } from '../core/event/index'
+import { EventsBinder } from '../core/event/index'
 
 export default function (Glide, Components) {
   const START_EVENTS = ['touchstart', 'mousedown']
@@ -12,7 +12,7 @@ export default function (Glide, Components) {
   let swipeStartY = 0
   let dragging = false
 
-  let Events = new EventBus()
+  let Events = new EventsBinder()
 
   const SWIPE = {
     /**

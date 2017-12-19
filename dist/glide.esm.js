@@ -687,13 +687,13 @@ var Build = function (Glide, Components) {
   };
 };
 
-var EventBus = function () {
+var EventsBinder = function () {
   /**
    * Construct events.
    */
-  function EventBus() {
+  function EventsBinder() {
     var listeners = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    classCallCheck(this, EventBus);
+    classCallCheck(this, EventsBinder);
 
     this.listeners = listeners;
   }
@@ -708,7 +708,7 @@ var EventBus = function () {
    */
 
 
-  createClass(EventBus, [{
+  createClass(EventsBinder, [{
     key: 'on',
     value: function on(events, el, closure) {
       if (typeof events === 'string') {
@@ -744,7 +744,7 @@ var EventBus = function () {
       }
     }
   }]);
-  return EventBus;
+  return EventsBinder;
 }();
 
 var Swipe = function (Glide, Components) {
@@ -758,7 +758,7 @@ var Swipe = function (Glide, Components) {
   var swipeStartY = 0;
   var dragging = false;
 
-  var Events = new EventBus();
+  var Events = new EventsBinder();
 
   var SWIPE = {
     /**
@@ -1219,7 +1219,7 @@ function debounce(func, wait, immediate) {
 }
 
 var Window = function (Glide, Components) {
-  var Events = new EventBus();
+  var Events = new EventsBinder();
 
   return {
     /**
@@ -1269,7 +1269,7 @@ var Window = function (Glide, Components) {
 };
 
 var Images = function (Glide, Components) {
-  var Events = new EventBus();
+  var Events = new EventsBinder();
 
   return {
     /**
@@ -1317,7 +1317,7 @@ var Anchors = function (Glide, Components) {
   var detached = false;
   var prevented = false;
 
-  var Events = new EventBus();
+  var Events = new EventsBinder();
 
   var ANCHORS = {
     /**
@@ -1440,7 +1440,7 @@ var Anchors = function (Glide, Components) {
 };
 
 var Controls = function (Glide, Components) {
-  var Events = new EventBus();
+  var Events = new EventsBinder();
 
   var CONTROLS_SELECTOR = '[data-glide-el="controls"]';
 
@@ -1504,8 +1504,34 @@ var Controls = function (Glide, Components) {
   };
 };
 
+var Keyboard = function (Glide, Components) {
+  var Events = new EventsBinder();
+
+  return {
+    init: function init() {
+      if (Glide.settings.keyboard) {
+        this.bind();
+      }
+    },
+    bind: function bind() {
+      Events.on('keyup', document, this.press);
+    },
+    unbind: function unbind() {
+      Events.on('keyup', document, this.press);
+    },
+    press: function press(event) {
+      if (event.keyCode === 39) {
+        Components.Run.make('>');
+      }
+      if (event.keyCode === 37) {
+        Components.Run.make('<');
+      }
+    }
+  };
+};
+
 var Autoplay = function (Glide, Components) {
-  var Events = new EventBus();
+  var Events = new EventsBinder();
 
   var AUTOPLAY = {
     init: function init() {
@@ -2051,6 +2077,7 @@ var COMPONENTS = {
   Window: Window,
   Anchors: Anchors,
   Controls: Controls,
+  Keyboard: Keyboard,
   Callbacks: Callbacks,
   Swipe: Swipe,
   Build: Build,

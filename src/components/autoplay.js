@@ -1,8 +1,8 @@
 import { define } from '../utils/object'
-import { EventBus } from '../core/event/index'
+import { EventsBinder } from '../core/event/index'
 
 export default function (Glide, Components) {
-  let Events = new EventBus()
+  let Events = new EventsBinder()
 
   const AUTOPLAY = {
     init () {

@@ -14,6 +14,7 @@ import Window from './components/window'
 import Images from './components/images'
 import Anchors from './components/anchors'
 import Controls from './components/controls'
+import Keyboard from './components/keyboard'
 import Autoplay from './components/autoplay'
 import Callbacks from './components/callbacks'
 import Animation from './components/animation'
@@ -34,6 +35,7 @@ const COMPONENTS = {
   Window,
   Anchors,
   Controls,
+  Keyboard,
   Callbacks,
   Swipe,
   Build,

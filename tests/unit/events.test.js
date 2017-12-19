@@ -1,13 +1,13 @@
-import { EventBus } from '../../src/core/event/index'
+import { EventsBinder } from '../../src/core/event/index'
 
 let events = null
 let event = 'click'
 let callback = jest.fn()
 let element = document.createElement('div')
 
-describe('EventBus should', () => {
+describe('EventsBinder should', () => {
   beforeEach(() => {
-    events = new EventBus()
+    events = new EventsBinder()
   })
 
   test('create and remove event listener from element', () => {

@@ -510,15 +510,16 @@ var Html = function (Glide, Components) {
  * @param {Number} width 
  * @returns {Number}
  */
-function converter(value, width) {
-  var coverted = parseInt(value, 10);
-  var isPercentage = value.indexOf('%') >= 0;
+function dimension(value, width) {
+  var isPercentage = typeof value === 'string' && value.indexOf('%') >= 0;
+
+  value = parseInt(value, 10);
 
   if (isPercentage) {
-    return parseInt(width * (coverted / 100));
+    return parseInt(width * (value / 100));
   }
 
-  return coverted;
+  return value;
 }
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
@@ -614,14 +615,14 @@ var Peek = function (Glide, Components) {
     set: function set$$1(value) {
       if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object') {
         if (typeof value.before === 'string') {
-          value.before = converter(value.before, Components.Dimensions.width);
+          value.before = dimension(value.before, Components.Dimensions.width);
         }
         if (typeof value.after === 'string') {
-          value.after = converter(value.after, Components.Dimensions.width);
+          value.after = dimension(value.after, Components.Dimensions.width);
         }
       } else {
         if (typeof value === 'string') {
-          value = converter(value, Components.Dimensions.width);
+          value = dimension(value, Components.Dimensions.width);
         }
 
         if (typeof value !== 'number') {
@@ -2076,23 +2077,25 @@ var Dimensions = function (Glide, Components) {
 };
 
 var COMPONENTS = {
+  // Required
   Html: Html,
   Translate: Translate,
   Transition: Transition,
   Dimensions: Dimensions,
   Animation: Animation,
   Peek: Peek,
-  Height: Height,
   Clones: Clones,
-  Images: Images,
   Window: Window,
+  Callbacks: Callbacks,
+  Build: Build,
+  Run: Run,
+  // Optional
+  Swipe: Swipe,
+  Height: Height,
+  Images: Images,
   Anchors: Anchors,
   Controls: Controls,
   Keyboard: Keyboard,
-  Callbacks: Callbacks,
-  Swipe: Swipe,
-  Build: Build,
-  Run: Run,
   Autoplay: Autoplay
 };
 

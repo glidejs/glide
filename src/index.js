@@ -23,23 +23,25 @@ import Translate from './components/translate'
 import Dimensions from './components/dimensions'
 
 const COMPONENTS = {
+  // Required
   Html,
   Translate,
   Transition,
   Dimensions,
   Animation,
   Peek,
-  Height,
   Clones,
-  Images,
   Window,
+  Callbacks,
+  Build,
+  Run,
+  // Optional
+  Swipe,
+  Height,
+  Images,
   Anchors,
   Controls,
   Keyboard,
-  Callbacks,
-  Swipe,
-  Build,
-  Run,
   Autoplay
 }
 

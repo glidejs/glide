@@ -1,7 +1,7 @@
 import { EventsBinder } from '../core/event/index'
 
 export default function (Glide, Components) {
-  let Events = new EventsBinder()
+  let Binder = new EventsBinder()
 
   return {
     /**
@@ -19,7 +19,7 @@ export default function (Glide, Components) {
      * @return {Void}
      */
     bind () {
-      Events.on('dragstart', Components.Html.wrapper, this.dragstart)
+      Binder.on('dragstart', Components.Html.wrapper, this.dragstart)
     },
 
     /**
@@ -28,7 +28,7 @@ export default function (Glide, Components) {
      * @return {Void}
      */
     unbind () {
-      Events.off('dragstart', Components.Html.wrapper, this.dragstart)
+      Binder.off('dragstart', Components.Html.wrapper, this.dragstart)
     },
 
     /**

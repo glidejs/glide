@@ -9,7 +9,7 @@ const TYPES = {
   Carousel
 }
 
-export default function (Glide, Components) {
+export default function (Glide, Components, Events) {
   const ANIMATION = {
     /**
      * Constructs animation component.
@@ -18,6 +18,10 @@ export default function (Glide, Components) {
      */
     init () {
       this._o = 0
+
+      Events.listen('build.init.before', () => {
+        this.make()
+      })
     },
 
     /**

@@ -2,7 +2,7 @@ import debounce from '../utils/debounce'
 import { EventsBinder } from '../core/event/index'
 
 export default function (Glide, Components) {
-  let Events = new EventsBinder()
+  let Binder = new EventsBinder()
 
   return {
     /**
@@ -19,7 +19,7 @@ export default function (Glide, Components) {
      * @return {Void}
      */
     bind () {
-      Events.on('resize', window, debounce(this.resize.bind(this), Glide.settings.debounce.resize))
+      Binder.on('resize', window, debounce(this.resize.bind(this), Glide.settings.debounce.resize))
     },
 
     /**
@@ -28,7 +28,7 @@ export default function (Glide, Components) {
      * @return {Void}
      */
     unbind () {
-      Events.off('resize', window)
+      Binder.off('resize', window)
     },
 
     /**

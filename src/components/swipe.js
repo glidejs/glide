@@ -12,7 +12,7 @@ export default function (Glide, Components) {
   let swipeStartY = 0
   let dragging = false
 
-  let Events = new EventsBinder()
+  let Binder = new EventsBinder()
 
   const SWIPE = {
     /**
@@ -145,11 +145,11 @@ export default function (Glide, Components) {
    */
     bindSwipeStart () {
       if (Glide.settings.swipeThreshold) {
-        Events.on(START_EVENTS[0], Components.Html.wrapper, this.start.bind(this))
+        Binder.on(START_EVENTS[0], Components.Html.wrapper, this.start.bind(this))
       }
 
       if (Glide.settings.dragThreshold) {
-        Events.on(START_EVENTS[1], Components.Html.wrapper, this.start.bind(this))
+        Binder.on(START_EVENTS[1], Components.Html.wrapper, this.start.bind(this))
       }
     },
 
@@ -159,8 +159,8 @@ export default function (Glide, Components) {
      * @return {Void}
      */
     unbindSwipeStart () {
-      Events.off(START_EVENTS[0], Components.Html.wrapper)
-      Events.off(START_EVENTS[1], Components.Html.wrapper)
+      Binder.off(START_EVENTS[0], Components.Html.wrapper)
+      Binder.off(START_EVENTS[1], Components.Html.wrapper)
     },
 
     /**
@@ -169,7 +169,7 @@ export default function (Glide, Components) {
      * @return {Void}
      */
     bindSwipeMove () {
-      Events.on(MOVE_EVENTS, Components.Html.wrapper, this.move.bind(this))
+      Binder.on(MOVE_EVENTS, Components.Html.wrapper, this.move.bind(this))
     },
 
     /**
@@ -178,7 +178,7 @@ export default function (Glide, Components) {
      * @return {Void}
      */
     unbindSwipeMove () {
-      Events.off(MOVE_EVENTS, Components.Html.wrapper)
+      Binder.off(MOVE_EVENTS, Components.Html.wrapper)
     },
 
     /**
@@ -187,7 +187,7 @@ export default function (Glide, Components) {
      * @return {Void}
      */
     bindSwipeEnd () {
-      Events.on(END_EVENTS, Components.Html.wrapper, this.end.bind(this))
+      Binder.on(END_EVENTS, Components.Html.wrapper, this.end.bind(this))
     },
 
     /**
@@ -196,7 +196,7 @@ export default function (Glide, Components) {
      * @return {Void}
      */
     unbindSwipeEnd () {
-      Events.off(END_EVENTS, Components.Html.wrapper)
+      Binder.off(END_EVENTS, Components.Html.wrapper)
     },
 
     touches (event) {

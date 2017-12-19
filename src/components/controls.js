@@ -1,7 +1,7 @@
 import { EventsBinder } from '../core/event/index'
 
 export default function (Glide, Components) {
-  let Events = new EventsBinder()
+  let Binder = new EventsBinder()
 
   const CONTROLS_SELECTOR = '[data-glide-el="controls"]'
 
@@ -29,7 +29,7 @@ export default function (Glide, Components) {
       let children = wrapper.children
 
       for (var i = 0; i < children.length; i++) {
-        Events.on(['click', 'touchstart'], children[i], this.click)
+        Binder.on(['click', 'touchstart'], children[i], this.click)
       }
     },
 
@@ -42,7 +42,7 @@ export default function (Glide, Components) {
       let children = wrapper.children
 
       for (var i = 0; i < children.length; i++) {
-        Events.off(['click', 'touchstart'], children[i])
+        Binder.off(['click', 'touchstart'], children[i])
       }
     },
 

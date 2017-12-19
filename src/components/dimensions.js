@@ -1,7 +1,13 @@
 import { define } from '../utils/object'
 
-export default function (Glide, Components) {
+export default function (Glide, Components, Events) {
   const DIMENSIONS = {
+    init () {
+      Events.listen('build.init.before', () => {
+        this.apply()
+      })
+    },
+
     /**
      * Applys dimentions to the glide HTML elements.
      *

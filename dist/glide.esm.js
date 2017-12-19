@@ -23,11 +23,11 @@ function warn(msg) {
  *
  * @returns {Void}
  */
-function init(glide, extensions) {
+function init(glide, extensions, events) {
   var components = {};
 
   for (var name in extensions) {
-    components[name] = extensions[name](glide, components);
+    components[name] = extensions[name](glide, components, events);
   }
 
   for (var _name in components) {
@@ -37,7 +37,171 @@ function init(glide, extensions) {
   }
 }
 
-var defaults = {
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+};
+
+
+
+
+
+
+
+
+
+
+
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+
+
+
+
+
+
+var _extends = Object.assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
+
+var EventsBinder = function () {
+  /**
+   * Construct events.
+   */
+  function EventsBinder() {
+    var listeners = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    classCallCheck(this, EventsBinder);
+
+    this.listeners = listeners;
+  }
+
+  /**
+   * Adds events listeners to arrows HTML elements.
+   *
+   * @param  {Array} events
+   * @param  {HTMLElement} el
+   * @param  {Closure} closure
+   * @return {Void}
+   */
+
+
+  createClass(EventsBinder, [{
+    key: 'on',
+    value: function on(events, el, closure) {
+      if (typeof events === 'string') {
+        events = [events];
+      }
+
+      for (var i = 0; i < events.length; i++) {
+        this.listeners[events[i]] = closure;
+
+        el.addEventListener(events[i], this.listeners[events[i]]);
+      }
+    }
+
+    /**
+     * Removes event listeners from arrows HTML elements.
+     *
+     * @param  {Array} events
+     * @param  {HTMLElement} el
+     * @return {Void}
+     */
+
+  }, {
+    key: 'off',
+    value: function off(events, el) {
+      if (typeof events === 'string') {
+        events = [events];
+      }
+
+      for (var i = 0; i < events.length; i++) {
+        el.removeEventListener(events[i], this.listeners[events[i]]);
+
+        delete this.listeners[events[i]];
+      }
+    }
+  }]);
+  return EventsBinder;
+}();
+
+var EventsBus = function () {
+  function EventsBus() {
+    var topics = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    classCallCheck(this, EventsBus);
+
+    this.topics = topics;
+    this.hOP = topics.hasOwnProperty;
+  }
+
+  createClass(EventsBus, [{
+    key: 'listen',
+    value: function listen(topic, listener) {
+      // Create the topic's object if not yet created
+      if (!this.hOP.call(this.topics, topic)) {
+        this.topics[topic] = [];
+      }
+
+      // Add the listener to queue
+      var index = this.topics[topic].push(listener) - 1;
+
+      // Provide handle back for removal of topic
+      return {
+        remove: function remove() {
+          delete this.topics[topic][index];
+        }
+      };
+    }
+  }, {
+    key: 'emit',
+    value: function emit(topic, info) {
+      // If the topic doesn't exist, or there's no listeners in queue, just leave
+      if (!this.hOP.call(this.topics, topic)) {
+        return;
+      }
+
+      // Cycle through topics queue, fire!
+      this.topics[topic].forEach(function (item) {
+        item(info || {});
+      });
+    }
+  }]);
+  return EventsBus;
+}();
+
+var defaults$1 = {
   /**
    * Type of the slides movements. Available types:
    * `slider` - Rewinds slider to the start/end when it reaches first or last slide.
@@ -516,67 +680,7 @@ function dimension(value, width) {
   return value;
 }
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-  return typeof obj;
-} : function (obj) {
-  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-};
-
-
-
-
-
-
-
-
-
-
-
-var classCallCheck = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
-
-var createClass = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-}();
-
-
-
-
-
-
-
-var _extends = Object.assign || function (target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i];
-
-    for (var key in source) {
-      if (Object.prototype.hasOwnProperty.call(source, key)) {
-        target[key] = source[key];
-      }
-    }
-  }
-
-  return target;
-};
-
-var Peek = function (Glide, Components) {
+var Peek = function (Glide, Components, Events) {
   var PEEK = {
     /**
      * Setups how much to peek based on settings.
@@ -631,27 +735,20 @@ var Peek = function (Glide, Components) {
   return PEEK;
 };
 
-var Build = function (Glide, Components) {
+var Build = function (Glide, Components, Events) {
   return {
     /**
      * Init glide building. Adds classes, sets
      * dimensions and setups initial state.
      */
     init: function init() {
-      Components.Transition.disable();
-      Components.Dimensions.apply();
-      Components.Peek.init();
-      Components.Animation.make();
-
-      if (Glide.isType('carousel')) {
-        Components.Clones.append();
-      }
+      Events.emit('build.init.before');
 
       this.typeClass();
       this.activeClass();
       this.setHeight();
 
-      Components.Transition.enable();
+      Events.emit('build.init.after');
     },
 
 
@@ -695,66 +792,6 @@ var Build = function (Glide, Components) {
   };
 };
 
-var EventsBinder = function () {
-  /**
-   * Construct events.
-   */
-  function EventsBinder() {
-    var listeners = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    classCallCheck(this, EventsBinder);
-
-    this.listeners = listeners;
-  }
-
-  /**
-   * Adds events listeners to arrows HTML elements.
-   *
-   * @param  {Array} events
-   * @param  {HTMLElement} el
-   * @param  {Closure} closure
-   * @return {Void}
-   */
-
-
-  createClass(EventsBinder, [{
-    key: 'on',
-    value: function on(events, el, closure) {
-      if (typeof events === 'string') {
-        events = [events];
-      }
-
-      for (var i = 0; i < events.length; i++) {
-        this.listeners[events[i]] = closure;
-
-        el.addEventListener(events[i], this.listeners[events[i]]);
-      }
-    }
-
-    /**
-     * Removes event listeners from arrows HTML elements.
-     *
-     * @param  {Array} events
-     * @param  {HTMLElement} el
-     * @return {Void}
-     */
-
-  }, {
-    key: 'off',
-    value: function off(events, el) {
-      if (typeof events === 'string') {
-        events = [events];
-      }
-
-      for (var i = 0; i < events.length; i++) {
-        el.removeEventListener(events[i], this.listeners[events[i]]);
-
-        delete this.listeners[events[i]];
-      }
-    }
-  }]);
-  return EventsBinder;
-}();
-
 var Swipe = function (Glide, Components) {
   var START_EVENTS = ['touchstart', 'mousedown'];
   var MOVE_EVENTS = ['touchmove', 'mousemove'];
@@ -766,7 +803,7 @@ var Swipe = function (Glide, Components) {
   var swipeStartY = 0;
   var dragging = false;
 
-  var Events = new EventsBinder();
+  var Binder = new EventsBinder();
 
   var SWIPE = {
     /**
@@ -899,11 +936,11 @@ var Swipe = function (Glide, Components) {
     */
     bindSwipeStart: function bindSwipeStart() {
       if (Glide.settings.swipeThreshold) {
-        Events.on(START_EVENTS[0], Components.Html.wrapper, this.start.bind(this));
+        Binder.on(START_EVENTS[0], Components.Html.wrapper, this.start.bind(this));
       }
 
       if (Glide.settings.dragThreshold) {
-        Events.on(START_EVENTS[1], Components.Html.wrapper, this.start.bind(this));
+        Binder.on(START_EVENTS[1], Components.Html.wrapper, this.start.bind(this));
       }
     },
 
@@ -914,8 +951,8 @@ var Swipe = function (Glide, Components) {
      * @return {Void}
      */
     unbindSwipeStart: function unbindSwipeStart() {
-      Events.off(START_EVENTS[0], Components.Html.wrapper);
-      Events.off(START_EVENTS[1], Components.Html.wrapper);
+      Binder.off(START_EVENTS[0], Components.Html.wrapper);
+      Binder.off(START_EVENTS[1], Components.Html.wrapper);
     },
 
 
@@ -925,7 +962,7 @@ var Swipe = function (Glide, Components) {
      * @return {Void}
      */
     bindSwipeMove: function bindSwipeMove() {
-      Events.on(MOVE_EVENTS, Components.Html.wrapper, this.move.bind(this));
+      Binder.on(MOVE_EVENTS, Components.Html.wrapper, this.move.bind(this));
     },
 
 
@@ -935,7 +972,7 @@ var Swipe = function (Glide, Components) {
      * @return {Void}
      */
     unbindSwipeMove: function unbindSwipeMove() {
-      Events.off(MOVE_EVENTS, Components.Html.wrapper);
+      Binder.off(MOVE_EVENTS, Components.Html.wrapper);
     },
 
 
@@ -945,7 +982,7 @@ var Swipe = function (Glide, Components) {
      * @return {Void}
      */
     bindSwipeEnd: function bindSwipeEnd() {
-      Events.on(END_EVENTS, Components.Html.wrapper, this.end.bind(this));
+      Binder.on(END_EVENTS, Components.Html.wrapper, this.end.bind(this));
     },
 
 
@@ -955,7 +992,7 @@ var Swipe = function (Glide, Components) {
      * @return {Void}
      */
     unbindSwipeEnd: function unbindSwipeEnd() {
-      Events.off(END_EVENTS, Components.Html.wrapper);
+      Binder.off(END_EVENTS, Components.Html.wrapper);
     },
     touches: function touches(event) {
       if (MOUSE_EVENTS.includes(event.type)) {
@@ -1023,7 +1060,7 @@ var Swipe = function (Glide, Components) {
   return SWIPE;
 };
 
-var Clones = function (Glide, Components) {
+var Clones = function (Glide, Components, Events) {
   var pattern = [];
 
   var CLONES = {
@@ -1032,6 +1069,12 @@ var Clones = function (Glide, Components) {
 
       this.map();
       this.collect();
+
+      if (Glide.isType('carousel')) {
+        Events.listen('build.init.before', function () {
+          Components.Clones.append();
+        });
+      }
     },
 
 
@@ -1227,7 +1270,7 @@ function debounce(func, wait, immediate) {
 }
 
 var Window = function (Glide, Components) {
-  var Events = new EventsBinder();
+  var Binder = new EventsBinder();
 
   return {
     /**
@@ -1245,7 +1288,7 @@ var Window = function (Glide, Components) {
      * @return {Void}
      */
     bind: function bind() {
-      Events.on('resize', window, debounce(this.resize.bind(this), Glide.settings.debounce.resize));
+      Binder.on('resize', window, debounce(this.resize.bind(this), Glide.settings.debounce.resize));
     },
 
 
@@ -1255,7 +1298,7 @@ var Window = function (Glide, Components) {
      * @return {Void}
      */
     unbind: function unbind() {
-      Events.off('resize', window);
+      Binder.off('resize', window);
     },
 
 
@@ -1275,7 +1318,7 @@ var Window = function (Glide, Components) {
 };
 
 var Images = function (Glide, Components) {
-  var Events = new EventsBinder();
+  var Binder = new EventsBinder();
 
   return {
     /**
@@ -1294,7 +1337,7 @@ var Images = function (Glide, Components) {
      * @return {Void}
      */
     bind: function bind() {
-      Events.on('dragstart', Components.Html.wrapper, this.dragstart);
+      Binder.on('dragstart', Components.Html.wrapper, this.dragstart);
     },
 
 
@@ -1304,7 +1347,7 @@ var Images = function (Glide, Components) {
      * @return {Void}
      */
     unbind: function unbind() {
-      Events.off('dragstart', Components.Html.wrapper, this.dragstart);
+      Binder.off('dragstart', Components.Html.wrapper, this.dragstart);
     },
 
 
@@ -1323,7 +1366,7 @@ var Anchors = function (Glide, Components) {
   var detached = false;
   var prevented = false;
 
-  var Events = new EventsBinder();
+  var Binder = new EventsBinder();
 
   var ANCHORS = {
     /**
@@ -1344,7 +1387,7 @@ var Anchors = function (Glide, Components) {
      * @return {Void}
      */
     bind: function bind() {
-      Events.on('click', Components.Html.wrapper, this.click.bind(this));
+      Binder.on('click', Components.Html.wrapper, this.click.bind(this));
     },
 
 
@@ -1446,7 +1489,7 @@ var Anchors = function (Glide, Components) {
 };
 
 var Controls = function (Glide, Components) {
-  var Events = new EventsBinder();
+  var Binder = new EventsBinder();
 
   var CONTROLS_SELECTOR = '[data-glide-el="controls"]';
 
@@ -1475,7 +1518,7 @@ var Controls = function (Glide, Components) {
       var children = wrapper.children;
 
       for (var i = 0; i < children.length; i++) {
-        Events.on(['click', 'touchstart'], children[i], this.click);
+        Binder.on(['click', 'touchstart'], children[i], this.click);
       }
     },
 
@@ -1489,7 +1532,7 @@ var Controls = function (Glide, Components) {
       var children = wrapper.children;
 
       for (var i = 0; i < children.length; i++) {
-        Events.off(['click', 'touchstart'], children[i]);
+        Binder.off(['click', 'touchstart'], children[i]);
       }
     },
 
@@ -1511,7 +1554,7 @@ var Controls = function (Glide, Components) {
 };
 
 var Keyboard = function (Glide, Components) {
-  var Events = new EventsBinder();
+  var Binder = new EventsBinder();
 
   return {
     init: function init() {
@@ -1520,10 +1563,10 @@ var Keyboard = function (Glide, Components) {
       }
     },
     bind: function bind() {
-      Events.on('keyup', document, this.press);
+      Binder.on('keyup', document, this.press);
     },
     unbind: function unbind() {
-      Events.on('keyup', document, this.press);
+      Binder.on('keyup', document, this.press);
     },
     press: function press(event) {
       if (event.keyCode === 39) {
@@ -1537,7 +1580,7 @@ var Keyboard = function (Glide, Components) {
 };
 
 var Autoplay = function (Glide, Components) {
-  var Events = new EventsBinder();
+  var Binder = new EventsBinder();
 
   var AUTOPLAY = {
     init: function init() {
@@ -1577,11 +1620,11 @@ var Autoplay = function (Glide, Components) {
     events: function events() {
       var _this2 = this;
 
-      Events.on('mouseover', Components.Html.root, function () {
+      Binder.on('mouseover', Components.Html.root, function () {
         _this2.stop();
       });
 
-      Events.on('mouseout', Components.Html.root, function () {
+      Binder.on('mouseout', Components.Html.root, function () {
         _this2.start();
       });
     }
@@ -1806,7 +1849,7 @@ var TYPES = {
   Carousel: Carousel
 };
 
-var Animation = function (Glide, Components) {
+var Animation = function (Glide, Components, Events) {
   var ANIMATION = {
     /**
      * Constructs animation component.
@@ -1814,7 +1857,13 @@ var Animation = function (Glide, Components) {
      * @returns {Void}
      */
     init: function init() {
+      var _this = this;
+
       this._o = 0;
+
+      Events.listen('build.init.before', function () {
+        _this.make();
+      });
     },
 
 
@@ -1892,10 +1941,23 @@ var Animation = function (Glide, Components) {
   return ANIMATION;
 };
 
-var Transition = function (Glide, Components) {
+var Transition = function (Glide, Components, Events) {
   var disabled = false;
 
   return {
+    init: function init() {
+      var _this = this;
+
+      Events.listen('build.init.before', function () {
+        _this.disable();
+      });
+
+      Events.listen('build.init.after', function () {
+        _this.enable();
+      });
+    },
+
+
     /**
      * Composes string of the CSS transition.
      *
@@ -1980,8 +2042,17 @@ var Translate = function (Glide, Components) {
   };
 };
 
-var Dimensions = function (Glide, Components) {
+var Dimensions = function (Glide, Components, Events) {
   var DIMENSIONS = {
+    init: function init() {
+      var _this = this;
+
+      Events.listen('build.init.before', function () {
+        _this.apply();
+      });
+    },
+
+
     /**
      * Applys dimentions to the glide HTML elements.
      *
@@ -2104,7 +2175,7 @@ var Glide = function () {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     classCallCheck(this, Glide);
 
-    this.settings = _extends(defaults, options);
+    this.settings = _extends(defaults$1, options);
 
     this.disabled = false;
     this.selector = selector;
@@ -2128,7 +2199,7 @@ var Glide = function () {
   createClass(Glide, [{
     key: 'mount',
     value: function mount(extensions) {
-      init(this, _extends(extensions, COMPONENTS));
+      init(this, _extends(extensions, COMPONENTS), new EventsBus());
     }
 
     /**

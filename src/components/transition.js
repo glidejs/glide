@@ -1,8 +1,18 @@
 
-export default function (Glide, Components) {
+export default function (Glide, Components, Events) {
   let disabled = false
 
   return {
+    init () {
+      Events.listen('build.init.before', () => {
+        this.disable()
+      })
+
+      Events.listen('build.init.after', () => {
+        this.enable()
+      })
+    },
+
     /**
      * Composes string of the CSS transition.
      *

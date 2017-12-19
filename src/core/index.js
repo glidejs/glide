@@ -7,11 +7,11 @@
  *
  * @returns {Void}
  */
-export function init (glide, extensions) {
+export function init (glide, extensions, events) {
   const components = {}
 
   for (let name in extensions) {
-    components[name] = extensions[name](glide, components)
+    components[name] = extensions[name](glide, components, events)
   }
 
   for (let name in components) {

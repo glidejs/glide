@@ -5,7 +5,7 @@ export default function (Glide, Components) {
   let detached = false
   let prevented = false
 
-  let Events = new EventsBinder()
+  let Binder = new EventsBinder()
 
   const ANCHORS = {
     /**
@@ -25,7 +25,7 @@ export default function (Glide, Components) {
      * @return {Void}
      */
     bind () {
-      Events.on('click', Components.Html.wrapper, this.click.bind(this))
+      Binder.on('click', Components.Html.wrapper, this.click.bind(this))
     },
 
     /**

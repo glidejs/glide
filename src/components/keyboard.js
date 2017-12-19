@@ -1,7 +1,7 @@
 import { EventsBinder } from '../core/event/index'
 
 export default function (Glide, Components) {
-  let Events = new EventsBinder()
+  let Binder = new EventsBinder()
 
   return {
     init () {
@@ -11,11 +11,11 @@ export default function (Glide, Components) {
     },
 
     bind () {
-      Events.on('keyup', document, this.press)
+      Binder.on('keyup', document, this.press)
     },
 
     unbind () {
-      Events.on('keyup', document, this.press)
+      Binder.on('keyup', document, this.press)
     },
 
     press (event) {

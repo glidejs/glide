@@ -1,6 +1,6 @@
 import { define } from '../utils/object'
 
-export default function (Glide, Components) {
+export default function (Glide, Components, Events) {
   let pattern = []
 
   const CLONES = {
@@ -9,6 +9,12 @@ export default function (Glide, Components) {
 
       this.map()
       this.collect()
+
+      if (Glide.isType('carousel')) {
+        Events.listen('build.init.before', () => {
+          Components.Clones.append()
+        })
+      }
     },
 
     /**

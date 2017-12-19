@@ -2,7 +2,7 @@ import { warn } from '../utils/log'
 import { define } from '../utils/object'
 import { dimension } from '../utils/unit'
 
-export default function (Glide, Components) {
+export default function (Glide, Components, Events) {
   const PEEK = {
     /**
      * Setups how much to peek based on settings.

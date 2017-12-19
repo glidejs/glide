@@ -2,7 +2,7 @@ import { define } from '../utils/object'
 import { EventsBinder } from '../core/event/index'
 
 export default function (Glide, Components) {
-  let Events = new EventsBinder()
+  let Binder = new EventsBinder()
 
   const AUTOPLAY = {
     init () {
@@ -39,11 +39,11 @@ export default function (Glide, Components) {
     },
 
     events () {
-      Events.on('mouseover', Components.Html.root, () => {
+      Binder.on('mouseover', Components.Html.root, () => {
         this.stop()
       })
 
-      Events.on('mouseout', Components.Html.root, () => {
+      Binder.on('mouseout', Components.Html.root, () => {
         this.start()
       })
     }

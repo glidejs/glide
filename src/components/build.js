@@ -1,26 +1,19 @@
 import { siblings } from '../utils/dom'
 
-export default function (Glide, Components) {
+export default function (Glide, Components, Events) {
   return {
     /**
      * Init glide building. Adds classes, sets
      * dimensions and setups initial state.
      */
     init () {
-      Components.Transition.disable()
-      Components.Dimensions.apply()
-      Components.Peek.init()
-      Components.Animation.make()
-
-      if (Glide.isType('carousel')) {
-        Components.Clones.append()
-      }
+      Events.emit('build.init.before')
 
       this.typeClass()
       this.activeClass()
       this.setHeight()
 
-      Components.Transition.enable()
+      Events.emit('build.init.after')
     },
 
     /**

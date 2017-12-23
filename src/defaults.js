@@ -1,6 +1,8 @@
 export default {
   /**
-   * Type of the slides movements. Available types:
+   * Type of the slides movements.
+   *
+   * Available types:
    * `slider` - Rewinds slider to the start/end when it reaches first or last slide.
    * `carousel` - Changes slides without starting over when it reaches first or last slide.
    * `slideshow` - Changes slides with fade effect.
@@ -10,7 +12,9 @@ export default {
   type: 'slider',
 
   /**
-   * Direction of the slider movements. Available modes:
+   * Direction of the slider movements.
+   *
+   * Available modes:
    * `horizontal` - Move slider on X axis.
    * `vertical` - Move slider on Y axis.
    *
@@ -33,7 +37,9 @@ export default {
   perView: 1,
 
   /**
-   * Focus currently active slide at specifed position in the track. Available inputs:
+   * Focus currently active slide at specifed position in the track.
+   *
+   * Available inputs:
    * `center` - Current slide will be always focused at the center of track.
    * `(1,2,3...)` - Current slide will be focused at the specifed position number.
    *
@@ -113,7 +119,7 @@ export default {
   animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
 
   /**
-   * Optimalize resize and swipemove events. Call at most once per every wait in milliseconds.
+   * Debounce constly events at most once per every wait in milliseconds.
    *
    * @type {Number}
    */
@@ -130,14 +136,14 @@ export default {
    * Distance value of the next and previous viewports which have to be
    * peeked in current view. Can be number, percentage or pixels.
    * Left and right peeking can be setup separetly with a
-   * object `{ left: 100, right: 100 }`
+   * directions object `{ left: 100, right: 100 }`.
    *
    * @type {Number|String|Object}
    */
   peek: 0,
 
   /**
-   * List of internally used Html classes.
+   * List of internally used html classes.
    *
    * @type {Object}
    */
@@ -153,7 +159,7 @@ export default {
   },
 
   /**
-   * Additional slider extension components.
+   * Additional slider extensions.
    *
    * @type {Object}
    */

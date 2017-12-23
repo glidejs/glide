@@ -12,7 +12,9 @@
 
 var defaults = {
   /**
-   * Type of the slides movements. Available types:
+   * Type of the slides movements.
+   *
+   * Available types:
    * `slider` - Rewinds slider to the start/end when it reaches first or last slide.
    * `carousel` - Changes slides without starting over when it reaches first or last slide.
    * `slideshow` - Changes slides with fade effect.
@@ -22,7 +24,9 @@ var defaults = {
   type: 'slider',
 
   /**
-   * Direction of the slider movements. Available modes:
+   * Direction of the slider movements.
+   *
+   * Available modes:
    * `horizontal` - Move slider on X axis.
    * `vertical` - Move slider on Y axis.
    *
@@ -45,7 +49,9 @@ var defaults = {
   perView: 1,
 
   /**
-   * Focus currently active slide at specifed position in the track. Available inputs:
+   * Focus currently active slide at specifed position in the track.
+   *
+   * Available inputs:
    * `center` - Current slide will be always focused at the center of track.
    * `(1,2,3...)` - Current slide will be focused at the specifed position number.
    *
@@ -125,7 +131,7 @@ var defaults = {
   animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
 
   /**
-   * Optimalize resize and swipemove events. Call at most once per every wait in milliseconds.
+   * Debounce constly events at most once per every wait in milliseconds.
    *
    * @type {Number}
    */
@@ -142,14 +148,14 @@ var defaults = {
    * Distance value of the next and previous viewports which have to be
    * peeked in current view. Can be number, percentage or pixels.
    * Left and right peeking can be setup separetly with a
-   * object `{ left: 100, right: 100 }`
+   * directions object `{ left: 100, right: 100 }`.
    *
    * @type {Number|String|Object}
    */
   peek: 0,
 
   /**
-   * List of internally used Html classes.
+   * List of internally used html classes.
    *
    * @type {Object}
    */
@@ -165,7 +171,7 @@ var defaults = {
   },
 
   /**
-   * Additional slider extension components.
+   * Additional slider extensions.
    *
    * @type {Object}
    */
@@ -236,7 +242,7 @@ var defaults = {
 };
 
 /**
- * Outputs warning message to the boswer console.
+ * Outputs warning message to the bowser console.
  *
  * @param  {String} msg
  * @return {Void}
@@ -385,9 +391,23 @@ function listen(event, handler) {
 }
 
 function emit(event, context) {
+  if (event.constructor === Array) {
+    for (var i = 0; i < event.length; i++) {
+      emit(event[i], context);
+    }
+  }
+
   return Events.emit(event, context);
 }
 
+/**
+ * Defines getter and setter property on the specified object.
+ *
+ * @param  {Object} obj         Object where property has to be defined.
+ * @param  {String} prop        Name of the defined property.
+ * @param  {Object} definition  Get and set definitions for the property.
+ * @return {Void}
+ */
 function define(obj, prop, definition) {
   Object.defineProperty(obj, prop, definition);
 }
@@ -400,7 +420,7 @@ var Run = function (Glide, Components) {
      * @return {self}
      */
     init: function init() {
-      this._f = false;
+      this._j = false;
     },
 
 
@@ -412,47 +432,48 @@ var Run = function (Glide, Components) {
      * @param {Function} callback
      */
     make: function make(move, callback) {
-      this.direction = move.substr(0, 1);
-      this.steps = move.substr(1) ? move.substr(1) : 0;
+      this._m = {
+        direction: move.substr(0, 1),
+        steps: move.substr(1) ? move.substr(1) : 0
+      };
 
-      switch (this.direction) {
+      emit('run.make', this._m);
+
+      switch (this._m.direction) {
         case '>':
-          if (typeof this.steps === 'number' && parseInt(this.steps) !== 0) {
-            Glide.index += Math.min(this.length - Glide.index, -parseInt(this.steps));
-          } else if (this.steps === '>') {
+          if (typeof this._m.steps === 'number' && parseInt(this._m.steps) !== 0) {
+            Glide.index += Math.min(this.length - Glide.index, -parseInt(this._m.steps));
+          } else if (this._m.steps === '>') {
             Glide.index = this.length;
           } else if (this.isEnd()) {
             Glide.index = 0;
 
-            this._f = true;
+            emit('run.make.atEnd', this._m);
           } else {
             Glide.index++;
           }
           break;
 
         case '<':
-          if (typeof this.steps === 'number' && parseInt(this.steps) !== 0) {
-            Glide.index -= Math.min(Glide.index, parseInt(this.steps));
-          } else if (this.steps === '<') {
+          if (typeof this._m.steps === 'number' && parseInt(this._m.steps) !== 0) {
+            Glide.index -= Math.min(Glide.index, parseInt(this._m.steps));
+          } else if (this._m.steps === '<') {
             Glide.index = 0;
           } else if (this.isStart()) {
             Glide.index = this.length;
 
-            this._f = true;
+            emit('run.make.atStart', this._m);
           } else {
             Glide.index--;
           }
           break;
 
         case '=':
-          Glide.index = this.steps;
+          Glide.index = this._m.steps;
           break;
       }
 
-      emit('run.make.after', {
-        direction: this.direction,
-        steps: this.steps
-      });
+      emit('run.make.after', this._m);
 
       return this;
     },
@@ -484,7 +505,7 @@ var Run = function (Glide, Components) {
      * @return {Boolean}
      */
     isOffset: function isOffset(direction) {
-      return this._f && this.direction === direction;
+      return this._j && this._m.direction === direction;
     }
   };
 
@@ -504,11 +525,21 @@ var Run = function (Glide, Components) {
     RUN.make('=' + Glide.index).init();
   });
 
+  listen(['run.make.atStart', 'run.make.atEnd'], function () {
+    RUN._j = true;
+  });
+
+  listen('animation.make.after', function () {
+    if (RUN.isOffset('<') || RUN.isOffset('>')) {
+      RUN._j = false;
+    }
+  });
+
   return RUN;
 };
 
 /**
- * Finds siblings elements of the passed node.
+ * Finds siblings nodes of the passed node.
  *
  * @param  {HTMLElement} node
  * @return {Array}
@@ -527,7 +558,7 @@ function siblings(node) {
 }
 
 /**
- * Checks if precised node exist and is a valid element.
+ * Checks if passed node exist and is a valid element.
  *
  * @param  {HTMLElement} node
  * @return {Boolean}
@@ -626,11 +657,11 @@ var Html = function (Glide, Components) {
 };
 
 /**
- * Converts value entered as number, string 
+ * Converts value entered as number, string
  * or procentage to actual width value.
- * 
- * @param {Number|String} value 
- * @param {Number} width 
+ *
+ * @param {Number|String} value
+ * @param {Number} width
  * @returns {Number}
  */
 function dimension(value, width) {
@@ -1228,8 +1259,12 @@ var Height = function (Glide, Components, Events$$1) {
   return HEIGHT;
 };
 
-// Similar to ES6's rest param (http://ariya.ofilabs.com/2013/03/es6-and-rest-parameter.html)
-// This accumulates the arguments passed into an array, after a given index.
+/**
+ * Similar to ES6's rest param (http://ariya.ofilabs.com/2013/03/es6-and-rest-parameter.html)
+ * This accumulates the arguments passed into an array, after a given index.
+ *
+ * @source https://github.com/jashkenas/underscore
+ */
 var restArgs = function restArgs(func, startIndex) {
   startIndex = startIndex == null ? func.length - 1 : +startIndex;
   return function () {
@@ -1256,14 +1291,26 @@ var restArgs = function restArgs(func, startIndex) {
   };
 };
 
-// Delays a function for the given number of milliseconds, and then calls
-// it with the arguments supplied.
+/**
+ * Delays a function for the given number of milliseconds, and then calls
+ * it with the arguments supplied.
+ *
+ * @source https://github.com/jashkenas/underscore
+ */
 var delay = restArgs(function (func, wait, args) {
   return setTimeout(function () {
     return func.apply(null, args);
   }, wait);
 });
 
+/**
+ * Returns a function, that, as long as it continues to be invoked, will not
+ * be triggered. The function will be called after it stops being called for
+ * N milliseconds. If `immediate` is passed, trigger the function on the
+ * leading edge, instead of the trailing.
+ *
+ * @source https://github.com/jashkenas/underscore
+ */
 function debounce(func, wait, immediate) {
   var timeout, result;
 
@@ -1719,6 +1766,12 @@ var Callbacks = function (Glide, Components) {
   return CALLBACKS;
 };
 
+/**
+ * Makes a string's first character uppercase.
+ *
+ * @param  {String} string
+ * @return {String}
+ */
 function ucfirst(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -1733,7 +1786,7 @@ function ucfirst(string) {
 var Grow = function (Glide, Components) {
   return {
     /**
-     * Adds to the passed translate width of the half of clones. 
+     * Adds to the passed translate width of the half of clones.
      *
      * @param  {Number} translate
      * @return {Number}
@@ -1768,10 +1821,10 @@ var Peeking = function (Glide, Components) {
         var peek = Components.Peek.value;
 
         if ((typeof peek === 'undefined' ? 'undefined' : _typeof(peek)) === 'object') {
-          _translate -= peek.before;
-        } else {
-          _translate -= peek;
+          return _translate - peek.before;
         }
+
+        return _translate - peek;
       }
 
       return _translate;
@@ -1789,25 +1842,21 @@ var Peeking = function (Glide, Components) {
 var Focusing = function (Glide, Components) {
   return {
     /**
-     * Modifies passed translate value with according to the `focusAt` setting.
+     * Modifies passed translate value with index in the `focusAt` setting.
      *
      * @param  {Number} translate
      * @return {Number}
      */
     translate: function translate(_translate) {
-      var width = Components.Dimensions.width;
       var focusAt = Glide.settings.focusAt;
+      var width = Components.Dimensions.width;
       var slideWidth = Components.Dimensions.slideWidth;
 
       if (focusAt === 'center') {
-        _translate -= width / 2 - slideWidth / 2;
+        return _translate - (width / 2 - slideWidth / 2);
       }
 
-      if (focusAt >= 0) {
-        _translate -= slideWidth * focusAt;
-      }
-
-      return _translate;
+      return _translate - slideWidth * focusAt;
     }
   };
 };
@@ -1820,7 +1869,7 @@ var Focusing = function (Glide, Components) {
 var TRANSFORMERS = [Grow, Peeking, Focusing];
 
 /**
- * Applies diffrent transformers on glide translate value.
+ * Applies diffrent transformers on translate value.
  *
  * @param  {Glide} Glide
  * @param  {Components} Components
@@ -1829,7 +1878,7 @@ var TRANSFORMERS = [Grow, Peeking, Focusing];
 var transformer = function (Glide, Components) {
   return {
     /**
-     * Pipline translate value registered transformers.
+     * Piplines translate value with registered transformers.
      *
      * @param  {Number} translate
      * @return {Number}
@@ -1844,12 +1893,26 @@ var transformer = function (Glide, Components) {
   };
 };
 
+/**
+ * Provide a transform value of the `slider` type glide.
+ *
+ * @param  {Glide}  Glide
+ * @param  {Object} Components
+ * @return {Number}
+ */
 var Slider = function (Glide, Components) {
   var translate = Components.Dimensions.slideWidth * Glide.index;
 
   return transformer(Glide, Components).transform(translate);
 };
 
+/**
+ * Provide a transform value of the `carousel` type glide.
+ *
+ * @param  {Glide}  Glide
+ * @param  {Object} Components
+ * @return {Number}
+ */
 var Carousel = function (Glide, Components) {
   var mutator = transformer(Glide, Components);
 
@@ -1857,22 +1920,20 @@ var Carousel = function (Glide, Components) {
   var slidesLength = Components.Html.slides.length;
 
   if (Components.Run.isOffset('<')) {
-    Components.Run._f = false;
-
-    Components.Animation.after(function () {
-      Components.Transition.disable();
-      Components.Translate.set(mutator.transform(slideWidth * (slidesLength - 1)));
+    Components.Transition.after(function () {
+      emit('carousel.jumping', {
+        movement: mutator.transform(slideWidth * (slidesLength - 1))
+      });
     });
 
     return mutator.transform(-slideWidth);
   }
 
   if (Components.Run.isOffset('>')) {
-    Components.Run._f = false;
-
-    Components.Animation.after(function () {
-      Components.Transition.disable();
-      Components.Translate.set(mutator.transform(0));
+    Components.Transition.after(function () {
+      emit('carousel.jumping', {
+        movement: mutator.transform(0)
+      });
     });
 
     return mutator.transform(slideWidth * slidesLength);
@@ -1913,22 +1974,9 @@ var Animation = function (Glide, Components, Events$$1) {
         movement: this.movement
       });
 
-      this.after(function () {
+      Components.Transition.after(function () {
         emit('animation.make.after');
       });
-    },
-
-
-    /**
-     * Runs callback after animation.
-     *
-     * @param  {Closure} callback
-     * @return {Integer}
-     */
-    after: function after(callback) {
-      setTimeout(function () {
-        callback();
-      }, Glide.settings.animationDuration + 10);
     }
   };
 
@@ -2019,6 +2067,19 @@ var Transition = function (Glide, Components, Events$$1) {
 
 
     /**
+     * Runs callback after animation.
+     *
+     * @param  {Closure} callback
+     * @return {Integer}
+     */
+    after: function after(callback) {
+      setTimeout(function () {
+        callback();
+      }, Glide.settings.animationDuration + 10);
+    },
+
+
+    /**
      * Enable transition.
      *
      * @return {self}
@@ -2046,11 +2107,11 @@ var Transition = function (Glide, Components, Events$$1) {
     TRANSITION.set();
   });
 
-  listen(['build.init.before', 'window.resize.before'], function () {
+  listen(['build.init.before', 'window.resize.before', 'carousel.jumping'], function () {
     TRANSITION.disable();
   });
 
-  listen(['build.init.after', 'window.resize.after'], function () {
+  listen(['build.init.after', 'window.resize.after', 'run.make.after'], function () {
     TRANSITION.enable();
   });
 
@@ -2083,7 +2144,7 @@ var Translate = function (Glide, Components) {
     }
   };
 
-  listen('animation.make', function (data) {
+  listen(['animation.make', 'carousel.jumping'], function (data) {
     TRANSLATE.set(data.movement);
   });
 
@@ -2267,7 +2328,7 @@ var Glide = function () {
   }, {
     key: 'settings',
     get: function get$$1() {
-      return this._opt;
+      return this._o;
     }
 
     /**
@@ -2279,7 +2340,7 @@ var Glide = function () {
     ,
     set: function set$$1(opt) {
       if ((typeof opt === 'undefined' ? 'undefined' : _typeof(opt)) === 'object') {
-        this._opt = opt;
+        this._o = opt;
       } else {
         warn('Options must be an `object` instance.');
       }

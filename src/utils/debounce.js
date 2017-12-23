@@ -1,5 +1,9 @@
-// Similar to ES6's rest param (http://ariya.ofilabs.com/2013/03/es6-and-rest-parameter.html)
-// This accumulates the arguments passed into an array, after a given index.
+/**
+ * Similar to ES6's rest param (http://ariya.ofilabs.com/2013/03/es6-and-rest-parameter.html)
+ * This accumulates the arguments passed into an array, after a given index.
+ *
+ * @source https://github.com/jashkenas/underscore
+ */
 var restArgs = function (func, startIndex) {
   startIndex = startIndex == null ? func.length - 1 : +startIndex
   return function () {
@@ -26,14 +30,26 @@ var restArgs = function (func, startIndex) {
   }
 }
 
-// Delays a function for the given number of milliseconds, and then calls
-// it with the arguments supplied.
+/**
+ * Delays a function for the given number of milliseconds, and then calls
+ * it with the arguments supplied.
+ *
+ * @source https://github.com/jashkenas/underscore
+ */
 var delay = restArgs(function (func, wait, args) {
   return setTimeout(function () {
     return func.apply(null, args)
   }, wait)
 })
 
+/**
+ * Returns a function, that, as long as it continues to be invoked, will not
+ * be triggered. The function will be called after it stops being called for
+ * N milliseconds. If `immediate` is passed, trigger the function on the
+ * leading edge, instead of the trailing.
+ *
+ * @source https://github.com/jashkenas/underscore
+ */
 export default function debounce (func, wait, immediate) {
   var timeout, result
 

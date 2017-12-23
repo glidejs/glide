@@ -8,7 +8,7 @@
 export default function (Glide, Components) {
   return {
     /**
-     * Adds to the passed translate width of the half of clones. 
+     * Adds to the passed translate width of the half of clones.
      *
      * @param  {Number} translate
      * @return {Number}

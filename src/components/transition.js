@@ -33,6 +33,18 @@ export default function (Glide, Components, Events) {
     },
 
     /**
+     * Runs callback after animation.
+     *
+     * @param  {Closure} callback
+     * @return {Integer}
+     */
+    after (callback) {
+      setTimeout(() => {
+        callback()
+      }, Glide.settings.animationDuration + 10)
+    },
+
+    /**
      * Enable transition.
      *
      * @return {self}
@@ -59,11 +71,11 @@ export default function (Glide, Components, Events) {
     TRANSITION.set()
   })
 
-  listen(['build.init.before', 'window.resize.before'], () => {
+  listen(['build.init.before', 'window.resize.before', 'carousel.jumping'], () => {
     TRANSITION.disable()
   })
 
-  listen(['build.init.after', 'window.resize.after'], () => {
+  listen(['build.init.after', 'window.resize.after', 'run.make.after'], () => {
     TRANSITION.enable()
   })
 

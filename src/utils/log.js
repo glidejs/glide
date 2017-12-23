@@ -1,5 +1,5 @@
 /**
- * Outputs warning message to the boswer console.
+ * Outputs warning message to the bowser console.
  *
  * @param  {String} msg
  * @return {Void}

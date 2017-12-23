@@ -18,10 +18,10 @@ export default function (Glide, Components) {
         let peek = Components.Peek.value
 
         if (typeof peek === 'object') {
-          translate -= peek.before
-        } else {
-          translate -= peek
+          return translate - peek.before
         }
+
+        return translate - peek
       }
 
       return translate

@@ -25,7 +25,7 @@ export default function (Glide, Components) {
     }
   }
 
-  listen('animation.make', (data) => {
+  listen(['animation.make', 'carousel.jumping'], (data) => {
     TRANSLATE.set(data.movement)
   })
 

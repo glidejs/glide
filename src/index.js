@@ -83,7 +83,7 @@ export default class Glide {
    * @return {Object}
    */
   get settings () {
-    return this._opt
+    return this._o
   }
 
   /**
@@ -94,7 +94,7 @@ export default class Glide {
    */
   set settings (opt) {
     if (typeof opt === 'object') {
-      this._opt = opt
+      this._o = opt
     } else {
       warn('Options must be an `object` instance.')
     }

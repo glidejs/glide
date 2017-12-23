@@ -47,5 +47,11 @@ export function listen (event, handler) {
 }
 
 export function emit (event, context) {
+  if (event.constructor === Array) {
+    for (let i = 0; i < event.length; i++) {
+      emit(event[i], context)
+    }
+  }
+
   return Events.emit(event, context)
 }

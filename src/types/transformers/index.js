@@ -14,7 +14,7 @@ const TRANSFORMERS = [
 ]
 
 /**
- * Applies diffrent transformers on glide translate value.
+ * Applies diffrent transformers on translate value.
  *
  * @param  {Glide} Glide
  * @param  {Components} Components
@@ -23,7 +23,7 @@ const TRANSFORMERS = [
 export default function (Glide, Components) {
   return {
     /**
-     * Pipline translate value registered transformers.
+     * Piplines translate value with registered transformers.
      *
      * @param  {Number} translate
      * @return {Number}

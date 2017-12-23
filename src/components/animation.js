@@ -34,21 +34,9 @@ export default function (Glide, Components, Events) {
         movement: this.movement
       })
 
-      this.after(() => {
+      Components.Transition.after(() => {
         emit('animation.make.after')
       })
-    },
-
-    /**
-     * Runs callback after animation.
-     *
-     * @param  {Closure} callback
-     * @return {Integer}
-     */
-    after (callback) {
-      setTimeout(() => {
-        callback()
-      }, Glide.settings.animationDuration + 10)
     }
   }
 

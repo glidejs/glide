@@ -1,5 +1,5 @@
 /**
- * Returns current time.
+ * Returns a current time.
  *
  * @return {Number}
  */

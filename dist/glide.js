@@ -915,7 +915,7 @@ var Swipe = function (Glide, Components) {
         swipeSin = Math.asin(swipeCathetus / swipeHypotenuse);
 
         if (swipeSin * 180 / Math.PI < Glide.settings.touchAngle) {
-          Components.Animation.make(subExSx * parseFloat(Glide.settings.touchRatio));
+          Components.Movement.make(subExSx * parseFloat(Glide.settings.touchRatio));
         }
 
         if (swipeSin * 180 / Math.PI < Glide.settings.touchAngle) {
@@ -966,7 +966,7 @@ var Swipe = function (Glide, Components) {
           Components.Run.make('>' + steps);
         } else {
           // While swipe don't reach distance apply previous transform.
-          Components.Animation.make();
+          Components.Movement.make();
         }
 
         Components.Html.wrapper.classList.remove(Glide.settings.classes.dragging);
@@ -1735,37 +1735,6 @@ var Autoplay = function (Glide, Components) {
   return AUTOPLAY;
 };
 
-var Callbacks = function (Glide, Components) {
-  var CALLBACKS = {
-    /**
-     * Calls callback with attributes.
-     *
-     * @param {Function} closure
-     * @return {self}
-     */
-    call: function call(closure) {
-      if (closure !== 'undefined' && typeof closure === 'function') {
-        closure(this.params);
-      }
-    }
-  };
-
-  define(CALLBACKS, 'params', {
-    /**
-     * Gets attributes for events callback's parameter.
-     *
-     * @return {Object}
-     */
-    get: function get() {
-      return {
-        index: Glide.index
-      };
-    }
-  });
-
-  return CALLBACKS;
-};
-
 /**
  * Makes a string's first character uppercase.
  *
@@ -1947,8 +1916,8 @@ var TYPES = {
   Carousel: Carousel
 };
 
-var Animation = function (Glide, Components, Events$$1) {
-  var ANIMATION = {
+var Movement = function (Glide, Components, Events$$1) {
+  var MOVEMENT = {
     /**
      * Constructs animation component.
      *
@@ -1971,7 +1940,7 @@ var Animation = function (Glide, Components, Events$$1) {
       this.offset = offset;
 
       emit('animation.make', {
-        movement: this.movement
+        movement: this.value
       });
 
       Components.Transition.after(function () {
@@ -1980,14 +1949,14 @@ var Animation = function (Glide, Components, Events$$1) {
     }
   };
 
-  define(ANIMATION, 'offset', {
+  define(MOVEMENT, 'offset', {
     /**
      * Gets node of the glide track with slides.
      *
      * @return {Object}
      */
     get: function get() {
-      return ANIMATION._o;
+      return MOVEMENT._o;
     },
 
 
@@ -1997,11 +1966,11 @@ var Animation = function (Glide, Components, Events$$1) {
      * @return {Object}
      */
     set: function set(value) {
-      ANIMATION._o = typeof value !== 'undefined' ? parseInt(value) : 0;
+      MOVEMENT._o = typeof value !== 'undefined' ? parseInt(value) : 0;
     }
   });
 
-  define(ANIMATION, 'translate', {
+  define(MOVEMENT, 'translate', {
     /**
      * Gets translate value based on configured glide type.
      *
@@ -2012,7 +1981,7 @@ var Animation = function (Glide, Components, Events$$1) {
     }
   });
 
-  define(ANIMATION, 'movement', {
+  define(MOVEMENT, 'value', {
     /**
      * Gets translate value based on configured glide type.
      *
@@ -2024,10 +1993,41 @@ var Animation = function (Glide, Components, Events$$1) {
   });
 
   listen(['build.init.before', 'run.make.after'], function () {
-    ANIMATION.make();
+    MOVEMENT.make();
   });
 
-  return ANIMATION;
+  return MOVEMENT;
+};
+
+var Callbacks = function (Glide, Components) {
+  var CALLBACKS = {
+    /**
+     * Calls callback with attributes.
+     *
+     * @param {Function} closure
+     * @return {self}
+     */
+    call: function call(closure) {
+      if (closure !== 'undefined' && typeof closure === 'function') {
+        closure(this.params);
+      }
+    }
+  };
+
+  define(CALLBACKS, 'params', {
+    /**
+     * Gets attributes for events callback's parameter.
+     *
+     * @return {Object}
+     */
+    get: function get() {
+      return {
+        index: Glide.index
+      };
+    }
+  });
+
+  return CALLBACKS;
 };
 
 var Transition = function (Glide, Components, Events$$1) {
@@ -2251,7 +2251,7 @@ var COMPONENTS = {
   Translate: Translate,
   Transition: Transition,
   Dimensions: Dimensions,
-  Animation: Animation,
+  Movement: Movement,
   Peek: Peek,
   Clones: Clones,
   Window: Window,

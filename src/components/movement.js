@@ -11,7 +11,7 @@ const TYPES = {
 }
 
 export default function (Glide, Components, Events) {
-  const ANIMATION = {
+  const MOVEMENT = {
     /**
      * Constructs animation component.
      *
@@ -31,7 +31,7 @@ export default function (Glide, Components, Events) {
       this.offset = offset
 
       emit('animation.make', {
-        movement: this.movement
+        movement: this.value
       })
 
       Components.Transition.after(() => {
@@ -40,14 +40,14 @@ export default function (Glide, Components, Events) {
     }
   }
 
-  define(ANIMATION, 'offset', {
+  define(MOVEMENT, 'offset', {
     /**
      * Gets node of the glide track with slides.
      *
      * @return {Object}
      */
     get () {
-      return ANIMATION._o
+      return MOVEMENT._o
     },
 
     /**
@@ -56,11 +56,11 @@ export default function (Glide, Components, Events) {
      * @return {Object}
      */
     set (value) {
-      ANIMATION._o = typeof value !== 'undefined' ? parseInt(value) : 0
+      MOVEMENT._o = typeof value !== 'undefined' ? parseInt(value) : 0
     }
   })
 
-  define(ANIMATION, 'translate', {
+  define(MOVEMENT, 'translate', {
     /**
      * Gets translate value based on configured glide type.
      *
@@ -71,7 +71,7 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  define(ANIMATION, 'movement', {
+  define(MOVEMENT, 'value', {
     /**
      * Gets translate value based on configured glide type.
      *
@@ -83,8 +83,8 @@ export default function (Glide, Components, Events) {
   })
 
   listen(['build.init.before', 'run.make.after'], () => {
-    ANIMATION.make()
+    MOVEMENT.make()
   })
 
-  return ANIMATION
+  return MOVEMENT
 }

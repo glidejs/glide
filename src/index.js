@@ -17,8 +17,8 @@ import Anchors from './components/anchors'
 import Controls from './components/controls'
 import Keyboard from './components/keyboard'
 import Autoplay from './components/autoplay'
+import Movement from './components/movement'
 import Callbacks from './components/callbacks'
-import Animation from './components/animation'
 import Transition from './components/transition'
 import Translate from './components/translate'
 import Dimensions from './components/dimensions'
@@ -29,7 +29,7 @@ const COMPONENTS = {
   Translate,
   Transition,
   Dimensions,
-  Animation,
+  Movement,
   Peek,
   Clones,
   Window,

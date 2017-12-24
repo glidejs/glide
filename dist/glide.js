@@ -432,48 +432,45 @@ var Run = function (Glide, Components) {
      * @param {Function} callback
      */
     make: function make(move, callback) {
-      this._m = {
-        direction: move.substr(0, 1),
-        steps: move.substr(1) ? move.substr(1) : 0
-      };
+      this.value = move;
 
-      emit('run.make', this._m);
+      emit('run.before', this.value);
 
-      switch (this._m.direction) {
+      switch (this.value.direction) {
         case '>':
-          if (typeof this._m.steps === 'number' && parseInt(this._m.steps) !== 0) {
-            Glide.index += Math.min(this.length - Glide.index, -parseInt(this._m.steps));
-          } else if (this._m.steps === '>') {
+          if (typeof this.value.steps === 'number' && parseInt(this.value.steps) !== 0) {
+            Glide.index += Math.min(this.length - Glide.index, -parseInt(this.value.steps));
+          } else if (this.value.steps === '>') {
             Glide.index = this.length;
           } else if (this.isEnd()) {
             Glide.index = 0;
 
-            emit('run.make.atEnd', this._m);
+            emit('run.end', this.value);
           } else {
             Glide.index++;
           }
           break;
 
         case '<':
-          if (typeof this._m.steps === 'number' && parseInt(this._m.steps) !== 0) {
-            Glide.index -= Math.min(Glide.index, parseInt(this._m.steps));
-          } else if (this._m.steps === '<') {
+          if (typeof this.value.steps === 'number' && parseInt(this.value.steps) !== 0) {
+            Glide.index -= Math.min(Glide.index, parseInt(this.value.steps));
+          } else if (this.value.steps === '<') {
             Glide.index = 0;
           } else if (this.isStart()) {
             Glide.index = this.length;
 
-            emit('run.make.atStart', this._m);
+            emit('run.start', this.value);
           } else {
             Glide.index--;
           }
           break;
 
         case '=':
-          Glide.index = this._m.steps;
+          Glide.index = this.value.steps;
           break;
       }
 
-      emit('run.make.after', this._m);
+      emit('run.after', this.value);
 
       return this;
     },
@@ -505,9 +502,21 @@ var Run = function (Glide, Components) {
      * @return {Boolean}
      */
     isOffset: function isOffset(direction) {
-      return this._j && this._m.direction === direction;
+      return this._j && this.value.direction === direction;
     }
   };
+
+  define(RUN, 'value', {
+    get: function get() {
+      return {
+        direction: this._v.substr(0, 1),
+        steps: this._v.substr(1) ? this._v.substr(1) : 0
+      };
+    },
+    set: function set(value) {
+      this._v = value;
+    }
+  });
 
   define(RUN, 'length', {
     /**
@@ -521,15 +530,15 @@ var Run = function (Glide, Components) {
     }
   });
 
-  listen('window.resize', function () {
+  listen('resize', function () {
     RUN.make('=' + Glide.index).init();
   });
 
-  listen(['run.make.atStart', 'run.make.atEnd'], function () {
+  listen(['run.start', 'run.end'], function () {
     RUN._j = true;
   });
 
-  listen('animation.make.after', function () {
+  listen('move.after', function () {
     if (RUN.isOffset('<') || RUN.isOffset('>')) {
       RUN._j = false;
     }
@@ -738,12 +747,12 @@ var Build = function (Glide, Components, Events$$1) {
      * dimensions and setups initial state.
      */
     init: function init() {
-      emit('build.init.before');
+      emit('build.before');
 
       this.typeClass();
       this.activeClass();
 
-      emit('build.init.after');
+      emit('build.after');
     },
 
 
@@ -774,11 +783,11 @@ var Build = function (Glide, Components, Events$$1) {
     }
   };
 
-  listen('window.resize', function () {
+  listen('resize', function () {
     BUILD.init();
   });
 
-  listen('animation.make.after', function () {
+  listen('move.after', function () {
     BUILD.activeClass();
   });
 
@@ -1205,7 +1214,7 @@ var Clones = function (Glide, Components, Events$$1) {
     }
   });
 
-  listen('build.init.before', function () {
+  listen('build.before', function () {
     if (Glide.isType('carousel')) {
       CLONES.append();
     }
@@ -1252,7 +1261,7 @@ var Height = function (Glide, Components, Events$$1) {
     }
   });
 
-  listen(['build.init.after', 'run.make.after'], function () {
+  listen(['build.after', 'run.after'], function () {
     HEIGHT.set();
   });
 
@@ -1359,14 +1368,8 @@ var Window = function (Glide, Components) {
      * @return {Void}
      */
     bind: function bind() {
-      var _this = this;
-
       Binder.on('resize', window, debounce(function () {
-        emit('window.resize.before');
-
-        _this.resize();
-
-        emit('window.resize.after');
+        emit('resize');
       }, Glide.settings.debounce.resize));
     },
 
@@ -1378,17 +1381,6 @@ var Window = function (Glide, Components) {
      */
     unbind: function unbind() {
       Binder.off('resize', window);
-    },
-
-
-    /**
-     * Handler for `resize` event. Rebuilds glide,
-     * so its status matches new dimentions.
-     * 
-     * @returns {Void}
-     */
-    resize: function resize() {
-      emit('window.resize');
     }
   };
 };
@@ -1566,7 +1558,9 @@ var Anchors = function (Glide, Components) {
   });
 
   listen('swipe.end', function () {
-    ANCHORS.unprevent().attach();
+    Components.Transition.after(function () {
+      ANCHORS.unprevent().attach();
+    });
   });
 
   return ANCHORS;
@@ -1656,6 +1650,7 @@ var Keyboard = function (Glide, Components) {
       if (event.keyCode === 39) {
         Components.Run.make('>');
       }
+
       if (event.keyCode === 37) {
         Components.Run.make('<');
       }
@@ -1939,12 +1934,12 @@ var Movement = function (Glide, Components, Events$$1) {
 
       this.offset = offset;
 
-      emit('animation.make', {
+      emit('move', {
         movement: this.value
       });
 
       Components.Transition.after(function () {
-        emit('animation.make.after');
+        emit('move.after');
       });
     }
   };
@@ -1992,42 +1987,44 @@ var Movement = function (Glide, Components, Events$$1) {
     }
   });
 
-  listen(['build.init.before', 'run.make.after'], function () {
+  listen(['build.before', 'run.after'], function () {
     MOVEMENT.make();
   });
 
   return MOVEMENT;
 };
 
-var Callbacks = function (Glide, Components) {
-  var CALLBACKS = {
+var Translate = function (Glide, Components) {
+  var TRANSLATE = {
     /**
-     * Calls callback with attributes.
+     * Gets value of translate.
      *
-     * @param {Function} closure
+     * @param  {Integer} value
+     * @return {String}
+     */
+    get: function get(value) {
+      return 'translate3d(' + -1 * value + 'px, 0px, 0px)';
+    },
+
+
+    /**
+     * Sets value of translate.
+     *
+     * @param {HTMLElement} el
      * @return {self}
      */
-    call: function call(closure) {
-      if (closure !== 'undefined' && typeof closure === 'function') {
-        closure(this.params);
-      }
+    set: function set(value) {
+      Components.Html.wrapper.style.transform = this.get(value);
+
+      return this;
     }
   };
 
-  define(CALLBACKS, 'params', {
-    /**
-     * Gets attributes for events callback's parameter.
-     *
-     * @return {Object}
-     */
-    get: function get() {
-      return {
-        index: Glide.index
-      };
-    }
+  listen(['move', 'carousel.jumping'], function (data) {
+    TRANSLATE.set(data.movement);
   });
 
-  return CALLBACKS;
+  return TRANSLATE;
 };
 
 var Transition = function (Glide, Components, Events$$1) {
@@ -2103,52 +2100,19 @@ var Transition = function (Glide, Components, Events$$1) {
     }
   };
 
-  listen('animation.make', function () {
+  listen('move', function () {
     TRANSITION.set();
   });
 
-  listen(['build.init.before', 'window.resize.before', 'carousel.jumping'], function () {
+  listen(['build.before', 'resize', 'carousel.jumping'], function () {
     TRANSITION.disable();
   });
 
-  listen(['build.init.after', 'window.resize.after', 'run.make.after'], function () {
+  listen(['build.after', 'resize', 'run.after'], function () {
     TRANSITION.enable();
   });
 
   return TRANSITION;
-};
-
-var Translate = function (Glide, Components) {
-  var TRANSLATE = {
-    /**
-     * Gets value of translate.
-     *
-     * @param  {Integer} value
-     * @return {String}
-     */
-    get: function get(value) {
-      return 'translate3d(' + -1 * value + 'px, 0px, 0px)';
-    },
-
-
-    /**
-     * Sets value of translate.
-     *
-     * @param {HTMLElement} el
-     * @return {self}
-     */
-    set: function set(value) {
-      Components.Html.wrapper.style.transform = this.get(value);
-
-      return this;
-    }
-  };
-
-  listen(['animation.make', 'carousel.jumping'], function (data) {
-    TRANSLATE.set(data.movement);
-  });
-
-  return TRANSLATE;
 };
 
 var Dimensions = function (Glide, Components, Events$$1) {
@@ -2238,7 +2202,7 @@ var Dimensions = function (Glide, Components, Events$$1) {
     }
   });
 
-  listen('build.init.before', function () {
+  listen('build.before', function () {
     DIMENSIONS.apply();
   });
 
@@ -2255,7 +2219,6 @@ var COMPONENTS = {
   Peek: Peek,
   Clones: Clones,
   Window: Window,
-  Callbacks: Callbacks,
   Build: Build,
   Run: Run,
   // Optional

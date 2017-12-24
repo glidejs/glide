@@ -20,48 +20,45 @@ export default function (Glide, Components) {
      * @param {Function} callback
      */
     make (move, callback) {
-      this._m = {
-        direction: move.substr(0, 1),
-        steps: move.substr(1) ? move.substr(1) : 0
-      }
+      this.value = move
 
-      emit('run.make', this._m)
+      emit('run.before', this.value)
 
-      switch (this._m.direction) {
+      switch (this.value.direction) {
         case '>':
-          if (typeof this._m.steps === 'number' && parseInt(this._m.steps) !== 0) {
-            Glide.index += Math.min(this.length - Glide.index, -parseInt(this._m.steps))
-          } else if (this._m.steps === '>') {
+          if (typeof this.value.steps === 'number' && parseInt(this.value.steps) !== 0) {
+            Glide.index += Math.min(this.length - Glide.index, -parseInt(this.value.steps))
+          } else if (this.value.steps === '>') {
             Glide.index = this.length
           } else if (this.isEnd()) {
             Glide.index = 0
 
-            emit('run.make.atEnd', this._m)
+            emit('run.end', this.value)
           } else {
             Glide.index++
           }
           break
 
         case '<':
-          if (typeof this._m.steps === 'number' && parseInt(this._m.steps) !== 0) {
-            Glide.index -= Math.min(Glide.index, parseInt(this._m.steps))
-          } else if (this._m.steps === '<') {
+          if (typeof this.value.steps === 'number' && parseInt(this.value.steps) !== 0) {
+            Glide.index -= Math.min(Glide.index, parseInt(this.value.steps))
+          } else if (this.value.steps === '<') {
             Glide.index = 0
           } else if (this.isStart()) {
             Glide.index = this.length
 
-            emit('run.make.atStart', this._m)
+            emit('run.start', this.value)
           } else {
             Glide.index--
           }
           break
 
         case '=':
-          Glide.index = this._m.steps
+          Glide.index = this.value.steps
           break
       }
 
-      emit('run.make.after', this._m)
+      emit('run.after', this.value)
 
       return this
     },
@@ -90,9 +87,22 @@ export default function (Glide, Components) {
      * @return {Boolean}
      */
     isOffset (direction) {
-      return this._j && this._m.direction === direction
+      return this._j && this.value.direction === direction
     }
   }
+
+  define(RUN, 'value', {
+    get () {
+      return {
+        direction: this._v.substr(0, 1),
+        steps: this._v.substr(1) ? this._v.substr(1) : 0
+      }
+    },
+
+    set (value) {
+      this._v = value
+    }
+  })
 
   define(RUN, 'length', {
     /**
@@ -106,15 +116,15 @@ export default function (Glide, Components) {
     }
   })
 
-  listen('window.resize', () => {
+  listen('resize', () => {
     RUN.make(`=${Glide.index}`).init()
   })
 
-  listen(['run.make.atStart', 'run.make.atEnd'], () => {
+  listen(['run.start', 'run.end'], () => {
     RUN._j = true
   })
 
-  listen('animation.make.after', () => {
+  listen('move.after', () => {
     if (RUN.isOffset('<') || RUN.isOffset('>')) {
       RUN._j = false
     }

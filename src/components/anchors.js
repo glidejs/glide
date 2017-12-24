@@ -125,7 +125,9 @@ export default function (Glide, Components) {
   })
 
   listen('swipe.end', () => {
-    ANCHORS.unprevent().attach()
+    Components.Transition.after(() => {
+      ANCHORS.unprevent().attach()
+    })
   })
 
   return ANCHORS

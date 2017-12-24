@@ -38,7 +38,7 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  listen(['build.init.after', 'run.make.after'], () => {
+  listen(['build.after', 'run.after'], () => {
     HEIGHT.set()
   })
 

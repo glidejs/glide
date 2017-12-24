@@ -8,12 +8,12 @@ export default function (Glide, Components, Events) {
      * dimensions and setups initial state.
      */
     init () {
-      emit('build.init.before')
+      emit('build.before')
 
       this.typeClass()
       this.activeClass()
 
-      emit('build.init.after')
+      emit('build.after')
     },
 
     /**
@@ -42,11 +42,11 @@ export default function (Glide, Components, Events) {
     }
   }
 
-  listen('window.resize', () => {
+  listen('resize', () => {
     BUILD.init()
   })
 
-  listen('animation.make.after', () => {
+  listen('move.after', () => {
     BUILD.activeClass()
   })
 

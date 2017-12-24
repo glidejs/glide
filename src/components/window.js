@@ -22,11 +22,7 @@ export default function (Glide, Components) {
      */
     bind () {
       Binder.on('resize', window, debounce(() => {
-        emit('window.resize.before')
-
-        this.resize()
-
-        emit('window.resize.after')
+        emit('resize')
       }, Glide.settings.debounce.resize))
     },
 
@@ -37,16 +33,6 @@ export default function (Glide, Components) {
      */
     unbind () {
       Binder.off('resize', window)
-    },
-
-    /**
-     * Handler for `resize` event. Rebuilds glide,
-     * so its status matches new dimentions.
-     * 
-     * @returns {Void}
-     */
-    resize () {
-      emit('window.resize')
     }
   }
 }

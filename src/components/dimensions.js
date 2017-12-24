@@ -86,7 +86,7 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  listen('build.init.before', () => {
+  listen('build.before', () => {
     DIMENSIONS.apply()
   })
 

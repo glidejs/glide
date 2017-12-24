@@ -18,9 +18,8 @@ import Controls from './components/controls'
 import Keyboard from './components/keyboard'
 import Autoplay from './components/autoplay'
 import Movement from './components/movement'
-import Callbacks from './components/callbacks'
-import Transition from './components/transition'
 import Translate from './components/translate'
+import Transition from './components/transition'
 import Dimensions from './components/dimensions'
 
 const COMPONENTS = {
@@ -33,7 +32,6 @@ const COMPONENTS = {
   Peek,
   Clones,
   Window,
-  Callbacks,
   Build,
   Run,
   // Optional

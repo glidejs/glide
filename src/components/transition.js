@@ -67,15 +67,15 @@ export default function (Glide, Components, Events) {
     }
   }
 
-  listen('animation.make', () => {
+  listen('move', () => {
     TRANSITION.set()
   })
 
-  listen(['build.init.before', 'window.resize.before', 'carousel.jumping'], () => {
+  listen(['build.before', 'resize', 'carousel.jumping'], () => {
     TRANSITION.disable()
   })
 
-  listen(['build.init.after', 'window.resize.after', 'run.make.after'], () => {
+  listen(['build.after', 'resize', 'run.after'], () => {
     TRANSITION.enable()
   })
 

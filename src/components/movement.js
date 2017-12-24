@@ -30,12 +30,12 @@ export default function (Glide, Components, Events) {
     make (offset = 0) {
       this.offset = offset
 
-      emit('animation.make', {
+      emit('move', {
         movement: this.value
       })
 
       Components.Transition.after(() => {
-        emit('animation.make.after')
+        emit('move.after')
       })
     }
   }
@@ -82,7 +82,7 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  listen(['build.init.before', 'run.make.after'], () => {
+  listen(['build.before', 'run.after'], () => {
     MOVEMENT.make()
   })
 

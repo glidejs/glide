@@ -34,7 +34,7 @@ export default function (Glide, Components, Events) {
      */
     collect () {
       let clone = null
-      
+
       for (let i = 0; i < pattern.length; i++) {
         clone = Components.Html.slides[Math.abs(pattern[i])].cloneNode(true)
 
@@ -91,7 +91,7 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  listen('build.init.before', () => {
+  listen('build.before', () => {
     if (Glide.isType('carousel')) {
       CLONES.append()
     }

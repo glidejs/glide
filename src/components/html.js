@@ -12,7 +12,7 @@ export default function (Glide, Components) {
      *
      * @param {Glide} glide
      */
-    init () {
+    mount () {
       this.root = Glide.selector
       this.track = this.root.querySelector(TRACK_SELECTOR)
       this.slides = this.wrapper.querySelectorAll(SLIDE_SELECTOR)

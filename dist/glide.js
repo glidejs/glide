@@ -168,77 +168,7 @@ var defaults = {
     activeSlide: 'glide__slide--active',
     disabledArrow: 'glide__arrow--disabled',
     activeBullet: 'glide__bullet--active'
-  },
-
-  /**
-   * Additional slider extensions.
-   *
-   * @type {Object}
-   */
-  extensions: {},
-
-  /**
-   * Callback that fires before a slider initialization.
-   *
-   * @param {Object} event
-   */
-  beforeInit: function beforeInit(event) {},
-
-
-  /**
-   * Callback that fires after a slider initialization.
-   *
-   * @param {Object} event
-   */
-  afterInit: function afterInit(event) {},
-
-
-  /**
-   * Callback that fires before a slide change.
-   *
-   * @param {Object} event
-   */
-  beforeTransition: function beforeTransition(event) {},
-
-
-  /**
-   * Callback that fires during changing of a slide.
-   *
-   * @param {Object} event
-   */
-  duringTransition: function duringTransition(event) {},
-
-
-  /**
-   * Callback that fires after a slide change.
-   *
-   * @param {Object} event
-   */
-  afterTransition: function afterTransition(event) {},
-
-
-  /**
-   * Callback that fires on start of touch/drag interaction.
-   *
-   * @param {Object} event
-   */
-  swipeStart: function swipeStart(event) {},
-
-
-  /**
-   * Callback that fires during touch/drag interaction.
-   *
-   * @param {Object} event
-   */
-  swipeMove: function swipeMove(event) {},
-
-
-  /**
-   * Callback that fires on end of touch/drag interaction.
-   *
-   * @param {Object} event
-   */
-  swipeEnd: function swipeEnd(event) {}
+  }
 };
 
 /**
@@ -260,7 +190,7 @@ function warn(msg) {
  *
  * @returns {Void}
  */
-function init(glide, extensions, events) {
+function mount(glide, extensions, events) {
   var components = {};
 
   for (var name in extensions) {
@@ -268,8 +198,8 @@ function init(glide, extensions, events) {
   }
 
   for (var _name in components) {
-    if (typeof components[_name].init === 'function') {
-      components[_name].init();
+    if (typeof components[_name].mount === 'function') {
+      components[_name].mount();
     }
   }
 }
@@ -419,7 +349,7 @@ var Run = function (Glide, Components) {
      *
      * @return {self}
      */
-    init: function init() {
+    mount: function mount() {
       this._j = false;
     },
 
@@ -432,47 +362,59 @@ var Run = function (Glide, Components) {
      * @param {Function} callback
      */
     make: function make(move, callback) {
-      this.value = move;
+      var _this = this;
 
-      emit('run.before', this.value);
+      this.move = move;
 
-      switch (this.value.direction) {
+      emit('run.before', this.move);
+
+      switch (this.move.direction) {
         case '>':
-          if (typeof this.value.steps === 'number' && parseInt(this.value.steps) !== 0) {
-            Glide.index += Math.min(this.length - Glide.index, -parseInt(this.value.steps));
-          } else if (this.value.steps === '>') {
+          if (typeof this.move.steps === 'number' && parseInt(this.move.steps) !== 0) {
+            Glide.index += Math.min(this.length - Glide.index, -parseInt(this.move.steps));
+          } else if (this.move.steps === '>') {
             Glide.index = this.length;
           } else if (this.isEnd()) {
+            this._j = true;
+
             Glide.index = 0;
 
-            emit('run.end', this.value);
+            emit('run.end', this.move);
           } else {
             Glide.index++;
           }
           break;
 
         case '<':
-          if (typeof this.value.steps === 'number' && parseInt(this.value.steps) !== 0) {
-            Glide.index -= Math.min(Glide.index, parseInt(this.value.steps));
-          } else if (this.value.steps === '<') {
+          if (typeof this.move.steps === 'number' && parseInt(this.move.steps) !== 0) {
+            Glide.index -= Math.min(Glide.index, parseInt(this.move.steps));
+          } else if (this.move.steps === '<') {
             Glide.index = 0;
           } else if (this.isStart()) {
+            this._j = true;
+
             Glide.index = this.length;
 
-            emit('run.start', this.value);
+            emit('run.start', this.move);
           } else {
             Glide.index--;
           }
           break;
 
         case '=':
-          Glide.index = this.value.steps;
+          Glide.index = this.move.steps;
           break;
       }
 
-      emit('run.after', this.value);
+      emit('run', this.move);
 
-      return this;
+      Components.Transition.after(function () {
+        if (_this.isOffset('<') || _this.isOffset('>')) {
+          _this._j = false;
+        }
+
+        emit('run.after', _this.move);
+      });
     },
 
 
@@ -502,19 +444,19 @@ var Run = function (Glide, Components) {
      * @return {Boolean}
      */
     isOffset: function isOffset(direction) {
-      return this._j && this.value.direction === direction;
+      return this._j && this.move.direction === direction;
     }
   };
 
-  define(RUN, 'value', {
+  define(RUN, 'move', {
     get: function get() {
-      return {
-        direction: this._v.substr(0, 1),
-        steps: this._v.substr(1) ? this._v.substr(1) : 0
-      };
+      return this._m;
     },
     set: function set(value) {
-      this._v = value;
+      this._m = {
+        direction: value.substr(0, 1),
+        steps: value.substr(1) ? value.substr(1) : 0
+      };
     }
   });
 
@@ -532,16 +474,6 @@ var Run = function (Glide, Components) {
 
   listen('resize', function () {
     RUN.make('=' + Glide.index).init();
-  });
-
-  listen(['run.start', 'run.end'], function () {
-    RUN._j = true;
-  });
-
-  listen('move.after', function () {
-    if (RUN.isOffset('<') || RUN.isOffset('>')) {
-      RUN._j = false;
-    }
   });
 
   return RUN;
@@ -590,7 +522,7 @@ var Html = function (Glide, Components) {
      *
      * @param {Glide} glide
      */
-    init: function init() {
+    mount: function mount() {
       this.root = Glide.selector;
       this.track = this.root.querySelector(TRACK_SELECTOR);
       this.slides = this.wrapper.querySelectorAll(SLIDE_SELECTOR);
@@ -692,7 +624,7 @@ var Peek = function (Glide, Components, Events) {
      *
      * @return {Void}
      */
-    init: function init() {
+    mount: function mount() {
       this.value = Glide.settings.peek;
     }
   };
@@ -746,13 +678,13 @@ var Build = function (Glide, Components, Events$$1) {
      * Init glide building. Adds classes, sets
      * dimensions and setups initial state.
      */
-    init: function init() {
-      emit('build.before');
+    mount: function mount() {
+      emit('build.before', Glide);
 
       this.typeClass();
       this.activeClass();
 
-      emit('build.after');
+      emit('build.after', Glide);
     },
 
 
@@ -873,7 +805,7 @@ var Swipe = function (Glide, Components) {
      *
      * @return {Void}
      */
-    init: function init() {
+    mount: function mount() {
       this.bindSwipeStart();
     },
 
@@ -1124,7 +1056,7 @@ var Clones = function (Glide, Components, Events$$1) {
   var pattern = [];
 
   var CLONES = {
-    init: function init() {
+    mount: function mount() {
       this.items = [];
 
       this.map();
@@ -1230,7 +1162,7 @@ var Height = function (Glide, Components, Events$$1) {
      *
      * @return {Void}
      */
-    init: function init() {
+    mount: function mount() {
       if (Glide.settings.autoheight) {
         Components.Html.track.style.transition = Components.Transition.compose('height');
       }
@@ -1261,7 +1193,7 @@ var Height = function (Glide, Components, Events$$1) {
     }
   });
 
-  listen(['build.after', 'run.after'], function () {
+  listen(['build.after', 'run'], function () {
     HEIGHT.set();
   });
 
@@ -1356,7 +1288,7 @@ var Window = function (Glide, Components) {
     /**
      * Initializes window bindings.
      */
-    init: function init() {
+    mount: function mount() {
       this.bind();
     },
 
@@ -1394,7 +1326,7 @@ var Images = function (Glide, Components) {
      *
      * @return {Void}
      */
-    init: function init() {
+    mount: function mount() {
       this.bind();
     },
 
@@ -1442,7 +1374,7 @@ var Anchors = function (Glide, Components) {
      *
      * @returns {Void}
      */
-    init: function init() {
+    mount: function mount() {
       this._a = Components.Html.wrapper.querySelectorAll('a');
 
       this.bind();
@@ -1578,7 +1510,7 @@ var Controls = function (Glide, Components) {
      *
      * @return {Void}
      */
-    init: function init() {
+    mount: function mount() {
       this._e = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR);
 
       for (var i = 0; i < this._e.length; i++) {
@@ -1635,7 +1567,7 @@ var Keyboard = function (Glide, Components) {
   var Binder = new EventsBinder();
 
   return {
-    init: function init() {
+    mount: function mount() {
       if (Glide.settings.keyboard) {
         this.bind();
       }
@@ -1662,7 +1594,7 @@ var Autoplay = function (Glide, Components) {
   var Binder = new EventsBinder();
 
   var AUTOPLAY = {
-    init: function init() {
+    mount: function mount() {
       this.start();
 
       if (Glide.settings.hoverpause) {
@@ -1918,7 +1850,7 @@ var Movement = function (Glide, Components, Events$$1) {
      *
      * @returns {Void}
      */
-    init: function init() {
+    mount: function mount() {
       this._o = 0;
     },
 
@@ -1987,7 +1919,7 @@ var Movement = function (Glide, Components, Events$$1) {
     }
   });
 
-  listen(['build.before', 'run.after'], function () {
+  listen(['build.before', 'run'], function () {
     MOVEMENT.make();
   });
 
@@ -2108,7 +2040,7 @@ var Transition = function (Glide, Components, Events$$1) {
     TRANSITION.disable();
   });
 
-  listen(['build.after', 'resize', 'run.after'], function () {
+  listen(['build.after', 'resize', 'run'], function () {
     TRANSITION.enable();
   });
 
@@ -2247,12 +2179,6 @@ var Glide = function () {
     this.disabled = false;
     this.selector = selector;
     this.index = this.settings.startAt;
-
-    this.settings.beforeInit(this);
-
-    this.mount(this.settings.extensions);
-
-    this.settings.afterInit(this);
   }
 
   /**
@@ -2265,8 +2191,18 @@ var Glide = function () {
 
   createClass(Glide, [{
     key: 'mount',
-    value: function mount(extensions) {
-      init(this, _extends(extensions, COMPONENTS), Events);
+    value: function mount$$1() {
+      var extensions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+      emit('mount.before', this);
+
+      if ((typeof extensions === 'undefined' ? 'undefined' : _typeof(extensions)) === 'object') {
+        mount(this, _extends(extensions, COMPONENTS), Events);
+      } else {
+        warn('You need to provide a components object on `mount()`');
+      }
+
+      emit('mount.after', this);
     }
 
     /**
@@ -2276,8 +2212,19 @@ var Glide = function () {
      */
 
   }, {
-    key: 'isType',
+    key: 'on',
 
+
+    /**
+     * Adds event listener.
+     *
+     * @param  {String|Array} event
+     * @param  {Callable} handler
+     * @return {Void}
+     */
+    value: function on(event, handler) {
+      listen(event, handler);
+    }
 
     /**
      * Checks if slider is a precised type.
@@ -2285,6 +2232,9 @@ var Glide = function () {
      * @param  {String} name
      * @return {Boolean}
      */
+
+  }, {
+    key: 'isType',
     value: function isType(name) {
       return this.settings.type === name;
     }

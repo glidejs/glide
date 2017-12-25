@@ -12,7 +12,7 @@ export default function (Glide, Components) {
      *
      * @return {Void}
      */
-    init () {
+    mount () {
       this._e = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR)
 
       for (let i = 0; i < this._e.length; i++) {

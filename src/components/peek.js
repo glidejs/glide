@@ -9,7 +9,7 @@ export default function (Glide, Components, Events) {
      *
      * @return {Void}
      */
-    init () {
+    mount () {
       this.value = Glide.settings.peek
     }
   }

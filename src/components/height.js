@@ -8,7 +8,7 @@ export default function (Glide, Components, Events) {
      *
      * @return {Void}
      */
-    init () {
+    mount () {
       if (Glide.settings.autoheight) {
         Components.Html.track.style.transition = Components.Transition.compose('height')
       }
@@ -38,7 +38,7 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  listen(['build.after', 'run.after'], () => {
+  listen(['build.after', 'run'], () => {
     HEIGHT.set()
   })
 

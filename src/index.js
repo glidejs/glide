@@ -1,8 +1,8 @@
 import defaults from './defaults'
 import { warn } from './utils/log'
-import { init } from './core/index'
+import { mount } from './core/index'
 
-import { Events } from './core/event/events-bus'
+import { Events, listen, emit } from './core/event/events-bus'
 
 import Run from './components/run'
 import Html from './components/html'
@@ -57,12 +57,6 @@ export default class Glide {
     this.disabled = false
     this.selector = selector
     this.index = this.settings.startAt
-
-    this.settings.beforeInit(this)
-
-    this.mount(this.settings.extensions)
-
-    this.settings.afterInit(this)
   }
 
   /**
@@ -71,8 +65,16 @@ export default class Glide {
    * @param {Object} extensions Collection of extensions to initialize.
    * @return {Void}
    */
-  mount (extensions) {
-    init(this, Object.assign(extensions, COMPONENTS), Events)
+  mount (extensions = {}) {
+    emit('mount.before', this)
+
+    if (typeof extensions === 'object') {
+      mount(this, Object.assign(extensions, COMPONENTS), Events)
+    } else {
+      warn('You need to provide a components object on `mount()`')
+    }
+
+    emit('mount.after', this)
   }
 
   /**
@@ -123,6 +125,17 @@ export default class Glide {
    */
   get type () {
     return this.settings.type
+  }
+
+  /**
+   * Adds event listener.
+   *
+   * @param  {String|Array} event
+   * @param  {Callable} handler
+   * @return {Void}
+   */
+  on (event, handler) {
+    listen(event, handler)
   }
 
   /**

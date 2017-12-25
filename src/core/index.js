@@ -7,7 +7,7 @@
  *
  * @returns {Void}
  */
-export function init (glide, extensions, events) {
+export function mount (glide, extensions, events) {
   const components = {}
 
   for (let name in extensions) {
@@ -15,8 +15,8 @@ export function init (glide, extensions, events) {
   }
 
   for (let name in components) {
-    if (typeof components[name].init === 'function') {
-      components[name].init()
+    if (typeof components[name].mount === 'function') {
+      components[name].mount()
     }
   }
 }

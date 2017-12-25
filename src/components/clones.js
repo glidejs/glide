@@ -5,7 +5,7 @@ export default function (Glide, Components, Events) {
   let pattern = []
 
   const CLONES = {
-    init () {
+    mount () {
       this.items = []
 
       this.map()

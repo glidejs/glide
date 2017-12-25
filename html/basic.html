@@ -67,7 +67,7 @@
 <script src="../dist/glide.js"></script>
 
 <script>
-  new Glide(document.querySelector('.glide'), {
+  var glide = new Glide(document.querySelector('.glide'), {
     type: 'carousel',
     perView: 4,
     startAt: 1,
@@ -78,12 +78,17 @@
       after: 100
     },
     autoplay: false,
-    extensions: {
-      Nav: function (Glide, Components) {
-        return {
-          init: function () {
-            console.log('Nav', { Glide, Components })
-          }
+  })
+
+  glide.on(['mount.after', 'build.after'], function (glide) {
+    console.log(glide)
+  })
+
+  glide.mount({
+    Nav: function (Glide, Components) {
+      return {
+        init: function () {
+          console.log('Nav', { Glide, Components })
         }
       }
     }

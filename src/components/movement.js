@@ -17,7 +17,7 @@ export default function (Glide, Components, Events) {
      *
      * @returns {Void}
      */
-    init () {
+    mount () {
       this._o = 0
     },
 
@@ -82,7 +82,7 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  listen(['build.before', 'run.after'], () => {
+  listen(['build.before', 'run'], () => {
     MOVEMENT.make()
   })
 

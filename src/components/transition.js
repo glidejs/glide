@@ -75,7 +75,7 @@ export default function (Glide, Components, Events) {
     TRANSITION.disable()
   })
 
-  listen(['build.after', 'resize', 'run.after'], () => {
+  listen(['build.after', 'resize', 'run'], () => {
     TRANSITION.enable()
   })
 

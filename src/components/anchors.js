@@ -15,7 +15,7 @@ export default function (Glide, Components) {
      *
      * @returns {Void}
      */
-    init () {
+    mount () {
       this._a = Components.Html.wrapper.querySelectorAll('a')
 
       this.bind()

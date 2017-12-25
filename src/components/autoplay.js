@@ -5,7 +5,7 @@ export default function (Glide, Components) {
   const Binder = new EventsBinder()
 
   const AUTOPLAY = {
-    init () {
+    mount () {
       this.start()
 
       if (Glide.settings.hoverpause) {

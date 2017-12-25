@@ -4,7 +4,7 @@ export default function (Glide, Components) {
   const Binder = new EventsBinder()
 
   return {
-    init () {
+    mount () {
       if (Glide.settings.keyboard) {
         this.bind()
       }

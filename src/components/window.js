@@ -10,7 +10,7 @@ export default function (Glide, Components) {
     /**
      * Initializes window bindings.
      */
-    init () {
+    mount () {
       this.bind()
     },
 

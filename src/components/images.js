@@ -9,7 +9,7 @@ export default function (Glide, Components) {
      *
      * @return {Void}
      */
-    init () {
+    mount () {
       this.bind()
     },
 

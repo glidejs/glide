@@ -7,13 +7,13 @@ export default function (Glide, Components, Events) {
      * Init glide building. Adds classes, sets
      * dimensions and setups initial state.
      */
-    init () {
-      emit('build.before')
+    mount () {
+      emit('build.before', Glide)
 
       this.typeClass()
       this.activeClass()
 
-      emit('build.after')
+      emit('build.after', Glide)
     },
 
     /**

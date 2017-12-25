@@ -8,7 +8,7 @@ export default function (Glide, Components) {
      *
      * @return {self}
      */
-    init () {
+    mount () {
       this._j = false
     },
 
@@ -20,47 +20,57 @@ export default function (Glide, Components) {
      * @param {Function} callback
      */
     make (move, callback) {
-      this.value = move
+      this.move = move
 
-      emit('run.before', this.value)
+      emit('run.before', this.move)
 
-      switch (this.value.direction) {
+      switch (this.move.direction) {
         case '>':
-          if (typeof this.value.steps === 'number' && parseInt(this.value.steps) !== 0) {
-            Glide.index += Math.min(this.length - Glide.index, -parseInt(this.value.steps))
-          } else if (this.value.steps === '>') {
+          if (typeof this.move.steps === 'number' && parseInt(this.move.steps) !== 0) {
+            Glide.index += Math.min(this.length - Glide.index, -parseInt(this.move.steps))
+          } else if (this.move.steps === '>') {
             Glide.index = this.length
           } else if (this.isEnd()) {
+            this._j = true
+
             Glide.index = 0
 
-            emit('run.end', this.value)
+            emit('run.end', this.move)
           } else {
             Glide.index++
           }
           break
 
         case '<':
-          if (typeof this.value.steps === 'number' && parseInt(this.value.steps) !== 0) {
-            Glide.index -= Math.min(Glide.index, parseInt(this.value.steps))
-          } else if (this.value.steps === '<') {
+          if (typeof this.move.steps === 'number' && parseInt(this.move.steps) !== 0) {
+            Glide.index -= Math.min(Glide.index, parseInt(this.move.steps))
+          } else if (this.move.steps === '<') {
             Glide.index = 0
           } else if (this.isStart()) {
+            this._j = true
+
             Glide.index = this.length
 
-            emit('run.start', this.value)
+            emit('run.start', this.move)
           } else {
             Glide.index--
           }
           break
 
         case '=':
-          Glide.index = this.value.steps
+          Glide.index = this.move.steps
           break
       }
 
-      emit('run.after', this.value)
+      emit('run', this.move)
 
-      return this
+      Components.Transition.after(() => {
+        if (this.isOffset('<') || this.isOffset('>')) {
+          this._j = false
+        }
+
+        emit('run.after', this.move)
+      })
     },
 
     /**
@@ -87,20 +97,20 @@ export default function (Glide, Components) {
      * @return {Boolean}
      */
     isOffset (direction) {
-      return this._j && this.value.direction === direction
+      return this._j && this.move.direction === direction
     }
   }
 
-  define(RUN, 'value', {
+  define(RUN, 'move', {
     get () {
-      return {
-        direction: this._v.substr(0, 1),
-        steps: this._v.substr(1) ? this._v.substr(1) : 0
-      }
+      return this._m
     },
 
     set (value) {
-      this._v = value
+      this._m = {
+        direction: value.substr(0, 1),
+        steps: value.substr(1) ? value.substr(1) : 0
+      }
     }
   })
 
@@ -118,16 +128,6 @@ export default function (Glide, Components) {
 
   listen('resize', () => {
     RUN.make(`=${Glide.index}`).init()
-  })
-
-  listen(['run.start', 'run.end'], () => {
-    RUN._j = true
-  })
-
-  listen('move.after', () => {
-    if (RUN.isOffset('<') || RUN.isOffset('>')) {
-      RUN._j = false
-    }
   })
 
   return RUN

@@ -24,53 +24,62 @@ export default function (Glide, Components) {
 
       emit('run.before', this.move)
 
-      switch (this.move.direction) {
-        case '>':
-          if (typeof this.move.steps === 'number' && parseInt(this.move.steps) !== 0) {
-            Glide.index += Math.min(this.length - Glide.index, -parseInt(this.move.steps))
-          } else if (this.move.steps === '>') {
-            Glide.index = this.length
-          } else if (this.isEnd()) {
-            this._j = true
-
-            Glide.index = 0
-
-            emit('run.end', this.move)
-          } else {
-            Glide.index++
-          }
-          break
-
-        case '<':
-          if (typeof this.move.steps === 'number' && parseInt(this.move.steps) !== 0) {
-            Glide.index -= Math.min(Glide.index, parseInt(this.move.steps))
-          } else if (this.move.steps === '<') {
-            Glide.index = 0
-          } else if (this.isStart()) {
-            this._j = true
-
-            Glide.index = this.length
-
-            emit('run.start', this.move)
-          } else {
-            Glide.index--
-          }
-          break
-
-        case '=':
-          Glide.index = this.move.steps
-          break
-      }
+      this.calculate()
 
       emit('run', this.move)
 
       Components.Transition.after(() => {
         if (this.isOffset('<') || this.isOffset('>')) {
           this._j = false
+
+          emit('run.offset', this.move)
         }
 
         emit('run.after', this.move)
       })
+    },
+
+    calculate () {
+      let { move, length } = this
+      let { steps, direction } = move
+
+      switch (direction) {
+        case '>':
+          if (typeof steps === 'number' && parseInt(steps) !== 0) {
+            Glide.index += Math.min(length - Glide.index, -parseInt(steps))
+          } else if (steps === '>') {
+            Glide.index = length
+          } else if (this.isEnd()) {
+            this._j = true
+
+            Glide.index = 0
+
+            emit('run.end', move)
+          } else {
+            Glide.index++
+          }
+          break
+
+        case '<':
+          if (typeof steps === 'number' && parseInt(steps) !== 0) {
+            Glide.index -= Math.min(Glide.index, parseInt(steps))
+          } else if (steps === '<') {
+            Glide.index = 0
+          } else if (this.isStart()) {
+            this._j = true
+
+            Glide.index = length
+
+            emit('run.start', move)
+          } else {
+            Glide.index--
+          }
+          break
+
+        case '=':
+          Glide.index = steps
+          break
+      }
     },
 
     /**
@@ -124,10 +133,6 @@ export default function (Glide, Components) {
     get () {
       return Components.Html.slides.length - 1
     }
-  })
-
-  listen('resize', () => {
-    RUN.make(`=${Glide.index}`).init()
   })
 
   return RUN

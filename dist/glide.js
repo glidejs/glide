@@ -368,53 +368,63 @@ var Run = function (Glide, Components) {
 
       emit('run.before', this.move);
 
-      switch (this.move.direction) {
-        case '>':
-          if (typeof this.move.steps === 'number' && parseInt(this.move.steps) !== 0) {
-            Glide.index += Math.min(this.length - Glide.index, -parseInt(this.move.steps));
-          } else if (this.move.steps === '>') {
-            Glide.index = this.length;
-          } else if (this.isEnd()) {
-            this._j = true;
-
-            Glide.index = 0;
-
-            emit('run.end', this.move);
-          } else {
-            Glide.index++;
-          }
-          break;
-
-        case '<':
-          if (typeof this.move.steps === 'number' && parseInt(this.move.steps) !== 0) {
-            Glide.index -= Math.min(Glide.index, parseInt(this.move.steps));
-          } else if (this.move.steps === '<') {
-            Glide.index = 0;
-          } else if (this.isStart()) {
-            this._j = true;
-
-            Glide.index = this.length;
-
-            emit('run.start', this.move);
-          } else {
-            Glide.index--;
-          }
-          break;
-
-        case '=':
-          Glide.index = this.move.steps;
-          break;
-      }
+      this.calculate(this.move);
 
       emit('run', this.move);
 
       Components.Transition.after(function () {
         if (_this.isOffset('<') || _this.isOffset('>')) {
           _this._j = false;
+
+          emit('run.offset', _this.move);
         }
 
         emit('run.after', _this.move);
       });
+    },
+    calculate: function calculate(move) {
+      var length = this.length;
+      var steps = move.steps,
+          direction = move.direction;
+
+
+      switch (direction) {
+        case '>':
+          if (typeof steps === 'number' && parseInt(steps) !== 0) {
+            Glide.index += Math.min(length - Glide.index, -parseInt(steps));
+          } else if (steps === '>') {
+            Glide.index = length;
+          } else if (this.isEnd()) {
+            this._j = true;
+
+            Glide.index = 0;
+
+            emit('run.end', move);
+          } else {
+            Glide.index++;
+          }
+          break;
+
+        case '<':
+          if (typeof steps === 'number' && parseInt(steps) !== 0) {
+            Glide.index -= Math.min(Glide.index, parseInt(steps));
+          } else if (steps === '<') {
+            Glide.index = 0;
+          } else if (this.isStart()) {
+            this._j = true;
+
+            Glide.index = length;
+
+            emit('run.start', move);
+          } else {
+            Glide.index--;
+          }
+          break;
+
+        case '=':
+          Glide.index = steps;
+          break;
+      }
     },
 
 
@@ -470,10 +480,6 @@ var Run = function (Glide, Components) {
     get: function get() {
       return Components.Html.slides.length - 1;
     }
-  });
-
-  listen('resize', function () {
-    RUN.make('=' + Glide.index).init();
   });
 
   return RUN;
@@ -716,7 +722,7 @@ var Build = function (Glide, Components, Events$$1) {
   };
 
   listen('resize', function () {
-    BUILD.init();
+    BUILD.mount();
   });
 
   listen('move.after', function () {

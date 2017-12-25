@@ -43,7 +43,7 @@ export default function (Glide, Components, Events) {
   }
 
   listen('resize', () => {
-    BUILD.init()
+    BUILD.mount()
   })
 
   listen('move.after', () => {

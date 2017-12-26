@@ -1,3 +1,5 @@
+import { isObject } from '../../utils/primitives'
+
 /**
  * Updates glide movement with a `peek` settings.
  *
@@ -17,7 +19,7 @@ export default function (Glide, Components) {
       if (Glide.settings.focusAt >= 0) {
         let peek = Components.Peek.value
 
-        if (typeof peek === 'object') {
+        if (isObject(peek)) {
           return translate - peek.before
         }
 

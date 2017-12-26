@@ -1,6 +1,7 @@
 import { warn } from '../utils/log'
 import { define } from '../utils/object'
 import { dimension } from '../utils/unit'
+import { isString, isObject, isNumber } from '../utils/primitives'
 
 export default function (Glide, Components, Events) {
   const PEEK = {
@@ -32,19 +33,19 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     set (value) {
-      if (typeof value === 'object') {
-        if (typeof value.before === 'string') {
+      if (isObject(value)) {
+        if (isString(value.before)) {
           value.before = dimension(value.before, Components.Dimensions.width)
         }
-        if (typeof value.after === 'string') {
+        if (isString(value.after)) {
           value.after = dimension(value.after, Components.Dimensions.width)
         }
       } else {
-        if (typeof value === 'string') {
+        if (isString(value)) {
           value = dimension(value, Components.Dimensions.width)
         }
 
-        if (typeof value !== 'number') {
+        if (isNumber(value)) {
           warn('Invalid peek value')
         }
       }

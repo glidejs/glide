@@ -1,3 +1,5 @@
+import { isString } from '../../utils/primitives'
+
 export default class EventsBinder {
   /**
    * Construct events.
@@ -15,7 +17,7 @@ export default class EventsBinder {
    * @return {Void}
    */
   on (events, el, closure) {
-    if (typeof events === 'string') {
+    if (isString(events)) {
       events = [events]
     }
 
@@ -34,7 +36,7 @@ export default class EventsBinder {
    * @return {Void}
    */
   off (events, el) {
-    if (typeof events === 'string') {
+    if (isString(events)) {
       events = [events]
     }
 

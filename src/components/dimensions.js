@@ -1,4 +1,5 @@
 import { define } from '../utils/object'
+import { isObject } from '../utils/primitives'
 import { listen } from '../core/event/events-bus'
 
 export default function (Glide, Components, Events) {
@@ -78,7 +79,7 @@ export default function (Glide, Components, Events) {
       let perView = Glide.settings.perView
       let rootWidth = Components.Html.root.offsetWidth
 
-      if (typeof peek === 'object') {
+      if (isObject(peek)) {
         return (rootWidth / perView) - (peek.before / perView) - (peek.after / perView)
       }
 

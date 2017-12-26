@@ -1,6 +1,7 @@
 import defaults from './defaults'
 import { warn } from './utils/log'
 import { mount } from './core/index'
+import { isObject } from './utils/primitives'
 
 import { Events, listen, emit } from './core/event/events-bus'
 
@@ -68,7 +69,7 @@ export default class Glide {
   mount (extensions = {}) {
     emit('mount.before', this)
 
-    if (typeof extensions === 'object') {
+    if (isObject(extensions)) {
       mount(this, Object.assign(extensions, COMPONENTS), Events)
     } else {
       warn('You need to provide a components object on `mount()`')
@@ -93,7 +94,7 @@ export default class Glide {
    * @return {Void}
    */
   set settings (opt) {
-    if (typeof opt === 'object') {
+    if (isObject(opt)) {
       this._o = opt
     } else {
       warn('Options must be an `object` instance.')

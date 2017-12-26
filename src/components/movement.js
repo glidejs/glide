@@ -1,5 +1,6 @@
 import { define } from '../utils/object'
 import { ucfirst } from '../utils/string'
+import { isUndefined } from '../utils/primitives'
 import { listen, emit } from '../core/event/events-bus'
 
 import Slider from '../types/slider'
@@ -56,7 +57,7 @@ export default function (Glide, Components, Events) {
      * @return {Object}
      */
     set (value) {
-      MOVEMENT._o = typeof value !== 'undefined' ? parseInt(value) : 0
+      MOVEMENT._o = !isUndefined(value) ? parseInt(value) : 0
     }
   })
 

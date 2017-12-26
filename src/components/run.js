@@ -1,4 +1,5 @@
 import { define } from '../utils/object'
+import { isNumber } from '../utils/primitives'
 import { listen, emit } from '../core/event/events-bus'
 
 export default function (Glide, Components) {
@@ -47,7 +48,7 @@ export default function (Glide, Components) {
       let { move, length } = this
       let { steps, direction } = move
 
-      let countableSteps = (typeof steps === 'number') && (parseInt(steps) !== 0)
+      let countableSteps = (isNumber(steps)) && (parseInt(steps) !== 0)
 
       switch (direction) {
         case '>':

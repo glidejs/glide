@@ -1,6 +1,7 @@
 import { warn } from '../utils/log'
 import { exist } from '../utils/dom'
 import { define } from '../utils/object'
+import { isString } from '../utils/primitives'
 
 const TRACK_SELECTOR = '[data-glide-el="track"]'
 const SLIDE_SELECTOR = '[data-glide-el="slide"]'
@@ -35,7 +36,7 @@ export default function (Glide, Components) {
      * @return {Object}
      */
     set (el) {
-      if (typeof el === 'string') {
+      if (isString(el)) {
         el = document.querySelector(el)
       }
 

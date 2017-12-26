@@ -1,3 +1,5 @@
+import { isArray } from '../../utils/primitives'
+
 export default class EventsBus {
   constructor (topics = {}) {
     this.topics = topics
@@ -37,7 +39,7 @@ export default class EventsBus {
 export const Events = new EventsBus()
 
 export function listen (event, handler) {
-  if (event.constructor === Array) {
+  if (isArray(event)) {
     for (let i = 0; i < event.length; i++) {
       listen(event[i], handler)
     }
@@ -47,7 +49,7 @@ export function listen (event, handler) {
 }
 
 export function emit (event, context) {
-  if (event.constructor === Array) {
+  if (isArray(event)) {
     for (let i = 0; i < event.length; i++) {
       emit(event[i], context)
     }

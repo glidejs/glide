@@ -1,3 +1,5 @@
+import { isString, isPercentage } from './primitives'
+
 /**
  * Converts value entered as number, string
  * or procentage to actual width value.
@@ -7,13 +9,11 @@
  * @returns {Number}
  */
 export function dimension (value, width) {
-  const isPercentage = (typeof value === 'string') && (value.indexOf('%') >= 0)
+  let parsed = parseInt(value, 10)
 
-  value = parseInt(value, 10)
-
-  if (isPercentage) {
-    return parseInt(width * (value / 100))
+  if (isPercentage(value)) {
+    return parseInt(width * (parsed / 100))
   }
 
-  return value
+  return parsed
 }

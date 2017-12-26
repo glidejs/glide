@@ -1,3 +1,5 @@
+import { isFunction } from '../utils/primitives'
+
 /**
  * Creates and initializes specified collection of extensions.
  * Each extension receives access to instance of glide and rest of components.
@@ -15,7 +17,7 @@ export function mount (glide, extensions, events) {
   }
 
   for (let name in components) {
-    if (typeof components[name].mount === 'function') {
+    if (isFunction(components[name].mount)) {
       components[name].mount()
     }
   }

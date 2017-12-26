@@ -181,29 +181,6 @@ function warn(msg) {
   console.error("[Glide warn]: " + msg);
 }
 
-/**
- * Creates and initializes specified collection of extensions.
- * Each extension receives access to instance of glide and rest of components.
- *
- * @param {Glide} glide
- * @param {Object} extensions
- *
- * @returns {Void}
- */
-function mount(glide, extensions, events) {
-  var components = {};
-
-  for (var name in extensions) {
-    components[name] = extensions[name](glide, components, events);
-  }
-
-  for (var _name in components) {
-    if (typeof components[_name].mount === 'function') {
-      components[_name].mount();
-    }
-  }
-}
-
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
 } : function (obj) {
@@ -264,6 +241,57 @@ var _extends = Object.assign || function (target) {
   return target;
 };
 
+function isString(value) {
+  return typeof value === 'string';
+}
+
+function isObject(value) {
+  return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object';
+}
+
+function isNumber(value) {
+  return typeof value === 'number';
+}
+
+function isFunction(value) {
+  return typeof value === 'function';
+}
+
+function isUndefined(value) {
+  return typeof value === 'undefined';
+}
+
+function isArray(value) {
+  return value.constructor === Array;
+}
+
+function isPercentage(value) {
+  return isString(value) && value.indexOf('%') >= 0;
+}
+
+/**
+ * Creates and initializes specified collection of extensions.
+ * Each extension receives access to instance of glide and rest of components.
+ *
+ * @param {Glide} glide
+ * @param {Object} extensions
+ *
+ * @returns {Void}
+ */
+function mount(glide, extensions, events) {
+  var components = {};
+
+  for (var name in extensions) {
+    components[name] = extensions[name](glide, components, events);
+  }
+
+  for (var _name in components) {
+    if (isFunction(components[_name].mount)) {
+      components[_name].mount();
+    }
+  }
+}
+
 var EventsBus = function () {
   function EventsBus() {
     var topics = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -274,7 +302,7 @@ var EventsBus = function () {
   }
 
   createClass(EventsBus, [{
-    key: "listen",
+    key: 'listen',
     value: function listen(topic, listener) {
       // Create the topic's object if not yet created
       if (!this.hOP.call(this.topics, topic)) {
@@ -292,7 +320,7 @@ var EventsBus = function () {
       };
     }
   }, {
-    key: "emit",
+    key: 'emit',
     value: function emit(topic, info) {
       // If the topic doesn't exist, or there's no listeners in queue, just leave
       if (!this.hOP.call(this.topics, topic)) {
@@ -311,7 +339,7 @@ var EventsBus = function () {
 var Events = new EventsBus();
 
 function listen(event, handler) {
-  if (event.constructor === Array) {
+  if (isArray(event)) {
     for (var i = 0; i < event.length; i++) {
       listen(event[i], handler);
     }
@@ -321,7 +349,7 @@ function listen(event, handler) {
 }
 
 function emit(event, context) {
-  if (event.constructor === Array) {
+  if (isArray(event)) {
     for (var i = 0; i < event.length; i++) {
       emit(event[i], context);
     }
@@ -395,7 +423,7 @@ var Run = function (Glide, Components) {
           direction = move.direction;
 
 
-      var countableSteps = typeof steps === 'number' && parseInt(steps) !== 0;
+      var countableSteps = isNumber(steps) && parseInt(steps) !== 0;
 
       switch (direction) {
         case '>':
@@ -573,7 +601,7 @@ var Html = function (Glide, Components) {
      * @return {Object}
      */
     set: function set(el) {
-      if (typeof el === 'string') {
+      if (isString(el)) {
         el = document.querySelector(el);
       }
 
@@ -633,15 +661,13 @@ var Html = function (Glide, Components) {
  * @returns {Number}
  */
 function dimension(value, width) {
-  var isPercentage = typeof value === 'string' && value.indexOf('%') >= 0;
+  var parsed = parseInt(value, 10);
 
-  value = parseInt(value, 10);
-
-  if (isPercentage) {
-    return parseInt(width * (value / 100));
+  if (isPercentage(value)) {
+    return parseInt(width * (parsed / 100));
   }
 
-  return value;
+  return parsed;
 }
 
 var Peek = function (Glide, Components, Events) {
@@ -662,7 +688,7 @@ var Peek = function (Glide, Components, Events) {
      *
      * @returns {Number}
      */
-    get: function get$$1() {
+    get: function get() {
       return PEEK._v;
     },
 
@@ -674,20 +700,20 @@ var Peek = function (Glide, Components, Events) {
      * @param {Number} value
      * @return {Void}
      */
-    set: function set$$1(value) {
-      if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object') {
-        if (typeof value.before === 'string') {
+    set: function set(value) {
+      if (isObject(value)) {
+        if (isString(value.before)) {
           value.before = dimension(value.before, Components.Dimensions.width);
         }
-        if (typeof value.after === 'string') {
+        if (isString(value.after)) {
           value.after = dimension(value.after, Components.Dimensions.width);
         }
       } else {
-        if (typeof value === 'string') {
+        if (isString(value)) {
           value = dimension(value, Components.Dimensions.width);
         }
 
-        if (typeof value !== 'number') {
+        if (isNumber(value)) {
           warn('Invalid peek value');
         }
       }
@@ -742,10 +768,18 @@ var Build = function (Glide, Components, Events$$1) {
     }
   };
 
+  /**
+   * Reinit building of the glide:
+   * - on resizing of the window to calculate new dimentions
+   */
   listen('resize', function () {
     BUILD.mount();
   });
 
+  /**
+   * Swap active class of current slide:
+   * - after each move to the new index
+   */
   listen('move.after', function () {
     BUILD.activeClass();
   });
@@ -777,7 +811,7 @@ var EventsBinder = function () {
   createClass(EventsBinder, [{
     key: 'on',
     value: function on(events, el, closure) {
-      if (typeof events === 'string') {
+      if (isString(events)) {
         events = [events];
       }
 
@@ -799,7 +833,7 @@ var EventsBinder = function () {
   }, {
     key: 'off',
     value: function off(events, el) {
-      if (typeof events === 'string') {
+      if (isString(events)) {
         events = [events];
       }
 
@@ -1162,6 +1196,11 @@ var Clones = function (Glide, Components, Events$$1) {
   };
 
   define(CLONES, 'grow', {
+    /**
+     * Gets additional dimentions value caused by clones.
+     *
+     * @return {Number}
+     */
     get: function get() {
       if (Glide.isType('carousel')) {
         return Components.Dimensions.slideWidth * CLONES.items.length;
@@ -1171,6 +1210,10 @@ var Clones = function (Glide, Components, Events$$1) {
     }
   });
 
+  /**
+   * Append additional slide's clones:
+   * - while glide's type is `carousel`
+   */
   listen('build.before', function () {
     if (Glide.isType('carousel')) {
       CLONES.append();
@@ -1218,6 +1261,11 @@ var Height = function (Glide, Components, Events$$1) {
     }
   });
 
+  /**
+   * Set height of the current slide on:
+   * - building, so it starts with proper dimensions
+   * - each run, when slide changed
+   */
   listen(['build.after', 'run'], function () {
     HEIGHT.set();
   });
@@ -1510,10 +1558,18 @@ var Anchors = function (Glide, Components) {
     }
   });
 
+  /**
+   * Unbind anchors inside slides:
+   * - on swiping, so they won't redirect to its `href` attributes
+   */
   listen('swipe.move', function () {
     ANCHORS.prevent().detach();
   });
 
+  /**
+   * Bind anchors inside slides:
+   * - after swiping and transitions ends, so they can redirect after click again
+   */
   listen('swipe.end', function () {
     Components.Transition.after(function () {
       ANCHORS.unprevent().attach();
@@ -1592,17 +1648,44 @@ var Keyboard = function (Glide, Components) {
   var Binder = new EventsBinder();
 
   return {
+    /**
+     * Binds keyboard events on component mount.
+     *
+     * @return {Void}
+     */
     mount: function mount() {
       if (Glide.settings.keyboard) {
         this.bind();
       }
     },
+
+
+    /**
+     * Adds keyboard press events.
+     *
+     * @return {Void}
+     */
     bind: function bind() {
       Binder.on('keyup', document, this.press);
     },
+
+
+    /**
+     * Removes keyboard press events.
+     *
+     * @return {Void}
+     */
     unbind: function unbind() {
       Binder.on('keyup', document, this.press);
     },
+
+
+    /**
+     * Handles keyboard's arrows press and moving glide foward and backward.
+     *
+     * @param  {Object} event
+     * @return {Void}
+     */
     press: function press(event) {
       if (event.keyCode === 39) {
         Components.Run.make('>');
@@ -1619,6 +1702,11 @@ var Autoplay = function (Glide, Components) {
   var Binder = new EventsBinder();
 
   var AUTOPLAY = {
+    /**
+     * Initializes autoplaying and events.
+     *
+     * @return {Void}
+     */
     mount: function mount() {
       this.start();
 
@@ -1626,11 +1714,18 @@ var Autoplay = function (Glide, Components) {
         this.events();
       }
     },
+
+
+    /**
+     * Starts autoplaying in configured interval.
+     *
+     * @return {Void}
+     */
     start: function start() {
       var _this = this;
 
       if (Glide.settings.autoplay) {
-        if (typeof this._i === 'undefined') {
+        if (isUndefined(this._i)) {
           this._i = setInterval(function () {
             _this.stop();
 
@@ -1653,6 +1748,13 @@ var Autoplay = function (Glide, Components) {
         this._i = clearInterval(this._i);
       }
     },
+
+
+    /**
+     * Stops autoplaying while mouse is over glide's area.
+     *
+     * @return {Void}
+     */
     events: function events() {
       var _this2 = this;
 
@@ -1741,7 +1843,7 @@ var Peeking = function (Glide, Components) {
       if (Glide.settings.focusAt >= 0) {
         var peek = Components.Peek.value;
 
-        if ((typeof peek === 'undefined' ? 'undefined' : _typeof(peek)) === 'object') {
+        if (isObject(peek)) {
           return _translate - peek.before;
         }
 
@@ -1918,7 +2020,7 @@ var Movement = function (Glide, Components, Events$$1) {
      * @return {Object}
      */
     set: function set(value) {
-      MOVEMENT._o = typeof value !== 'undefined' ? parseInt(value) : 0;
+      MOVEMENT._o = !isUndefined(value) ? parseInt(value) : 0;
     }
   });
 
@@ -1944,6 +2046,11 @@ var Movement = function (Glide, Components, Events$$1) {
     }
   });
 
+  /**
+   * Make movement to proper slide on:
+   * - before build, so glide will start at `startAt` index
+   * - on each standard run to move to newly calculated index
+   */
   listen(['build.before', 'run'], function () {
     MOVEMENT.make();
   });
@@ -2062,6 +2169,10 @@ var Transition = function (Glide, Components, Events$$1) {
     }
   };
 
+  /**
+   * Set transition `style` value:
+   * - on each moving, because it may be cleared by offset move
+   */
   listen('move', function () {
     TRANSITION.set();
   });
@@ -2079,7 +2190,7 @@ var Transition = function (Glide, Components, Events$$1) {
   /**
    * Enable transition:
    * - after initial build, because we disabled it before
-   * - on each running, because it may be disabled by offset transition
+   * - on each running, because it may be disabled by offset move
    */
   listen(['build.after', 'run'], function () {
     TRANSITION.enable();
@@ -2129,7 +2240,7 @@ var Dimensions = function (Glide, Components, Events$$1) {
      *
      * @return {Number}
      */
-    get: function get$$1() {
+    get: function get() {
       return DIMENSIONS.slideWidth * DIMENSIONS.length + Components.Clones.grow;
     }
   });
@@ -2140,7 +2251,7 @@ var Dimensions = function (Glide, Components, Events$$1) {
      *
      * @return {Number}
      */
-    get: function get$$1() {
+    get: function get() {
       return Components.Html.slides.length;
     }
   });
@@ -2151,7 +2262,7 @@ var Dimensions = function (Glide, Components, Events$$1) {
      *
      * @return {Number}
      */
-    get: function get$$1() {
+    get: function get() {
       return Components.Html.root.offsetWidth;
     }
   });
@@ -2162,12 +2273,12 @@ var Dimensions = function (Glide, Components, Events$$1) {
      *
      * @return {Number}
      */
-    get: function get$$1() {
+    get: function get() {
       var peek = Components.Peek.value;
       var perView = Glide.settings.perView;
       var rootWidth = Components.Html.root.offsetWidth;
 
-      if ((typeof peek === 'undefined' ? 'undefined' : _typeof(peek)) === 'object') {
+      if (isObject(peek)) {
         return rootWidth / perView - peek.before / perView - peek.after / perView;
       }
 
@@ -2175,6 +2286,10 @@ var Dimensions = function (Glide, Components, Events$$1) {
     }
   });
 
+  /**
+   * Apply calculated glide's dimensions on:
+   * - before building, so other dimentions (e.g. translate) will be calculated propertly
+   */
   listen('build.before', function () {
     DIMENSIONS.apply();
   });
@@ -2237,7 +2352,7 @@ var Glide = function () {
 
       emit('mount.before', this);
 
-      if ((typeof extensions === 'undefined' ? 'undefined' : _typeof(extensions)) === 'object') {
+      if (isObject(extensions)) {
         mount(this, _extends(extensions, COMPONENTS), Events);
       } else {
         warn('You need to provide a components object on `mount()`');
@@ -2293,7 +2408,7 @@ var Glide = function () {
      */
     ,
     set: function set$$1(opt) {
-      if ((typeof opt === 'undefined' ? 'undefined' : _typeof(opt)) === 'object') {
+      if (isObject(opt)) {
         this._o = opt;
       } else {
         warn('Options must be an `object` instance.');

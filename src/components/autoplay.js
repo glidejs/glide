@@ -1,4 +1,5 @@
 import { define } from '../utils/object'
+import { isUndefined } from '../utils/primitives'
 import EventsBinder from '../core/event/events-binder'
 
 export default function (Glide, Components) {
@@ -25,7 +26,7 @@ export default function (Glide, Components) {
      */
     start () {
       if (Glide.settings.autoplay) {
-        if (typeof this._i === 'undefined') {
+        if (isUndefined(this._i)) {
           this._i = setInterval(() => {
             this.stop()
 

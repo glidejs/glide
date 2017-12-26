@@ -86,6 +86,10 @@ export default function (Glide, Components, Events) {
     }
   })
 
+  /**
+   * Apply calculated glide's dimensions on:
+   * - before building, so other dimentions (e.g. translate) will be calculated propertly
+   */
   listen('build.before', () => {
     DIMENSIONS.apply()
   })

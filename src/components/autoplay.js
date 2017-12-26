@@ -5,6 +5,11 @@ export default function (Glide, Components) {
   const Binder = new EventsBinder()
 
   const AUTOPLAY = {
+    /**
+     * Initializes autoplaying and events.
+     *
+     * @return {Void}
+     */
     mount () {
       this.start()
 
@@ -13,6 +18,11 @@ export default function (Glide, Components) {
       }
     },
 
+    /**
+     * Starts autoplaying in configured interval.
+     *
+     * @return {Void}
+     */
     start () {
       if (Glide.settings.autoplay) {
         if (typeof this._i === 'undefined') {
@@ -38,6 +48,11 @@ export default function (Glide, Components) {
       }
     },
 
+    /**
+     * Stops autoplaying while mouse is over glide's area.
+     *
+     * @return {Void}
+     */
     events () {
       Binder.on('mouseover', Components.Html.root, () => {
         this.stop()

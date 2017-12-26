@@ -120,10 +120,18 @@ export default function (Glide, Components) {
     }
   })
 
+  /**
+   * Unbind anchors inside slides:
+   * - on swiping, so they won't redirect to its `href` attributes
+   */
   listen('swipe.move', () => {
     ANCHORS.prevent().detach()
   })
 
+  /**
+   * Bind anchors inside slides:
+   * - after swiping and transitions ends, so they can redirect after click again
+   */
   listen('swipe.end', () => {
     Components.Transition.after(() => {
       ANCHORS.unprevent().attach()

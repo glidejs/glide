@@ -82,6 +82,11 @@ export default function (Glide, Components, Events) {
     }
   })
 
+  /**
+   * Make movement to proper slide on:
+   * - before build, so glide will start at `startAt` index
+   * - on each standard run to move to newly calculated index
+   */
   listen(['build.before', 'run'], () => {
     MOVEMENT.make()
   })

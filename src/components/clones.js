@@ -82,6 +82,11 @@ export default function (Glide, Components, Events) {
   }
 
   define(CLONES, 'grow', {
+    /**
+     * Gets additional dimentions value caused by clones.
+     *
+     * @return {Number}
+     */
     get () {
       if (Glide.isType('carousel')) {
         return Components.Dimensions.slideWidth * CLONES.items.length
@@ -91,6 +96,10 @@ export default function (Glide, Components, Events) {
     }
   })
 
+  /**
+   * Append additional slide's clones:
+   * - while glide's type is `carousel`
+   */
   listen('build.before', () => {
     if (Glide.isType('carousel')) {
       CLONES.append()

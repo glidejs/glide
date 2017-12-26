@@ -42,10 +42,18 @@ export default function (Glide, Components, Events) {
     }
   }
 
+  /**
+   * Reinit building of the glide:
+   * - on resizing of the window to calculate new dimentions
+   */
   listen('resize', () => {
     BUILD.mount()
   })
 
+  /**
+   * Swap active class of current slide:
+   * - after each move to the new index
+   */
   listen('move.after', () => {
     BUILD.activeClass()
   })

@@ -38,6 +38,11 @@ export default function (Glide, Components, Events) {
     }
   })
 
+  /**
+   * Set height of the current slide on:
+   * - building, so it starts with proper dimensions
+   * - each run, when slide changed
+   */
   listen(['build.after', 'run'], () => {
     HEIGHT.set()
   })

@@ -25,8 +25,13 @@ export default function (Glide, Components) {
     }
   }
 
-  listen(['move', 'carousel.jumping'], (data) => {
-    TRANSLATE.set(data.movement)
+  /**
+   * Set new translate value on:
+   * - standard moving on index change
+   * - on jumping from offset transition at start and end edges in `carousel` type
+   */
+  listen(['move', 'carousel.jumping'], (context) => {
+    TRANSLATE.set(context.movement)
   })
 
   return TRANSLATE

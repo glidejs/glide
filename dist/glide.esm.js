@@ -344,13 +344,12 @@ var Run = function (Glide, Components) {
      * @return {self}
      */
     mount: function mount() {
-      this._j = false;
+      this._f = false;
     },
 
 
     /**
-     * Handles glide status. Calculates current index
-     * based on passed move and slider type.
+     * Makes glides running based on the passed moving schema.
      *
      * @param {String} move
      * @param {Function} callback
@@ -362,13 +361,13 @@ var Run = function (Glide, Components) {
 
       emit('run.before', this.move);
 
-      this.calculate(this.move);
+      this.calculate();
 
       emit('run', this.move);
 
       Components.Transition.after(function () {
         if (_this.isOffset('<') || _this.isOffset('>')) {
-          _this._j = false;
+          _this._f = false;
 
           emit('run.offset', _this.move);
         }
@@ -376,20 +375,30 @@ var Run = function (Glide, Components) {
         emit('run.after', _this.move);
       });
     },
-    calculate: function calculate(move) {
-      var length = this.length;
+
+
+    /**
+     * Calculates current index based on passed move.
+     *
+     * @return {Void}
+     */
+    calculate: function calculate() {
+      var move = this.move,
+          length = this.length;
       var steps = move.steps,
           direction = move.direction;
 
 
+      var countableSteps = typeof steps === 'number' && parseInt(steps) !== 0;
+
       switch (direction) {
         case '>':
-          if (typeof steps === 'number' && parseInt(steps) !== 0) {
+          if (countableSteps) {
             Glide.index += Math.min(length - Glide.index, -parseInt(steps));
           } else if (steps === '>') {
             Glide.index = length;
           } else if (this.isEnd()) {
-            this._j = true;
+            this._f = true;
 
             Glide.index = 0;
 
@@ -400,12 +409,12 @@ var Run = function (Glide, Components) {
           break;
 
         case '<':
-          if (typeof steps === 'number' && parseInt(steps) !== 0) {
+          if (countableSteps) {
             Glide.index -= Math.min(Glide.index, parseInt(steps));
           } else if (steps === '<') {
             Glide.index = 0;
           } else if (this.isStart()) {
-            this._j = true;
+            this._f = true;
 
             Glide.index = length;
 
@@ -448,14 +457,26 @@ var Run = function (Glide, Components) {
      * @return {Boolean}
      */
     isOffset: function isOffset(direction) {
-      return this._j && this.move.direction === direction;
+      return this._f && this.move.direction === direction;
     }
   };
 
   define(RUN, 'move', {
+    /**
+     * Gets value of the move schema.
+     *
+     * @returns {Object}
+     */
     get: function get() {
       return this._m;
     },
+
+
+    /**
+     * Sets value of the move schema.
+     *
+     * @returns {Object}
+     */
     set: function set(value) {
       this._m = {
         direction: value.substr(0, 1),
@@ -831,7 +852,6 @@ var Swipe = function (Glide, Components) {
         this.bindSwipeEnd();
 
         emit('swipe.start');
-        // Components.Callbacks.call(Glide.settings.swipeStart)
       }
     },
 
@@ -915,7 +935,6 @@ var Swipe = function (Glide, Components) {
         this.unbindSwipeMove();
         this.unbindSwipeEnd();
 
-        // Components.Callbacks.call(Glide.settings.swipeEnd)
         emit('swipe.end');
       }
     },
@@ -1952,8 +1971,13 @@ var Translate = function (Glide, Components) {
     }
   };
 
-  listen(['move', 'carousel.jumping'], function (data) {
-    TRANSLATE.set(data.movement);
+  /**
+   * Set new translate value on:
+   * - standard moving on index change
+   * - on jumping from offset transition at start and end edges in `carousel` type
+   */
+  listen(['move', 'carousel.jumping'], function (context) {
+    TRANSLATE.set(context.movement);
   });
 
   return TRANSLATE;
@@ -2036,11 +2060,22 @@ var Transition = function (Glide, Components, Events$$1) {
     TRANSITION.set();
   });
 
+  /**
+   * Disable transition:
+   * - before initial build to avoid transitioning from `0` to `startAt` index
+   * - while resizing window and recalculating dimentions
+   * - on jumping from offset transition at start and end edges in `carousel` type
+   */
   listen(['build.before', 'resize', 'carousel.jumping'], function () {
     TRANSITION.disable();
   });
 
-  listen(['build.after', 'resize', 'run'], function () {
+  /**
+   * Enable transition:
+   * - after initial build, because we disabled it before
+   * - on each running, because it may be disabled by offset transition
+   */
+  listen(['build.after', 'run'], function () {
     TRANSITION.enable();
   });
 

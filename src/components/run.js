@@ -9,12 +9,11 @@ export default function (Glide, Components) {
      * @return {self}
      */
     mount () {
-      this._j = false
+      this._f = false
     },
 
     /**
-     * Handles glide status. Calculates current index
-     * based on passed move and slider type.
+     * Makes glides running based on the passed moving schema.
      *
      * @param {String} move
      * @param {Function} callback
@@ -30,7 +29,7 @@ export default function (Glide, Components) {
 
       Components.Transition.after(() => {
         if (this.isOffset('<') || this.isOffset('>')) {
-          this._j = false
+          this._f = false
 
           emit('run.offset', this.move)
         }
@@ -39,18 +38,25 @@ export default function (Glide, Components) {
       })
     },
 
+    /**
+     * Calculates current index based on passed move.
+     *
+     * @return {Void}
+     */
     calculate () {
       let { move, length } = this
       let { steps, direction } = move
 
+      let countableSteps = (typeof steps === 'number') && (parseInt(steps) !== 0)
+
       switch (direction) {
         case '>':
-          if (typeof steps === 'number' && parseInt(steps) !== 0) {
+          if (countableSteps) {
             Glide.index += Math.min(length - Glide.index, -parseInt(steps))
           } else if (steps === '>') {
             Glide.index = length
           } else if (this.isEnd()) {
-            this._j = true
+            this._f = true
 
             Glide.index = 0
 
@@ -61,12 +67,12 @@ export default function (Glide, Components) {
           break
 
         case '<':
-          if (typeof steps === 'number' && parseInt(steps) !== 0) {
+          if (countableSteps) {
             Glide.index -= Math.min(Glide.index, parseInt(steps))
           } else if (steps === '<') {
             Glide.index = 0
           } else if (this.isStart()) {
-            this._j = true
+            this._f = true
 
             Glide.index = length
 
@@ -106,15 +112,25 @@ export default function (Glide, Components) {
      * @return {Boolean}
      */
     isOffset (direction) {
-      return this._j && this.move.direction === direction
+      return this._f && this.move.direction === direction
     }
   }
 
   define(RUN, 'move', {
+    /**
+     * Gets value of the move schema.
+     *
+     * @returns {Object}
+     */
     get () {
       return this._m
     },
 
+    /**
+     * Sets value of the move schema.
+     *
+     * @returns {Object}
+     */
     set (value) {
       this._m = {
         direction: value.substr(0, 1),

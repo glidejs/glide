@@ -67,15 +67,30 @@ export default function (Glide, Components, Events) {
     }
   }
 
+  /**
+   * Set transition `style` value:
+   * - on each moving, because it may be cleared by offset move
+   */
   listen('move', () => {
     TRANSITION.set()
   })
 
+  /**
+   * Disable transition:
+   * - before initial build to avoid transitioning from `0` to `startAt` index
+   * - while resizing window and recalculating dimentions
+   * - on jumping from offset transition at start and end edges in `carousel` type
+   */
   listen(['build.before', 'resize', 'carousel.jumping'], () => {
     TRANSITION.disable()
   })
 
-  listen(['build.after', 'resize', 'run'], () => {
+  /**
+   * Enable transition:
+   * - after initial build, because we disabled it before
+   * - on each running, because it may be disabled by offset move
+   */
+  listen(['build.after', 'run'], () => {
     TRANSITION.enable()
   })
 

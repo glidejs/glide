@@ -1,4 +1,4 @@
-import Glide from '../src/index'
+import Core from '../src/index'
 
 // Required components
 import Run from '../src/components/run'
@@ -30,7 +30,7 @@ const COMPONENTS = {
   Movement,
   Peek,
   Clones,
-  Window,
+  Resize,
   Build,
   Run,
 
@@ -44,7 +44,7 @@ const COMPONENTS = {
   Autoplay
 }
 
-export default class extends Glide {
+export default class Glide extends Core {
   mount (extensions) {
     super.mount(Object.assign(extensions, COMPONENTS))
   }

@@ -467,7 +467,7 @@ function emit(event, context) {
   return Events.emit(event, context);
 }
 
-var Glide = function () {
+var Glide$2 = function () {
   /**
    * Construct glide.
    *
@@ -1187,6 +1187,43 @@ var delay = restArgs(function (func, wait, args) {
   }, wait);
 });
 
+/**
+ * Returns a function, that, as long as it continues to be invoked, will not
+ * be triggered. The function will be called after it stops being called for
+ * N milliseconds. If `immediate` is passed, trigger the function on the
+ * leading edge, instead of the trailing.
+ *
+ * @source https://github.com/jashkenas/underscore
+ */
+function debounce(func, wait, immediate) {
+  var timeout, result;
+
+  var later = function later(context, args) {
+    timeout = null;
+    if (args) result = func.apply(context, args);
+  };
+
+  var debounced = restArgs(function (args) {
+    if (timeout) clearTimeout(timeout);
+    if (immediate) {
+      var callNow = !timeout;
+      timeout = setTimeout(later, wait);
+      if (callNow) result = func.apply(this, args);
+    } else {
+      timeout = delay(later, wait, this, args);
+    }
+
+    return result;
+  });
+
+  debounced.cancel = function () {
+    clearTimeout(timeout);
+    timeout = null;
+  };
+
+  return debounced;
+}
+
 var EventsBinder = function () {
   /**
    * Construct events.
@@ -1246,6 +1283,42 @@ var EventsBinder = function () {
   }]);
   return EventsBinder;
 }();
+
+var Resize = function (Glide, Components) {
+  var Binder = new EventsBinder();
+
+  return {
+    /**
+     * Initializes window bindings.
+     */
+    mount: function mount() {
+      this.bind();
+    },
+
+
+    /**
+     * Binds `rezsize` listener to the window.
+     * It's a costly event, so we are debouncing it.
+     *
+     * @return {Void}
+     */
+    bind: function bind() {
+      Binder.on('resize', window, debounce(function () {
+        emit('resize');
+      }, Glide.settings.debounce.resize));
+    },
+
+
+    /**
+     * Unbinds listeners from the window.
+     *
+     * @return {Void}
+     */
+    unbind: function unbind() {
+      Binder.off('resize', window);
+    }
+  };
+};
 
 /**
  * Makes a string's first character uppercase.
@@ -2479,7 +2552,7 @@ var COMPONENTS = {
   Movement: Movement,
   Peek: Peek,
   Clones: Clones,
-  Window: Window,
+  Resize: Resize,
   Build: Build,
   Run: Run,
 
@@ -2493,21 +2566,21 @@ var COMPONENTS = {
   Autoplay: Autoplay
 };
 
-var _class = function (_Glide) {
-  inherits(_class, _Glide);
+var Glide = function (_Core) {
+  inherits(Glide, _Core);
 
-  function _class() {
-    classCallCheck(this, _class);
-    return possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).apply(this, arguments));
+  function Glide() {
+    classCallCheck(this, Glide);
+    return possibleConstructorReturn(this, (Glide.__proto__ || Object.getPrototypeOf(Glide)).apply(this, arguments));
   }
 
-  createClass(_class, [{
+  createClass(Glide, [{
     key: 'mount',
     value: function mount(extensions) {
-      get(_class.prototype.__proto__ || Object.getPrototypeOf(_class.prototype), 'mount', this).call(this, _extends(extensions, COMPONENTS));
+      get(Glide.prototype.__proto__ || Object.getPrototypeOf(Glide.prototype), 'mount', this).call(this, _extends(extensions, COMPONENTS));
     }
   }]);
-  return _class;
-}(Glide);
+  return Glide;
+}(Glide$2);
 
-export default _class;
+export default Glide;

@@ -2,7 +2,7 @@ import banner from './banner'
 import babel from 'rollup-plugin-babel'
 
 export default {
-  name: 'glidejs',
+  name: 'Glide',
   output: {
     banner
   },

@@ -1,4 +1,4 @@
-import Glide from '../src/index'
+import Core from '../src/index'
 
 import Run from '../src/components/run'
 import Html from '../src/components/html'
@@ -27,7 +27,7 @@ const COMPONENTS = {
   Movement,
   Peek,
   Clones,
-  Window,
+  Resize,
   Build,
   Run
 }
@@ -40,7 +40,7 @@ export { Controls }
 export { Keyboard }
 export { Autoplay }
 
-export default class extends Glide {
+export default class Glide extends Core {
   mount (extensions) {
     super.mount(Object.assign(extensions, COMPONENTS))
   }

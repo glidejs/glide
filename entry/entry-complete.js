@@ -45,7 +45,7 @@ const COMPONENTS = {
 }
 
 export default class Glide extends Core {
-  mount (extensions) {
+  mount (extensions = {}) {
     super.mount(Object.assign(extensions, COMPONENTS))
   }
 }

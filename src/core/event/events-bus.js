@@ -38,6 +38,13 @@ export default class EventsBus {
 
 export const Events = new EventsBus()
 
+/**
+ * Registers a event listener inside the events bus.
+ *
+ * @param  {String|Array} event
+ * @param  {Function} handler
+ * @return {Object}
+ */
 export function listen (event, handler) {
   if (isArray(event)) {
     for (let i = 0; i < event.length; i++) {
@@ -48,6 +55,13 @@ export function listen (event, handler) {
   return Events.listen(event, handler)
 }
 
+/**
+ * Calls registered handlers for passed event.
+ *
+ * @param  {String|Array} event
+ * @param  {Mixed} context
+ * @return {Void}
+ */
 export function emit (event, context) {
   if (isArray(event)) {
     for (let i = 0; i < event.length; i++) {

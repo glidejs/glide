@@ -1,9 +1,9 @@
 import { mount } from '../../src/core/index'
 
-describe('`init()` function should', () => {
+describe('`mount()` function should', () => {
   test('initialize all registered components', () => {
     // Here we creating a mock of glide internal component.
-    // Every component have to implement a `init` method and be a function
+    // Every component have to implement a `mount()` method and be a function
     let fn = jest.fn()
     let stub = { mount: fn }
     let mock = jest.fn(() => {
@@ -12,7 +12,7 @@ describe('`init()` function should', () => {
 
     mount('glide', { mock }, 'events')
 
-    // `init()` method of the component should be called
+    // `mount()` method of the component should be called
     expect(fn).toHaveBeenCalled()
 
     // component should be initialized with glide and other components as arguments

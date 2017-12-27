@@ -19,14 +19,6 @@ import Controls from '../src/components/controls'
 import Keyboard from '../src/components/keyboard'
 import Autoplay from '../src/components/autoplay'
 
-export { Swipe }
-export { Height }
-export { Images }
-export { Anchors }
-export { Controls }
-export { Keyboard }
-export { Autoplay }
-
 const COMPONENTS = {
   Html,
   Translate,
@@ -39,6 +31,14 @@ const COMPONENTS = {
   Build,
   Run
 }
+
+export { Swipe }
+export { Height }
+export { Images }
+export { Anchors }
+export { Controls }
+export { Keyboard }
+export { Autoplay }
 
 export default class extends Glide {
   mount (extensions) {

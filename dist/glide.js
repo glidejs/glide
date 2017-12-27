@@ -1193,43 +1193,6 @@ var delay = restArgs(function (func, wait, args) {
   }, wait);
 });
 
-/**
- * Returns a function, that, as long as it continues to be invoked, will not
- * be triggered. The function will be called after it stops being called for
- * N milliseconds. If `immediate` is passed, trigger the function on the
- * leading edge, instead of the trailing.
- *
- * @source https://github.com/jashkenas/underscore
- */
-function debounce(func, wait, immediate) {
-  var timeout, result;
-
-  var later = function later(context, args) {
-    timeout = null;
-    if (args) result = func.apply(context, args);
-  };
-
-  var debounced = restArgs(function (args) {
-    if (timeout) clearTimeout(timeout);
-    if (immediate) {
-      var callNow = !timeout;
-      timeout = setTimeout(later, wait);
-      if (callNow) result = func.apply(this, args);
-    } else {
-      timeout = delay(later, wait, this, args);
-    }
-
-    return result;
-  });
-
-  debounced.cancel = function () {
-    clearTimeout(timeout);
-    timeout = null;
-  };
-
-  return debounced;
-}
-
 var EventsBinder = function () {
   /**
    * Construct events.
@@ -1289,42 +1252,6 @@ var EventsBinder = function () {
   }]);
   return EventsBinder;
 }();
-
-var Window = function (Glide, Components) {
-  var Binder = new EventsBinder();
-
-  return {
-    /**
-     * Initializes window bindings.
-     */
-    mount: function mount() {
-      this.bind();
-    },
-
-
-    /**
-     * Binds `rezsize` listener to the window.
-     * It's a costly event, so we are debouncing it.
-     *
-     * @return {Void}
-     */
-    bind: function bind() {
-      Binder.on('resize', window, debounce(function () {
-        emit('resize');
-      }, Glide.settings.debounce.resize));
-    },
-
-
-    /**
-     * Unbinds listeners from the window.
-     *
-     * @return {Void}
-     */
-    unbind: function unbind() {
-      Binder.off('resize', window);
-    }
-  };
-};
 
 /**
  * Makes a string's first character uppercase.

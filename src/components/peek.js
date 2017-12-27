@@ -45,7 +45,7 @@ export default function (Glide, Components, Events) {
           value = dimension(value, Components.Dimensions.width)
         }
 
-        if (isNumber(value)) {
+        if (!isNumber(value)) {
           warn('Invalid peek value')
         }
       }

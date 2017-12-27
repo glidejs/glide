@@ -9,13 +9,13 @@ describe('API call to', () => {
   })
 
   test('`index` should return index of current index', () => {
-    let glide = new Glide('#glide', { startAt: 2 })
+    let glide = new Glide('#glide', { startAt: 2 }).mount()
 
     expect(glide.index).toBe(2)
   })
 
   test('`settings` should return extended options', () => {
-    let glide = new Glide('#glide', { startAt: 2 })
+    let glide = new Glide('#glide', { startAt: 2 }).mount()
 
     expect(glide.settings).toBe(Object.assign(defaults, { startAt: 2 }))
   })

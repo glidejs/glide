@@ -76,6 +76,8 @@ export default class Glide {
     }
 
     emit('mount.after', this)
+
+    return this
   }
 
   /**

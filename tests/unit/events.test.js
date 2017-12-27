@@ -1,4 +1,4 @@
-import { EventsBinder } from '../../src/core/event/index'
+import EventsBinder from '../../src/core/event/events-binder'
 
 let events = null
 let event = 'click'

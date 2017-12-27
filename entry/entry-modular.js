@@ -42,6 +42,6 @@ export { Autoplay }
 
 export default class Glide extends Core {
   mount (extensions = {}) {
-    super.mount(Object.assign(extensions, COMPONENTS))
+    super.mount(Object.assign(COMPONENTS, extensions))
   }
 }

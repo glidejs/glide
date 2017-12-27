@@ -5,46 +5,6 @@ import { isObject } from './utils/primitives'
 
 import { Events, listen, emit } from './core/event/events-bus'
 
-import Run from './components/run'
-import Html from './components/html'
-import Peek from './components/peek'
-import Build from './components/build'
-import Swipe from './components/swipe'
-import Clones from './components/clones'
-import Height from './components/height'
-import Window from './components/window'
-import Images from './components/images'
-import Anchors from './components/anchors'
-import Controls from './components/controls'
-import Keyboard from './components/keyboard'
-import Autoplay from './components/autoplay'
-import Movement from './components/movement'
-import Translate from './components/translate'
-import Transition from './components/transition'
-import Dimensions from './components/dimensions'
-
-const COMPONENTS = {
-  // Required
-  Html,
-  Translate,
-  Transition,
-  Dimensions,
-  Movement,
-  Peek,
-  Clones,
-  Window,
-  Build,
-  Run,
-  // Optional
-  Swipe,
-  Height,
-  Images,
-  Anchors,
-  Controls,
-  Keyboard,
-  Autoplay
-}
-
 export default class Glide {
   /**
    * Construct glide.
@@ -70,7 +30,7 @@ export default class Glide {
     emit('mount.before', this)
 
     if (isObject(extensions)) {
-      mount(this, Object.assign(extensions, COMPONENTS), Events)
+      mount(this, extensions, Events)
     } else {
       warn('You need to provide a components object on `mount()`')
     }

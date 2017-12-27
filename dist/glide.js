@@ -241,30 +241,131 @@ var _extends = Object.assign || function (target) {
   return target;
 };
 
+var get = function get(object, property, receiver) {
+  if (object === null) object = Function.prototype;
+  var desc = Object.getOwnPropertyDescriptor(object, property);
+
+  if (desc === undefined) {
+    var parent = Object.getPrototypeOf(object);
+
+    if (parent === null) {
+      return undefined;
+    } else {
+      return get(parent, property, receiver);
+    }
+  } else if ("value" in desc) {
+    return desc.value;
+  } else {
+    var getter = desc.get;
+
+    if (getter === undefined) {
+      return undefined;
+    }
+
+    return getter.call(receiver);
+  }
+};
+
+var inherits = function (subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+};
+
+
+
+
+
+
+
+
+
+
+
+var possibleConstructorReturn = function (self, call) {
+  if (!self) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return call && (typeof call === "object" || typeof call === "function") ? call : self;
+};
+
+/**
+ * Indicates whether the specified value is a string.
+ *
+ * @param  {Mixed}   value
+ * @return {Boolean}
+ */
 function isString(value) {
   return typeof value === 'string';
 }
 
+/**
+ * Indicates whether the specified value is an object.
+ *
+ * @param  {Mixed}   value
+ * @return {Boolean}
+ */
 function isObject(value) {
   return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object';
 }
 
+/**
+ * Indicates whether the specified value is a number.
+ *
+ * @param  {Mixed}   value
+ * @return {Boolean}
+ */
 function isNumber(value) {
   return typeof value === 'number';
 }
 
+/**
+ * Indicates whether the specified value is a function.
+ *
+ * @param  {Mixed}   value
+ * @return {Boolean}
+ */
 function isFunction(value) {
   return typeof value === 'function';
 }
 
+/**
+ * Indicates whether the specified value is undefined.
+ *
+ * @param  {Mixed}   value
+ * @return {Boolean}
+ */
 function isUndefined(value) {
   return typeof value === 'undefined';
 }
 
+/**
+ * Indicates whether the specified value is an array.
+ *
+ * @param  {Mixed}   value
+ * @return {Boolean}
+ */
 function isArray(value) {
   return value.constructor === Array;
 }
 
+/**
+ * Indicates whether the specified value is a precentage value represented as string.
+ *
+ * @param  {Mixed}   value
+ * @return {Boolean}
+ */
 function isPercentage(value) {
   return isString(value) && value.indexOf('%') >= 0;
 }
@@ -338,6 +439,13 @@ var EventsBus = function () {
 
 var Events = new EventsBus();
 
+/**
+ * Registers a event listener inside the events bus.
+ *
+ * @param  {String|Array} event
+ * @param  {Function} handler
+ * @return {Object}
+ */
 function listen(event, handler) {
   if (isArray(event)) {
     for (var i = 0; i < event.length; i++) {
@@ -348,6 +456,13 @@ function listen(event, handler) {
   return Events.listen(event, handler);
 }
 
+/**
+ * Calls registered handlers for passed event.
+ *
+ * @param  {String|Array} event
+ * @param  {Mixed} context
+ * @return {Void}
+ */
 function emit(event, context) {
   if (isArray(event)) {
     for (var i = 0; i < event.length; i++) {
@@ -357,6 +472,141 @@ function emit(event, context) {
 
   return Events.emit(event, context);
 }
+
+var Glide = function () {
+  /**
+   * Construct glide.
+   *
+   * @param  {String} selector
+   * @param  {Object} options
+   */
+  function Glide(selector) {
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    classCallCheck(this, Glide);
+
+    this.settings = _extends(defaults, options);
+
+    this.disabled = false;
+    this.selector = selector;
+    this.index = this.settings.startAt;
+  }
+
+  /**
+   * Initializes glide components.
+   *
+   * @param {Object} extensions Collection of extensions to initialize.
+   * @return {Void}
+   */
+
+
+  createClass(Glide, [{
+    key: 'mount',
+    value: function mount$$1() {
+      var extensions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+      emit('mount.before', this);
+
+      if (isObject(extensions)) {
+        mount(this, extensions, Events);
+      } else {
+        warn('You need to provide a components object on `mount()`');
+      }
+
+      emit('mount.after', this);
+
+      return this;
+    }
+
+    /**
+     * Gets value of the core options.
+     *
+     * @return {Object}
+     */
+
+  }, {
+    key: 'on',
+
+
+    /**
+     * Adds event listener.
+     *
+     * @param  {String|Array} event
+     * @param  {Callable} handler
+     * @return {Void}
+     */
+    value: function on(event, handler) {
+      listen(event, handler);
+    }
+
+    /**
+     * Checks if slider is a precised type.
+     *
+     * @param  {String} name
+     * @return {Boolean}
+     */
+
+  }, {
+    key: 'isType',
+    value: function isType(name) {
+      return this.settings.type === name;
+    }
+  }, {
+    key: 'settings',
+    get: function get$$1() {
+      return this._o;
+    }
+
+    /**
+     * Sets value of the core options.
+     *
+     * @param  {Object} opt
+     * @return {Void}
+     */
+    ,
+    set: function set$$1(opt) {
+      if (isObject(opt)) {
+        this._o = opt;
+      } else {
+        warn('Options must be an `object` instance.');
+      }
+    }
+
+    /**
+     * Gets current index of the slider.
+     *
+     * @return {Object}
+     */
+
+  }, {
+    key: 'index',
+    get: function get$$1() {
+      return this._i;
+    }
+
+    /**
+     * Sets current index a slider.
+     *
+     * @return {Object}
+     */
+    ,
+    set: function set$$1(i) {
+      this._i = parseInt(i);
+    }
+
+    /**
+     * Gets type name of the slider.
+     *
+     * @return {String}
+     */
+
+  }, {
+    key: 'type',
+    get: function get$$1() {
+      return this.settings.type;
+    }
+  }]);
+  return Glide;
+}();
 
 /**
  * Defines getter and setter property on the specified object.
@@ -713,7 +963,7 @@ var Peek = function (Glide, Components, Events) {
           value = dimension(value, Components.Dimensions.width);
         }
 
-        if (isNumber(value)) {
+        if (!isNumber(value)) {
           warn('Invalid peek value');
         }
       }
@@ -785,330 +1035,6 @@ var Build = function (Glide, Components, Events$$1) {
   });
 
   return BUILD;
-};
-
-var EventsBinder = function () {
-  /**
-   * Construct events.
-   */
-  function EventsBinder() {
-    var listeners = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    classCallCheck(this, EventsBinder);
-
-    this.listeners = listeners;
-  }
-
-  /**
-   * Adds events listeners to arrows HTML elements.
-   *
-   * @param  {Array} events
-   * @param  {HTMLElement} el
-   * @param  {Closure} closure
-   * @return {Void}
-   */
-
-
-  createClass(EventsBinder, [{
-    key: 'on',
-    value: function on(events, el, closure) {
-      if (isString(events)) {
-        events = [events];
-      }
-
-      for (var i = 0; i < events.length; i++) {
-        this.listeners[events[i]] = closure;
-
-        el.addEventListener(events[i], this.listeners[events[i]]);
-      }
-    }
-
-    /**
-     * Removes event listeners from arrows HTML elements.
-     *
-     * @param  {Array} events
-     * @param  {HTMLElement} el
-     * @return {Void}
-     */
-
-  }, {
-    key: 'off',
-    value: function off(events, el) {
-      if (isString(events)) {
-        events = [events];
-      }
-
-      for (var i = 0; i < events.length; i++) {
-        el.removeEventListener(events[i], this.listeners[events[i]]);
-
-        delete this.listeners[events[i]];
-      }
-    }
-  }]);
-  return EventsBinder;
-}();
-
-var START_EVENTS = ['touchstart', 'mousedown'];
-var MOVE_EVENTS = ['touchmove', 'mousemove'];
-var END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave'];
-var MOUSE_EVENTS = ['mousedown', 'mousemove', 'mouseup', 'mouseleave'];
-
-var Swipe = function (Glide, Components) {
-  var Binder = new EventsBinder();
-
-  var swipeSin = 0;
-  var swipeStartX = 0;
-  var swipeStartY = 0;
-  var dragging = false;
-
-  var SWIPE = {
-    /**
-     * Initializes swipe bindings.
-     *
-     * @return {Void}
-     */
-    mount: function mount() {
-      this.bindSwipeStart();
-    },
-
-
-    /**
-     * Handler for `swipestart` event.
-     * Calculates entry points of the user's tap.
-     *
-     * @param {Object} event
-     * @return {Void}
-     */
-    start: function start(event) {
-      if (this.enabled) {
-        var swipe = this.touches(event);
-
-        this.disable();
-
-        swipeSin = null;
-        swipeStartX = parseInt(swipe.pageX);
-        swipeStartY = parseInt(swipe.pageY);
-
-        this.bindSwipeMove();
-        this.bindSwipeEnd();
-
-        emit('swipe.start');
-      }
-    },
-
-
-    /**
-     * Handler for `swipemove` event.
-     * Calculates user's tap angle and distance.
-     *
-     * @param {Object} event
-     */
-    move: function move(event) {
-      if (this.enabled) {
-        var swipe = this.touches(event);
-
-        var subExSx = parseInt(swipe.pageX) - swipeStartX;
-        var subEySy = parseInt(swipe.pageY) - swipeStartY;
-        var powEX = Math.abs(subExSx << 2);
-        var powEY = Math.abs(subEySy << 2);
-        var swipeHypotenuse = Math.sqrt(powEX + powEY);
-        var swipeCathetus = Math.sqrt(powEY);
-
-        swipeSin = Math.asin(swipeCathetus / swipeHypotenuse);
-
-        if (swipeSin * 180 / Math.PI < Glide.settings.touchAngle) {
-          Components.Movement.make(subExSx * parseFloat(Glide.settings.touchRatio));
-        }
-
-        if (swipeSin * 180 / Math.PI < Glide.settings.touchAngle) {
-          event.stopPropagation();
-          event.preventDefault();
-
-          Components.Html.wrapper.classList.add(Glide.settings.classes.dragging);
-        } else {
-          return;
-        }
-
-        emit('swipe.move');
-      }
-    },
-
-
-    /**
-     * Handler for `swipeend` event. Finitializes
-     * user's tap and decides about glide move.
-     *
-     * @param {Object} event
-     * @return {Void}
-     */
-    end: function end(event) {
-      if (this.enabled) {
-        var swipe = this.touches(event);
-        var threshold = this.threshold(event);
-
-        this.enable();
-
-        var swipeDistance = swipe.pageX - swipeStartX;
-        var swipeDeg = swipeSin * 180 / Math.PI;
-        var steps = Math.round(swipeDistance / Components.Dimensions.slideWidth);
-
-        if (swipeDistance > threshold && swipeDeg < Glide.settings.touchAngle) {
-          // While swipe is positive and greater than threshold move backward.
-          if (Glide.settings.perTouch) {
-            steps = Math.min(steps, parseInt(Glide.settings.perTouch));
-          }
-
-          Components.Run.make('<' + steps);
-        } else if (swipeDistance < -threshold && swipeDeg < Glide.settings.touchAngle) {
-          // While swipe is negative and lower than negative threshold move forward.
-          if (Glide.settings.perTouch) {
-            steps = Math.max(steps, -parseInt(Glide.settings.perTouch));
-          }
-
-          Components.Run.make('>' + steps);
-        } else {
-          // While swipe don't reach distance apply previous transform.
-          Components.Movement.make();
-        }
-
-        Components.Html.wrapper.classList.remove(Glide.settings.classes.dragging);
-
-        this.unbindSwipeMove();
-        this.unbindSwipeEnd();
-
-        emit('swipe.end');
-      }
-    },
-
-
-    /**
-    * Binds swipe's starting event.
-    *
-    * @return {Void}
-    */
-    bindSwipeStart: function bindSwipeStart() {
-      if (Glide.settings.swipeThreshold) {
-        Binder.on(START_EVENTS[0], Components.Html.wrapper, this.start.bind(this));
-      }
-
-      if (Glide.settings.dragThreshold) {
-        Binder.on(START_EVENTS[1], Components.Html.wrapper, this.start.bind(this));
-      }
-    },
-
-
-    /**
-     * Unbinds swipe's starting event.
-     *
-     * @return {Void}
-     */
-    unbindSwipeStart: function unbindSwipeStart() {
-      Binder.off(START_EVENTS[0], Components.Html.wrapper);
-      Binder.off(START_EVENTS[1], Components.Html.wrapper);
-    },
-
-
-    /**
-     * Binds swipe's moving event.
-     *
-     * @return {Void}
-     */
-    bindSwipeMove: function bindSwipeMove() {
-      Binder.on(MOVE_EVENTS, Components.Html.wrapper, this.move.bind(this));
-    },
-
-
-    /**
-     * Unbinds swipe's moving event.
-     *
-     * @return {Void}
-     */
-    unbindSwipeMove: function unbindSwipeMove() {
-      Binder.off(MOVE_EVENTS, Components.Html.wrapper);
-    },
-
-
-    /**
-     * Binds swipe's ending event.
-     *
-     * @return {Void}
-     */
-    bindSwipeEnd: function bindSwipeEnd() {
-      Binder.on(END_EVENTS, Components.Html.wrapper, this.end.bind(this));
-    },
-
-
-    /**
-     * Unbinds swipe's ending event.
-     *
-     * @return {Void}
-     */
-    unbindSwipeEnd: function unbindSwipeEnd() {
-      Binder.off(END_EVENTS, Components.Html.wrapper);
-    },
-    touches: function touches(event) {
-      if (MOUSE_EVENTS.includes(event.type)) {
-        return event;
-      }
-
-      return event.touches[0] || event.changedTouches[0];
-    },
-
-
-    /**
-     * Gets value of minimum swipe distance.
-     * Returns value based on event type.
-     *
-     * @return {Number}
-     */
-    threshold: function threshold(event) {
-      if (MOUSE_EVENTS.includes(event.type)) {
-        return Glide.settings.dragThreshold;
-      }
-
-      return Glide.settings.swipeThreshold;
-    },
-
-
-    /**
-     * Enables swipe event.
-     *
-     * @return {self}
-     */
-    enable: function enable() {
-      dragging = false;
-
-      Components.Transition.enable();
-
-      return this;
-    },
-
-
-    /**
-     * Disables swipe event.
-     *
-     * @return {self}
-     */
-    disable: function disable() {
-      dragging = true;
-
-      Components.Transition.disable();
-
-      return this;
-    }
-  };
-
-  define(SWIPE, 'enabled', {
-    /**
-     * Gets value of the peek.
-     *
-     * @returns {Number}
-     */
-    get: function get() {
-      return !(Glide.disabled && dragging);
-    }
-  });
-
-  return SWIPE;
 };
 
 var Clones = function (Glide, Components, Events$$1) {
@@ -1223,56 +1149,6 @@ var Clones = function (Glide, Components, Events$$1) {
   return CLONES;
 };
 
-var Height = function (Glide, Components, Events$$1) {
-  var HEIGHT = {
-    /**
-     * Inits height. Adds `height` transition to the root.
-     *
-     * @return {Void}
-     */
-    mount: function mount() {
-      if (Glide.settings.autoheight) {
-        Components.Html.track.style.transition = Components.Transition.compose('height');
-      }
-    },
-
-
-    /**
-     * Sets height of the slider.
-     *
-     * @param {Boolean} force Force height setting even if option is turn off.
-     * @return {Void}
-     */
-    set: function set(force) {
-      if (Glide.settings.autoheight || force) {
-        Components.Html.track.style.height = this.value;
-      }
-    }
-  };
-
-  define(HEIGHT, 'value', {
-    /**
-     * Gets height of the current slide.
-     *
-     * @return {Number}
-     */
-    get: function get() {
-      return Components.Html.slides[Glide.index].offsetHeight;
-    }
-  });
-
-  /**
-   * Set height of the current slide on:
-   * - building, so it starts with proper dimensions
-   * - each run, when slide changed
-   */
-  listen(['build.after', 'run'], function () {
-    HEIGHT.set();
-  });
-
-  return HEIGHT;
-};
-
 /**
  * Similar to ES6's rest param (http://ariya.ofilabs.com/2013/03/es6-and-rest-parameter.html)
  * This accumulates the arguments passed into an array, after a given index.
@@ -1354,6 +1230,66 @@ function debounce(func, wait, immediate) {
   return debounced;
 }
 
+var EventsBinder = function () {
+  /**
+   * Construct events.
+   */
+  function EventsBinder() {
+    var listeners = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    classCallCheck(this, EventsBinder);
+
+    this.listeners = listeners;
+  }
+
+  /**
+   * Adds events listeners to arrows HTML elements.
+   *
+   * @param  {Array} events
+   * @param  {HTMLElement} el
+   * @param  {Closure} closure
+   * @return {Void}
+   */
+
+
+  createClass(EventsBinder, [{
+    key: 'on',
+    value: function on(events, el, closure) {
+      if (isString(events)) {
+        events = [events];
+      }
+
+      for (var i = 0; i < events.length; i++) {
+        this.listeners[events[i]] = closure;
+
+        el.addEventListener(events[i], this.listeners[events[i]]);
+      }
+    }
+
+    /**
+     * Removes event listeners from arrows HTML elements.
+     *
+     * @param  {Array} events
+     * @param  {HTMLElement} el
+     * @return {Void}
+     */
+
+  }, {
+    key: 'off',
+    value: function off(events, el) {
+      if (isString(events)) {
+        events = [events];
+      }
+
+      for (var i = 0; i < events.length; i++) {
+        el.removeEventListener(events[i], this.listeners[events[i]]);
+
+        delete this.listeners[events[i]];
+      }
+    }
+  }]);
+  return EventsBinder;
+}();
+
 var Window = function (Glide, Components) {
   var Binder = new EventsBinder();
 
@@ -1388,405 +1324,6 @@ var Window = function (Glide, Components) {
       Binder.off('resize', window);
     }
   };
-};
-
-var Images = function (Glide, Components) {
-  var Binder = new EventsBinder();
-
-  return {
-    /**
-     * Binds listener to glide wrapper.
-     *
-     * @return {Void}
-     */
-    mount: function mount() {
-      this.bind();
-    },
-
-
-    /**
-     * Binds `dragstart` event on wrapper to prevent dragging images.
-     *
-     * @return {Void}
-     */
-    bind: function bind() {
-      Binder.on('dragstart', Components.Html.wrapper, this.dragstart);
-    },
-
-
-    /**
-     * Unbinds `dragstart` event on wrapper.
-     *
-     * @return {Void}
-     */
-    unbind: function unbind() {
-      Binder.off('dragstart', Components.Html.wrapper, this.dragstart);
-    },
-
-
-    /**
-     * Event handler. Prevents dragging.
-     *
-     * @return {Void}
-     */
-    dragstart: function dragstart(event) {
-      event.preventDefault();
-    }
-  };
-};
-
-var Anchors = function (Glide, Components) {
-  var Binder = new EventsBinder();
-
-  var detached = false;
-  var prevented = false;
-
-  var ANCHORS = {
-    /**
-     * Setups a initial state of anchors component.
-     *
-     * @returns {Void}
-     */
-    mount: function mount() {
-      this._a = Components.Html.wrapper.querySelectorAll('a');
-
-      this.bind();
-    },
-
-
-    /**
-     * Binds events to anchors inside a track.
-     *
-     * @return {Void}
-     */
-    bind: function bind() {
-      Binder.on('click', Components.Html.wrapper, this.click.bind(this));
-    },
-
-
-    /**
-     * Handler for click event. Prevents clicks when glide is in `prevent` status.
-     *
-     * @param  {Object} event
-     * @return {Void}
-     */
-    click: function click(event) {
-      event.stopPropagation();
-
-      if (prevented) {
-        event.preventDefault();
-      }
-    },
-
-
-    /**
-     * Detaches anchors click event inside glide.
-     *
-     * @return {self}
-     */
-    detach: function detach() {
-      if (!detached) {
-        for (var i = 0; i < this.items.length; i++) {
-          this.items[i].draggable = false;
-
-          this.items[i].dataset.href = this.items[i].getAttribute('href');
-
-          this.items[i].removeAttribute('href');
-        }
-
-        detached = true;
-      }
-
-      return this;
-    },
-
-
-    /**
-     * Attaches anchors click events inside glide.
-     *
-     * @return {self}
-     */
-    attach: function attach() {
-      if (detached) {
-        for (var i = 0; i < this.items.length; i++) {
-          this.items[i].draggable = true;
-
-          this.items[i].setAttribute('href', this.items[i].dataset.href);
-
-          delete this.items[i].dataset.href;
-        }
-
-        detached = false;
-      }
-
-      return this;
-    },
-
-
-    /**
-     * Sets `prevented` status so anchors inside track are not clickable.
-     *
-     * @return {self}
-     */
-    prevent: function prevent() {
-      prevented = true;
-
-      return this;
-    },
-
-
-    /**
-     * Unsets `prevented` status so anchors inside track are clickable.
-     *
-     * @return {self}
-     */
-    unprevent: function unprevent() {
-      prevented = false;
-
-      return this;
-    }
-  };
-
-  define(ANCHORS, 'items', {
-    /**
-     * Gets collection of the arrows HTML elements.
-     *
-     * @return {HTMLElement[]}
-     */
-    get: function get() {
-      return ANCHORS._a;
-    }
-  });
-
-  /**
-   * Unbind anchors inside slides:
-   * - on swiping, so they won't redirect to its `href` attributes
-   */
-  listen('swipe.move', function () {
-    ANCHORS.prevent().detach();
-  });
-
-  /**
-   * Bind anchors inside slides:
-   * - after swiping and transitions ends, so they can redirect after click again
-   */
-  listen('swipe.end', function () {
-    Components.Transition.after(function () {
-      ANCHORS.unprevent().attach();
-    });
-  });
-
-  return ANCHORS;
-};
-
-var CONTROLS_SELECTOR = '[data-glide-el="controls"]';
-
-var Controls = function (Glide, Components) {
-  var Binder = new EventsBinder();
-
-  return {
-    /**
-     * Inits arrows. Binds events listeners
-     * to the arrows HTML elements.
-     *
-     * @return {Void}
-     */
-    mount: function mount() {
-      this._e = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR);
-
-      for (var i = 0; i < this._e.length; i++) {
-        this.bind(this._e[i]);
-      }
-    },
-
-
-    /**
-     * Binds events to arrows HTML elements.
-     *
-     * @return {Void}
-     */
-    bind: function bind(wrapper) {
-      var children = wrapper.children;
-
-      for (var i = 0; i < children.length; i++) {
-        Binder.on(['click', 'touchstart'], children[i], this.click);
-      }
-    },
-
-
-    /**
-     * Unbinds events binded to the arrows HTML elements.
-     *
-     * @return {Void}
-     */
-    unbind: function unbind(wrapper) {
-      var children = wrapper.children;
-
-      for (var i = 0; i < children.length; i++) {
-        Binder.off(['click', 'touchstart'], children[i]);
-      }
-    },
-
-
-    /**
-     * Handles `click` event on the arrows HTML elements.
-     * Moves slider in driection precised in
-     * `data-glide-dir` attribute.
-     *
-     * @param {Object} event
-     * @return {Void}
-     */
-    click: function click(event) {
-      event.preventDefault();
-
-      Components.Run.make(event.target.dataset.glideDir);
-    }
-  };
-};
-
-var Keyboard = function (Glide, Components) {
-  var Binder = new EventsBinder();
-
-  return {
-    /**
-     * Binds keyboard events on component mount.
-     *
-     * @return {Void}
-     */
-    mount: function mount() {
-      if (Glide.settings.keyboard) {
-        this.bind();
-      }
-    },
-
-
-    /**
-     * Adds keyboard press events.
-     *
-     * @return {Void}
-     */
-    bind: function bind() {
-      Binder.on('keyup', document, this.press);
-    },
-
-
-    /**
-     * Removes keyboard press events.
-     *
-     * @return {Void}
-     */
-    unbind: function unbind() {
-      Binder.on('keyup', document, this.press);
-    },
-
-
-    /**
-     * Handles keyboard's arrows press and moving glide foward and backward.
-     *
-     * @param  {Object} event
-     * @return {Void}
-     */
-    press: function press(event) {
-      if (event.keyCode === 39) {
-        Components.Run.make('>');
-      }
-
-      if (event.keyCode === 37) {
-        Components.Run.make('<');
-      }
-    }
-  };
-};
-
-var Autoplay = function (Glide, Components) {
-  var Binder = new EventsBinder();
-
-  var AUTOPLAY = {
-    /**
-     * Initializes autoplaying and events.
-     *
-     * @return {Void}
-     */
-    mount: function mount() {
-      this.start();
-
-      if (Glide.settings.hoverpause) {
-        this.events();
-      }
-    },
-
-
-    /**
-     * Starts autoplaying in configured interval.
-     *
-     * @return {Void}
-     */
-    start: function start() {
-      var _this = this;
-
-      if (Glide.settings.autoplay) {
-        if (isUndefined(this._i)) {
-          this._i = setInterval(function () {
-            _this.stop();
-
-            Components.Run.make('>');
-
-            _this.start();
-          }, this.time);
-        }
-      }
-    },
-
-
-    /**
-     * Stops autorunning of the glide.
-     *
-     * @return {self}
-     */
-    stop: function stop() {
-      if (Glide.settings.autoplay) {
-        this._i = clearInterval(this._i);
-      }
-    },
-
-
-    /**
-     * Stops autoplaying while mouse is over glide's area.
-     *
-     * @return {Void}
-     */
-    events: function events() {
-      var _this2 = this;
-
-      Binder.on('mouseover', Components.Html.root, function () {
-        _this2.stop();
-      });
-
-      Binder.on('mouseout', Components.Html.root, function () {
-        _this2.start();
-      });
-    }
-  };
-
-  define(AUTOPLAY, 'time', {
-    /**
-     * Gets time period value for the autoplay interval. Prioritizes
-     * times in `data-glide-autoplay` attrubutes over options.
-     *
-     * @return {Number}
-     */
-    get: function get() {
-      var autoplay = Components.Html.slides[Glide.index].getAttribute('data-glide-autoplay');
-
-      if (autoplay) {
-        return parseInt(autoplay);
-      }
-
-      return Glide.settings.autoplay;
-    }
-  });
-
-  return AUTOPLAY;
 };
 
 /**
@@ -2297,6 +1834,721 @@ var Dimensions = function (Glide, Components, Events$$1) {
   return DIMENSIONS;
 };
 
+var START_EVENTS = ['touchstart', 'mousedown'];
+var MOVE_EVENTS = ['touchmove', 'mousemove'];
+var END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave'];
+var MOUSE_EVENTS = ['mousedown', 'mousemove', 'mouseup', 'mouseleave'];
+
+var Swipe = function (Glide, Components) {
+  var Binder = new EventsBinder();
+
+  var swipeSin = 0;
+  var swipeStartX = 0;
+  var swipeStartY = 0;
+  var dragging = false;
+
+  var SWIPE = {
+    /**
+     * Initializes swipe bindings.
+     *
+     * @return {Void}
+     */
+    mount: function mount() {
+      this.bindSwipeStart();
+    },
+
+
+    /**
+     * Handler for `swipestart` event.
+     * Calculates entry points of the user's tap.
+     *
+     * @param {Object} event
+     * @return {Void}
+     */
+    start: function start(event) {
+      if (this.enabled) {
+        var swipe = this.touches(event);
+
+        this.disable();
+
+        swipeSin = null;
+        swipeStartX = parseInt(swipe.pageX);
+        swipeStartY = parseInt(swipe.pageY);
+
+        this.bindSwipeMove();
+        this.bindSwipeEnd();
+
+        emit('swipe.start');
+      }
+    },
+
+
+    /**
+     * Handler for `swipemove` event.
+     * Calculates user's tap angle and distance.
+     *
+     * @param {Object} event
+     */
+    move: function move(event) {
+      if (this.enabled) {
+        var swipe = this.touches(event);
+
+        var subExSx = parseInt(swipe.pageX) - swipeStartX;
+        var subEySy = parseInt(swipe.pageY) - swipeStartY;
+        var powEX = Math.abs(subExSx << 2);
+        var powEY = Math.abs(subEySy << 2);
+        var swipeHypotenuse = Math.sqrt(powEX + powEY);
+        var swipeCathetus = Math.sqrt(powEY);
+
+        swipeSin = Math.asin(swipeCathetus / swipeHypotenuse);
+
+        if (swipeSin * 180 / Math.PI < Glide.settings.touchAngle) {
+          Components.Movement.make(subExSx * parseFloat(Glide.settings.touchRatio));
+        }
+
+        if (swipeSin * 180 / Math.PI < Glide.settings.touchAngle) {
+          event.stopPropagation();
+          event.preventDefault();
+
+          Components.Html.wrapper.classList.add(Glide.settings.classes.dragging);
+        } else {
+          return;
+        }
+
+        emit('swipe.move');
+      }
+    },
+
+
+    /**
+     * Handler for `swipeend` event. Finitializes
+     * user's tap and decides about glide move.
+     *
+     * @param {Object} event
+     * @return {Void}
+     */
+    end: function end(event) {
+      if (this.enabled) {
+        var swipe = this.touches(event);
+        var threshold = this.threshold(event);
+
+        this.enable();
+
+        var swipeDistance = swipe.pageX - swipeStartX;
+        var swipeDeg = swipeSin * 180 / Math.PI;
+        var steps = Math.round(swipeDistance / Components.Dimensions.slideWidth);
+
+        if (swipeDistance > threshold && swipeDeg < Glide.settings.touchAngle) {
+          // While swipe is positive and greater than threshold move backward.
+          if (Glide.settings.perTouch) {
+            steps = Math.min(steps, parseInt(Glide.settings.perTouch));
+          }
+
+          Components.Run.make('<' + steps);
+        } else if (swipeDistance < -threshold && swipeDeg < Glide.settings.touchAngle) {
+          // While swipe is negative and lower than negative threshold move forward.
+          if (Glide.settings.perTouch) {
+            steps = Math.max(steps, -parseInt(Glide.settings.perTouch));
+          }
+
+          Components.Run.make('>' + steps);
+        } else {
+          // While swipe don't reach distance apply previous transform.
+          Components.Movement.make();
+        }
+
+        Components.Html.wrapper.classList.remove(Glide.settings.classes.dragging);
+
+        this.unbindSwipeMove();
+        this.unbindSwipeEnd();
+
+        emit('swipe.end');
+      }
+    },
+
+
+    /**
+    * Binds swipe's starting event.
+    *
+    * @return {Void}
+    */
+    bindSwipeStart: function bindSwipeStart() {
+      if (Glide.settings.swipeThreshold) {
+        Binder.on(START_EVENTS[0], Components.Html.wrapper, this.start.bind(this));
+      }
+
+      if (Glide.settings.dragThreshold) {
+        Binder.on(START_EVENTS[1], Components.Html.wrapper, this.start.bind(this));
+      }
+    },
+
+
+    /**
+     * Unbinds swipe's starting event.
+     *
+     * @return {Void}
+     */
+    unbindSwipeStart: function unbindSwipeStart() {
+      Binder.off(START_EVENTS[0], Components.Html.wrapper);
+      Binder.off(START_EVENTS[1], Components.Html.wrapper);
+    },
+
+
+    /**
+     * Binds swipe's moving event.
+     *
+     * @return {Void}
+     */
+    bindSwipeMove: function bindSwipeMove() {
+      Binder.on(MOVE_EVENTS, Components.Html.wrapper, this.move.bind(this));
+    },
+
+
+    /**
+     * Unbinds swipe's moving event.
+     *
+     * @return {Void}
+     */
+    unbindSwipeMove: function unbindSwipeMove() {
+      Binder.off(MOVE_EVENTS, Components.Html.wrapper);
+    },
+
+
+    /**
+     * Binds swipe's ending event.
+     *
+     * @return {Void}
+     */
+    bindSwipeEnd: function bindSwipeEnd() {
+      Binder.on(END_EVENTS, Components.Html.wrapper, this.end.bind(this));
+    },
+
+
+    /**
+     * Unbinds swipe's ending event.
+     *
+     * @return {Void}
+     */
+    unbindSwipeEnd: function unbindSwipeEnd() {
+      Binder.off(END_EVENTS, Components.Html.wrapper);
+    },
+    touches: function touches(event) {
+      if (MOUSE_EVENTS.includes(event.type)) {
+        return event;
+      }
+
+      return event.touches[0] || event.changedTouches[0];
+    },
+
+
+    /**
+     * Gets value of minimum swipe distance.
+     * Returns value based on event type.
+     *
+     * @return {Number}
+     */
+    threshold: function threshold(event) {
+      if (MOUSE_EVENTS.includes(event.type)) {
+        return Glide.settings.dragThreshold;
+      }
+
+      return Glide.settings.swipeThreshold;
+    },
+
+
+    /**
+     * Enables swipe event.
+     *
+     * @return {self}
+     */
+    enable: function enable() {
+      dragging = false;
+
+      Components.Transition.enable();
+
+      return this;
+    },
+
+
+    /**
+     * Disables swipe event.
+     *
+     * @return {self}
+     */
+    disable: function disable() {
+      dragging = true;
+
+      Components.Transition.disable();
+
+      return this;
+    }
+  };
+
+  define(SWIPE, 'enabled', {
+    /**
+     * Gets value of the peek.
+     *
+     * @returns {Number}
+     */
+    get: function get() {
+      return !(Glide.disabled && dragging);
+    }
+  });
+
+  return SWIPE;
+};
+
+var Height = function (Glide, Components, Events$$1) {
+  var HEIGHT = {
+    /**
+     * Inits height. Adds `height` transition to the root.
+     *
+     * @return {Void}
+     */
+    mount: function mount() {
+      if (Glide.settings.autoheight) {
+        Components.Html.track.style.transition = Components.Transition.compose('height');
+      }
+    },
+
+
+    /**
+     * Sets height of the slider.
+     *
+     * @param {Boolean} force Force height setting even if option is turn off.
+     * @return {Void}
+     */
+    set: function set(force) {
+      if (Glide.settings.autoheight || force) {
+        Components.Html.track.style.height = this.value;
+      }
+    }
+  };
+
+  define(HEIGHT, 'value', {
+    /**
+     * Gets height of the current slide.
+     *
+     * @return {Number}
+     */
+    get: function get() {
+      return Components.Html.slides[Glide.index].offsetHeight;
+    }
+  });
+
+  /**
+   * Set height of the current slide on:
+   * - building, so it starts with proper dimensions
+   * - each run, when slide changed
+   */
+  listen(['build.after', 'run'], function () {
+    HEIGHT.set();
+  });
+
+  return HEIGHT;
+};
+
+var Images = function (Glide, Components) {
+  var Binder = new EventsBinder();
+
+  return {
+    /**
+     * Binds listener to glide wrapper.
+     *
+     * @return {Void}
+     */
+    mount: function mount() {
+      this.bind();
+    },
+
+
+    /**
+     * Binds `dragstart` event on wrapper to prevent dragging images.
+     *
+     * @return {Void}
+     */
+    bind: function bind() {
+      Binder.on('dragstart', Components.Html.wrapper, this.dragstart);
+    },
+
+
+    /**
+     * Unbinds `dragstart` event on wrapper.
+     *
+     * @return {Void}
+     */
+    unbind: function unbind() {
+      Binder.off('dragstart', Components.Html.wrapper, this.dragstart);
+    },
+
+
+    /**
+     * Event handler. Prevents dragging.
+     *
+     * @return {Void}
+     */
+    dragstart: function dragstart(event) {
+      event.preventDefault();
+    }
+  };
+};
+
+var Anchors = function (Glide, Components) {
+  var Binder = new EventsBinder();
+
+  var detached = false;
+  var prevented = false;
+
+  var ANCHORS = {
+    /**
+     * Setups a initial state of anchors component.
+     *
+     * @returns {Void}
+     */
+    mount: function mount() {
+      this._a = Components.Html.wrapper.querySelectorAll('a');
+
+      this.bind();
+    },
+
+
+    /**
+     * Binds events to anchors inside a track.
+     *
+     * @return {Void}
+     */
+    bind: function bind() {
+      Binder.on('click', Components.Html.wrapper, this.click.bind(this));
+    },
+
+
+    /**
+     * Handler for click event. Prevents clicks when glide is in `prevent` status.
+     *
+     * @param  {Object} event
+     * @return {Void}
+     */
+    click: function click(event) {
+      event.stopPropagation();
+
+      if (prevented) {
+        event.preventDefault();
+      }
+    },
+
+
+    /**
+     * Detaches anchors click event inside glide.
+     *
+     * @return {self}
+     */
+    detach: function detach() {
+      if (!detached) {
+        for (var i = 0; i < this.items.length; i++) {
+          this.items[i].draggable = false;
+
+          this.items[i].dataset.href = this.items[i].getAttribute('href');
+
+          this.items[i].removeAttribute('href');
+        }
+
+        detached = true;
+      }
+
+      return this;
+    },
+
+
+    /**
+     * Attaches anchors click events inside glide.
+     *
+     * @return {self}
+     */
+    attach: function attach() {
+      if (detached) {
+        for (var i = 0; i < this.items.length; i++) {
+          this.items[i].draggable = true;
+
+          this.items[i].setAttribute('href', this.items[i].dataset.href);
+
+          delete this.items[i].dataset.href;
+        }
+
+        detached = false;
+      }
+
+      return this;
+    },
+
+
+    /**
+     * Sets `prevented` status so anchors inside track are not clickable.
+     *
+     * @return {self}
+     */
+    prevent: function prevent() {
+      prevented = true;
+
+      return this;
+    },
+
+
+    /**
+     * Unsets `prevented` status so anchors inside track are clickable.
+     *
+     * @return {self}
+     */
+    unprevent: function unprevent() {
+      prevented = false;
+
+      return this;
+    }
+  };
+
+  define(ANCHORS, 'items', {
+    /**
+     * Gets collection of the arrows HTML elements.
+     *
+     * @return {HTMLElement[]}
+     */
+    get: function get() {
+      return ANCHORS._a;
+    }
+  });
+
+  /**
+   * Unbind anchors inside slides:
+   * - on swiping, so they won't redirect to its `href` attributes
+   */
+  listen('swipe.move', function () {
+    ANCHORS.prevent().detach();
+  });
+
+  /**
+   * Bind anchors inside slides:
+   * - after swiping and transitions ends, so they can redirect after click again
+   */
+  listen('swipe.end', function () {
+    Components.Transition.after(function () {
+      ANCHORS.unprevent().attach();
+    });
+  });
+
+  return ANCHORS;
+};
+
+var CONTROLS_SELECTOR = '[data-glide-el="controls"]';
+
+var Controls = function (Glide, Components) {
+  var Binder = new EventsBinder();
+
+  return {
+    /**
+     * Inits arrows. Binds events listeners
+     * to the arrows HTML elements.
+     *
+     * @return {Void}
+     */
+    mount: function mount() {
+      this._e = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR);
+
+      for (var i = 0; i < this._e.length; i++) {
+        this.bind(this._e[i]);
+      }
+    },
+
+
+    /**
+     * Binds events to arrows HTML elements.
+     *
+     * @return {Void}
+     */
+    bind: function bind(wrapper) {
+      var children = wrapper.children;
+
+      for (var i = 0; i < children.length; i++) {
+        Binder.on(['click', 'touchstart'], children[i], this.click);
+      }
+    },
+
+
+    /**
+     * Unbinds events binded to the arrows HTML elements.
+     *
+     * @return {Void}
+     */
+    unbind: function unbind(wrapper) {
+      var children = wrapper.children;
+
+      for (var i = 0; i < children.length; i++) {
+        Binder.off(['click', 'touchstart'], children[i]);
+      }
+    },
+
+
+    /**
+     * Handles `click` event on the arrows HTML elements.
+     * Moves slider in driection precised in
+     * `data-glide-dir` attribute.
+     *
+     * @param {Object} event
+     * @return {Void}
+     */
+    click: function click(event) {
+      event.preventDefault();
+
+      Components.Run.make(event.target.dataset.glideDir);
+    }
+  };
+};
+
+var Keyboard = function (Glide, Components) {
+  var Binder = new EventsBinder();
+
+  return {
+    /**
+     * Binds keyboard events on component mount.
+     *
+     * @return {Void}
+     */
+    mount: function mount() {
+      if (Glide.settings.keyboard) {
+        this.bind();
+      }
+    },
+
+
+    /**
+     * Adds keyboard press events.
+     *
+     * @return {Void}
+     */
+    bind: function bind() {
+      Binder.on('keyup', document, this.press);
+    },
+
+
+    /**
+     * Removes keyboard press events.
+     *
+     * @return {Void}
+     */
+    unbind: function unbind() {
+      Binder.on('keyup', document, this.press);
+    },
+
+
+    /**
+     * Handles keyboard's arrows press and moving glide foward and backward.
+     *
+     * @param  {Object} event
+     * @return {Void}
+     */
+    press: function press(event) {
+      if (event.keyCode === 39) {
+        Components.Run.make('>');
+      }
+
+      if (event.keyCode === 37) {
+        Components.Run.make('<');
+      }
+    }
+  };
+};
+
+var Autoplay = function (Glide, Components) {
+  var Binder = new EventsBinder();
+
+  var AUTOPLAY = {
+    /**
+     * Initializes autoplaying and events.
+     *
+     * @return {Void}
+     */
+    mount: function mount() {
+      this.start();
+
+      if (Glide.settings.hoverpause) {
+        this.events();
+      }
+    },
+
+
+    /**
+     * Starts autoplaying in configured interval.
+     *
+     * @return {Void}
+     */
+    start: function start() {
+      var _this = this;
+
+      if (Glide.settings.autoplay) {
+        if (isUndefined(this._i)) {
+          this._i = setInterval(function () {
+            _this.stop();
+
+            Components.Run.make('>');
+
+            _this.start();
+          }, this.time);
+        }
+      }
+    },
+
+
+    /**
+     * Stops autorunning of the glide.
+     *
+     * @return {self}
+     */
+    stop: function stop() {
+      if (Glide.settings.autoplay) {
+        this._i = clearInterval(this._i);
+      }
+    },
+
+
+    /**
+     * Stops autoplaying while mouse is over glide's area.
+     *
+     * @return {Void}
+     */
+    events: function events() {
+      var _this2 = this;
+
+      Binder.on('mouseover', Components.Html.root, function () {
+        _this2.stop();
+      });
+
+      Binder.on('mouseout', Components.Html.root, function () {
+        _this2.start();
+      });
+    }
+  };
+
+  define(AUTOPLAY, 'time', {
+    /**
+     * Gets time period value for the autoplay interval. Prioritizes
+     * times in `data-glide-autoplay` attrubutes over options.
+     *
+     * @return {Number}
+     */
+    get: function get() {
+      var autoplay = Components.Html.slides[Glide.index].getAttribute('data-glide-autoplay');
+
+      if (autoplay) {
+        return parseInt(autoplay);
+      }
+
+      return Glide.settings.autoplay;
+    }
+  });
+
+  return AUTOPLAY;
+};
+
+// Required components
+// Optional components
 var COMPONENTS = {
   // Required
   Html: Html,
@@ -2309,6 +2561,7 @@ var COMPONENTS = {
   Window: Window,
   Build: Build,
   Run: Run,
+
   // Optional
   Swipe: Swipe,
   Height: Height,
@@ -2319,139 +2572,23 @@ var COMPONENTS = {
   Autoplay: Autoplay
 };
 
-var Glide = function () {
-  /**
-   * Construct glide.
-   *
-   * @param  {String} selector
-   * @param  {Object} options
-   */
-  function Glide(selector) {
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    classCallCheck(this, Glide);
+var _class = function (_Glide) {
+  inherits(_class, _Glide);
 
-    this.settings = _extends(defaults, options);
-
-    this.disabled = false;
-    this.selector = selector;
-    this.index = this.settings.startAt;
+  function _class() {
+    classCallCheck(this, _class);
+    return possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).apply(this, arguments));
   }
 
-  /**
-   * Initializes glide components.
-   *
-   * @param {Object} extensions Collection of extensions to initialize.
-   * @return {Void}
-   */
-
-
-  createClass(Glide, [{
+  createClass(_class, [{
     key: 'mount',
-    value: function mount$$1() {
-      var extensions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-      emit('mount.before', this);
-
-      if (isObject(extensions)) {
-        mount(this, _extends(extensions, COMPONENTS), Events);
-      } else {
-        warn('You need to provide a components object on `mount()`');
-      }
-
-      emit('mount.after', this);
-    }
-
-    /**
-     * Gets value of the core options.
-     *
-     * @return {Object}
-     */
-
-  }, {
-    key: 'on',
-
-
-    /**
-     * Adds event listener.
-     *
-     * @param  {String|Array} event
-     * @param  {Callable} handler
-     * @return {Void}
-     */
-    value: function on(event, handler) {
-      listen(event, handler);
-    }
-
-    /**
-     * Checks if slider is a precised type.
-     *
-     * @param  {String} name
-     * @return {Boolean}
-     */
-
-  }, {
-    key: 'isType',
-    value: function isType(name) {
-      return this.settings.type === name;
-    }
-  }, {
-    key: 'settings',
-    get: function get$$1() {
-      return this._o;
-    }
-
-    /**
-     * Sets value of the core options.
-     *
-     * @param  {Object} opt
-     * @return {Void}
-     */
-    ,
-    set: function set$$1(opt) {
-      if (isObject(opt)) {
-        this._o = opt;
-      } else {
-        warn('Options must be an `object` instance.');
-      }
-    }
-
-    /**
-     * Gets current index of the slider.
-     *
-     * @return {Object}
-     */
-
-  }, {
-    key: 'index',
-    get: function get$$1() {
-      return this._i;
-    }
-
-    /**
-     * Sets current index a slider.
-     *
-     * @return {Object}
-     */
-    ,
-    set: function set$$1(i) {
-      this._i = parseInt(i);
-    }
-
-    /**
-     * Gets type name of the slider.
-     *
-     * @return {String}
-     */
-
-  }, {
-    key: 'type',
-    get: function get$$1() {
-      return this.settings.type;
+    value: function mount(extensions) {
+      get(_class.prototype.__proto__ || Object.getPrototypeOf(_class.prototype), 'mount', this).call(this, _extends(extensions, COMPONENTS));
     }
   }]);
-  return Glide;
-}();
+  return _class;
+}(Glide);
 
-return Glide;
+return _class;
 
 })));

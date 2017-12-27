@@ -1833,7 +1833,7 @@ var MOVE_EVENTS = ['touchmove', 'mousemove'];
 var END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave'];
 var MOUSE_EVENTS = ['mousedown', 'mousemove', 'mouseup', 'mouseleave'];
 
-var Swipe = function (Glide, Components) {
+var swipe = function (Glide, Components) {
   var Binder = new EventsBinder();
 
   var swipeSin = 0;
@@ -2092,7 +2092,7 @@ var Swipe = function (Glide, Components) {
   return SWIPE;
 };
 
-var Height = function (Glide, Components, Events$$1) {
+var height = function (Glide, Components, Events$$1) {
   var HEIGHT = {
     /**
      * Inits height. Adds `height` transition to the root.
@@ -2142,7 +2142,7 @@ var Height = function (Glide, Components, Events$$1) {
   return HEIGHT;
 };
 
-var Images = function (Glide, Components) {
+var images = function (Glide, Components) {
   var Binder = new EventsBinder();
 
   return {
@@ -2187,7 +2187,7 @@ var Images = function (Glide, Components) {
   };
 };
 
-var Anchors = function (Glide, Components) {
+var anchors = function (Glide, Components) {
   var Binder = new EventsBinder();
 
   var detached = false;
@@ -2333,7 +2333,7 @@ var Anchors = function (Glide, Components) {
 
 var CONTROLS_SELECTOR = '[data-glide-el="controls"]';
 
-var Controls = function (Glide, Components) {
+var controls = function (Glide, Components) {
   var Binder = new EventsBinder();
 
   return {
@@ -2396,7 +2396,7 @@ var Controls = function (Glide, Components) {
   };
 };
 
-var Keyboard = function (Glide, Components) {
+var keyboard = function (Glide, Components) {
   var Binder = new EventsBinder();
 
   return {
@@ -2450,7 +2450,7 @@ var Keyboard = function (Glide, Components) {
   };
 };
 
-var Autoplay = function (Glide, Components) {
+var autoplay = function (Glide, Components) {
   var Binder = new EventsBinder();
 
   var AUTOPLAY = {
@@ -2541,10 +2541,7 @@ var Autoplay = function (Glide, Components) {
   return AUTOPLAY;
 };
 
-// Required components
-// Optional components
 var COMPONENTS = {
-  // Required
   Html: Html,
   Translate: Translate,
   Transition: Transition,
@@ -2554,16 +2551,7 @@ var COMPONENTS = {
   Clones: Clones,
   Window: Window,
   Build: Build,
-  Run: Run,
-
-  // Optional
-  Swipe: Swipe,
-  Height: Height,
-  Images: Images,
-  Anchors: Anchors,
-  Controls: Controls,
-  Keyboard: Keyboard,
-  Autoplay: Autoplay
+  Run: Run
 };
 
 var _class = function (_Glide) {
@@ -2583,4 +2571,5 @@ var _class = function (_Glide) {
   return _class;
 }(Glide);
 
+export { swipe as Swipe, height as Height, images as Images, anchors as Anchors, controls as Controls, keyboard as Keyboard, autoplay as Autoplay };
 export default _class;

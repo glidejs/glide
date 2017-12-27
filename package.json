@@ -25,7 +25,9 @@
     "sass:core": "node-sass assets/sass/glide.core.scss dist/css/glide.core.css && node-sass assets/sass/glide.core.scss dist/css/glide.core.min.css --output-style=compressed",
     "sass:theme": "node-sass assets/sass/glide.theme.scss dist/css/glide.theme.css && node-sass assets/sass/glide.theme.scss dist/css/glide.theme.min.css --output-style=compressed",
     "build:css": "npm run sass:core && npm run sass:theme",
-    "build:js": "rollup --config build/build.js && rollup --config build/build.compressed.js && rollup --config build/build.esm.js",
+    "build:esm": "rollup --config build/esm.js && rollup --config build/esm.modular.js",
+    "build:umd": "rollup --config build/umd.js && rollup --config build/umd.min.js",
+    "build:js": "npm run build:esm && npm run build:umd",
     "build": "npm run build:css && npm run build:js",
     "test": "jest tests --coverage",
     "watch": "npm-watch"

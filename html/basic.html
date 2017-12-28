@@ -67,8 +67,10 @@
 <script src="../dist/glide.js"></script>
 
 <script>
-  var glide = new Glide(document.querySelector('.glide'), {
-    // type: 'carousel',
+  var el = document.querySelector('.glide')
+
+  var glide = new Glide(el, {
+    type: 'carousel',
     perView: 4,
     startAt: 1,
     focusAt: 1,

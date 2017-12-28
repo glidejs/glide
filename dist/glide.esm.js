@@ -2155,8 +2155,10 @@ var Height = function (Glide, Components, Events$$1) {
      */
     set: function set(force) {
       if (Glide.settings.autoheight || force) {
-        Components.Html.track.style.transition = Components.Transition.compose('height');
-        Components.Html.track.style.height = this.value;
+        var style = Components.Html.track.style;
+
+        style.transition = Components.Transition.compose('height');
+        style.height = this.value;
       }
     }
   };

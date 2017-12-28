@@ -5,22 +5,10 @@ export default {
    * Available types:
    * `slider` - Rewinds slider to the start/end when it reaches first or last slide.
    * `carousel` - Changes slides without starting over when it reaches first or last slide.
-   * `slideshow` - Changes slides with fade effect.
    *
    * @type {String}
    */
   type: 'slider',
-
-  /**
-   * Direction of the slider movements.
-   *
-   * Available modes:
-   * `horizontal` - Move slider on X axis.
-   * `vertical` - Move slider on Y axis.
-   *
-   * @type {String}
-   */
-  mode: 'horizontal',
 
   /**
    * Start at specifed slide zero-based index.
@@ -41,7 +29,7 @@ export default {
    *
    * Available inputs:
    * `center` - Current slide will be always focused at the center of track.
-   * `(1,2,3...)` - Current slide will be focused at the specifed position number.
+   * `(1,2,3...)` - Current slide will be focused at the specifed index number.
    *
    * @type {String|Number}
    */

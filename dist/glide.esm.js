@@ -500,22 +500,17 @@ var Glide$2 = function () {
     }
 
     /**
-     * Gets value of the core options.
-     *
-     * @return {Object}
-     */
-
-  }, {
-    key: 'disable',
-
-
-    /**
      * Sets glide into a idle status.
      *
      * @return {Void}
      */
+
+  }, {
+    key: 'disable',
     value: function disable() {
       this.disabled = true;
+
+      return this;
     }
 
     /**
@@ -528,6 +523,8 @@ var Glide$2 = function () {
     key: 'enable',
     value: function enable() {
       this.disabled = false;
+
+      return this;
     }
 
     /**
@@ -542,6 +539,8 @@ var Glide$2 = function () {
     key: 'on',
     value: function on(event, handler) {
       listen(event, handler);
+
+      return this;
     }
 
     /**
@@ -558,7 +557,7 @@ var Glide$2 = function () {
     }
 
     /**
-     * Checks if glide is disabled for interaction.
+     * Checks if glide is idle.
      *
      * @return {Boolean}
      */
@@ -568,6 +567,13 @@ var Glide$2 = function () {
     value: function isDisabled() {
       return this.disabled === true;
     }
+
+    /**
+    * Gets value of the core options.
+    *
+    * @return {Object}
+    */
+
   }, {
     key: 'settings',
     get: function get$$1() {
@@ -858,7 +864,6 @@ function exist(node) {
 }
 
 var TRACK_SELECTOR = '[data-glide-el="track"]';
-var SLIDE_SELECTOR = '[data-glide-el="slide"]';
 
 var Html = function (Glide, Components) {
   var HTML = {
@@ -870,7 +875,9 @@ var Html = function (Glide, Components) {
     mount: function mount() {
       this.root = Glide.selector;
       this.track = this.root.querySelector(TRACK_SELECTOR);
-      this.slides = this.wrapper.querySelectorAll(SLIDE_SELECTOR);
+      this.slides = Array.from(this.wrapper.children).filter(function (slide) {
+        return !slide.classList.contains(Glide.settings.classes.cloneSlide);
+      });
     }
   };
 
@@ -1769,7 +1776,7 @@ var Transition = function (Glide, Components, Events$$1) {
    * - after initial build, because we disabled it before
    * - on each running, because it may be disabled by offset move
    */
-  listen(['build.after', 'run'], function () {
+  listen(['run'], function () {
     TRANSITION.enable();
   });
 
@@ -2141,18 +2148,6 @@ var Swipe = function (Glide, Components) {
 var Height = function (Glide, Components, Events$$1) {
   var HEIGHT = {
     /**
-     * Inits height. Adds `height` transition to the root.
-     *
-     * @return {Void}
-     */
-    mount: function mount() {
-      if (Glide.settings.autoheight) {
-        Components.Html.track.style.transition = Components.Transition.compose('height');
-      }
-    },
-
-
-    /**
      * Sets height of the slider.
      *
      * @param {Boolean} force Force height setting even if option is turn off.
@@ -2160,6 +2155,7 @@ var Height = function (Glide, Components, Events$$1) {
      */
     set: function set(force) {
       if (Glide.settings.autoheight || force) {
+        Components.Html.track.style.transition = Components.Transition.compose('height');
         Components.Html.track.style.height = this.value;
       }
     }

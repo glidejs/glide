@@ -90,7 +90,7 @@ export default function (Glide, Components, Events) {
    * - after initial build, because we disabled it before
    * - on each running, because it may be disabled by offset move
    */
-  listen(['build.after', 'run'], () => {
+  listen(['run'], () => {
     TRANSITION.enable()
   })
 

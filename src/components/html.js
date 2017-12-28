@@ -4,7 +4,6 @@ import { define } from '../utils/object'
 import { isString } from '../utils/primitives'
 
 const TRACK_SELECTOR = '[data-glide-el="track"]'
-const SLIDE_SELECTOR = '[data-glide-el="slide"]'
 
 export default function (Glide, Components) {
   const HTML = {
@@ -16,7 +15,9 @@ export default function (Glide, Components) {
     mount () {
       this.root = Glide.selector
       this.track = this.root.querySelector(TRACK_SELECTOR)
-      this.slides = this.wrapper.querySelectorAll(SLIDE_SELECTOR)
+      this.slides = Array.from(this.wrapper.children).filter((slide) => {
+        return !slide.classList.contains(Glide.settings.classes.cloneSlide)
+      })
     }
   }
 

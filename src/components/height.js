@@ -4,17 +4,6 @@ import { listen } from '../core/event/events-bus'
 export default function (Glide, Components, Events) {
   const HEIGHT = {
     /**
-     * Inits height. Adds `height` transition to the root.
-     *
-     * @return {Void}
-     */
-    mount () {
-      if (Glide.settings.autoheight) {
-        Components.Html.track.style.transition = Components.Transition.compose('height')
-      }
-    },
-
-    /**
      * Sets height of the slider.
      *
      * @param {Boolean} force Force height setting even if option is turn off.
@@ -22,6 +11,7 @@ export default function (Glide, Components, Events) {
      */
     set (force) {
       if (Glide.settings.autoheight || force) {
+        Components.Html.track.style.transition = Components.Transition.compose('height')
         Components.Html.track.style.height = this.value
       }
     }

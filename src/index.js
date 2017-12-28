@@ -41,6 +41,60 @@ export default class Glide {
   }
 
   /**
+   * Sets glide into a idle status.
+   *
+   * @return {Void}
+   */
+  disable () {
+    this.disabled = true
+
+    return this
+  }
+
+  /**
+   * Sets glide into a active status.
+   *
+   * @return {Void}
+   */
+  enable () {
+    this.disabled = false
+
+    return this
+  }
+
+  /**
+   * Adds cuutom event listener with handler.
+   *
+   * @param  {String|Array} event
+   * @param  {Function} handler
+   * @return {Void}
+   */
+  on (event, handler) {
+    listen(event, handler)
+
+    return this
+  }
+
+  /**
+   * Checks if glide is a precised type.
+   *
+   * @param  {String} name
+   * @return {Boolean}
+   */
+  isType (name) {
+    return this.settings.type === name
+  }
+
+  /**
+   * Checks if glide is idle.
+   *
+   * @return {Boolean}
+   */
+  isDisabled () {
+    return this.disabled === true
+  }
+
+    /**
    * Gets value of the core options.
    *
    * @return {Object}
@@ -91,23 +145,20 @@ export default class Glide {
   }
 
   /**
-   * Adds event listener.
+   * Gets value of the idle status.
    *
-   * @param  {String|Array} event
-   * @param  {Callable} handler
-   * @return {Void}
+   * @return {Boolean}
    */
-  on (event, handler) {
-    listen(event, handler)
+  get disabled () {
+    return this._d
   }
 
   /**
-   * Checks if slider is a precised type.
+   * Sets value of the idle status.
    *
-   * @param  {String} name
    * @return {Boolean}
    */
-  isType (name) {
-    return this.settings.type === name
+  set disabled (status) {
+    this._d = !!status
   }
 }

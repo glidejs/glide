@@ -17,22 +17,10 @@ var defaults = {
    * Available types:
    * `slider` - Rewinds slider to the start/end when it reaches first or last slide.
    * `carousel` - Changes slides without starting over when it reaches first or last slide.
-   * `slideshow` - Changes slides with fade effect.
    *
    * @type {String}
    */
   type: 'slider',
-
-  /**
-   * Direction of the slider movements.
-   *
-   * Available modes:
-   * `horizontal` - Move slider on X axis.
-   * `vertical` - Move slider on Y axis.
-   *
-   * @type {String}
-   */
-  mode: 'horizontal',
 
   /**
    * Start at specifed slide zero-based index.
@@ -53,7 +41,7 @@ var defaults = {
    *
    * Available inputs:
    * `center` - Current slide will be always focused at the center of track.
-   * `(1,2,3...)` - Current slide will be focused at the specifed position number.
+   * `(1,2,3...)` - Current slide will be focused at the specifed index number.
    *
    * @type {String|Number}
    */
@@ -524,22 +512,46 @@ var Glide$2 = function () {
      */
 
   }, {
-    key: 'on',
+    key: 'disable',
 
 
     /**
-     * Adds event listener.
+     * Sets glide into a idle status.
      *
-     * @param  {String|Array} event
-     * @param  {Callable} handler
      * @return {Void}
      */
+    value: function disable() {
+      this.disabled = true;
+    }
+
+    /**
+     * Sets glide into a active status.
+     *
+     * @return {Void}
+     */
+
+  }, {
+    key: 'enable',
+    value: function enable() {
+      this.disabled = false;
+    }
+
+    /**
+     * Adds cuutom event listener with handler.
+     *
+     * @param  {String|Array} event
+     * @param  {Function} handler
+     * @return {Void}
+     */
+
+  }, {
+    key: 'on',
     value: function on(event, handler) {
       listen(event, handler);
     }
 
     /**
-     * Checks if slider is a precised type.
+     * Checks if glide is a precised type.
      *
      * @param  {String} name
      * @return {Boolean}
@@ -549,6 +561,18 @@ var Glide$2 = function () {
     key: 'isType',
     value: function isType(name) {
       return this.settings.type === name;
+    }
+
+    /**
+     * Checks if glide is disabled for interaction.
+     *
+     * @return {Boolean}
+     */
+
+  }, {
+    key: 'isDisabled',
+    value: function isDisabled() {
+      return this.disabled === true;
     }
   }, {
     key: 'settings',
@@ -603,6 +627,28 @@ var Glide$2 = function () {
     key: 'type',
     get: function get$$1() {
       return this.settings.type;
+    }
+
+    /**
+     * Gets value of the idle status.
+     *
+     * @return {Boolean}
+     */
+
+  }, {
+    key: 'disabled',
+    get: function get$$1() {
+      return this._d;
+    }
+
+    /**
+     * Sets value of the idle status.
+     *
+     * @return {Boolean}
+     */
+    ,
+    set: function set$$1(status) {
+      this._d = !!status;
     }
   }]);
   return Glide;

@@ -1,8 +1,8 @@
-[![glide.js](http://glide.jedrzejchalubek.com/images/glide-logotype.png)](http://glide.jedrzejchalubek.com)
+[![glide.js](//glide.jedrzejchalubek.com/images/glide-logotype.png)](//glide.jedrzejchalubek.com)
 
-[Glide.js](http://glide.jedrzejchalubek.com) is a responsive and touch-friendly vanilla JavaScript slider/carousel. It’s simple, lightweight and fast. Designed to slide. No less, no more.
+[Glide.js](//glide.jedrzejchalubek.com) is a responsive and touch-friendly vanilla JavaScript slider/carousel. It’s simple, lightweight and fast. Designed to slide. No less, no more.
 
-[![Build Status](https://api.travis-ci.org/jedrzejchalubek/glidejs.svg?branch=master)](https://travis-ci.org/jedrzejchalubek/glidejs)
+[![Build Status](//api.travis-ci.org/jedrzejchalubek/glidejs.svg?branch=master)](//travis-ci.org/jedrzejchalubek/glidejs)
 
 ## Getting started
 
@@ -25,10 +25,10 @@ new Glide('#glide', {
 ```
 
 ## Documentation
-Available at: http://glide.jedrzejchalubek.com/docs.html
+Available at: [glide.jedrzejchalubek.com/docs.html](//glide.jedrzejchalubek.com/docs.html)
 
 ## Contributing
-The issue channel is especially for improvement proposals and bug reporting. If you have implementing problems, please write on StackOverflow with [glidejs](http://stackoverflow.com/questions/tagged/glidejs) tag.
+The issue channel is especially for improvement proposals and bug reporting. If you have implementing problems, please write on StackOverflow with [glidejs](//stackoverflow.com/questions/tagged/glidejs) tag.
 
 ## Building
 Build using NPM scripts. The following scripts are available:
@@ -36,6 +36,7 @@ Build using NPM scripts. The following scripts are available:
 - `build:js` (...)
 - `build` (...)
 - `test` (...)
+- `lint` (...)
 
 ## License
-Copyright (c) 2014-present, [Jędrzej Chałubek](http://jedrzejchalubek.com). Licensed under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+Copyright (c) 2014-present, [Jędrzej Chałubek](//jedrzejchalubek.com). Licensed under the terms of the [MIT License](//opensource.org/licenses/MIT).

@@ -4,7 +4,7 @@
  * @param  {Mixed}   value
  * @return {Boolean}
  */
-export function isString(value) {
+export function isString (value) {
   return typeof value === 'string'
 }
 
@@ -14,7 +14,7 @@ export function isString(value) {
  * @param  {Mixed}   value
  * @return {Boolean}
  */
-export function isObject(value) {
+export function isObject (value) {
   return typeof value === 'object'
 }
 
@@ -24,7 +24,7 @@ export function isObject(value) {
  * @param  {Mixed}   value
  * @return {Boolean}
  */
-export function isNumber(value) {
+export function isNumber (value) {
   return typeof value === 'number'
 }
 
@@ -34,7 +34,7 @@ export function isNumber(value) {
  * @param  {Mixed}   value
  * @return {Boolean}
  */
-export function isFunction(value) {
+export function isFunction (value) {
   return typeof value === 'function'
 }
 
@@ -44,7 +44,7 @@ export function isFunction(value) {
  * @param  {Mixed}   value
  * @return {Boolean}
  */
-export function isUndefined(value) {
+export function isUndefined (value) {
   return typeof value === 'undefined'
 }
 
@@ -54,7 +54,7 @@ export function isUndefined(value) {
  * @param  {Mixed}   value
  * @return {Boolean}
  */
-export function isArray(value) {
+export function isArray (value) {
   return value.constructor === Array
 }
 
@@ -64,6 +64,6 @@ export function isArray(value) {
  * @param  {Mixed}   value
  * @return {Boolean}
  */
-export function isPercentage(value) {
+export function isPercentage (value) {
   return (isString(value)) && (value.indexOf('%') >= 0)
 }

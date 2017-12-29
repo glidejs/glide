@@ -94,7 +94,7 @@ export default class Glide {
     return this.disabled === true
   }
 
-    /**
+  /**
    * Gets value of the core options.
    *
    * @return {Object}

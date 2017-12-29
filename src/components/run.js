@@ -1,6 +1,6 @@
 import { define } from '../utils/object'
 import { isNumber } from '../utils/primitives'
-import { listen, emit } from '../core/event/events-bus'
+import { emit } from '../core/event/events-bus'
 
 export default function (Glide, Components) {
   const RUN = {

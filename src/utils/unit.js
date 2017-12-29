@@ -1,4 +1,4 @@
-import { isString, isPercentage } from './primitives'
+import { isPercentage } from './primitives'
 
 /**
  * Converts value entered as number, string

@@ -13,9 +13,9 @@ export default `
 
   <div data-glide-el="track" class="glide__track">
     <ul class="glide__slides">
-      <li class="glide__slide" data-glide-el="slide">1</li>
-      <li class="glide__slide" data-glide-el="slide">2</li>
-      <li class="glide__slide" data-glide-el="slide">3</li>
+      <li class="glide__slide">1</li>
+      <li class="glide__slide">2</li>
+      <li class="glide__slide">3</li>
     </ul>
   </div>
 </div>

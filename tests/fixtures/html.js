@@ -1,8 +1,10 @@
 export default `
 <div id="glide" class="glide">
   <div data-glide-el="controls" class="glide__arrows">
-    <button class="glide__arrow prev" data-glide-dir="<">prev</button>
-    <button class="glide__arrow next" data-glide-dir=">">next</button>
+    <button class="glide__arrow glide__arrow--start" data-glide-dir="<<">start</button>
+    <button class="glide__arrow glide__arrow--prev" data-glide-dir="<">prev</button>
+    <button class="glide__arrow glide__arrow--next" data-glide-dir=">">next</button>
+    <button class="glide__arrow glide__arrow--end" data-glide-dir=">>">end</button>
   </div>
 
   <div data-glide-el="controls" class="glide__bullets">

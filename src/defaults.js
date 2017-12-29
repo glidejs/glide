@@ -138,12 +138,11 @@ export default {
   classes: {
     slider: 'glide--slider',
     carousel: 'glide--carousel',
-    slideshow: 'glide--slideshow',
     swipeable: 'glide--swipeable',
     dragging: 'glide--dragging',
     cloneSlide: 'glide__slide--clone',
+    activeNav: 'glide__bullet--active',
     activeSlide: 'glide__slide--active',
-    disabledArrow: 'glide__arrow--disabled',
-    activeBullet: 'glide__bullet--active'
+    disabledArrow: 'glide__arrow--disabled'
   }
 }

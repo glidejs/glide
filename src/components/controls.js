@@ -1,11 +1,14 @@
+import { siblings } from '../utils/dom'
+import { listen } from '../core/event/events-bus'
 import EventsBinder from '../core/event/events-binder'
 
-const CONTROLS_SELECTOR = '[data-glide-el="controls"]'
+const NAV_SELECTOR = '[data-glide-el="controls[nav]"]'
+const CONTROLS_SELECTOR = '[data-glide-el^="controls"]'
 
 export default function (Glide, Components) {
   const Binder = new EventsBinder()
 
-  return {
+  const CONTROLS = {
     /**
      * Inits arrows. Binds events listeners
      * to the arrows HTML elements.
@@ -13,8 +16,47 @@ export default function (Glide, Components) {
      * @return {Void}
      */
     mount () {
+      this._n = Components.Html.root.querySelectorAll(NAV_SELECTOR)
       this._e = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR)
 
+      this.activeClass()
+      this.bindEvents()
+    },
+
+    /**
+     * Sets active class to current slide.
+     *
+     * @return {Void}
+     */
+    activeClass () {
+      for (let i = 0; i < this._n.length; i++) {
+        this.class(this._n[i])
+      }
+    },
+
+    /**
+     * Toggles active class on items inside navigation.
+     *
+     * @param  {HTMLElement} wrapper
+     * @return {Void}
+     */
+    class (wrapper) {
+      let settings = Glide.settings
+      let item = wrapper.children[Glide.index]
+
+      item.classList.add(settings.classes.activeNav)
+
+      siblings(item).forEach(sibling => {
+        sibling.classList.remove(settings.classes.activeNav)
+      })
+    },
+
+    /**
+     * Binds handles to the each group of controls.
+     *
+     * @return {Void}
+     */
+    bindEvents () {
       for (let i = 0; i < this._e.length; i++) {
         this.bind(this._e[i])
       }
@@ -60,4 +102,14 @@ export default function (Glide, Components) {
       Components.Run.make(event.target.dataset.glideDir)
     }
   }
+
+  /**
+   * Swap active class of current navigation item:
+   * - after each move to the new index
+   */
+  listen('move.after', () => {
+    CONTROLS.activeClass()
+  })
+
+  return CONTROLS
 }

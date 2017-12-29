@@ -144,13 +144,12 @@ var defaults = {
   classes: {
     slider: 'glide--slider',
     carousel: 'glide--carousel',
-    slideshow: 'glide--slideshow',
     swipeable: 'glide--swipeable',
     dragging: 'glide--dragging',
     cloneSlide: 'glide__slide--clone',
+    activeNav: 'glide__bullet--active',
     activeSlide: 'glide__slide--active',
-    disabledArrow: 'glide__arrow--disabled',
-    activeBullet: 'glide__bullet--active'
+    disabledArrow: 'glide__arrow--disabled'
   }
 };
 
@@ -2388,12 +2387,13 @@ var Anchors = function (Glide, Components) {
   return ANCHORS;
 };
 
-var CONTROLS_SELECTOR = '[data-glide-el="controls"]';
+var NAV_SELECTOR = '[data-glide-el="controls[nav]"]';
+var CONTROLS_SELECTOR = '[data-glide-el^="controls"]';
 
 var Controls = function (Glide, Components) {
   var Binder = new EventsBinder();
 
-  return {
+  var CONTROLS = {
     /**
      * Inits arrows. Binds events listeners
      * to the arrows HTML elements.
@@ -2401,8 +2401,50 @@ var Controls = function (Glide, Components) {
      * @return {Void}
      */
     mount: function mount() {
+      this._n = Components.Html.root.querySelectorAll(NAV_SELECTOR);
       this._e = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR);
 
+      this.activeClass();
+      this.bindEvents();
+    },
+
+
+    /**
+     * Sets active class to current slide.
+     *
+     * @return {Void}
+     */
+    activeClass: function activeClass() {
+      for (var i = 0; i < this._n.length; i++) {
+        this.class(this._n[i]);
+      }
+    },
+
+
+    /**
+     * Toggles active class on items inside navigation.
+     *
+     * @param  {HTMLElement} wrapper
+     * @return {Void}
+     */
+    class: function _class(wrapper) {
+      var settings = Glide.settings;
+      var item = wrapper.children[Glide.index];
+
+      item.classList.add(settings.classes.activeNav);
+
+      siblings(item).forEach(function (sibling) {
+        sibling.classList.remove(settings.classes.activeNav);
+      });
+    },
+
+
+    /**
+     * Binds handles to the each group of controls.
+     *
+     * @return {Void}
+     */
+    bindEvents: function bindEvents() {
       for (var i = 0; i < this._e.length; i++) {
         this.bind(this._e[i]);
       }
@@ -2451,6 +2493,16 @@ var Controls = function (Glide, Components) {
       Components.Run.make(event.target.dataset.glideDir);
     }
   };
+
+  /**
+   * Swap active class of current navigation item:
+   * - after each move to the new index
+   */
+  listen('move.after', function () {
+    CONTROLS.activeClass();
+  });
+
+  return CONTROLS;
 };
 
 var Keyboard = function (Glide, Components) {

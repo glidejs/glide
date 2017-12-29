@@ -1,54 +1,71 @@
-@import "variables";
+@import 'variables';
 
 .#{$glide-class} {
   $this: &;
 
-  &#{$glide-element-separator}arrows {
-    position: absolute;
-  }
+  $se: $glide-element-separator;
+  $sm: $glide-modifier-separator;
 
-  &#{$glide-element-separator}arrow {
+  &#{$se}arrow {
     position: absolute;
+    display: block;
+    top: 50%;
     z-index: 2;
     color: white;
     text-transform: uppercase;
-    font: 11px Arial, sans-serif;
     padding: 9px 12px;
     background-color: transparent;
     border: 2px solid rgba(255, 255, 255, 0.5);
     border-radius: 4px;
+    box-shadow: 0 0.25em 0.5em 0 rgba(0, 0, 0, 0.1);
+    text-shadow: 0px 0.25em 0.5em rgba(0, 0, 0, 0.1);
     opacity: 1;
-    transition: opacity 150ms ease, border 300ms ease-in-out;
     cursor: pointer;
+    transition: opacity 150ms ease, border 300ms ease-in-out;
+    transform: translateY(-50%);
+    line-height: 1;
 
     &:focus { outline: none; }
     &:hover { border-color: white; }
 
-    &#{$glide-modifier-separator}disabled {
+    &#{$sm}prev {
+      left: 2em;
+    }
+
+    &#{$sm}next {
+      right: 2em;
+    }
+
+    &#{$sm}disabled {
       opacity: 0.33;
     }
   }
 
-  &#{$glide-element-separator}bullets {
+  &#{$se}bullets {
     position: absolute;
     z-index: 2;
+    bottom: 2em;
+    left: 50%;
+    display: inline-flex;
     list-style: none;
+    transform: translateX(-50%);
+
+    & > * + * {
+      margin-left: 0.5em;
+    }
   }
 
-  &#{$glide-element-separator}bullet {
-    display: inline-block;
+  &#{$se}bullet {
     background-color: rgba(255, 255, 255, 0.5);
-    width: 12px;
-    height: 12px;
+    width: 9px;
+    height: 9px;
     padding: 0;
     border-radius: 50%;
     border: 2px solid transparent;
     transition: all 300ms ease-in-out;
     cursor: pointer;
-
-    &.active {
-      background-color: white;
-    }
+    line-height: 0;
+    box-shadow: 0 0.25em 0.5em 0 rgba(0, 0, 0, 0.1);
 
     &:focus {
       outline: none;
@@ -59,46 +76,19 @@
       border: 2px solid white;
       background-color: rgba(255, 255, 255, 0.5);
     }
-  }
 
-  &#{$glide-element-separator}arrows {
-    left: 50%;
-    height: 88%;
-    margin-top: 6%;
-  }
-
-  &#{$glide-element-separator}arrow {
-    transform: translateX(-50%);
-
-    &#{$glide-modifier-separator}prev {
-      top: 0;
-    }
-
-    &#{$glide-modifier-separator}next {
-      bottom: 0;
+    &--active {
+      background-color: white;
     }
   }
 
-  &#{$glide-element-separator}bullets {
-    top: 50%;
-    right: 8%;
-    width: 12px;
-    height: auto;
-    transform: translateY(-50%);
-  }
-
-  &#{$glide-element-separator}bullet {
-    vertical-align: middle;
-  }
-
-
-  &#{$glide-modifier-separator}swipeable {
+  &#{$sm}swipeable {
     cursor: grab;
     cursor: -moz-grab;
     cursor: -webkit-grab;
   }
 
-  &#{$glide-modifier-separator}dragging {
+  &#{$sm}dragging {
     cursor: grabbing;
     cursor: -moz-grabbing;
     cursor: -webkit-grabbing;

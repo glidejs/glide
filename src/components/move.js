@@ -12,7 +12,7 @@ const TYPES = {
 }
 
 export default function (Glide, Components, Events) {
-  const MOVEMENT = {
+  const MOVE = {
     /**
      * Constructs animation component.
      *
@@ -41,14 +41,14 @@ export default function (Glide, Components, Events) {
     }
   }
 
-  define(MOVEMENT, 'offset', {
+  define(MOVE, 'offset', {
     /**
      * Gets node of the glide track with slides.
      *
      * @return {Object}
      */
     get () {
-      return MOVEMENT._o
+      return MOVE._o
     },
 
     /**
@@ -57,11 +57,11 @@ export default function (Glide, Components, Events) {
      * @return {Object}
      */
     set (value) {
-      MOVEMENT._o = !isUndefined(value) ? parseInt(value) : 0
+      MOVE._o = !isUndefined(value) ? parseInt(value) : 0
     }
   })
 
-  define(MOVEMENT, 'translate', {
+  define(MOVE, 'translate', {
     /**
      * Gets translate value based on configured glide type.
      *
@@ -72,7 +72,7 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  define(MOVEMENT, 'value', {
+  define(MOVE, 'value', {
     /**
      * Gets translate value based on configured glide type.
      *
@@ -89,8 +89,8 @@ export default function (Glide, Components, Events) {
    * - on each standard run to move to newly calculated index
    */
   listen(['build.before', 'run'], () => {
-    MOVEMENT.make()
+    MOVE.make()
   })
 
-  return MOVEMENT
+  return MOVE
 }

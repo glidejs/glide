@@ -1032,6 +1032,275 @@ var Peek = function (Glide, Components, Events) {
   return PEEK;
 };
 
+/**
+ * Makes a string's first character uppercase.
+ *
+ * @param  {String} string
+ * @return {String}
+ */
+function ucfirst(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+/**
+ * Updates glide movement with width of additional clones width.
+ *
+ * @param  {Glide} Glide
+ * @param  {Array} Components
+ * @return {Object}
+ */
+var Grow = function (Glide, Components) {
+  return {
+    /**
+     * Adds to the passed translate width of the half of clones.
+     *
+     * @param  {Number} translate
+     * @return {Number}
+     */
+    translate: function translate(_translate) {
+      if (Glide.isType('carousel')) {
+        return _translate + Components.Clones.grow / 2;
+      }
+
+      return _translate;
+    }
+  };
+};
+
+/**
+ * Updates glide movement with a `peek` settings.
+ *
+ * @param  {Glide} Glide
+ * @param  {Array} Components
+ * @return {Object}
+ */
+var Peeking = function (Glide, Components) {
+  return {
+    /**
+     * Modifies passed translate value with a `peek` setting.
+     *
+     * @param  {Number} translate
+     * @return {Number}
+     */
+    translate: function translate(_translate) {
+      if (Glide.settings.focusAt >= 0) {
+        var peek = Components.Peek.value;
+
+        if (isObject(peek)) {
+          return _translate - peek.before;
+        }
+
+        return _translate - peek;
+      }
+
+      return _translate;
+    }
+  };
+};
+
+/**
+ * Updates glide movement with a `focusAt` settings.
+ *
+ * @param  {Glide} Glide
+ * @param  {Array} Components
+ * @return {Object}
+ */
+var Focusing = function (Glide, Components) {
+  return {
+    /**
+     * Modifies passed translate value with index in the `focusAt` setting.
+     *
+     * @param  {Number} translate
+     * @return {Number}
+     */
+    translate: function translate(_translate) {
+      var focusAt = Glide.settings.focusAt;
+      var width = Components.Dimensions.width;
+      var slideWidth = Components.Dimensions.slideWidth;
+
+      if (focusAt === 'center') {
+        return _translate - (width / 2 - slideWidth / 2);
+      }
+
+      return _translate - slideWidth * focusAt;
+    }
+  };
+};
+
+/**
+ * Collection of transformers.
+ *
+ * @type {Array}
+ */
+var TRANSFORMERS = [Grow, Peeking, Focusing];
+
+/**
+ * Applies diffrent transformers on translate value.
+ *
+ * @param  {Glide} Glide
+ * @param  {Components} Components
+ * @return {Object}
+ */
+var transformer = function (Glide, Components) {
+  return {
+    /**
+     * Piplines translate value with registered transformers.
+     *
+     * @param  {Number} translate
+     * @return {Number}
+     */
+    transform: function transform(translate) {
+      for (var i = 0; i < TRANSFORMERS.length; i++) {
+        translate = TRANSFORMERS[i](Glide, Components).translate(translate);
+      }
+
+      return translate;
+    }
+  };
+};
+
+/**
+ * Provide a transform value of the `slider` type glide.
+ *
+ * @param  {Glide}  Glide
+ * @param  {Object} Components
+ * @return {Number}
+ */
+var Slider = function (Glide, Components) {
+  var translate = Components.Dimensions.slideWidth * Glide.index;
+
+  return transformer(Glide, Components).transform(translate);
+};
+
+/**
+ * Provide a transform value of the `carousel` type glide.
+ *
+ * @param  {Glide}  Glide
+ * @param  {Object} Components
+ * @return {Number}
+ */
+var Carousel = function (Glide, Components) {
+  var mutator = transformer(Glide, Components);
+
+  var slideWidth = Components.Dimensions.slideWidth;
+  var slidesLength = Components.Html.slides.length;
+
+  if (Components.Run.isOffset('<')) {
+    Components.Transition.after(function () {
+      emit('carousel.jumping', {
+        movement: mutator.transform(slideWidth * (slidesLength - 1))
+      });
+    });
+
+    return mutator.transform(-slideWidth);
+  }
+
+  if (Components.Run.isOffset('>')) {
+    Components.Transition.after(function () {
+      emit('carousel.jumping', {
+        movement: mutator.transform(0)
+      });
+    });
+
+    return mutator.transform(slideWidth * slidesLength);
+  }
+
+  return mutator.transform(slideWidth * Glide.index);
+};
+
+var TYPES = {
+  Slider: Slider,
+  Carousel: Carousel
+};
+
+var Move = function (Glide, Components, Events$$1) {
+  var MOVE = {
+    /**
+     * Constructs animation component.
+     *
+     * @returns {Void}
+     */
+    mount: function mount() {
+      this._o = 0;
+    },
+
+
+    /**
+     * Makes configured animation type on slider.
+     *
+     * @param  {Number} offset
+     * @return {self}
+     */
+    make: function make() {
+      var offset = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+
+      this.offset = offset;
+
+      emit('move', {
+        movement: this.value
+      });
+
+      Components.Transition.after(function () {
+        emit('move.after');
+      });
+    }
+  };
+
+  define(MOVE, 'offset', {
+    /**
+     * Gets node of the glide track with slides.
+     *
+     * @return {Object}
+     */
+    get: function get() {
+      return MOVE._o;
+    },
+
+
+    /**
+     * Sets node of the glide track with slides.
+     *
+     * @return {Object}
+     */
+    set: function set(value) {
+      MOVE._o = !isUndefined(value) ? parseInt(value) : 0;
+    }
+  });
+
+  define(MOVE, 'translate', {
+    /**
+     * Gets translate value based on configured glide type.
+     *
+     * @return {Number}
+     */
+    get: function get() {
+      return TYPES[ucfirst(Glide.type)](Glide, Components);
+    }
+  });
+
+  define(MOVE, 'value', {
+    /**
+     * Gets translate value based on configured glide type.
+     *
+     * @return {Number}
+     */
+    get: function get() {
+      return this.translate - this.offset;
+    }
+  });
+
+  /**
+   * Make movement to proper slide on:
+   * - before build, so glide will start at `startAt` index
+   * - on each standard run to move to newly calculated index
+   */
+  listen(['build.before', 'run'], function () {
+    MOVE.make();
+  });
+
+  return MOVE;
+};
+
 var Build = function (Glide, Components, Events$$1) {
   var BUILD = {
     /**
@@ -1381,275 +1650,6 @@ var Resize = function (Glide, Components) {
       Binder.off('resize', window);
     }
   };
-};
-
-/**
- * Makes a string's first character uppercase.
- *
- * @param  {String} string
- * @return {String}
- */
-function ucfirst(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-/**
- * Updates glide movement with width of additional clones width.
- *
- * @param  {Glide} Glide
- * @param  {Array} Components
- * @return {Object}
- */
-var Grow = function (Glide, Components) {
-  return {
-    /**
-     * Adds to the passed translate width of the half of clones.
-     *
-     * @param  {Number} translate
-     * @return {Number}
-     */
-    translate: function translate(_translate) {
-      if (Glide.isType('carousel')) {
-        return _translate + Components.Clones.grow / 2;
-      }
-
-      return _translate;
-    }
-  };
-};
-
-/**
- * Updates glide movement with a `peek` settings.
- *
- * @param  {Glide} Glide
- * @param  {Array} Components
- * @return {Object}
- */
-var Peeking = function (Glide, Components) {
-  return {
-    /**
-     * Modifies passed translate value with a `peek` setting.
-     *
-     * @param  {Number} translate
-     * @return {Number}
-     */
-    translate: function translate(_translate) {
-      if (Glide.settings.focusAt >= 0) {
-        var peek = Components.Peek.value;
-
-        if (isObject(peek)) {
-          return _translate - peek.before;
-        }
-
-        return _translate - peek;
-      }
-
-      return _translate;
-    }
-  };
-};
-
-/**
- * Updates glide movement with a `focusAt` settings.
- *
- * @param  {Glide} Glide
- * @param  {Array} Components
- * @return {Object}
- */
-var Focusing = function (Glide, Components) {
-  return {
-    /**
-     * Modifies passed translate value with index in the `focusAt` setting.
-     *
-     * @param  {Number} translate
-     * @return {Number}
-     */
-    translate: function translate(_translate) {
-      var focusAt = Glide.settings.focusAt;
-      var width = Components.Dimensions.width;
-      var slideWidth = Components.Dimensions.slideWidth;
-
-      if (focusAt === 'center') {
-        return _translate - (width / 2 - slideWidth / 2);
-      }
-
-      return _translate - slideWidth * focusAt;
-    }
-  };
-};
-
-/**
- * Collection of transformers.
- *
- * @type {Array}
- */
-var TRANSFORMERS = [Grow, Peeking, Focusing];
-
-/**
- * Applies diffrent transformers on translate value.
- *
- * @param  {Glide} Glide
- * @param  {Components} Components
- * @return {Object}
- */
-var transformer = function (Glide, Components) {
-  return {
-    /**
-     * Piplines translate value with registered transformers.
-     *
-     * @param  {Number} translate
-     * @return {Number}
-     */
-    transform: function transform(translate) {
-      for (var i = 0; i < TRANSFORMERS.length; i++) {
-        translate = TRANSFORMERS[i](Glide, Components).translate(translate);
-      }
-
-      return translate;
-    }
-  };
-};
-
-/**
- * Provide a transform value of the `slider` type glide.
- *
- * @param  {Glide}  Glide
- * @param  {Object} Components
- * @return {Number}
- */
-var Slider = function (Glide, Components) {
-  var translate = Components.Dimensions.slideWidth * Glide.index;
-
-  return transformer(Glide, Components).transform(translate);
-};
-
-/**
- * Provide a transform value of the `carousel` type glide.
- *
- * @param  {Glide}  Glide
- * @param  {Object} Components
- * @return {Number}
- */
-var Carousel = function (Glide, Components) {
-  var mutator = transformer(Glide, Components);
-
-  var slideWidth = Components.Dimensions.slideWidth;
-  var slidesLength = Components.Html.slides.length;
-
-  if (Components.Run.isOffset('<')) {
-    Components.Transition.after(function () {
-      emit('carousel.jumping', {
-        movement: mutator.transform(slideWidth * (slidesLength - 1))
-      });
-    });
-
-    return mutator.transform(-slideWidth);
-  }
-
-  if (Components.Run.isOffset('>')) {
-    Components.Transition.after(function () {
-      emit('carousel.jumping', {
-        movement: mutator.transform(0)
-      });
-    });
-
-    return mutator.transform(slideWidth * slidesLength);
-  }
-
-  return mutator.transform(slideWidth * Glide.index);
-};
-
-var TYPES = {
-  Slider: Slider,
-  Carousel: Carousel
-};
-
-var Movement = function (Glide, Components, Events$$1) {
-  var MOVEMENT = {
-    /**
-     * Constructs animation component.
-     *
-     * @returns {Void}
-     */
-    mount: function mount() {
-      this._o = 0;
-    },
-
-
-    /**
-     * Makes configured animation type on slider.
-     *
-     * @param  {Number} offset
-     * @return {self}
-     */
-    make: function make() {
-      var offset = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-
-      this.offset = offset;
-
-      emit('move', {
-        movement: this.value
-      });
-
-      Components.Transition.after(function () {
-        emit('move.after');
-      });
-    }
-  };
-
-  define(MOVEMENT, 'offset', {
-    /**
-     * Gets node of the glide track with slides.
-     *
-     * @return {Object}
-     */
-    get: function get() {
-      return MOVEMENT._o;
-    },
-
-
-    /**
-     * Sets node of the glide track with slides.
-     *
-     * @return {Object}
-     */
-    set: function set(value) {
-      MOVEMENT._o = !isUndefined(value) ? parseInt(value) : 0;
-    }
-  });
-
-  define(MOVEMENT, 'translate', {
-    /**
-     * Gets translate value based on configured glide type.
-     *
-     * @return {Number}
-     */
-    get: function get() {
-      return TYPES[ucfirst(Glide.type)](Glide, Components);
-    }
-  });
-
-  define(MOVEMENT, 'value', {
-    /**
-     * Gets translate value based on configured glide type.
-     *
-     * @return {Number}
-     */
-    get: function get() {
-      return this.translate - this.offset;
-    }
-  });
-
-  /**
-   * Make movement to proper slide on:
-   * - before build, so glide will start at `startAt` index
-   * - on each standard run to move to newly calculated index
-   */
-  listen(['build.before', 'run'], function () {
-    MOVEMENT.make();
-  });
-
-  return MOVEMENT;
 };
 
 var Translate = function (Glide, Components) {
@@ -2664,7 +2664,7 @@ var COMPONENTS = {
   Translate: Translate,
   Transition: Transition,
   Dimensions: Dimensions,
-  Movement: Movement,
+  Move: Move,
   Peek: Peek,
   Clones: Clones,
   Resize: Resize,

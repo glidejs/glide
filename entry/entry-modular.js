@@ -3,10 +3,10 @@ import Core from '../src/index'
 import Run from '../src/components/run'
 import Html from '../src/components/html'
 import Peek from '../src/components/peek'
+import Move from '../src/components/move'
 import Build from '../src/components/build'
 import Clones from '../src/components/clones'
 import Resize from '../src/components/resize'
-import Movement from '../src/components/movement'
 import Translate from '../src/components/translate'
 import Transition from '../src/components/transition'
 import Dimensions from '../src/components/dimensions'
@@ -24,7 +24,7 @@ const COMPONENTS = {
   Translate,
   Transition,
   Dimensions,
-  Movement,
+  Move,
   Peek,
   Clones,
   Resize,

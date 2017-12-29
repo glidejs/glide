@@ -1,5 +1,5 @@
 import { define } from '../utils/object'
-import { emit } from '../core/event/events-bus'
+import { listen, emit } from '../core/event/events-bus'
 
 import EventsBinder from '../core/event/events-binder'
 
@@ -77,12 +77,12 @@ export default function (Glide, Components) {
           event.stopPropagation()
           event.preventDefault()
 
-          Components.Html.wrapper.classList.add(Glide.settings.classes.dragging)
+          Components.Html.root.classList.add(Glide.settings.classes.dragging)
+
+          emit('swipe.move')
         } else {
           return
         }
-
-        emit('swipe.move')
       }
     },
 
@@ -126,7 +126,7 @@ export default function (Glide, Components) {
           Components.Movement.make()
         }
 
-        Components.Html.wrapper.classList.remove(Glide.settings.classes.dragging)
+        Components.Html.root.classList.remove(Glide.settings.classes.dragging)
 
         this.unbindSwipeMove()
         this.unbindSwipeEnd()
@@ -254,6 +254,14 @@ export default function (Glide, Components) {
     get () {
       return !(Glide.disabled && dragging)
     }
+  })
+
+  /**
+   * Add component class:
+   * - after initial building
+   */
+  listen('build.after', () => {
+    Components.Html.root.classList.add(Glide.settings.classes.swipeable)
   })
 
   return SWIPE

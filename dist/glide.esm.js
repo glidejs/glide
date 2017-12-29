@@ -145,6 +145,7 @@ var defaults = {
     slider: 'glide--slider',
     carousel: 'glide--carousel',
     slideshow: 'glide--slideshow',
+    swipeable: 'glide--swipeable',
     dragging: 'glide--dragging',
     cloneSlide: 'glide__slide--clone',
     activeSlide: 'glide__slide--active',
@@ -1961,12 +1962,12 @@ var Swipe = function (Glide, Components) {
           event.stopPropagation();
           event.preventDefault();
 
-          Components.Html.wrapper.classList.add(Glide.settings.classes.dragging);
+          Components.Html.root.classList.add(Glide.settings.classes.dragging);
+
+          emit('swipe.move');
         } else {
           return;
         }
-
-        emit('swipe.move');
       }
     },
 
@@ -2008,7 +2009,7 @@ var Swipe = function (Glide, Components) {
           Components.Movement.make();
         }
 
-        Components.Html.wrapper.classList.remove(Glide.settings.classes.dragging);
+        Components.Html.root.classList.remove(Glide.settings.classes.dragging);
 
         this.unbindSwipeMove();
         this.unbindSwipeEnd();
@@ -2144,6 +2145,14 @@ var Swipe = function (Glide, Components) {
     get: function get() {
       return !(Glide.disabled && dragging);
     }
+  });
+
+  /**
+   * Add component class:
+   * - after initial building
+   */
+  listen('build.after', function () {
+    Components.Html.root.classList.add(Glide.settings.classes.swipeable);
   });
 
   return SWIPE;

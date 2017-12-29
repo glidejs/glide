@@ -139,6 +139,7 @@ export default {
     slider: 'glide--slider',
     carousel: 'glide--carousel',
     slideshow: 'glide--slideshow',
+    swipeable: 'glide--swipeable',
     dragging: 'glide--dragging',
     cloneSlide: 'glide__slide--clone',
     activeSlide: 'glide__slide--active',

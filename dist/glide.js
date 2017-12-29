@@ -371,7 +371,11 @@ function mount(glide, extensions, events) {
   var components = {};
 
   for (var name in extensions) {
-    components[name] = extensions[name](glide, components, events);
+    if (isFunction(extensions[name])) {
+      components[name] = extensions[name](glide, components, events);
+    } else {
+      warn('Extension must be a function');
+    }
   }
 
   for (var _name in components) {
@@ -575,10 +579,10 @@ var Glide$2 = function () {
     }
 
     /**
-    * Gets value of the core options.
-    *
-    * @return {Object}
-    */
+     * Gets value of the core options.
+     *
+     * @return {Object}
+     */
 
   }, {
     key: 'settings',
@@ -2629,7 +2633,7 @@ var Glide = function (_Core) {
     value: function mount() {
       var extensions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-      get(Glide.prototype.__proto__ || Object.getPrototypeOf(Glide.prototype), 'mount', this).call(this, _extends(COMPONENTS, extensions));
+      return get(Glide.prototype.__proto__ || Object.getPrototypeOf(Glide.prototype), 'mount', this).call(this, _extends(COMPONENTS, extensions));
     }
   }]);
   return Glide;

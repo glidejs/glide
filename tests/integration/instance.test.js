@@ -37,4 +37,26 @@ describe('Glide', () => {
     let glide = new Glide('#glide').mount()
     expect(glide.selector).toBe('#glide')
   })
+
+  test('should initialize extensions specified at mounting', () => {
+    let fn = jest.fn()
+    let stub = () => {
+      return { mount: fn }
+    }
+
+    new Glide('#glide').mount({ stub })
+
+    expect(fn).toHaveBeenCalled()
+  })
+
+  test('should warn about invalid extensions', () => {
+    let fn = jest.fn()
+    let stub = { mount () {} }
+
+    console.error = fn
+
+    new Glide('#glide').mount({ stub })
+
+    expect(fn).toHaveBeenCalled()
+  })
 })

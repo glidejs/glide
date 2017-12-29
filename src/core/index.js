@@ -1,3 +1,4 @@
+import { warn } from '../utils/log'
 import { isFunction } from '../utils/primitives'
 
 /**
@@ -13,7 +14,11 @@ export function mount (glide, extensions, events) {
   const components = {}
 
   for (let name in extensions) {
-    components[name] = extensions[name](glide, components, events)
+    if (isFunction(extensions[name])) {
+      components[name] = extensions[name](glide, components, events)
+    } else {
+      warn('Extension must be a function')
+    }
   }
 
   for (let name in components) {

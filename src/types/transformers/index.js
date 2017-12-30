@@ -12,6 +12,9 @@ const TRANSFORMERS = [
   Grow,
   Peeking,
   Focusing,
+  // It's important that the Rtl component
+  // be last on the list, so it reflects
+  // all previous transformations.
   Rtl
 ]
 

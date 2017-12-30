@@ -2067,14 +2067,22 @@ var Swipe = function (Glide, Components) {
             steps = Math.min(steps, parseInt(settings.perTouch));
           }
 
-          Components.Run.make('<' + steps);
+          if (settings.rtl) {
+            Components.Run.make('>' + steps);
+          } else {
+            Components.Run.make('<' + steps);
+          }
         } else if (swipeDistance < -threshold && swipeDeg < settings.touchAngle) {
           // While swipe is negative and lower than negative threshold move forward.
           if (settings.perTouch) {
             steps = Math.max(steps, -parseInt(settings.perTouch));
           }
 
-          Components.Run.make('>' + steps);
+          if (settings.rtl) {
+            Components.Run.make('<' + steps);
+          } else {
+            Components.Run.make('>' + steps);
+          }
         } else {
           // While swipe don't reach distance apply previous transform.
           Components.Move.make();

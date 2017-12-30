@@ -118,7 +118,11 @@ export default function (Glide, Components) {
             steps = Math.min(steps, parseInt(settings.perTouch))
           }
 
-          Components.Run.make(`<${steps}`)
+          if (settings.rtl) {
+            Components.Run.make(`>${steps}`)
+          } else {
+            Components.Run.make(`<${steps}`)
+          }
         } else if (
           swipeDistance < -threshold &&
           swipeDeg < settings.touchAngle
@@ -128,7 +132,11 @@ export default function (Glide, Components) {
             steps = Math.max(steps, -parseInt(settings.perTouch))
           }
 
-          Components.Run.make(`>${steps}`)
+          if (settings.rtl) {
+            Components.Run.make(`<${steps}`)
+          } else {
+            Components.Run.make(`>${steps}`)
+          }
         } else {
           // While swipe don't reach distance apply previous transform.
           Components.Move.make()

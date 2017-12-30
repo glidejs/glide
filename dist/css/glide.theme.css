@@ -65,3 +65,11 @@
   cursor: grabbing;
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing; }
+
+.glide--rtl .glide__arrow--prev {
+  left: auto;
+  right: 2em; }
+
+.glide--rtl .glide__arrow--next {
+  right: auto;
+  left: 2em; }

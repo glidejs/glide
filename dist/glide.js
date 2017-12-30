@@ -1507,7 +1507,6 @@ var Build = function (Glide, Components, Events$$1) {
    * - after each move to the new index
    */
   listen('move.after', function () {
-    console.log('asd');
     BUILD.activeClass();
   });
 

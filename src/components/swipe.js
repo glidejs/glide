@@ -106,7 +106,7 @@ export default function (Glide, Components) {
 
         let swipeDistance = swipe.pageX - swipeStartX
         let swipeDeg = swipeSin * 180 / Math.PI
-        let steps = Math.round(swipeDistance / Components.Dimensions.slideWidth)
+        let steps = Math.round(swipeDistance / Components.Sizes.slideWidth)
 
         if (swipeDistance > threshold && swipeDeg < Glide.settings.touchAngle) {
           // While swipe is positive and greater than threshold move backward.

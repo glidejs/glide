@@ -11,7 +11,7 @@ import { emit } from '../core/event/events-bus'
 export default function (Glide, Components) {
   const mutator = transformer(Glide, Components)
 
-  let slideWidth = Components.Dimensions.slideWidth
+  let slideWidth = Components.Sizes.slideWidth
   let slidesLength = Components.Html.slides.length
 
   if (Components.Run.isOffset('<')) {

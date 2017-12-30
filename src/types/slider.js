@@ -8,7 +8,7 @@ import transformer from './transformers/index'
  * @return {Number}
  */
 export default function (Glide, Components) {
-  let translate = Components.Dimensions.slideWidth * Glide.index
+  let translate = Components.Sizes.slideWidth * Glide.index
 
   return transformer(Glide, Components).transform(translate)
 }

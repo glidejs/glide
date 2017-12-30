@@ -15,8 +15,8 @@ export default function (Glide, Components) {
      */
     translate (translate) {
       let focusAt = Glide.settings.focusAt
-      let width = Components.Dimensions.width
-      let slideWidth = Components.Dimensions.slideWidth
+      let width = Components.Sizes.width
+      let slideWidth = Components.Sizes.slideWidth
 
       if (focusAt === 'center') {
         return translate - (width / 2 - slideWidth / 2)

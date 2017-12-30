@@ -59,7 +59,7 @@ export default function (Glide, Components, Events) {
       for (let i = 0; i < this.items.length; i++) {
         item = this.items[i]
 
-        item.style.width = Components.Dimensions.slideWidth
+        item.style.width = Components.Sizes.slideWidth
 
         // Append clone if pattern position is positive.
         // Prepend clone if pattern position is negative.
@@ -93,7 +93,7 @@ export default function (Glide, Components, Events) {
      */
     get () {
       if (Glide.isType('carousel')) {
-        return Components.Dimensions.slideWidth * CLONES.items.length
+        return Components.Sizes.slideWidth * CLONES.items.length
       }
 
       return 0

@@ -1005,16 +1005,18 @@ var Peek = function (Glide, Components, Events) {
      * @return {Void}
      */
     set: function set(value) {
+      var width = Components.Sizes.width;
+
       if (isObject(value)) {
         if (isString(value.before)) {
-          value.before = dimension(value.before, Components.Sizes.width);
+          value.before = dimension(value.before, width);
         }
         if (isString(value.after)) {
-          value.after = dimension(value.after, Components.Sizes.width);
+          value.after = dimension(value.after, width);
         }
       } else {
         if (isString(value)) {
-          value = dimension(value, Components.Sizes.width);
+          value = dimension(value, width);
         }
 
         if (!isNumber(value)) {
@@ -1353,8 +1355,10 @@ var Sizes = function (Glide, Components, Events$$1) {
      * @return {Void}
      */
     setupSlides: function setupSlides(dimention) {
-      for (var i = 0; i < Components.Html.slides.length; i++) {
-        Components.Html.slides[i].style.width = this.slideWidth + 'px';
+      var slides = Components.Html.slides;
+
+      for (var i = 0; i < slides.length; i++) {
+        slides[i].style.width = this.slideWidth + 'px';
       }
     },
 
@@ -1563,10 +1567,8 @@ var Clones = function (Glide, Components, Events$$1) {
      * @return {Void}
      */
     append: function append() {
-      var item = null;
-
       for (var i = 0; i < this.items.length; i++) {
-        item = this.items[i];
+        var item = this.items[i];
 
         item.style.width = Components.Sizes.slideWidth;
 
@@ -1998,6 +2000,8 @@ var Swipe = function (Glide, Components) {
      */
     move: function move(event) {
       if (this.enabled) {
+        var settings = Glide.settings;
+
         var swipe = this.touches(event);
 
         var subExSx = parseInt(swipe.pageX) - swipeStartX;
@@ -2009,19 +2013,19 @@ var Swipe = function (Glide, Components) {
 
         swipeSin = Math.asin(swipeCathetus / swipeHypotenuse);
 
-        if (swipeSin * 180 / Math.PI < Glide.settings.touchAngle) {
-          if (Glide.settings.rtl) {
-            Components.Move.make(-subExSx * parseFloat(Glide.settings.touchRatio));
+        if (swipeSin * 180 / Math.PI < settings.touchAngle) {
+          if (settings.rtl) {
+            Components.Move.make(-subExSx * parseFloat(settings.touchRatio));
           } else {
-            Components.Move.make(subExSx * parseFloat(Glide.settings.touchRatio));
+            Components.Move.make(subExSx * parseFloat(settings.touchRatio));
           }
         }
 
-        if (swipeSin * 180 / Math.PI < Glide.settings.touchAngle) {
+        if (swipeSin * 180 / Math.PI < settings.touchAngle) {
           event.stopPropagation();
           event.preventDefault();
 
-          Components.Html.root.classList.add(Glide.settings.classes.dragging);
+          Components.Html.root.classList.add(settings.classes.dragging);
 
           emit('swipe.move');
         } else {
@@ -2040,6 +2044,8 @@ var Swipe = function (Glide, Components) {
      */
     end: function end(event) {
       if (this.enabled) {
+        var settings = Glide.settings;
+
         var swipe = this.touches(event);
         var threshold = this.threshold(event);
 
@@ -2049,17 +2055,17 @@ var Swipe = function (Glide, Components) {
         var swipeDeg = swipeSin * 180 / Math.PI;
         var steps = Math.round(swipeDistance / Components.Sizes.slideWidth);
 
-        if (swipeDistance > threshold && swipeDeg < Glide.settings.touchAngle) {
+        if (swipeDistance > threshold && swipeDeg < settings.touchAngle) {
           // While swipe is positive and greater than threshold move backward.
-          if (Glide.settings.perTouch) {
-            steps = Math.min(steps, parseInt(Glide.settings.perTouch));
+          if (settings.perTouch) {
+            steps = Math.min(steps, parseInt(settings.perTouch));
           }
 
           Components.Run.make('<' + steps);
-        } else if (swipeDistance < -threshold && swipeDeg < Glide.settings.touchAngle) {
+        } else if (swipeDistance < -threshold && swipeDeg < settings.touchAngle) {
           // While swipe is negative and lower than negative threshold move forward.
-          if (Glide.settings.perTouch) {
-            steps = Math.max(steps, -parseInt(Glide.settings.perTouch));
+          if (settings.perTouch) {
+            steps = Math.max(steps, -parseInt(settings.perTouch));
           }
 
           Components.Run.make('>' + steps);
@@ -2068,7 +2074,7 @@ var Swipe = function (Glide, Components) {
           Components.Move.make();
         }
 
-        Components.Html.root.classList.remove(Glide.settings.classes.dragging);
+        Components.Html.root.classList.remove(settings.classes.dragging);
 
         this.unbindSwipeMove();
         this.unbindSwipeEnd();
@@ -2084,11 +2090,13 @@ var Swipe = function (Glide, Components) {
     * @return {Void}
     */
     bindSwipeStart: function bindSwipeStart() {
-      if (Glide.settings.swipeThreshold) {
+      var settings = Glide.settings;
+
+      if (settings.swipeThreshold) {
         Binder.on(START_EVENTS[0], Components.Html.wrapper, this.start.bind(this));
       }
 
-      if (Glide.settings.dragThreshold) {
+      if (settings.dragThreshold) {
         Binder.on(START_EVENTS[1], Components.Html.wrapper, this.start.bind(this));
       }
     },
@@ -2159,11 +2167,13 @@ var Swipe = function (Glide, Components) {
      * @return {Number}
      */
     threshold: function threshold(event) {
+      var settings = Glide.settings;
+
       if (MOUSE_EVENTS.includes(event.type)) {
-        return Glide.settings.dragThreshold;
+        return settings.dragThreshold;
       }
 
-      return Glide.settings.swipeThreshold;
+      return settings.swipeThreshold;
     },
 
 

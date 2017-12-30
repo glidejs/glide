@@ -20,8 +20,10 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     setupSlides (dimention) {
-      for (var i = 0; i < Components.Html.slides.length; i++) {
-        Components.Html.slides[i].style.width = `${this.slideWidth}px`
+      let slides = Components.Html.slides
+
+      for (var i = 0; i < slides.length; i++) {
+        slides[i].style.width = `${this.slideWidth}px`
       }
     },
 

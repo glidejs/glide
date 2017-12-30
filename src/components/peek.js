@@ -33,16 +33,18 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     set (value) {
+      let width = Components.Sizes.width
+
       if (isObject(value)) {
         if (isString(value.before)) {
-          value.before = dimension(value.before, Components.Sizes.width)
+          value.before = dimension(value.before, width)
         }
         if (isString(value.after)) {
-          value.after = dimension(value.after, Components.Sizes.width)
+          value.after = dimension(value.after, width)
         }
       } else {
         if (isString(value)) {
-          value = dimension(value, Components.Sizes.width)
+          value = dimension(value, width)
         }
 
         if (!isNumber(value)) {

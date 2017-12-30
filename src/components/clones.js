@@ -54,10 +54,8 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     append () {
-      var item = null
-
       for (let i = 0; i < this.items.length; i++) {
-        item = this.items[i]
+        let item = this.items[i]
 
         item.style.width = Components.Sizes.slideWidth
 

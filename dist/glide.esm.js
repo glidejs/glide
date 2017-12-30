@@ -1307,11 +1307,14 @@ var Move = function (Glide, Components, Events$$1) {
      * @return {Number}
      */
     get: function get() {
+      var offset = this.offset;
+      var translate = this.translate;
+
       if (Glide.settings.rtl) {
-        return this.translate + this.offset;
+        return translate + offset;
       }
 
-      return this.translate - this.offset;
+      return translate - offset;
     }
   });
 

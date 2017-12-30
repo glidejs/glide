@@ -10,10 +10,22 @@ export default function (Glide, Components, Events) {
     mount () {
       emit('build.before', Glide)
 
+      this.dirClass()
       this.typeClass()
       this.activeClass()
 
       emit('build.after', Glide)
+    },
+
+    /**
+     * Adds `rtl` class to the glide element.
+     *
+     * @return {Void}
+     */
+    dirClass () {
+      if (Glide.settings.rtl) {
+        Components.Html.root.classList.add(Glide.settings.classes.rtl)
+      }
     },
 
     /**

@@ -142,12 +142,15 @@ var defaults = {
    */
   peek: 0,
 
+  rtl: false,
+
   /**
    * List of internally used html classes.
    *
    * @type {Object}
    */
   classes: {
+    rtl: 'glide--rtl',
     slider: 'glide--slider',
     carousel: 'glide--carousel',
     swipeable: 'glide--swipeable',
@@ -1049,6 +1052,31 @@ function ucfirst(string) {
  * @param  {Array} Components
  * @return {Object}
  */
+var Rtl = function (Glide, Components) {
+  return {
+    /**
+     * Adds to the passed translate width of the half of clones.
+     *
+     * @param  {Number} translate
+     * @return {Number}
+     */
+    translate: function translate(_translate) {
+      if (Glide.settings.rtl) {
+        return -_translate;
+      }
+
+      return _translate;
+    }
+  };
+};
+
+/**
+ * Updates glide movement with width of additional clones width.
+ *
+ * @param  {Glide} Glide
+ * @param  {Array} Components
+ * @return {Object}
+ */
 var Grow = function (Glide, Components) {
   return {
     /**
@@ -1132,7 +1160,7 @@ var Focusing = function (Glide, Components) {
  *
  * @type {Array}
  */
-var TRANSFORMERS = [Grow, Peeking, Focusing];
+var TRANSFORMERS = [Grow, Peeking, Focusing, Rtl];
 
 /**
  * Applies diffrent transformers on translate value.
@@ -1285,6 +1313,10 @@ var Move = function (Glide, Components, Events$$1) {
      * @return {Number}
      */
     get: function get() {
+      if (Glide.settings.rtl) {
+        return this.translate + this.offset;
+      }
+
       return this.translate - this.offset;
     }
   });
@@ -1310,10 +1342,23 @@ var Build = function (Glide, Components, Events$$1) {
     mount: function mount() {
       emit('build.before', Glide);
 
+      this.dirClass();
       this.typeClass();
       this.activeClass();
 
       emit('build.after', Glide);
+    },
+
+
+    /**
+     * Adds `rtl` class to the glide element.
+     *
+     * @return {Void}
+     */
+    dirClass: function dirClass() {
+      if (Glide.settings.rtl) {
+        Components.Html.root.classList.add(Glide.settings.classes.rtl);
+      }
     },
 
 

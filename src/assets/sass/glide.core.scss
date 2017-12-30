@@ -61,31 +61,7 @@
     user-select: none;
   }
 
-  &#{$glide-modifier-separator}carousel {
-    &#{$this}#{$glide-modifier-separator}vertical {
-      #{$this}#{$glide-element-separator}slides {
-        overflow: visible;
-      }
-    }
-  }
-
-  &#{$glide-modifier-separator}slideshow {
-    #{$this}#{$glide-element-separator}track {
-      height: 100%;
-    }
-
-    #{$this}#{$glide-element-separator}slide {
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: -1;
-      -webkit-transform-style: preserve-3d;
-      -webkit-transform: translate3d(0, 0, 0);
-
-      &#{$glide-modifier-separator}active {
-        z-index: 1;
-      }
-    }
+  &#{$glide-modifier-separator}rtl {
+    direction: rtl;
   }
 }

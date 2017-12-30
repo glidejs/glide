@@ -32,13 +32,15 @@ const COMPONENTS = {
   Run
 }
 
-export { Swipe }
-export { Height }
-export { Images }
-export { Anchors }
-export { Controls }
-export { Keyboard }
-export { Autoplay }
+export {
+  Swipe,
+  Height,
+  Images,
+  Anchors,
+  Controls,
+  Keyboard,
+  Autoplay
+}
 
 export default class Glide extends Core {
   mount (extensions = {}) {

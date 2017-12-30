@@ -18,11 +18,15 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     map () {
-      for (let i = 0; i < Glide.settings.perView; i++) {
+      // We should have one more slides clones
+      // than we have slides per view.
+      let total = Glide.settings.perView + 1
+
+      for (let i = 0; i < total; i++) {
         pattern.push(i)
       }
 
-      for (let i = Glide.settings.perView - 1; i >= 0; i--) {
+      for (let i = total - 1; i >= 0; i--) {
         pattern.push(-(Components.Html.slides.length - 1) + i)
       }
     },

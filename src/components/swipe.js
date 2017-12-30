@@ -70,7 +70,11 @@ export default function (Glide, Components) {
         swipeSin = Math.asin(swipeCathetus / swipeHypotenuse)
 
         if (swipeSin * 180 / Math.PI < Glide.settings.touchAngle) {
-          Components.Movement.make(subExSx * parseFloat(Glide.settings.touchRatio))
+          if (Glide.settings.rtl) {
+            Components.Move.make(-subExSx * parseFloat(Glide.settings.touchRatio))
+          } else {
+            Components.Move.make(subExSx * parseFloat(Glide.settings.touchRatio))
+          }
         }
 
         if (swipeSin * 180 / Math.PI < Glide.settings.touchAngle) {
@@ -123,7 +127,7 @@ export default function (Glide, Components) {
           Components.Run.make(`>${steps}`)
         } else {
           // While swipe don't reach distance apply previous transform.
-          Components.Movement.make()
+          Components.Move.make()
         }
 
         Components.Html.root.classList.remove(Glide.settings.classes.dragging)

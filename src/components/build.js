@@ -67,6 +67,7 @@ export default function (Glide, Components, Events) {
    * - after each move to the new index
    */
   listen('move.after', () => {
+    console.log('asd')
     BUILD.activeClass()
   })
 

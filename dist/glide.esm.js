@@ -1154,7 +1154,11 @@ var Focusing = function (Glide, Components) {
  *
  * @type {Array}
  */
-var TRANSFORMERS = [Grow, Peeking, Focusing, Rtl];
+var TRANSFORMERS = [Grow, Peeking, Focusing,
+// It's important that the Rtl component
+// be last on the list, so it reflects
+// all previous transformations.
+Rtl];
 
 /**
  * Applies diffrent transformers on translate value.
@@ -1399,6 +1403,7 @@ var Build = function (Glide, Components, Events$$1) {
    * - after each move to the new index
    */
   listen('move.after', function () {
+    console.log('asd');
     BUILD.activeClass();
   });
 
@@ -1423,11 +1428,15 @@ var Clones = function (Glide, Components, Events$$1) {
      * @return {Void}
      */
     map: function map() {
-      for (var i = 0; i < Glide.settings.perView; i++) {
+      // We should have one more slides clones
+      // than we have slides per view.
+      var total = Glide.settings.perView + 1;
+
+      for (var i = 0; i < total; i++) {
         pattern.push(i);
       }
 
-      for (var _i = Glide.settings.perView - 1; _i >= 0; _i--) {
+      for (var _i = total - 1; _i >= 0; _i--) {
         pattern.push(-(Components.Html.slides.length - 1) + _i);
       }
     },
@@ -2002,7 +2011,11 @@ var Swipe = function (Glide, Components) {
         swipeSin = Math.asin(swipeCathetus / swipeHypotenuse);
 
         if (swipeSin * 180 / Math.PI < Glide.settings.touchAngle) {
-          Components.Movement.make(subExSx * parseFloat(Glide.settings.touchRatio));
+          if (Glide.settings.rtl) {
+            Components.Move.make(-subExSx * parseFloat(Glide.settings.touchRatio));
+          } else {
+            Components.Move.make(subExSx * parseFloat(Glide.settings.touchRatio));
+          }
         }
 
         if (swipeSin * 180 / Math.PI < Glide.settings.touchAngle) {
@@ -2053,7 +2066,7 @@ var Swipe = function (Glide, Components) {
           Components.Run.make('>' + steps);
         } else {
           // While swipe don't reach distance apply previous transform.
-          Components.Movement.make();
+          Components.Move.make();
         }
 
         Components.Html.root.classList.remove(Glide.settings.classes.dragging);

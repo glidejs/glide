@@ -2627,11 +2627,19 @@ var Keyboard = function (Glide, Components) {
      */
     press: function press(event) {
       if (event.keyCode === 39) {
-        Components.Run.make('>');
+        if (Glide.settings.rtl) {
+          Components.Run.make('<');
+        } else {
+          Components.Run.make('>');
+        }
       }
 
       if (event.keyCode === 37) {
-        Components.Run.make('<');
+        if (Glide.settings.rtl) {
+          Components.Run.make('>');
+        } else {
+          Components.Run.make('<');
+        }
       }
     }
   };

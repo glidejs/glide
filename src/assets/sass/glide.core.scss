@@ -3,6 +3,9 @@
 .#{$glide-class} {
   $this: &;
 
+  $se: $glide-element-separator;
+  $sm: $glide-modifier-separator;
+
   position: relative;
   width: 100%;
   box-sizing: border-box;
@@ -11,11 +14,11 @@
     box-sizing: inherit;
   }
 
-  &#{$glide-element-separator}track {
+  &#{$se}track {
     overflow: hidden;
   }
 
-  &#{$glide-element-separator}slides {
+  &#{$se}slides {
     position: relative;
     width: 100%;
     list-style: none;
@@ -34,7 +37,7 @@
     }
   }
 
-  &#{$glide-element-separator}slide {
+  &#{$se}slide {
     width: 100%;
     height: 100%;
     flex-shrink: 0;
@@ -51,41 +54,17 @@
     }
   }
 
-  &#{$glide-element-separator}arrows {
+  &#{$se}arrows {
     -webkit-touch-callout: none;
     user-select: none;
   }
 
-  &#{$glide-element-separator}bullets {
+  &#{$se}bullets {
     -webkit-touch-callout: none;
     user-select: none;
   }
 
-  &#{$glide-modifier-separator}carousel {
-    &#{$this}#{$glide-modifier-separator}vertical {
-      #{$this}#{$glide-element-separator}slides {
-        overflow: visible;
-      }
-    }
-  }
-
-  &#{$glide-modifier-separator}slideshow {
-    #{$this}#{$glide-element-separator}track {
-      height: 100%;
-    }
-
-    #{$this}#{$glide-element-separator}slide {
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: -1;
-      -webkit-transform-style: preserve-3d;
-      -webkit-transform: translate3d(0, 0, 0);
-
-      &#{$glide-modifier-separator}active {
-        z-index: 1;
-      }
-    }
+  &#{$sm}rtl {
+    direction: rtl;
   }
 }

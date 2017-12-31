@@ -61,14 +61,15 @@
 
   var glide = new Glide(el, {
     type: 'carousel',
-    perView: 4,
+    perView: 2,
     startAt: 1,
-    focusAt: 'center',
+    focusAt: 1,
     peek: {
       before: '5%',
       after: '5%'
     },
     autoplay: false,
+    rtl: true
   })
 
   glide.on(['mount.after', 'build.after'], function (glide) {

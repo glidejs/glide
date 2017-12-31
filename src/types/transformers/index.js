@@ -1,3 +1,4 @@
+import Rtl from './rtl'
 import Grow from './grow'
 import Peeking from './peeking'
 import Focusing from './focusing'
@@ -10,7 +11,11 @@ import Focusing from './focusing'
 const TRANSFORMERS = [
   Grow,
   Peeking,
-  Focusing
+  Focusing,
+  // It's important that the Rtl component
+  // be last on the list, so it reflects
+  // all previous transformations.
+  Rtl
 ]
 
 /**

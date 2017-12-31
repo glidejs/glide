@@ -40,17 +40,5 @@
   .glide__bullets {
     -webkit-touch-callout: none;
     user-select: none; }
-  .glide--carousel.glide--vertical .glide__slides {
-    overflow: visible; }
-  .glide--slideshow .glide__track {
-    height: 100%; }
-  .glide--slideshow .glide__slide {
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1;
-    -webkit-transform-style: preserve-3d;
-    -webkit-transform: translate3d(0, 0, 0); }
-    .glide--slideshow .glide__slide--active {
-      z-index: 1; }
+  .glide--rtl {
+    direction: rtl; }

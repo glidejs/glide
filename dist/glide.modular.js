@@ -136,12 +136,15 @@ var defaults = {
    */
   peek: 0,
 
+  rtl: false,
+
   /**
    * List of internally used html classes.
    *
    * @type {Object}
    */
   classes: {
+    rtl: 'glide--rtl',
     slider: 'glide--slider',
     carousel: 'glide--carousel',
     swipeable: 'glide--swipeable',
@@ -1002,16 +1005,18 @@ var Peek = function (Glide, Components, Events) {
      * @return {Void}
      */
     set: function set(value) {
+      var width = Components.Sizes.width;
+
       if (isObject(value)) {
         if (isString(value.before)) {
-          value.before = dimension(value.before, Components.Dimensions.width);
+          value.before = dimension(value.before, width);
         }
         if (isString(value.after)) {
-          value.after = dimension(value.after, Components.Dimensions.width);
+          value.after = dimension(value.after, width);
         }
       } else {
         if (isString(value)) {
-          value = dimension(value, Components.Dimensions.width);
+          value = dimension(value, width);
         }
 
         if (!isNumber(value)) {
@@ -1035,6 +1040,31 @@ var Peek = function (Glide, Components, Events) {
 function ucfirst(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+/**
+ * Updates glide movement with width of additional clones width.
+ *
+ * @param  {Glide} Glide
+ * @param  {Array} Components
+ * @return {Object}
+ */
+var Rtl = function (Glide, Components) {
+  return {
+    /**
+     * Adds to the passed translate width of the half of clones.
+     *
+     * @param  {Number} translate
+     * @return {Number}
+     */
+    translate: function translate(_translate) {
+      if (Glide.settings.rtl) {
+        return -_translate;
+      }
+
+      return _translate;
+    }
+  };
+};
 
 /**
  * Updates glide movement with width of additional clones width.
@@ -1109,8 +1139,8 @@ var Focusing = function (Glide, Components) {
      */
     translate: function translate(_translate) {
       var focusAt = Glide.settings.focusAt;
-      var width = Components.Dimensions.width;
-      var slideWidth = Components.Dimensions.slideWidth;
+      var width = Components.Sizes.width;
+      var slideWidth = Components.Sizes.slideWidth;
 
       if (focusAt === 'center') {
         return _translate - (width / 2 - slideWidth / 2);
@@ -1126,7 +1156,11 @@ var Focusing = function (Glide, Components) {
  *
  * @type {Array}
  */
-var TRANSFORMERS = [Grow, Peeking, Focusing];
+var TRANSFORMERS = [Grow, Peeking, Focusing,
+// It's important that the Rtl component
+// be last on the list, so it reflects
+// all previous transformations.
+Rtl];
 
 /**
  * Applies diffrent transformers on translate value.
@@ -1161,7 +1195,7 @@ var transformer = function (Glide, Components) {
  * @return {Number}
  */
 var Slider = function (Glide, Components) {
-  var translate = Components.Dimensions.slideWidth * Glide.index;
+  var translate = Components.Sizes.slideWidth * Glide.index;
 
   return transformer(Glide, Components).transform(translate);
 };
@@ -1176,7 +1210,7 @@ var Slider = function (Glide, Components) {
 var Carousel = function (Glide, Components) {
   var mutator = transformer(Glide, Components);
 
-  var slideWidth = Components.Dimensions.slideWidth;
+  var slideWidth = Components.Sizes.slideWidth;
   var slidesLength = Components.Html.slides.length;
 
   if (Components.Run.isOffset('<')) {
@@ -1279,7 +1313,14 @@ var Move = function (Glide, Components, Events$$1) {
      * @return {Number}
      */
     get: function get() {
-      return this.translate - this.offset;
+      var offset = this.offset;
+      var translate = this.translate;
+
+      if (Glide.settings.rtl) {
+        return translate + offset;
+      }
+
+      return translate - offset;
     }
   });
 
@@ -1295,6 +1336,106 @@ var Move = function (Glide, Components, Events$$1) {
   return MOVE;
 };
 
+var Sizes = function (Glide, Components, Events$$1) {
+  var SIZES = {
+    /**
+     * Applys dimentions to the glide HTML elements.
+     *
+     * @return {Void}
+     */
+    apply: function apply() {
+      this.setupSlides();
+      this.setupWrapper();
+    },
+
+
+    /**
+     * Setups dimentions of slides.
+     *
+     * @return {Void}
+     */
+    setupSlides: function setupSlides(dimention) {
+      var slides = Components.Html.slides;
+
+      for (var i = 0; i < slides.length; i++) {
+        slides[i].style.width = this.slideWidth + 'px';
+      }
+    },
+
+
+    /**
+     * Setups dimentions of slides wrapper.
+     *
+     * @return {Void}
+     */
+    setupWrapper: function setupWrapper(dimention) {
+      Components.Html.wrapper.style.width = this.wrapperSize + 'px';
+    }
+  };
+
+  define(SIZES, 'wrapperSize', {
+    /**
+     * Gets size of the slides wrapper.
+     *
+     * @return {Number}
+     */
+    get: function get() {
+      return SIZES.slideWidth * SIZES.length + Components.Clones.grow;
+    }
+  });
+
+  define(SIZES, 'length', {
+    /**
+     * Gets count number of the slides.
+     *
+     * @return {Number}
+     */
+    get: function get() {
+      return Components.Html.slides.length;
+    }
+  });
+
+  define(SIZES, 'width', {
+    /**
+     * Gets width value of the glide.
+     *
+     * @return {Number}
+     */
+    get: function get() {
+      return Components.Html.root.offsetWidth;
+    }
+  });
+
+  define(SIZES, 'slideWidth', {
+    /**
+     * Gets width value of the single slide.
+     *
+     * @return {Number}
+     */
+    get: function get() {
+      var peek = Components.Peek.value;
+      var perView = Glide.settings.perView;
+      var rootWidth = Components.Html.root.offsetWidth;
+
+      if (isObject(peek)) {
+        return rootWidth / perView - peek.before / perView - peek.after / perView;
+      }
+
+      return rootWidth / perView - peek * 2 / perView;
+    }
+  });
+
+  /**
+   * Apply calculated glide's dimensions on:
+   * - before building, so other dimentions (e.g. translate) will be calculated propertly
+   */
+  listen('build.before', function () {
+    SIZES.apply();
+  });
+
+  return SIZES;
+};
+
 var Build = function (Glide, Components, Events$$1) {
   var BUILD = {
     /**
@@ -1304,10 +1445,23 @@ var Build = function (Glide, Components, Events$$1) {
     mount: function mount() {
       emit('build.before', Glide);
 
+      this.dirClass();
       this.typeClass();
       this.activeClass();
 
       emit('build.after', Glide);
+    },
+
+
+    /**
+     * Adds `rtl` class to the glide element.
+     *
+     * @return {Void}
+     */
+    dirClass: function dirClass() {
+      if (Glide.settings.rtl) {
+        Components.Html.root.classList.add(Glide.settings.classes.rtl);
+      }
     },
 
 
@@ -1375,11 +1529,15 @@ var Clones = function (Glide, Components, Events$$1) {
      * @return {Void}
      */
     map: function map() {
-      for (var i = 0; i < Glide.settings.perView; i++) {
+      // We should have one more slides clones
+      // than we have slides per view.
+      var total = Glide.settings.perView + 1;
+
+      for (var i = 0; i < total; i++) {
         pattern.push(i);
       }
 
-      for (var _i = Glide.settings.perView - 1; _i >= 0; _i--) {
+      for (var _i = total - 1; _i >= 0; _i--) {
         pattern.push(-(Components.Html.slides.length - 1) + _i);
       }
     },
@@ -1409,12 +1567,10 @@ var Clones = function (Glide, Components, Events$$1) {
      * @return {Void}
      */
     append: function append() {
-      var item = null;
-
       for (var i = 0; i < this.items.length; i++) {
-        item = this.items[i];
+        var item = this.items[i];
 
-        item.style.width = Components.Dimensions.slideWidth;
+        item.style.width = Components.Sizes.slideWidth;
 
         // Append clone if pattern position is positive.
         // Prepend clone if pattern position is negative.
@@ -1449,7 +1605,7 @@ var Clones = function (Glide, Components, Events$$1) {
      */
     get: function get() {
       if (Glide.isType('carousel')) {
-        return Components.Dimensions.slideWidth * CLONES.items.length;
+        return Components.Sizes.slideWidth * CLONES.items.length;
       }
 
       return 0;
@@ -1787,104 +1943,6 @@ var Transition = function (Glide, Components, Events$$1) {
   return TRANSITION;
 };
 
-var Dimensions = function (Glide, Components, Events$$1) {
-  var DIMENSIONS = {
-    /**
-     * Applys dimentions to the glide HTML elements.
-     *
-     * @return {Void}
-     */
-    apply: function apply() {
-      this.setupSlides();
-      this.setupWrapper();
-    },
-
-
-    /**
-     * Setups dimentions of slides.
-     *
-     * @return {Void}
-     */
-    setupSlides: function setupSlides(dimention) {
-      for (var i = 0; i < Components.Html.slides.length; i++) {
-        Components.Html.slides[i].style.width = this.slideWidth + 'px';
-      }
-    },
-
-
-    /**
-     * Setups dimentions of slides wrapper.
-     *
-     * @return {Void}
-     */
-    setupWrapper: function setupWrapper(dimention) {
-      Components.Html.wrapper.style.width = this.wrapperSize + 'px';
-    }
-  };
-
-  define(DIMENSIONS, 'wrapperSize', {
-    /**
-     * Gets size of the slides wrapper.
-     *
-     * @return {Number}
-     */
-    get: function get() {
-      return DIMENSIONS.slideWidth * DIMENSIONS.length + Components.Clones.grow;
-    }
-  });
-
-  define(DIMENSIONS, 'length', {
-    /**
-     * Gets count number of the slides.
-     *
-     * @return {Number}
-     */
-    get: function get() {
-      return Components.Html.slides.length;
-    }
-  });
-
-  define(DIMENSIONS, 'width', {
-    /**
-     * Gets width value of the glide.
-     *
-     * @return {Number}
-     */
-    get: function get() {
-      return Components.Html.root.offsetWidth;
-    }
-  });
-
-  define(DIMENSIONS, 'slideWidth', {
-    /**
-     * Gets width value of the single slide.
-     *
-     * @return {Number}
-     */
-    get: function get() {
-      var peek = Components.Peek.value;
-      var perView = Glide.settings.perView;
-      var rootWidth = Components.Html.root.offsetWidth;
-
-      if (isObject(peek)) {
-        return rootWidth / perView - peek.before / perView - peek.after / perView;
-      }
-
-      return rootWidth / perView - peek * 2 / perView;
-    }
-  });
-
-  /**
-   * Apply calculated glide's dimensions on:
-   * - before building, so other dimentions (e.g. translate) will be calculated propertly
-   */
-  listen('build.before', function () {
-    DIMENSIONS.apply();
-  });
-
-  return DIMENSIONS;
-};
-
 var START_EVENTS = ['touchstart', 'mousedown'];
 var MOVE_EVENTS = ['touchmove', 'mousemove'];
 var END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave'];
@@ -1942,6 +2000,8 @@ var swipe = function (Glide, Components) {
      */
     move: function move(event) {
       if (this.enabled) {
+        var settings = Glide.settings;
+
         var swipe = this.touches(event);
 
         var subExSx = parseInt(swipe.pageX) - swipeStartX;
@@ -1953,15 +2013,19 @@ var swipe = function (Glide, Components) {
 
         swipeSin = Math.asin(swipeCathetus / swipeHypotenuse);
 
-        if (swipeSin * 180 / Math.PI < Glide.settings.touchAngle) {
-          Components.Movement.make(subExSx * parseFloat(Glide.settings.touchRatio));
+        if (swipeSin * 180 / Math.PI < settings.touchAngle) {
+          if (settings.rtl) {
+            Components.Move.make(-subExSx * parseFloat(settings.touchRatio));
+          } else {
+            Components.Move.make(subExSx * parseFloat(settings.touchRatio));
+          }
         }
 
-        if (swipeSin * 180 / Math.PI < Glide.settings.touchAngle) {
+        if (swipeSin * 180 / Math.PI < settings.touchAngle) {
           event.stopPropagation();
           event.preventDefault();
 
-          Components.Html.root.classList.add(Glide.settings.classes.dragging);
+          Components.Html.root.classList.add(settings.classes.dragging);
 
           emit('swipe.move');
         } else {
@@ -1980,6 +2044,8 @@ var swipe = function (Glide, Components) {
      */
     end: function end(event) {
       if (this.enabled) {
+        var settings = Glide.settings;
+
         var swipe = this.touches(event);
         var threshold = this.threshold(event);
 
@@ -1987,28 +2053,36 @@ var swipe = function (Glide, Components) {
 
         var swipeDistance = swipe.pageX - swipeStartX;
         var swipeDeg = swipeSin * 180 / Math.PI;
-        var steps = Math.round(swipeDistance / Components.Dimensions.slideWidth);
+        var steps = Math.round(swipeDistance / Components.Sizes.slideWidth);
 
-        if (swipeDistance > threshold && swipeDeg < Glide.settings.touchAngle) {
+        if (swipeDistance > threshold && swipeDeg < settings.touchAngle) {
           // While swipe is positive and greater than threshold move backward.
-          if (Glide.settings.perTouch) {
-            steps = Math.min(steps, parseInt(Glide.settings.perTouch));
+          if (settings.perTouch) {
+            steps = Math.min(steps, parseInt(settings.perTouch));
           }
 
-          Components.Run.make('<' + steps);
-        } else if (swipeDistance < -threshold && swipeDeg < Glide.settings.touchAngle) {
+          if (settings.rtl) {
+            Components.Run.make('>' + steps);
+          } else {
+            Components.Run.make('<' + steps);
+          }
+        } else if (swipeDistance < -threshold && swipeDeg < settings.touchAngle) {
           // While swipe is negative and lower than negative threshold move forward.
-          if (Glide.settings.perTouch) {
-            steps = Math.max(steps, -parseInt(Glide.settings.perTouch));
+          if (settings.perTouch) {
+            steps = Math.max(steps, -parseInt(settings.perTouch));
           }
 
-          Components.Run.make('>' + steps);
+          if (settings.rtl) {
+            Components.Run.make('<' + steps);
+          } else {
+            Components.Run.make('>' + steps);
+          }
         } else {
           // While swipe don't reach distance apply previous transform.
-          Components.Movement.make();
+          Components.Move.make();
         }
 
-        Components.Html.root.classList.remove(Glide.settings.classes.dragging);
+        Components.Html.root.classList.remove(settings.classes.dragging);
 
         this.unbindSwipeMove();
         this.unbindSwipeEnd();
@@ -2024,11 +2098,13 @@ var swipe = function (Glide, Components) {
     * @return {Void}
     */
     bindSwipeStart: function bindSwipeStart() {
-      if (Glide.settings.swipeThreshold) {
+      var settings = Glide.settings;
+
+      if (settings.swipeThreshold) {
         Binder.on(START_EVENTS[0], Components.Html.wrapper, this.start.bind(this));
       }
 
-      if (Glide.settings.dragThreshold) {
+      if (settings.dragThreshold) {
         Binder.on(START_EVENTS[1], Components.Html.wrapper, this.start.bind(this));
       }
     },
@@ -2099,11 +2175,13 @@ var swipe = function (Glide, Components) {
      * @return {Number}
      */
     threshold: function threshold(event) {
+      var settings = Glide.settings;
+
       if (MOUSE_EVENTS.includes(event.type)) {
-        return Glide.settings.dragThreshold;
+        return settings.dragThreshold;
       }
 
-      return Glide.settings.swipeThreshold;
+      return settings.swipeThreshold;
     },
 
 
@@ -2549,11 +2627,19 @@ var keyboard = function (Glide, Components) {
      */
     press: function press(event) {
       if (event.keyCode === 39) {
-        Components.Run.make('>');
+        if (Glide.settings.rtl) {
+          Components.Run.make('<');
+        } else {
+          Components.Run.make('>');
+        }
       }
 
       if (event.keyCode === 37) {
-        Components.Run.make('<');
+        if (Glide.settings.rtl) {
+          Components.Run.make('>');
+        } else {
+          Components.Run.make('<');
+        }
       }
     }
   };
@@ -2654,7 +2740,7 @@ var COMPONENTS = {
   Html: Html,
   Translate: Translate,
   Transition: Transition,
-  Dimensions: Dimensions,
+  Sizes: Sizes,
   Move: Move,
   Peek: Peek,
   Clones: Clones,

@@ -79,7 +79,14 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      return this.translate - this.offset
+      let offset = this.offset
+      let translate = this.translate
+
+      if (Glide.settings.rtl) {
+        return translate + offset
+      }
+
+      return translate - offset
     }
   })
 

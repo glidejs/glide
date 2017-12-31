@@ -35,8 +35,6 @@
   display: inline-flex;
   list-style: none;
   transform: translateX(-50%); }
-  .glide__bullets > * + * {
-    margin-left: 0.5em; }
 
 .glide__bullet {
   background-color: rgba(255, 255, 255, 0.5);
@@ -48,7 +46,8 @@
   transition: all 300ms ease-in-out;
   cursor: pointer;
   line-height: 0;
-  box-shadow: 0 0.25em 0.5em 0 rgba(0, 0, 0, 0.1); }
+  box-shadow: 0 0.25em 0.5em 0 rgba(0, 0, 0, 0.1);
+  margin: 0 0.25em; }
   .glide__bullet:focus {
     outline: none; }
   .glide__bullet:hover, .glide__bullet:focus {
@@ -66,3 +65,11 @@
   cursor: grabbing;
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing; }
+
+.glide--rtl .glide__arrow--prev {
+  left: auto;
+  right: 2em; }
+
+.glide--rtl .glide__arrow--next {
+  right: auto;
+  left: 2em; }

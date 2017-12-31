@@ -130,12 +130,15 @@ export default {
    */
   peek: 0,
 
+  rtl: false,
+
   /**
    * List of internally used html classes.
    *
    * @type {Object}
    */
   classes: {
+    rtl: 'glide--rtl',
     slider: 'glide--slider',
     carousel: 'glide--carousel',
     swipeable: 'glide--swipeable',

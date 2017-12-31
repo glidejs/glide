@@ -3,7 +3,7 @@ import { isObject } from '../utils/primitives'
 import { listen } from '../core/event/events-bus'
 
 export default function (Glide, Components, Events) {
-  const DIMENSIONS = {
+  const SIZES = {
     /**
      * Applys dimentions to the glide HTML elements.
      *
@@ -20,8 +20,10 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     setupSlides (dimention) {
-      for (var i = 0; i < Components.Html.slides.length; i++) {
-        Components.Html.slides[i].style.width = `${this.slideWidth}px`
+      let slides = Components.Html.slides
+
+      for (var i = 0; i < slides.length; i++) {
+        slides[i].style.width = `${this.slideWidth}px`
       }
     },
 
@@ -35,18 +37,18 @@ export default function (Glide, Components, Events) {
     }
   }
 
-  define(DIMENSIONS, 'wrapperSize', {
+  define(SIZES, 'wrapperSize', {
     /**
      * Gets size of the slides wrapper.
      *
      * @return {Number}
      */
     get () {
-      return (DIMENSIONS.slideWidth * DIMENSIONS.length) + Components.Clones.grow
+      return (SIZES.slideWidth * SIZES.length) + Components.Clones.grow
     }
   })
 
-  define(DIMENSIONS, 'length', {
+  define(SIZES, 'length', {
     /**
      * Gets count number of the slides.
      *
@@ -57,7 +59,7 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  define(DIMENSIONS, 'width', {
+  define(SIZES, 'width', {
     /**
      * Gets width value of the glide.
      *
@@ -68,7 +70,7 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  define(DIMENSIONS, 'slideWidth', {
+  define(SIZES, 'slideWidth', {
     /**
      * Gets width value of the single slide.
      *
@@ -92,8 +94,8 @@ export default function (Glide, Components, Events) {
    * - before building, so other dimentions (e.g. translate) will be calculated propertly
    */
   listen('build.before', () => {
-    DIMENSIONS.apply()
+    SIZES.apply()
   })
 
-  return DIMENSIONS
+  return SIZES
 }

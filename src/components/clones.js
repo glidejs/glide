@@ -18,11 +18,15 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     map () {
-      for (let i = 0; i < Glide.settings.perView; i++) {
+      // We should have one more slides clones
+      // than we have slides per view.
+      let total = Glide.settings.perView + 1
+
+      for (let i = 0; i < total; i++) {
         pattern.push(i)
       }
 
-      for (let i = Glide.settings.perView - 1; i >= 0; i--) {
+      for (let i = total - 1; i >= 0; i--) {
         pattern.push(-(Components.Html.slides.length - 1) + i)
       }
     },
@@ -50,12 +54,10 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     append () {
-      var item = null
-
       for (let i = 0; i < this.items.length; i++) {
-        item = this.items[i]
+        let item = this.items[i]
 
-        item.style.width = Components.Dimensions.slideWidth
+        item.style.width = Components.Sizes.slideWidth
 
         // Append clone if pattern position is positive.
         // Prepend clone if pattern position is negative.
@@ -89,7 +91,7 @@ export default function (Glide, Components, Events) {
      */
     get () {
       if (Glide.isType('carousel')) {
-        return Components.Dimensions.slideWidth * CLONES.items.length
+        return Components.Sizes.slideWidth * CLONES.items.length
       }
 
       return 0

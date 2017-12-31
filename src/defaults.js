@@ -130,6 +130,11 @@ export default {
    */
   peek: 0,
 
+  /**
+   * Switch glide to right to left moving mode.
+   *
+   * @type {Boolean}
+   */
   rtl: false,
 
   /**

@@ -136,6 +136,11 @@ var defaults = {
    */
   peek: 0,
 
+  /**
+   * Switch glide to right to left moving mode.
+   *
+   * @type {Boolean}
+   */
   rtl: false,
 
   /**
@@ -694,23 +699,29 @@ var Run = function (Glide, Components) {
     make: function make(move, callback) {
       var _this = this;
 
-      this.move = move;
+      if (!Glide.isDisabled()) {
+        Glide.disable();
 
-      emit('run.before', this.move);
+        this.move = move;
 
-      this.calculate();
+        emit('run.before', this.move);
 
-      emit('run', this.move);
+        this.calculate();
 
-      Components.Transition.after(function () {
-        if (_this.isOffset('<') || _this.isOffset('>')) {
-          _this._f = false;
+        emit('run', this.move);
 
-          emit('run.offset', _this.move);
-        }
+        Components.Transition.after(function () {
+          Glide.enable();
 
-        emit('run.after', _this.move);
-      });
+          if (_this.isOffset('<') || _this.isOffset('>')) {
+            _this._f = false;
+
+            emit('run.offset', _this.move);
+          }
+
+          emit('run.after', _this.move);
+        });
+      }
     },
 
 

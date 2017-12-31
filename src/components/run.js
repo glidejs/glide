@@ -20,23 +20,29 @@ export default function (Glide, Components) {
      * @param {Function} callback
      */
     make (move, callback) {
-      this.move = move
+      if (! Glide.isDisabled()) {
+        Glide.disable()
 
-      emit('run.before', this.move)
+        this.move = move
 
-      this.calculate()
+        emit('run.before', this.move)
 
-      emit('run', this.move)
+        this.calculate()
 
-      Components.Transition.after(() => {
-        if (this.isOffset('<') || this.isOffset('>')) {
-          this._f = false
+        emit('run', this.move)
 
-          emit('run.offset', this.move)
-        }
+        Components.Transition.after(() => {
+          Glide.enable()
 
-        emit('run.after', this.move)
-      })
+          if (this.isOffset('<') || this.isOffset('>')) {
+            this._f = false
+
+            emit('run.offset', this.move)
+          }
+
+          emit('run.after', this.move)
+        })
+      }
     },
 
     /**

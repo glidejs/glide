@@ -111,7 +111,7 @@ export default {
    *
    * @type {Number}
    */
-  debounce: 200,
+  debounce: 150,
 
   /**
    * Set height of the slider based on current slide content.
@@ -136,6 +136,8 @@ export default {
    * @type {Boolean}
    */
   rtl: false,
+
+  breakpoints: {},
 
   /**
    * List of internally used html classes.

@@ -23,7 +23,7 @@ export default function (Glide, Components) {
     bind () {
       Binder.on('resize', window, debounce(() => {
         emit('resize')
-      }, Glide.settings.debounce.resize))
+      }, Glide.settings.debounce))
     },
 
     /**

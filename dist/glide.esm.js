@@ -1,6 +1,6 @@
 /*!
  * Glide.js v3.0.0
- * (c) 2013-2017 Jędrzej Chałubek <jedrzej.chalubek@gmail.com> (http://jedrzejchalubek.com/)
+ * (c) 2013-2018 Jędrzej Chałubek <jedrzej.chalubek@gmail.com> (http://jedrzejchalubek.com/)
  * Released under the MIT License.
  */
 
@@ -117,7 +117,7 @@ var defaults = {
    *
    * @type {Number}
    */
-  debounce: 200,
+  debounce: 150,
 
   /**
    * Set height of the slider based on current slide content.
@@ -142,6 +142,8 @@ var defaults = {
    * @type {Boolean}
    */
   rtl: false,
+
+  breakpoints: {},
 
   /**
    * List of internally used html classes.
@@ -509,6 +511,13 @@ var Glide$2 = function () {
       emit('mount.after', this);
 
       return this;
+    }
+  }, {
+    key: 'reinit',
+    value: function reinit(settings) {
+      this.settings = _extends(this.settings, settings);
+
+      emit('reinit');
     }
 
     /**
@@ -1798,7 +1807,7 @@ var Resize = function (Glide, Components) {
     bind: function bind() {
       Binder.on('resize', window, debounce(function () {
         emit('resize');
-      }, Glide.settings.debounce.resize));
+      }, Glide.settings.debounce));
     },
 
 
@@ -1952,6 +1961,42 @@ var Transition = function (Glide, Components, Events$$1) {
   });
 
   return TRANSITION;
+};
+
+var Media = function (Glide, Components) {
+  var Binder = new EventsBinder();
+
+  var defaults = _extends({}, Glide.settings);
+
+  var MEDIA = {
+    mount: function mount() {
+      this.match();
+      this.bind();
+    },
+    bind: function bind() {
+      var _this = this;
+
+      Binder.on('resize', window, debounce(function () {
+        _this.match();
+      }, Glide.settings.debounce));
+    },
+    match: function match() {
+      var breakpoints = Glide.settings.breakpoints;
+
+      for (var point in breakpoints) {
+        if (breakpoints.hasOwnProperty(point)) {
+          console.log(defaults);
+          if (window.matchMedia('(max-width: ' + point + ')').matches) {
+            Glide.reinit(breakpoints[point]);
+          } else {
+            Glide.reinit(defaults);
+          }
+        }
+      }
+    }
+  };
+
+  return MEDIA;
 };
 
 var START_EVENTS = ['touchstart', 'mousedown'];
@@ -2763,6 +2808,7 @@ var COMPONENTS = {
   Run: Run,
 
   // Optional
+  Media: Media,
   Swipe: Swipe,
   Height: Height,
   Images: Images,

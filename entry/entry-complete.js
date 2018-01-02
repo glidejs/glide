@@ -13,6 +13,7 @@ import Translate from '../src/components/translate'
 import Transition from '../src/components/transition'
 
 // Optional components
+import Media from '../src/components/media'
 import Swipe from '../src/components/swipe'
 import Height from '../src/components/height'
 import Images from '../src/components/images'
@@ -35,6 +36,7 @@ const COMPONENTS = {
   Run,
 
   // Optional
+  Media,
   Swipe,
   Height,
   Images,

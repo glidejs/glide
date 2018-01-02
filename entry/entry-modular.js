@@ -11,6 +11,7 @@ import Resize from '../src/components/resize'
 import Translate from '../src/components/translate'
 import Transition from '../src/components/transition'
 
+import Media from '../src/components/media'
 import Swipe from '../src/components/swipe'
 import Height from '../src/components/height'
 import Images from '../src/components/images'
@@ -33,6 +34,7 @@ const COMPONENTS = {
 }
 
 export {
+  Media,
   Swipe,
   Height,
   Images,

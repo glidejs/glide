@@ -63,24 +63,29 @@
     type: 'carousel',
     perView: 2,
     startAt: 1,
-    focusAt: 1,
+    focusAt: 'center',
     peek: {
       before: '5%',
       after: '5%'
     },
     autoplay: false,
-    rtl: true
+    rtl: true,
+    breakpoints: {
+      '600px': {
+        perView: 1
+      }
+    }
   })
 
   glide.on(['mount.after', 'build.after'], function (glide) {
-    console.log(glide)
+    // console.log(glide)
   })
 
   glide.mount({
     Nav: function (Glide, Components) {
       return {
         mount: function () {
-          console.log('Nav', { Glide, Components })
+          // console.log('Nav', { Glide, Components })
         }
       }
     }

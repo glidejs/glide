@@ -1,4 +1,4 @@
-import { isArray } from '../../utils/primitives'
+import { isArray } from '../../utils/unit'
 
 export default class EventsBus {
   constructor (topics = {}) {

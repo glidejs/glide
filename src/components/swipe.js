@@ -88,7 +88,7 @@ export default function (Glide, Components) {
 
           emit('swipe.move')
         } else {
-          return
+          return false
         }
       }
     },

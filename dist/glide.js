@@ -308,6 +308,17 @@ var possibleConstructorReturn = function (self, call) {
 };
 
 /**
+ * Converts value entered as number 
+ * or string to integer value.
+ *
+ * @param {Number|String} value
+ * @returns {Number}
+ */
+function toInt(value) {
+  return parseInt(value);
+}
+
+/**
  * Indicates whether the specified value is a string.
  *
  * @param  {Mixed}   value
@@ -399,17 +410,6 @@ function mount(glide, extensions, events) {
       components[_name].mount();
     }
   }
-}
-
-/**
- * Converts value entered as number 
- * or string to integer value.
- *
- * @param {Number|String} value
- * @returns {Number}
- */
-function toInt(value) {
-  return parseInt(value);
 }
 
 var EventsBus = function () {
@@ -2055,7 +2055,7 @@ var Swipe = function (Glide, Components) {
 
           emit('swipe.move');
         } else {
-          return;
+          return false;
         }
       }
     },

@@ -1,7 +1,7 @@
 import { warn } from '../utils/log'
 import { exist } from '../utils/dom'
 import { define } from '../utils/object'
-import { isString } from '../utils/primitives'
+import { isString } from '../utils/unit'
 
 const TRACK_SELECTOR = '[data-glide-el="track"]'
 

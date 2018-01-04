@@ -1,4 +1,4 @@
-import { isObject } from '../../utils/primitives'
+import { isObject } from '../../utils/unit'
 
 /**
  * Updates glide movement with a `peek` settings.

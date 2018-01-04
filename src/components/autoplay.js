@@ -1,6 +1,5 @@
-import { toInt } from '../utils/unit'
 import { define } from '../utils/object'
-import { isUndefined } from '../utils/primitives'
+import { toInt, isUndefined } from '../utils/unit'
 import EventsBinder from '../core/event/events-binder'
 
 export default function (Glide, Components) {

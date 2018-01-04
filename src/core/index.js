@@ -1,5 +1,5 @@
 import { warn } from '../utils/log'
-import { isFunction } from '../utils/primitives'
+import { isFunction } from '../utils/unit'
 
 /**
  * Creates and initializes specified collection of extensions.

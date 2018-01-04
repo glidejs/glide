@@ -107,11 +107,11 @@ export default {
   animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
 
   /**
-   * Debounce constly events at most once per every wait in milliseconds.
+   * Throttle constly events at most once per every wait milliseconds.
    *
    * @type {Number}
    */
-  debounce: 150,
+  throttle: 25,
 
   /**
    * Set height of the slider based on current slide content.

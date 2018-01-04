@@ -61,7 +61,7 @@
 
   var glide = new Glide(el, {
     type: 'carousel',
-    perView: 2,
+    perView: 3,
     startAt: 1,
     focusAt: 'center',
     peek: {
@@ -69,10 +69,10 @@
       after: '5%'
     },
     autoplay: false,
-    rtl: true,
     breakpoints: {
       '600px': {
-        perView: 1
+        focusAt: 0,
+        perView: 2
       }
     }
   })

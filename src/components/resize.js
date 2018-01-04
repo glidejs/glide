@@ -1,4 +1,4 @@
-import debounce from '../utils/debounce'
+import { throttle } from '../utils/wait'
 import { emit } from '../core/event/events-bus'
 
 import EventsBinder from '../core/event/events-binder'
@@ -21,9 +21,9 @@ export default function (Glide, Components) {
      * @return {Void}
      */
     bind () {
-      Binder.on('resize', window, debounce(() => {
+      Binder.on('resize', window, throttle(() => {
         emit('resize')
-      }, Glide.settings.debounce))
+      }, Glide.settings.throttle))
     },
 
     /**

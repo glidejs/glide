@@ -1,40 +1,35 @@
-import debounce from '../utils/debounce'
-import { define } from '../utils/object'
 import { listen } from '../core/event/events-bus'
 
-import EventsBinder from '../core/event/events-binder'
-
 export default function (Glide, Components) {
-  const Binder = new EventsBinder()
-
   const defaults = Object.assign({}, Glide.settings)
-  
+
   const MEDIA = {
-    mount () {
-      this.match()
-      this.bind()
-    },
-
-    bind () {
-      Binder.on('resize', window, debounce(() => {
-        this.match()
-      }, Glide.settings.debounce))
-    },
-
-    match () {
-      let breakpoints = Glide.settings.breakpoints
-
+    match (breakpoints) {
       for (const point in breakpoints) {
         if (breakpoints.hasOwnProperty(point)) {
           if (window.matchMedia(`(max-width: ${point})`).matches) {
-            Glide.reinit(breakpoints[point])
-          } else {
-            Glide.reinit(defaults)
+            return breakpoints[point]
           }
+
+          return defaults
         }
       }
     }
   }
+  
+  /**
+   * Overwrite instance settings with matched ones for current breakpoint.
+   * This happens right after component initialization.
+   */
+  Glide.settings = Object.assign(Glide.settings, MEDIA.match(Glide.settings.breakpoints))
+
+  /**
+   * Reinit glide:
+   * - on window resize with proper settings for matched breakpoint
+   */
+  listen('resize', () => {
+    Glide.reinit(MEDIA.match(Glide.settings.breakpoints))
+  })
 
   return MEDIA
 }

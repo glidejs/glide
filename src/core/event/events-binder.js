@@ -1,4 +1,4 @@
-import { isString } from '../../utils/primitives'
+import { isString } from '../../utils/unit'
 
 export default class EventsBinder {
   /**

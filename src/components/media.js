@@ -16,7 +16,7 @@ export default function (Glide, Components) {
       }
     }
   }
-  
+
   /**
    * Overwrite instance settings with matched ones for current breakpoint.
    * This happens right after component initialization.

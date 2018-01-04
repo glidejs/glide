@@ -1,7 +1,6 @@
-import { toInt } from '../utils/unit'
 import { define } from '../utils/object'
-import { isNumber } from '../utils/primitives'
 import { emit } from '../core/event/events-bus'
+import { toInt, isNumber } from '../utils/unit'
 
 export default function (Glide, Components) {
   const RUN = {

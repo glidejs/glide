@@ -1,8 +1,7 @@
 import defaults from './defaults'
 import { warn } from './utils/log'
 import { mount } from './core/index'
-import { toInt } from './utils/unit'
-import { isObject } from './utils/primitives'
+import { toInt, isObject } from './utils/unit'
 
 import { Events, listen, emit } from './core/event/events-bus'
 

@@ -1,7 +1,6 @@
-import { toInt } from '../utils/unit'
 import { define } from '../utils/object'
 import { ucfirst } from '../utils/string'
-import { isUndefined } from '../utils/primitives'
+import { toInt, isUndefined } from '../utils/unit'
 import { listen, emit } from '../core/event/events-bus'
 
 import Slider from '../types/slider'

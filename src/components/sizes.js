@@ -1,5 +1,5 @@
 import { define } from '../utils/object'
-import { isObject } from '../utils/primitives'
+import { isObject } from '../utils/unit'
 import { listen } from '../core/event/events-bus'
 
 export default function (Glide, Components, Events) {

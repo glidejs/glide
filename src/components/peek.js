@@ -1,7 +1,7 @@
-import { warn } from '../utils/log'
+import { toInt } from '../utils/unit'
 import { define } from '../utils/object'
-import { dimension } from '../utils/unit'
-import { isString, isObject, isNumber } from '../utils/primitives'
+import { isObject } from '../utils/primitives'
+import { listen } from '../core/event/events-bus'
 
 export default function (Glide, Components, Events) {
   const PEEK = {
@@ -28,7 +28,6 @@ export default function (Glide, Components, Events) {
     /**
      * Sets node of the glide track with slides.
      *
-     * @todo  refactor
      * @param {Number} value
      * @return {Void}
      */
@@ -36,24 +35,22 @@ export default function (Glide, Components, Events) {
       let width = Components.Sizes.width
 
       if (isObject(value)) {
-        if (isString(value.before)) {
-          value.before = dimension(value.before, width)
-        }
-        if (isString(value.after)) {
-          value.after = dimension(value.after, width)
-        }
+        value.before = toInt(value.before)
+        value.after = toInt(value.after)
       } else {
-        if (isString(value)) {
-          value = dimension(value, width)
-        }
-
-        if (!isNumber(value)) {
-          warn('Invalid peek value')
-        }
+        value = toInt(value, width)
       }
 
       PEEK._v = value
     }
+  })
+
+  /**
+   * Recalculate peeking sizes on:
+   * - when resizing window to update to proper percents
+   */
+  listen('resize', () => {
+    PEEK.mount()
   })
 
   return PEEK

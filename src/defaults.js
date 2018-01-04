@@ -122,7 +122,7 @@ export default {
 
   /**
    * Distance value of the next and previous viewports which have to be
-   * peeked in current view. Can be number, percentage or pixels.
+   * peeked in current view. Accepts number and pixels as string.
    * Left and right peeking can be setup separetly with a
    * directions object `{ left: 100, right: 100 }`.
    *
@@ -131,12 +131,21 @@ export default {
   peek: 0,
 
   /**
-   * Switch glide to right to left moving mode.
+   * Switch glide to "right to left" moving mode.
    *
    * @type {Boolean}
    */
   rtl: false,
 
+  /**
+   * Collection of options applied at specified media breakpoints.
+   * For example: display two slides per view under 800px.
+   * `{
+   *   '800px': {
+   *     perView: 2
+   *   }
+   * }`
+   */
   breakpoints: {},
 
   /**

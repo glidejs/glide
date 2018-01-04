@@ -1,3 +1,4 @@
+import { toInt } from '../utils/unit'
 import { define } from '../utils/object'
 import { isNumber } from '../utils/primitives'
 import { emit } from '../core/event/events-bus'
@@ -20,7 +21,7 @@ export default function (Glide, Components) {
      * @param {Function} callback
      */
     make (move, callback) {
-      if (! Glide.isDisabled()) {
+      if (!Glide.isDisabled()) {
         Glide.disable()
 
         this.move = move
@@ -54,12 +55,12 @@ export default function (Glide, Components) {
       let { move, length } = this
       let { steps, direction } = move
 
-      let countableSteps = (isNumber(steps)) && (parseInt(steps) !== 0)
+      let countableSteps = (isNumber(steps)) && (toInt(steps) !== 0)
 
       switch (direction) {
         case '>':
           if (countableSteps) {
-            Glide.index += Math.min(length - Glide.index, -parseInt(steps))
+            Glide.index += Math.min(length - Glide.index, -toInt(steps))
           } else if (steps === '>') {
             Glide.index = length
           } else if (this.isEnd()) {
@@ -75,7 +76,7 @@ export default function (Glide, Components) {
 
         case '<':
           if (countableSteps) {
-            Glide.index -= Math.min(Glide.index, parseInt(steps))
+            Glide.index -= Math.min(Glide.index, toInt(steps))
           } else if (steps === '<') {
             Glide.index = 0
           } else if (this.isStart()) {

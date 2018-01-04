@@ -134,7 +134,7 @@ var defaults = {
 
   /**
    * Distance value of the next and previous viewports which have to be
-   * peeked in current view. Can be number, percentage or pixels.
+   * peeked in current view. Accepts number and pixels as string.
    * Left and right peeking can be setup separetly with a
    * directions object `{ left: 100, right: 100 }`.
    *
@@ -143,12 +143,21 @@ var defaults = {
   peek: 0,
 
   /**
-   * Switch glide to right to left moving mode.
+   * Switch glide to "right to left" moving mode.
    *
    * @type {Boolean}
    */
   rtl: false,
 
+  /**
+   * Collection of options applied at specified media breakpoints.
+   * For example: display two slides per view under 800px.
+   * `{
+   *   '800px': {
+   *     perView: 2
+   *   }
+   * }`
+   */
   breakpoints: {},
 
   /**
@@ -364,9 +373,6 @@ function isArray(value) {
  * @param  {Mixed}   value
  * @return {Boolean}
  */
-function isPercentage(value) {
-  return isString(value) && value.indexOf('%') >= 0;
-}
 
 /**
  * Creates and initializes specified collection of extensions.
@@ -393,6 +399,17 @@ function mount(glide, extensions, events) {
       components[_name].mount();
     }
   }
+}
+
+/**
+ * Converts value entered as number 
+ * or string to integer value.
+ *
+ * @param {Number|String} value
+ * @returns {Number}
+ */
+function toInt(value) {
+  return parseInt(value);
 }
 
 var EventsBus = function () {
@@ -641,7 +658,7 @@ var Glide$2 = function () {
      */
     ,
     set: function set$$1(i) {
-      this._i = parseInt(i);
+      this._i = toInt(i);
     }
 
     /**
@@ -752,12 +769,12 @@ var Run = function (Glide, Components) {
           direction = move.direction;
 
 
-      var countableSteps = isNumber(steps) && parseInt(steps) !== 0;
+      var countableSteps = isNumber(steps) && toInt(steps) !== 0;
 
       switch (direction) {
         case '>':
           if (countableSteps) {
-            Glide.index += Math.min(length - Glide.index, -parseInt(steps));
+            Glide.index += Math.min(length - Glide.index, -toInt(steps));
           } else if (steps === '>') {
             Glide.index = length;
           } else if (this.isEnd()) {
@@ -773,7 +790,7 @@ var Run = function (Glide, Components) {
 
         case '<':
           if (countableSteps) {
-            Glide.index -= Math.min(Glide.index, parseInt(steps));
+            Glide.index -= Math.min(Glide.index, toInt(steps));
           } else if (steps === '<') {
             Glide.index = 0;
           } else if (this.isStart()) {
@@ -982,25 +999,7 @@ var Html = function (Glide, Components) {
   return HTML;
 };
 
-/**
- * Converts value entered as number, string
- * or procentage to actual width value.
- *
- * @param {Number|String} value
- * @param {Number} width
- * @returns {Number}
- */
-function dimension(value, width) {
-  var parsed = parseInt(value, 10);
-
-  if (isPercentage(value)) {
-    return parseInt(width * (parsed / 100));
-  }
-
-  return parsed;
-}
-
-var Peek = function (Glide, Components, Events) {
+var Peek = function (Glide, Components, Events$$1) {
   var PEEK = {
     /**
      * Setups how much to peek based on settings.
@@ -1026,7 +1025,6 @@ var Peek = function (Glide, Components, Events) {
     /**
      * Sets node of the glide track with slides.
      *
-     * @todo  refactor
      * @param {Number} value
      * @return {Void}
      */
@@ -1034,24 +1032,22 @@ var Peek = function (Glide, Components, Events) {
       var width = Components.Sizes.width;
 
       if (isObject(value)) {
-        if (isString(value.before)) {
-          value.before = dimension(value.before, width);
-        }
-        if (isString(value.after)) {
-          value.after = dimension(value.after, width);
-        }
+        value.before = toInt(value.before);
+        value.after = toInt(value.after);
       } else {
-        if (isString(value)) {
-          value = dimension(value, width);
-        }
-
-        if (!isNumber(value)) {
-          warn('Invalid peek value');
-        }
+        value = toInt(value, width);
       }
 
       PEEK._v = value;
     }
+  });
+
+  /**
+   * Recalculate peeking sizes on:
+   * - when resizing window to update to proper percents
+   */
+  listen('resize', function () {
+    PEEK.mount();
   });
 
   return PEEK;
@@ -1317,7 +1313,7 @@ var Move = function (Glide, Components, Events$$1) {
      * @return {Object}
      */
     set: function set(value) {
-      MOVE._o = !isUndefined(value) ? parseInt(value) : 0;
+      MOVE._o = !isUndefined(value) ? toInt(value) : 0;
     }
   });
 
@@ -2011,8 +2007,8 @@ var Swipe = function (Glide, Components) {
         this.disable();
 
         swipeSin = null;
-        swipeStartX = parseInt(swipe.pageX);
-        swipeStartY = parseInt(swipe.pageY);
+        swipeStartX = toInt(swipe.pageX);
+        swipeStartY = toInt(swipe.pageY);
 
         this.bindSwipeMove();
         this.bindSwipeEnd();
@@ -2034,8 +2030,8 @@ var Swipe = function (Glide, Components) {
 
         var swipe = this.touches(event);
 
-        var subExSx = parseInt(swipe.pageX) - swipeStartX;
-        var subEySy = parseInt(swipe.pageY) - swipeStartY;
+        var subExSx = toInt(swipe.pageX) - swipeStartX;
+        var subEySy = toInt(swipe.pageY) - swipeStartY;
         var powEX = Math.abs(subExSx << 2);
         var powEY = Math.abs(subEySy << 2);
         var swipeHypotenuse = Math.sqrt(powEX + powEY);
@@ -2088,7 +2084,7 @@ var Swipe = function (Glide, Components) {
         if (swipeDistance > threshold && swipeDeg < settings.touchAngle) {
           // While swipe is positive and greater than threshold move backward.
           if (settings.perTouch) {
-            steps = Math.min(steps, parseInt(settings.perTouch));
+            steps = Math.min(steps, toInt(settings.perTouch));
           }
 
           if (settings.rtl) {
@@ -2099,7 +2095,7 @@ var Swipe = function (Glide, Components) {
         } else if (swipeDistance < -threshold && swipeDeg < settings.touchAngle) {
           // While swipe is negative and lower than negative threshold move forward.
           if (settings.perTouch) {
-            steps = Math.max(steps, -parseInt(settings.perTouch));
+            steps = Math.max(steps, -toInt(settings.perTouch));
           }
 
           if (settings.rtl) {
@@ -2756,7 +2752,7 @@ var Autoplay = function (Glide, Components) {
       var autoplay = Components.Html.slides[Glide.index].getAttribute('data-glide-autoplay');
 
       if (autoplay) {
-        return parseInt(autoplay);
+        return toInt(autoplay);
       }
 
       return Glide.settings.autoplay;
@@ -2773,9 +2769,9 @@ var COMPONENTS = {
   Html: Html,
   Translate: Translate,
   Transition: Transition,
+  Peek: Peek,
   Sizes: Sizes,
   Move: Move,
-  Peek: Peek,
   Clones: Clones,
   Resize: Resize,
   Build: Build,

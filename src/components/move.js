@@ -1,3 +1,4 @@
+import { toInt } from '../utils/unit'
 import { define } from '../utils/object'
 import { ucfirst } from '../utils/string'
 import { isUndefined } from '../utils/primitives'
@@ -57,7 +58,7 @@ export default function (Glide, Components, Events) {
      * @return {Object}
      */
     set (value) {
-      MOVE._o = !isUndefined(value) ? parseInt(value) : 0
+      MOVE._o = !isUndefined(value) ? toInt(value) : 0
     }
   })
 

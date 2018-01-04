@@ -65,14 +65,18 @@
     startAt: 1,
     focusAt: 'center',
     peek: {
-      before: '5%',
-      after: '5%'
+      before: 50,
+      after: 50
     },
     autoplay: false,
     breakpoints: {
       '600px': {
         focusAt: 0,
-        perView: 2
+        perView: 2,
+        peek: {
+          before: 10,
+          after: 10
+        },
       }
     }
   })

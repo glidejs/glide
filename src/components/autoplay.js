@@ -1,3 +1,4 @@
+import { toInt } from '../utils/unit'
 import { define } from '../utils/object'
 import { isUndefined } from '../utils/primitives'
 import EventsBinder from '../core/event/events-binder'
@@ -76,7 +77,7 @@ export default function (Glide, Components) {
       let autoplay = Components.Html.slides[Glide.index].getAttribute('data-glide-autoplay')
 
       if (autoplay) {
-        return parseInt(autoplay)
+        return toInt(autoplay)
       }
 
       return Glide.settings.autoplay

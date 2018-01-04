@@ -1,3 +1,4 @@
+import { toInt } from '../utils/unit'
 import { define } from '../utils/object'
 import { listen, emit } from '../core/event/events-bus'
 
@@ -40,8 +41,8 @@ export default function (Glide, Components) {
         this.disable()
 
         swipeSin = null
-        swipeStartX = parseInt(swipe.pageX)
-        swipeStartY = parseInt(swipe.pageY)
+        swipeStartX = toInt(swipe.pageX)
+        swipeStartY = toInt(swipe.pageY)
 
         this.bindSwipeMove()
         this.bindSwipeEnd()
@@ -62,8 +63,8 @@ export default function (Glide, Components) {
 
         let swipe = this.touches(event)
 
-        let subExSx = parseInt(swipe.pageX) - swipeStartX
-        let subEySy = parseInt(swipe.pageY) - swipeStartY
+        let subExSx = toInt(swipe.pageX) - swipeStartX
+        let subEySy = toInt(swipe.pageY) - swipeStartY
         let powEX = Math.abs(subExSx << 2)
         let powEY = Math.abs(subEySy << 2)
         let swipeHypotenuse = Math.sqrt(powEX + powEY)
@@ -115,7 +116,7 @@ export default function (Glide, Components) {
         if (swipeDistance > threshold && swipeDeg < settings.touchAngle) {
           // While swipe is positive and greater than threshold move backward.
           if (settings.perTouch) {
-            steps = Math.min(steps, parseInt(settings.perTouch))
+            steps = Math.min(steps, toInt(settings.perTouch))
           }
 
           if (settings.rtl) {
@@ -129,7 +130,7 @@ export default function (Glide, Components) {
         ) {
           // While swipe is negative and lower than negative threshold move forward.
           if (settings.perTouch) {
-            steps = Math.max(steps, -parseInt(settings.perTouch))
+            steps = Math.max(steps, -toInt(settings.perTouch))
           }
 
           if (settings.rtl) {

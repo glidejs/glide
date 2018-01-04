@@ -1,6 +1,7 @@
 import defaults from './defaults'
 import { warn } from './utils/log'
 import { mount } from './core/index'
+import { toInt } from './utils/unit'
 import { isObject } from './utils/primitives'
 
 import { Events, listen, emit } from './core/event/events-bus'
@@ -138,7 +139,7 @@ export default class Glide {
    * @return {Object}
    */
   set index (i) {
-    this._i = parseInt(i)
+    this._i = toInt(i)
   }
 
   /**

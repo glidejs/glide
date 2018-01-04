@@ -40,7 +40,12 @@ export default class Glide {
     return this
   }
 
-  reinit (settings) {
+  /**
+   * Reinits glide with specified settings.
+   * 
+   * @param {Object} settings 
+   */
+  reinit (settings = {}) {
     this.settings = Object.assign(this.settings, settings)
 
     emit('reinit')

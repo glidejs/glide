@@ -119,11 +119,11 @@ var defaults = {
   animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
 
   /**
-   * Debounce constly events at most once per every wait in milliseconds.
+   * Throttle constly events at most once per every wait milliseconds.
    *
    * @type {Number}
    */
-  debounce: 150,
+  throttle: 25,
 
   /**
    * Set height of the slider based on current slide content.
@@ -1454,8 +1454,9 @@ var Sizes = function (Glide, Components, Events$$1) {
   /**
    * Apply calculated glide's dimensions on:
    * - before building, so other dimentions (e.g. translate) will be calculated propertly
+   * - when resizing window to recalculate sildes dimensions
    */
-  listen('build.before', function () {
+  listen(['build.before', 'resize'], function () {
     SIZES.apply();
   });
 
@@ -1652,84 +1653,53 @@ var Clones = function (Glide, Components, Events$$1) {
 };
 
 /**
- * Similar to ES6's rest param (http://ariya.ofilabs.com/2013/03/es6-and-rest-parameter.html)
- * This accumulates the arguments passed into an array, after a given index.
+ * Returns a current time.
  *
- * @source https://github.com/jashkenas/underscore
+ * @return {Number}
  */
-var restArgs = function restArgs(func, startIndex) {
-  startIndex = startIndex == null ? func.length - 1 : +startIndex;
-  return function () {
-    var length = Math.max(arguments.length - startIndex, 0);
-    var rest = Array(length);
-    var index = 0;
-    for (; index < length; index++) {
-      rest[index] = arguments[index + startIndex];
-    }
-    switch (startIndex) {
-      case 0:
-        return func.call(this, rest);
-      case 1:
-        return func.call(this, arguments[0], rest);
-      case 2:
-        return func.call(this, arguments[0], arguments[1], rest);
-    }
-    var args = Array(startIndex + 1);
-    for (index = 0; index < startIndex; index++) {
-      args[index] = arguments[index];
-    }
-    args[startIndex] = rest;
-    return func.apply(this, args);
-  };
-};
+function now() {
+  return new Date().getTime();
+}
 
-/**
- * Delays a function for the given number of milliseconds, and then calls
- * it with the arguments supplied.
- *
- * @source https://github.com/jashkenas/underscore
- */
-var delay = restArgs(function (func, wait, args) {
-  return setTimeout(function () {
-    return func.apply(null, args);
-  }, wait);
-});
+function throttle(func, wait, options) {
+  var timeout, context, args, result;
+  var previous = 0;
+  if (!options) options = {};
 
-/**
- * Returns a function, that, as long as it continues to be invoked, will not
- * be triggered. The function will be called after it stops being called for
- * N milliseconds. If `immediate` is passed, trigger the function on the
- * leading edge, instead of the trailing.
- *
- * @source https://github.com/jashkenas/underscore
- */
-function debounce(func, wait, immediate) {
-  var timeout, result;
-
-  var later = function later(context, args) {
+  var later = function later() {
+    previous = options.leading === false ? 0 : now();
     timeout = null;
-    if (args) result = func.apply(context, args);
+    result = func.apply(context, args);
+    if (!timeout) context = args = null;
   };
 
-  var debounced = restArgs(function (args) {
-    if (timeout) clearTimeout(timeout);
-    if (immediate) {
-      var callNow = !timeout;
-      timeout = setTimeout(later, wait);
-      if (callNow) result = func.apply(this, args);
-    } else {
-      timeout = delay(later, wait, this, args);
+  var throttled = function throttled() {
+    var at = now();
+    if (!previous && options.leading === false) previous = at;
+    var remaining = wait - (at - previous);
+    context = this;
+    args = arguments;
+    if (remaining <= 0 || remaining > wait) {
+      if (timeout) {
+        clearTimeout(timeout);
+        timeout = null;
+      }
+      previous = at;
+      result = func.apply(context, args);
+      if (!timeout) context = args = null;
+    } else if (!timeout && options.trailing !== false) {
+      timeout = setTimeout(later, remaining);
     }
-
     return result;
-  });
-
-  debounced.cancel = function () {
-    clearTimeout(timeout);
-    timeout = null;
   };
 
-  return debounced;
+  throttled.cancel = function () {
+    clearTimeout(timeout);
+    previous = 0;
+    timeout = context = args = null;
+  };
+
+  return throttled;
 }
 
 var EventsBinder = function () {
@@ -1811,9 +1781,9 @@ var Resize = function (Glide, Components) {
      * @return {Void}
      */
     bind: function bind() {
-      Binder.on('resize', window, debounce(function () {
+      Binder.on('resize', window, throttle(function () {
         emit('resize');
-      }, Glide.settings.debounce));
+      }, Glide.settings.throttle));
     },
 
 
@@ -1970,37 +1940,35 @@ var Transition = function (Glide, Components, Events$$1) {
 };
 
 var Media = function (Glide, Components) {
-  var Binder = new EventsBinder();
-
   var defaults = _extends({}, Glide.settings);
 
   var MEDIA = {
-    mount: function mount() {
-      this.match();
-      this.bind();
-    },
-    bind: function bind() {
-      var _this = this;
-
-      Binder.on('resize', window, debounce(function () {
-        _this.match();
-      }, Glide.settings.debounce));
-    },
-    match: function match() {
-      var breakpoints = Glide.settings.breakpoints;
-
+    match: function match(breakpoints) {
       for (var point in breakpoints) {
         if (breakpoints.hasOwnProperty(point)) {
-          console.log(defaults);
           if (window.matchMedia('(max-width: ' + point + ')').matches) {
-            Glide.reinit(breakpoints[point]);
-          } else {
-            Glide.reinit(defaults);
+            return breakpoints[point];
           }
+
+          return defaults;
         }
       }
     }
   };
+
+  /**
+   * Overwrite instance settings with matched ones for current breakpoint.
+   * This happens right after component initialization.
+   */
+  Glide.settings = _extends(Glide.settings, MEDIA.match(Glide.settings.breakpoints));
+
+  /**
+   * Reinit glide:
+   * - on window resize with proper settings for matched breakpoint
+   */
+  listen('resize', function () {
+    Glide.reinit(MEDIA.match(Glide.settings.breakpoints));
+  });
 
   return MEDIA;
 };

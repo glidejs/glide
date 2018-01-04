@@ -24,9 +24,12 @@ export function isString (value) {
  *
  * @param  {Mixed}   value
  * @return {Boolean}
+ * @see https://github.com/jashkenas/underscore
  */
 export function isObject (value) {
-  return typeof value === 'object'
+  let type = typeof value
+
+  return type === 'function' || type === 'object' && !!value // eslint-disable-line no-mixed-operators
 }
 
 /**
@@ -67,14 +70,4 @@ export function isUndefined (value) {
  */
 export function isArray (value) {
   return value.constructor === Array
-}
-
-/**
- * Indicates whether the specified value is a precentage value represented as string.
- *
- * @param  {Mixed}   value
- * @return {Boolean}
- */
-export function isPercentage (value) {
-  return (isString(value)) && (value.indexOf('%') >= 0)
 }

@@ -58,7 +58,7 @@ module.exports = function(grunt){
 		},
 
 		/**
-		 * Merege all scripts into one file
+		 * Merge all scripts into one file
 		 * Warp concated files inside self-invoking anonymous function
 		 */
 		concat: {

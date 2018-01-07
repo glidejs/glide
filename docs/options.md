@@ -17,6 +17,7 @@ Type of the movement. Available types:
 - `carousel` - Changes slides without starting over when it reaches first or last slide.
 
 **default:** `'slider'`
+
 **type:** `String`
 
 ---
@@ -26,6 +27,7 @@ Type of the movement. Available types:
 Start at specific slide number defined with zero-based index.
 
 **default:** `0`
+
 **type:** `Number`
 
 ---
@@ -35,6 +37,7 @@ Start at specific slide number defined with zero-based index.
 A number of slides visible on the single viewport.
 
 **default:** `1`
+
 **type:** `Number`
 
 ---
@@ -46,6 +49,7 @@ Focus currently active slide at a specified position in the track. Available inp
 - `(1,2,3...)` - Current slide will be focused on the specified zero-based index.
 
 **default:** `center`
+
 **type:** `String|Number`
 
 ---
@@ -55,6 +59,7 @@ Focus currently active slide at a specified position in the track. Available inp
 Change slides after a specified interval. Use `false` for turning off autoplay.
 
 **default:** `4000`
+
 **type:** `String|Number`
 
 ---
@@ -64,6 +69,7 @@ Change slides after a specified interval. Use `false` for turning off autoplay.
 Stop autoplay on mouseover event.
 
 **default:** `true`
+
 **type:** `Boolean`
 
 ---
@@ -73,6 +79,7 @@ Stop autoplay on mouseover event.
 Allow for changing slides with left and right keyboard arrows.
 
 **default:** `true`
+
 **type:** `Boolean`
 
 ---
@@ -82,6 +89,7 @@ Allow for changing slides with left and right keyboard arrows.
 Minimal swipe distance needed to change the slide. Use `false` for turning off a swiping.
 
 **default:** `80`
+
 **type:** `Number|Boolean`
 
 ---
@@ -91,6 +99,7 @@ Minimal swipe distance needed to change the slide. Use `false` for turning off a
 Minimal mouse drag distance needed to change slide. Use `false` for turning off a dragging.
 
 **default:** `120`
+
 **type:** `Number|Boolean`
 
 ---
@@ -100,6 +109,7 @@ Minimal mouse drag distance needed to change slide. Use `false` for turning off 
 A maximum number of slides to whom movement is made on swiping or dragging. Use `false` for unlimited.
 
 **default:** `false`
+
 **type:** `Number|Boolean`
 
 ---
@@ -109,6 +119,7 @@ A maximum number of slides to whom movement is made on swiping or dragging. Use 
 Moving distance ratio of the slides on a swiping and dragging.
 
 **default:** `0.75`
+
 **type:** `Number`
 
 ---
@@ -118,6 +129,7 @@ Moving distance ratio of the slides on a swiping and dragging.
 Angle required to activate slides moving on swiping or dragging.
 
 **default:** `45`
+
 **type:** `Number`
 
 ---
@@ -127,6 +139,7 @@ Angle required to activate slides moving on swiping or dragging.
 Duration of the animation in milliseconds.
 
 **default:** `400`
+
 **type:** `Number`
 
 ---
@@ -136,6 +149,7 @@ Duration of the animation in milliseconds.
 Easing function for the animation.
 
 **default:** `'cubic-bezier(0.165, 0.840, 0.440, 1.000)'`
+
 **type:** `String`
 
 ---
@@ -145,6 +159,7 @@ Easing function for the animation.
 Throttle costly events at most once per every wait milliseconds.
 
 **default:** `25`
+
 **type:** `Number`
 
 ---
@@ -154,6 +169,7 @@ Throttle costly events at most once per every wait milliseconds.
 Set height of the slider based on current slide content.
 
 **default:** `false`
+
 **type:** `Boolean`
 
 ---
@@ -163,6 +179,7 @@ Set height of the slider based on current slide content.
 Switch to "right to left" moving mode.
 
 **default:** `false`
+
 **type:** `Boolean`
 
 ---
@@ -174,6 +191,7 @@ Distance value of the next and previous viewports which have to be peeked in cur
 - `{ left: 100, right: 50 }` - Peek 100px on the left side and 50px on the right side.
 
 **default:** `0`
+
 **type:** `Number|String|Object`
 
 ---
@@ -190,6 +208,7 @@ Collection of options applied at specified media breakpoints. For example, displ
 ```
 
 **default:** `{}`
+
 **type:** `Object`
 
 ---
@@ -199,6 +218,7 @@ Collection of options applied at specified media breakpoints. For example, displ
 Collection of internally used HTML classes.
 
 **default:** 
+
 ```
 {
   rtl: 'glide--rtl',

@@ -1,10 +1,10 @@
 [![glide.js](//glide.jedrzejchalubek.com/images/glide-logotype.png)](//glide.jedrzejchalubek.com)
 
-[Glide.js](//glide.jedrzejchalubek.com) is a responsive and dependency-free JavaScript ES6 slider and carousel. It’s simple, lightweight and fast. Designed to slide. No less, no more.
+[Glide.js](//glide.jedrzejchalubek.com) is a dependency-free JavaScript ES6 slider and carousel. It’s simple, lightweight and fast. Designed to slide. No less, no more
 
 What can convince you:
 - **Dependency-free**. Everything included, ready for action.
-- Lightweight, **~18kb (~6kb gzipped)** with every function on board.
+- Lightweight. Only **~18kb (~6kb gzipped)** with every function on board.
 - **Modular**. Remove unused modules and drop script weight even more.
 - **Extendable**. Plug-in your own modules with additional functions.
 - **Bundlers ready**. Using Rollup or Webpack? We have your back.

@@ -6,7 +6,7 @@
 
 var defaults = {
   /**
-   * Type of the slides movements.
+   * Type of the movement.
    *
    * Available types:
    * `slider` - Rewinds slider to the start/end when it reaches first or last slide.
@@ -17,75 +17,74 @@ var defaults = {
   type: 'slider',
 
   /**
-   * Start at specifed slide zero-based index.
+   * Start at specific slide number defined with zero-based index.
    *
    * @type {Number}
    */
   startAt: 0,
 
   /**
-   * Number of slides visible on viewport.
+   * A number of slides visible on the single viewport.
    *
    * @type {Number}
    */
   perView: 1,
 
   /**
-   * Focus currently active slide at specifed position in the track.
+   * Focus currently active slide at a specified position in the track.
    *
    * Available inputs:
-   * `center` - Current slide will be always focused at the center of track.
-   * `(1,2,3...)` - Current slide will be focused at the specifed index number.
+   * `center` - Current slide will be always focused at the center of a track.
+   * `0,1,2,3...` - Current slide will be focused on the specified zero-based index.
    *
    * @type {String|Number}
    */
   focusAt: 'center',
 
   /**
-   * Change slides after specifed interval.
-   * Use false for turning off autoplay.
+   * Change slides after a specified interval. Use `false` for turning off autoplay.
    *
    * @type {Number|Boolean}
    */
   autoplay: 4000,
 
   /**
-   * Stop autoplay on mouseover.
+   * Stop autoplay on mouseover event.
    *
    * @type {Boolean}
    */
   hoverpause: true,
 
   /**
-   * Allow for changing slides with keyboard left and right arrows.
+   * Allow for changing slides with left and right keyboard arrows.
    *
    * @type {Boolean}
    */
   keyboard: true,
 
   /**
-   * Minimal swipe distance needed to change slide, `false` for turning off touch.
+   * Minimal swipe distance needed to change the slide. Use `false` for turning off a swiping.
    *
-   * @type {Number}
+   * @type {Number|Boolean}
    */
   swipeThreshold: 80,
 
   /**
-   * Minimal mouse drag distance needed to change slide, `false` for turning off mouse drag.
+   * Minimal mouse drag distance needed to change slide. Use `false` for turning off a dragging.
    *
    * @type {Number}
    */
   dragThreshold: 120,
 
   /**
-   * A maximum number of slides to whom movement is maked on swiping or dragging, `false` for unlimited.
+   * A maximum number of slides to whom movement is made on swiping or dragging. Use `false` for unlimited.
    *
-   * @type {Number}
+   * @type {Number|Boolean}
    */
   perTouch: false,
 
   /**
-   * Moving ratio of the slides on a swiping and dragging.
+   * Moving distance ratio of the slides on a swiping and dragging.
    *
    * @type {Number}
    */
@@ -106,14 +105,14 @@ var defaults = {
   animationDuration: 400,
 
   /**
-   * Easing function for animation.
+   * Easing function for the animation.
    *
    * @type {String}
    */
   animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
 
   /**
-   * Throttle constly events at most once per every wait milliseconds.
+   * Throttle costly events at most once per every wait milliseconds.
    *
    * @type {Number}
    */
@@ -127,21 +126,23 @@ var defaults = {
   autoheight: false,
 
   /**
-   * Distance value of the next and previous viewports which have to be
-   * peeked in current view. Accepts number and pixels as string.
-   * Left and right peeking can be setup separetly with a
-   * directions object `{ left: 100, right: 100 }`.
-   *
-   * @type {Number|String|Object}
-   */
-  peek: 0,
-
-  /**
-   * Switch glide to "right to left" moving mode.
+   * Switch to "right to left" moving mode.
    *
    * @type {Boolean}
    */
   rtl: false,
+
+  /**
+   * Distance value of the next and previous viewports which have to be
+   * peeked in current view. Accepts number and pixels as string.
+   * Left and right peeking can be setup separetly with a
+   * directions object. For example:
+   * `100`, `'100'`, `'100px'` - Peek 100px on the both sides.
+   * { left: 100, right: 50 }` - Peek 100px on the left side and 50px on the right side.
+   *
+   * @type {Number|String|Object}
+   */
+  peek: 0,
 
   /**
    * Collection of options applied at specified media breakpoints.
@@ -155,7 +156,7 @@ var defaults = {
   breakpoints: {},
 
   /**
-   * List of internally used html classes.
+   * Collection of internally used HTML classes.
    *
    * @type {Object}
    */
@@ -327,9 +328,12 @@ function isString(value) {
  *
  * @param  {Mixed}   value
  * @return {Boolean}
+ * @see https://github.com/jashkenas/underscore
  */
 function isObject(value) {
-  return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object';
+  var type = typeof value === 'undefined' ? 'undefined' : _typeof(value);
+
+  return type === 'function' || type === 'object' && !!value; // eslint-disable-line no-mixed-operators
 }
 
 /**
@@ -371,13 +375,6 @@ function isUndefined(value) {
 function isArray(value) {
   return value.constructor === Array;
 }
-
-/**
- * Indicates whether the specified value is a precentage value represented as string.
- *
- * @param  {Mixed}   value
- * @return {Boolean}
- */
 
 /**
  * Creates and initializes specified collection of extensions.
@@ -529,9 +526,18 @@ var Glide$2 = function () {
 
       return this;
     }
+
+    /**
+     * Reinits glide with specified settings.
+     * 
+     * @param {Object} settings 
+     */
+
   }, {
     key: 'reinit',
-    value: function reinit(settings) {
+    value: function reinit() {
+      var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
       this.settings = _extends(this.settings, settings);
 
       emit('reinit');
@@ -1929,40 +1935,6 @@ var Transition = function (Glide, Components, Events$$1) {
   return TRANSITION;
 };
 
-var Media = function (Glide, Components) {
-  var defaults = _extends({}, Glide.settings);
-
-  var MEDIA = {
-    match: function match(breakpoints) {
-      for (var point in breakpoints) {
-        if (breakpoints.hasOwnProperty(point)) {
-          if (window.matchMedia('(max-width: ' + point + ')').matches) {
-            return breakpoints[point];
-          }
-
-          return defaults;
-        }
-      }
-    }
-  };
-
-  /**
-   * Overwrite instance settings with matched ones for current breakpoint.
-   * This happens right after component initialization.
-   */
-  Glide.settings = _extends(Glide.settings, MEDIA.match(Glide.settings.breakpoints));
-
-  /**
-   * Reinit glide:
-   * - on window resize with proper settings for matched breakpoint
-   */
-  listen('resize', function () {
-    Glide.reinit(MEDIA.match(Glide.settings.breakpoints));
-  });
-
-  return MEDIA;
-};
-
 var START_EVENTS = ['touchstart', 'mousedown'];
 var MOVE_EVENTS = ['touchmove', 'mousemove'];
 var END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave'];
@@ -2756,6 +2728,46 @@ var Autoplay = function (Glide, Components) {
   return AUTOPLAY;
 };
 
+var Breakpoints = function (Glide, Components) {
+  var defaults = _extends({}, Glide.settings);
+
+  var BREAKPOINTS = {
+    /**
+     * Matches settings for currectly matching media breakpoint. 
+     * 
+     * @param {Object} breakpoints 
+     * @returns {Object}
+     */
+    match: function match(breakpoints) {
+      for (var point in breakpoints) {
+        if (breakpoints.hasOwnProperty(point)) {
+          if (window.matchMedia('(max-width: ' + point + ')').matches) {
+            return breakpoints[point];
+          }
+
+          return defaults;
+        }
+      }
+    }
+  };
+
+  /**
+   * Overwrite instance settings with currently matching breakpoint settings.
+   * This happens right after component initialization.
+   */
+  Glide.settings = _extends(Glide.settings, BREAKPOINTS.match(Glide.settings.breakpoints));
+
+  /**
+   * Reinit glide on:
+   * - window resize with proper settings for matched breakpoint
+   */
+  listen('resize', function () {
+    Glide.reinit(BREAKPOINTS.match(Glide.settings.breakpoints));
+  });
+
+  return BREAKPOINTS;
+};
+
 // Required components
 // Optional components
 var COMPONENTS = {
@@ -2772,14 +2784,14 @@ var COMPONENTS = {
   Run: Run,
 
   // Optional
-  Media: Media,
   Swipe: Swipe,
   Height: Height,
   Images: Images,
   Anchors: Anchors,
   Controls: Controls,
   Keyboard: Keyboard,
-  Autoplay: Autoplay
+  Autoplay: Autoplay,
+  Breakpoints: Breakpoints
 };
 
 var Glide = function (_Core) {

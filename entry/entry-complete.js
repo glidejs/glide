@@ -13,7 +13,6 @@ import Translate from '../src/components/translate'
 import Transition from '../src/components/transition'
 
 // Optional components
-import Media from '../src/components/media'
 import Swipe from '../src/components/swipe'
 import Height from '../src/components/height'
 import Images from '../src/components/images'
@@ -21,6 +20,7 @@ import Anchors from '../src/components/anchors'
 import Controls from '../src/components/controls'
 import Keyboard from '../src/components/keyboard'
 import Autoplay from '../src/components/autoplay'
+import Breakpoints from '../src/components/breakpoints'
 
 const COMPONENTS = {
   // Required
@@ -36,14 +36,14 @@ const COMPONENTS = {
   Run,
 
   // Optional
-  Media,
   Swipe,
   Height,
   Images,
   Anchors,
   Controls,
   Keyboard,
-  Autoplay
+  Autoplay,
+  Breakpoints
 }
 
 export default class Glide extends Core {

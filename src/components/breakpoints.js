@@ -3,7 +3,7 @@ import { listen } from '../core/event/events-bus'
 export default function (Glide, Components) {
   const defaults = Object.assign({}, Glide.settings)
 
-  const MEDIA = {
+  const BREAKPOINTS = {
     /**
      * Matches settings for currectly matching media breakpoint. 
      * 
@@ -27,15 +27,15 @@ export default function (Glide, Components) {
    * Overwrite instance settings with currently matching breakpoint settings.
    * This happens right after component initialization.
    */
-  Glide.settings = Object.assign(Glide.settings, MEDIA.match(Glide.settings.breakpoints))
+  Glide.settings = Object.assign(Glide.settings, BREAKPOINTS.match(Glide.settings.breakpoints))
 
   /**
    * Reinit glide on:
    * - window resize with proper settings for matched breakpoint
    */
   listen('resize', () => {
-    Glide.reinit(MEDIA.match(Glide.settings.breakpoints))
+    Glide.reinit(BREAKPOINTS.match(Glide.settings.breakpoints))
   })
 
-  return MEDIA
+  return BREAKPOINTS
 }

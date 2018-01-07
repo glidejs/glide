@@ -15,7 +15,7 @@ export default function (Glide, Components) {
   let swipeSin = 0
   let swipeStartX = 0
   let swipeStartY = 0
-  let dragging = false
+  let disabled = false
 
   const SWIPE = {
     /**
@@ -35,10 +35,10 @@ export default function (Glide, Components) {
      * @return {Void}
      */
     start (event) {
-      if (this.enabled) {
-        let swipe = this.touches(event)
-
+      if (!disabled && !Glide.isDisabled()) {
         this.disable()
+        
+        let swipe = this.touches(event)
 
         swipeSin = null
         swipeStartX = toInt(swipe.pageX)
@@ -58,7 +58,7 @@ export default function (Glide, Components) {
      * @param {Object} event
      */
     move (event) {
-      if (this.enabled) {
+      if (!Glide.isDisabled()) {
         let settings = Glide.settings
 
         let swipe = this.touches(event)
@@ -101,13 +101,11 @@ export default function (Glide, Components) {
      * @return {Void}
      */
     end (event) {
-      if (this.enabled) {
+      if (!Glide.isDisabled()) {
         let settings = Glide.settings
 
         let swipe = this.touches(event)
         let threshold = this.threshold(event)
-
-        this.enable()
 
         let swipeDistance = swipe.pageX - swipeStartX
         let swipeDeg = swipeSin * 180 / Math.PI
@@ -147,6 +145,7 @@ export default function (Glide, Components) {
 
         this.unbindSwipeMove()
         this.unbindSwipeEnd()
+        this.enable()
 
         emit('swipe.end')
       }
@@ -245,7 +244,7 @@ export default function (Glide, Components) {
      * @return {self}
      */
     enable () {
-      dragging = false
+      disabled = false
 
       Components.Transition.enable()
 
@@ -258,24 +257,13 @@ export default function (Glide, Components) {
      * @return {self}
      */
     disable () {
-      dragging = true
+      disabled = true
 
       Components.Transition.disable()
 
       return this
     }
   }
-
-  define(SWIPE, 'enabled', {
-    /**
-     * Gets value of the peek.
-     *
-     * @returns {Number}
-     */
-    get () {
-      return !(Glide.disabled && dragging)
-    }
-  })
 
   /**
    * Add component class:

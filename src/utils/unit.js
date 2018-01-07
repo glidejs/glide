@@ -24,6 +24,7 @@ export function isString (value) {
  *
  * @param  {Mixed}   value
  * @return {Boolean}
+ * 
  * @see https://github.com/jashkenas/underscore
  */
 export function isObject (value) {

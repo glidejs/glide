@@ -328,6 +328,7 @@ function isString(value) {
  *
  * @param  {Mixed}   value
  * @return {Boolean}
+ * 
  * @see https://github.com/jashkenas/underscore
  */
 function isObject(value) {
@@ -1657,8 +1658,22 @@ function now() {
   return new Date().getTime();
 }
 
+/**
+ * Returns a function, that, when invoked, will only be triggered 
+ * at most once during a given window of time. 
+ * 
+ * @param {Function} func 
+ * @param {Number} wait 
+ * @param {Object} options 
+ * @return {Function}
+ * 
+ * @see https://github.com/jashkenas/underscore
+ */
 function throttle(func, wait, options) {
-  var timeout, context, args, result;
+  var timeout = void 0,
+      context = void 0,
+      args = void 0,
+      result = void 0;
   var previous = 0;
   if (!options) options = {};
 
@@ -1946,7 +1961,7 @@ var swipe = function (Glide, Components) {
   var swipeSin = 0;
   var swipeStartX = 0;
   var swipeStartY = 0;
-  var dragging = false;
+  var disabled = false;
 
   var SWIPE = {
     /**
@@ -1967,10 +1982,10 @@ var swipe = function (Glide, Components) {
      * @return {Void}
      */
     start: function start(event) {
-      if (this.enabled) {
-        var swipe = this.touches(event);
-
+      if (!disabled && !Glide.isDisabled()) {
         this.disable();
+
+        var swipe = this.touches(event);
 
         swipeSin = null;
         swipeStartX = toInt(swipe.pageX);
@@ -1991,7 +2006,7 @@ var swipe = function (Glide, Components) {
      * @param {Object} event
      */
     move: function move(event) {
-      if (this.enabled) {
+      if (!Glide.isDisabled()) {
         var settings = Glide.settings;
 
         var swipe = this.touches(event);
@@ -2035,13 +2050,11 @@ var swipe = function (Glide, Components) {
      * @return {Void}
      */
     end: function end(event) {
-      if (this.enabled) {
+      if (!Glide.isDisabled()) {
         var settings = Glide.settings;
 
         var swipe = this.touches(event);
         var threshold = this.threshold(event);
-
-        this.enable();
 
         var swipeDistance = swipe.pageX - swipeStartX;
         var swipeDeg = swipeSin * 180 / Math.PI;
@@ -2078,6 +2091,7 @@ var swipe = function (Glide, Components) {
 
         this.unbindSwipeMove();
         this.unbindSwipeEnd();
+        this.enable();
 
         emit('swipe.end');
       }
@@ -2183,7 +2197,7 @@ var swipe = function (Glide, Components) {
      * @return {self}
      */
     enable: function enable() {
-      dragging = false;
+      disabled = false;
 
       Components.Transition.enable();
 
@@ -2197,24 +2211,13 @@ var swipe = function (Glide, Components) {
      * @return {self}
      */
     disable: function disable() {
-      dragging = true;
+      disabled = true;
 
       Components.Transition.disable();
 
       return this;
     }
   };
-
-  define(SWIPE, 'enabled', {
-    /**
-     * Gets value of the peek.
-     *
-     * @returns {Number}
-     */
-    get: function get() {
-      return !(Glide.disabled && dragging);
-    }
-  });
 
   /**
    * Add component class:

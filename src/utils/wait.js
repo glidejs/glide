@@ -1,21 +1,32 @@
 import { now } from './time'
 
+/**
+ * Returns a function, that, when invoked, will only be triggered 
+ * at most once during a given window of time. 
+ * 
+ * @param {Function} func 
+ * @param {Number} wait 
+ * @param {Object} options 
+ * @return {Function}
+ * 
+ * @see https://github.com/jashkenas/underscore
+ */
 export function throttle (func, wait, options) {
-  var timeout, context, args, result
-  var previous = 0
+  let timeout, context, args, result
+  let previous = 0
   if (!options) options = {}
 
-  var later = function () {
+  let later = function () {
     previous = options.leading === false ? 0 : now()
     timeout = null
     result = func.apply(context, args)
     if (!timeout) context = args = null
   }
 
-  var throttled = function () {
-    var at = now()
+  let throttled = function () {
+    let at = now()
     if (!previous && options.leading === false) previous = at
-    var remaining = wait - (at - previous)
+    let remaining = wait - (at - previous)
     context = this
     args = arguments
     if (remaining <= 0 || remaining > wait) {

@@ -58,7 +58,7 @@ new Glide('.glide').mount()
 Need a few selected modules? Import and mount only what you need.
 
 ```js
-import { Glide, Controls, Breakpoints } from 'glidejs/dist/glide.modular'
+import { Glide, Controls, Breakpoints } from 'glidejs/dist/glide.modular.esm'
 
 new Glide('.glide').mount({ Controls, Breakpoints })
 ```

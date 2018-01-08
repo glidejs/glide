@@ -214,6 +214,11 @@ export default function (Glide, Components) {
       Binder.off(END_EVENTS, Components.Html.wrapper)
     },
 
+    /**
+     * Normalizes event touches points accorting to different types.
+     * 
+     * @param {Object} event 
+     */
     touches (event) {
       if (MOUSE_EVENTS.includes(event.type)) {
         return event

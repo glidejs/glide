@@ -1,5 +1,5 @@
 /**
- * Updates glide movement with width of additional clones width.
+ * Reflects value of glide movement.
  *
  * @param  {Glide} Glide
  * @param  {Array} Components
@@ -8,7 +8,7 @@
 export default function (Glide, Components) {
   return {
     /**
-     * Adds to the passed translate width of the half of clones.
+     * Negates the passed translate if glide is in RTL option.
      *
      * @param  {Number} translate
      * @return {Number}

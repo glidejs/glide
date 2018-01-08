@@ -8,7 +8,7 @@ import { isFunction } from '../utils/unit'
  * @param {Glide} glide
  * @param {Object} extensions
  *
- * @returns {Void}
+ * @returns {Object}
  */
 export function mount (glide, extensions, events) {
   const components = {}
@@ -26,4 +26,6 @@ export function mount (glide, extensions, events) {
       components[name].mount()
     }
   }
+
+  return components
 }

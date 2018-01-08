@@ -5,6 +5,8 @@ import { toInt, isObject } from './utils/unit'
 
 import { Events, listen, emit } from './core/event/events-bus'
 
+let Components = {}
+
 export default class Glide {
   /**
    * Construct glide.
@@ -30,7 +32,7 @@ export default class Glide {
     emit('mount.before', this)
 
     if (isObject(extensions)) {
-      mount(this, extensions, Events)
+      Components = mount(this, extensions, Events)
     } else {
       warn('You need to provide a components object on `mount()`')
     }
@@ -49,6 +51,22 @@ export default class Glide {
     this.settings = Object.assign(this.settings, settings)
 
     emit('reinit')
+  }
+
+  /**
+   * Move glide by specified distance. Distance must be in special pattern:
+   * `>` - Move one forward
+   * `<` - Move one backward
+   * `={i}` - Go to {i} zero-based slide (eq. '=3', will go to second slide)
+   * `>>` - Rewinds to end (last slide)
+   * `<<` - Rewinds to start (first slide)
+   * 
+   * @param {String} distance 
+   */
+  go (distance) {
+    Components.Run.make(distance)
+
+    return this
   }
 
   /**

@@ -390,7 +390,7 @@ function isArray(value) {
  * @param {Glide} glide
  * @param {Object} extensions
  *
- * @returns {Void}
+ * @returns {Object}
  */
 function mount(glide, extensions, events) {
   var components = {};
@@ -408,6 +408,8 @@ function mount(glide, extensions, events) {
       components[_name].mount();
     }
   }
+
+  return components;
 }
 
 var EventsBus = function () {
@@ -490,6 +492,8 @@ function emit(event, context) {
   return Events.emit(event, context);
 }
 
+var Components = {};
+
 var Glide$2 = function () {
   /**
    * Construct glide.
@@ -524,7 +528,7 @@ var Glide$2 = function () {
       emit('mount.before', this);
 
       if (isObject(extensions)) {
-        mount(this, extensions, Events);
+        Components = mount(this, extensions, Events);
       } else {
         warn('You need to provide a components object on `mount()`');
       }
@@ -548,6 +552,25 @@ var Glide$2 = function () {
       this.settings = _extends(this.settings, settings);
 
       emit('reinit');
+    }
+
+    /**
+     * Move glide by specified distance. Distance must be in special pattern:
+     * `>` - Move one forward
+     * `<` - Move one backward
+     * `={i}` - Go to {i} zero-based slide (eq. '=3', will go to second slide)
+     * `>>` - Rewinds to end (last slide)
+     * `<<` - Rewinds to start (first slide)
+     * 
+     * @param {String} distance 
+     */
+
+  }, {
+    key: 'go',
+    value: function go(distance) {
+      Components.Run.make(distance);
+
+      return this;
     }
 
     /**
@@ -1071,7 +1094,7 @@ function ucfirst(string) {
 }
 
 /**
- * Updates glide movement with width of additional clones width.
+ * Reflects value of glide movement.
  *
  * @param  {Glide} Glide
  * @param  {Array} Components
@@ -1080,7 +1103,7 @@ function ucfirst(string) {
 var Rtl = function (Glide, Components) {
   return {
     /**
-     * Adds to the passed translate width of the half of clones.
+     * Negates the passed translate if glide is in RTL option.
      *
      * @param  {Number} translate
      * @return {Number}
@@ -1545,6 +1568,9 @@ var Clones = function (Glide, Components, Events$$1) {
   var pattern = [];
 
   var CLONES = {
+    /**
+     * Create pattern map and collect slides to be cloned.
+     */
     mount: function mount() {
       this.items = [];
 
@@ -1559,14 +1585,16 @@ var Clones = function (Glide, Components, Events$$1) {
      * @return {Void}
      */
     map: function map() {
-      // We should have one more slides clones
-      // than we have slides per view.
+      // We should have one more slides clones, than we have slides per view.
+      // This give us confidence that viewport will always filled with slides.
       var total = Glide.settings.perView + 1;
 
+      // Fill pattern with indexes of slides at the beginning of track.
       for (var i = 0; i < total; i++) {
         pattern.push(i);
       }
 
+      // Fill pattern with indexes of slides from the end of track.
       for (var _i = total - 1; _i >= 0; _i--) {
         pattern.push(-(Components.Html.slides.length - 1) + _i);
       }
@@ -2171,6 +2199,13 @@ var Swipe = function (Glide, Components) {
     unbindSwipeEnd: function unbindSwipeEnd() {
       Binder.off(END_EVENTS, Components.Html.wrapper);
     },
+
+
+    /**
+     * Normalizes event touches points accorting to different types.
+     * 
+     * @param {Object} event 
+     */
     touches: function touches(event) {
       if (MOUSE_EVENTS.includes(event.type)) {
         return event;
@@ -2730,7 +2765,7 @@ var Autoplay = function (Glide, Components) {
         return toInt(autoplay);
       }
 
-      return Glide.settings.autoplay;
+      return toInt(Glide.settings.autoplay);
     }
   });
 

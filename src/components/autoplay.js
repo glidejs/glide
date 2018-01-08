@@ -79,7 +79,7 @@ export default function (Glide, Components) {
         return toInt(autoplay)
       }
 
-      return Glide.settings.autoplay
+      return toInt(Glide.settings.autoplay)
     }
   })
 

@@ -1,7 +1,7 @@
 const ROOT_SELECTOR = '.glide'
 const TRACK_SELECTOR = '[data-glide-el="track"]'
 
-export default function (document) {
+export function query (document) {
   let root = document.querySelector(ROOT_SELECTOR)
   let track = root.querySelector(TRACK_SELECTOR)
   let wrapper = track.children[0]

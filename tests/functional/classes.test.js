@@ -1,5 +1,6 @@
 import html from '../fixtures/html'
-import query from '../fixtures/query'
+import { query } from '../fixtures/query'
+import { afterTransition } from '../fixtures/transition'
 
 import defaults from '../../src/defaults'
 import Glide from '../../entry/entry-complete'
@@ -34,10 +35,10 @@ describe('Class', () => {
 
     new Glide('#glide').mount().go('>')
 
-    setTimeout(() => {
+    afterTransition(() => {
       expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(false)
       expect(slides[1].classList.contains(defaults.classes.activeSlide)).toBe(true)
-    }, defaults.animationDuration)
+    })
   })
 
   test('`classes.swipeable` should be applied on the root element', () => {

@@ -1,5 +1,5 @@
 import html from '../fixtures/html'
-import query from '../fixtures/query'
+import { query } from '../fixtures/query'
 
 import defaults from '../../src/defaults'
 import Glide from '../../entry/entry-complete'

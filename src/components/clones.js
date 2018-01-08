@@ -5,6 +5,9 @@ export default function (Glide, Components, Events) {
   let pattern = []
 
   const CLONES = {
+    /**
+     * Create pattern map and collect slides to be cloned.
+     */
     mount () {
       this.items = []
 
@@ -18,14 +21,16 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     map () {
-      // We should have one more slides clones
-      // than we have slides per view.
+      // We should have one more slides clones, than we have slides per view.
+      // This give us confidence that viewport will always filled with slides.
       let total = Glide.settings.perView + 1
 
+      // Fill pattern with indexes of slides at the beginning of track.
       for (let i = 0; i < total; i++) {
         pattern.push(i)
       }
 
+      // Fill pattern with indexes of slides from the end of track.
       for (let i = total - 1; i >= 0; i--) {
         pattern.push(-(Components.Html.slides.length - 1) + i)
       }

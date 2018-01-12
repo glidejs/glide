@@ -57,8 +57,9 @@ export default function (Glide, Components, Events) {
   /**
    * Reinit building of the glide:
    * - on resizing of the window to calculate new dimentions
+   * - on reiniting via API to recalculate dimentions
    */
-  listen('resize', () => {
+  listen(['resize', 'reinit'], () => {
     BUILD.mount()
   })
 

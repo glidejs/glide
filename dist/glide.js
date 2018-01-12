@@ -505,10 +505,9 @@ var Glide$2 = function () {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     classCallCheck(this, Glide);
 
-    this.settings = _extends(defaults, options);
-
     this.disabled = false;
     this.selector = selector;
+    this.settings = _extends(defaults, options);
     this.index = this.settings.startAt;
   }
 
@@ -550,12 +549,13 @@ var Glide$2 = function () {
       var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
       this.settings = _extends(this.settings, settings);
+      this.index = this.settings.startAt;
 
       emit('reinit');
     }
 
     /**
-     * Move glide by specified distance. Distance must be in special pattern:
+     * Move glide by specified distance with animation. Distance must be in special pattern:
      * `>` - Move one forward
      * `<` - Move one backward
      * `={i}` - Go to {i} zero-based slide (eq. '=3', will go to second slide)
@@ -1552,8 +1552,9 @@ var Build = function (Glide, Components, Events$$1) {
   /**
    * Reinit building of the glide:
    * - on resizing of the window to calculate new dimentions
+   * - on reiniting via API to recalculate dimentions
    */
-  listen('resize', function () {
+  listen(['resize', 'reinit'], function () {
     BUILD.mount();
   });
 
@@ -1978,7 +1979,6 @@ var Transition = function (Glide, Components, Events$$1) {
 
   /**
    * Enable transition:
-   * - after initial build, because we disabled it before
    * - on each running, because it may be disabled by offset move
    */
   listen(['run'], function () {

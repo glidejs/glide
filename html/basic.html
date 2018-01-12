@@ -60,7 +60,7 @@
   var el = document.querySelector('.glide')
 
   var glide = new Glide(el, {
-    // type: 'carousel',
+    type: 'carousel',
     perView: 3,
     startAt: 0,
     focusAt: 'center',
@@ -94,4 +94,12 @@
       }
     }
   })
+
+  setTimeout(function() {
+    glide.reinit({
+      startAt: 2,
+      perView: 4, 
+      focusAt: 2 
+    })
+  }, 1000)
 </script>

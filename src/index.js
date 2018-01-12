@@ -15,10 +15,9 @@ export default class Glide {
    * @param  {Object} options
    */
   constructor (selector, options = {}) {
-    this.settings = Object.assign(defaults, options)
-
     this.disabled = false
     this.selector = selector
+    this.settings = Object.assign(defaults, options)
     this.index = this.settings.startAt
   }
 
@@ -49,12 +48,13 @@ export default class Glide {
    */
   reinit (settings = {}) {
     this.settings = Object.assign(this.settings, settings)
+    this.index = this.settings.startAt
 
     emit('reinit')
   }
 
   /**
-   * Move glide by specified distance. Distance must be in special pattern:
+   * Move glide by specified distance with animation. Distance must be in special pattern:
    * `>` - Move one forward
    * `<` - Move one backward
    * `={i}` - Go to {i} zero-based slide (eq. '=3', will go to second slide)

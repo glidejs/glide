@@ -60,9 +60,9 @@
   var el = document.querySelector('.glide')
 
   var glide = new Glide(el, {
-    type: 'carousel',
+    // type: 'carousel',
     perView: 3,
-    startAt: 1,
+    startAt: 0,
     focusAt: 'center',
     peek: {
       before: 50,
@@ -94,6 +94,4 @@
       }
     }
   })
-
-  glide.go('>')
 </script>

@@ -29,7 +29,7 @@
     "build:umd": "rollup --config build/umd.js && rollup --config build/umd.min.js",
     "build:js": "npm run build:esm && npm run build:umd",
     "build": "npm run build:css && npm run build:js",
-    "test": "jest tests --coverage",
+    "test": "jest tests/**/*.test.js --coverage",
     "lint": "eslint {src,tests}/**/*.js",
     "watch": "npm-watch"
   },
@@ -40,24 +40,24 @@
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
-    "babel-jest": "^20.0.3",
+    "babel-jest": "^22.0.6",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-object-assign": "^6.22.0",
-    "babel-preset-env": "^1.6.0",
-    "eslint": "^4.7.2",
+    "babel-preset-env": "^1.6.1",
+    "eslint": "^4.15.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": ">=2.2.0",
     "eslint-plugin-node": ">=4.2.2",
     "eslint-plugin-promise": ">=3.5.0",
     "eslint-plugin-standard": ">=3.0.0",
-    "jest": "^20.0.4",
-    "node-sass": "^4.5.3",
+    "jest": "^22.0.6",
+    "node-sass": "^4.7.2",
     "npm-watch": "^0.2.0",
     "rollup": "^0.48.2",
-    "rollup-plugin-babel": "^3.0.2",
+    "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-uglify": "^2.0.1",
-    "stylelint": "^8.2.0",
+    "stylelint": "^8.4.0",
     "stylelint-config-standard": "^17.0.0",
-    "stylelint-scss": "^2.1.0"
+    "stylelint-scss": "^2.2.0"
   }
 }

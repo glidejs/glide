@@ -16,7 +16,7 @@ export default class Glide {
   constructor (selector, options = {}) {
     this.disabled = false
     this.selector = selector
-    this.settings = Object.assign(defaults, options)
+    this.settings = Object.assign({}, defaults, options)
     this.index = this.settings.startAt
 
     this.events = new EventsBus()
@@ -29,7 +29,7 @@ export default class Glide {
    * @return {Void}
    */
   mount (extensions = {}) {
-    emit(this.events, 'mount.before', this)
+    emit(this.events, 'mount.before')
 
     if (isObject(extensions)) {
       Components = mount(this, extensions, this.events)
@@ -37,7 +37,7 @@ export default class Glide {
       warn('You need to provide a components object on `mount()`')
     }
 
-    emit(this.events, 'mount.after', this)
+    emit(this.events, 'mount.after')
 
     return this
   }
@@ -112,7 +112,7 @@ export default class Glide {
    * @return {Void}
    */
   on (event, handler) {
-    listen(event, handler)
+    listen(this.events, event, handler)
 
     return this
   }

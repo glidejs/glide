@@ -90,14 +90,14 @@
 
 <script>
   var el = document.querySelector('#glide1')
-  var glide1 = new Glide(el, { autoplay: false })
+  var glide1 = new Glide(el, { 
+    perView: 3,
+    autoplay: false 
+  })
   glide1.mount()
 
   var el2 = document.querySelector('#glide2')
   var glide2 = new Glide(el2, { autoplay: false })
-  // glide2.on('move', function (distance) {
-  //   glide.move(distance)
-  // })
   glide2.mount()
 
   console.log(glide1)

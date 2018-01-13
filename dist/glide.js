@@ -507,7 +507,7 @@ var Glide$2 = function () {
 
     this.disabled = false;
     this.selector = selector;
-    this.settings = _extends(defaults, options);
+    this.settings = _extends({}, defaults, options);
     this.index = this.settings.startAt;
 
     this.events = new EventsBus();
@@ -526,7 +526,7 @@ var Glide$2 = function () {
     value: function mount$$1() {
       var extensions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-      emit(this.events, 'mount.before', this);
+      emit(this.events, 'mount.before');
 
       if (isObject(extensions)) {
         Components = mount(this, extensions, this.events);
@@ -534,7 +534,7 @@ var Glide$2 = function () {
         warn('You need to provide a components object on `mount()`');
       }
 
-      emit(this.events, 'mount.after', this);
+      emit(this.events, 'mount.after');
 
       return this;
     }
@@ -629,7 +629,7 @@ var Glide$2 = function () {
   }, {
     key: 'on',
     value: function on(event, handler) {
-      listen(event, handler);
+      listen(this.events, event, handler);
 
       return this;
     }

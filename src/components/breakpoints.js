@@ -5,9 +5,9 @@ export default function (Glide, Components) {
 
   const BREAKPOINTS = {
     /**
-     * Matches settings for currectly matching media breakpoint. 
-     * 
-     * @param {Object} breakpoints 
+     * Matches settings for currectly matching media breakpoint.
+     *
+     * @param {Object} breakpoints
      * @returns {Object}
      */
     match (breakpoints) {

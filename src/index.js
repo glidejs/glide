@@ -43,8 +43,8 @@ export default class Glide {
 
   /**
    * Reinits glide with specified settings.
-   * 
-   * @param {Object} settings 
+   *
+   * @param {Object} settings
    */
   reinit (settings = {}) {
     this.settings = Object.assign(this.settings, settings)
@@ -60,8 +60,8 @@ export default class Glide {
    * `={i}` - Go to {i} zero-based slide (eq. '=3', will go to second slide)
    * `>>` - Rewinds to end (last slide)
    * `<<` - Rewinds to start (first slide)
-   * 
-   * @param {String} distance 
+   *
+   * @param {String} distance
    */
   go (distance) {
     Components.Run.make(distance)

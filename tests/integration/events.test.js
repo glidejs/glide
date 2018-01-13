@@ -7,7 +7,7 @@ describe('Events on', () => {
 
   beforeEach(() => {
     document.body.innerHTML = html
-    
+
     glide = new Glide('#glide')
   })
 

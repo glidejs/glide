@@ -1,5 +1,4 @@
 import { toInt } from '../utils/unit'
-import { define } from '../utils/object'
 import { listen, emit } from '../core/event/events-bus'
 
 import EventsBinder from '../core/event/events-binder'
@@ -37,7 +36,7 @@ export default function (Glide, Components) {
     start (event) {
       if (!disabled && !Glide.isDisabled()) {
         this.disable()
-        
+
         let swipe = this.touches(event)
 
         swipeSin = null
@@ -216,8 +215,8 @@ export default function (Glide, Components) {
 
     /**
      * Normalizes event touches points accorting to different types.
-     * 
-     * @param {Object} event 
+     *
+     * @param {Object} event
      */
     touches (event) {
       if (MOUSE_EVENTS.includes(event.type)) {

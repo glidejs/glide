@@ -1,14 +1,14 @@
 import { now } from './time'
 
 /**
- * Returns a function, that, when invoked, will only be triggered 
- * at most once during a given window of time. 
- * 
- * @param {Function} func 
- * @param {Number} wait 
- * @param {Object} options 
+ * Returns a function, that, when invoked, will only be triggered
+ * at most once during a given window of time.
+ *
+ * @param {Function} func
+ * @param {Number} wait
+ * @param {Object} options
  * @return {Function}
- * 
+ *
  * @see https://github.com/jashkenas/underscore
  */
 export function throttle (func, wait, options) {

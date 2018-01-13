@@ -1,5 +1,5 @@
 /**
- * Converts value entered as number 
+ * Converts value entered as number
  * or string to integer value.
  *
  * @param {Number|String} value
@@ -24,7 +24,7 @@ export function isString (value) {
  *
  * @param  {Mixed}   value
  * @return {Boolean}
- * 
+ *
  * @see https://github.com/jashkenas/underscore
  */
 export function isObject (value) {

@@ -3,7 +3,7 @@ import { listen } from '../core/event/events-bus'
 
 import EventsBinder from '../core/event/events-binder'
 
-export default function (Glide, Components) {
+export default function (Glide, Components, Events) {
   const Binder = new EventsBinder()
 
   let detached = false
@@ -124,7 +124,7 @@ export default function (Glide, Components) {
    * Unbind anchors inside slides:
    * - on swiping, so they won't redirect to its `href` attributes
    */
-  listen('swipe.move', () => {
+  listen(Events, 'swipe.move', () => {
     ANCHORS.prevent().detach()
   })
 
@@ -132,7 +132,7 @@ export default function (Glide, Components) {
    * Bind anchors inside slides:
    * - after swiping and transitions ends, so they can redirect after click again
    */
-  listen('swipe.end', () => {
+  listen(Events, 'swipe.end', () => {
     Components.Transition.after(() => {
       ANCHORS.unprevent().attach()
     })

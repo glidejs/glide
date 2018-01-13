@@ -2,8 +2,7 @@ import defaults from './defaults'
 import { warn } from './utils/log'
 import { mount } from './core/index'
 import { toInt, isObject } from './utils/unit'
-
-import { Events, listen, emit } from './core/event/events-bus'
+import { EventsBus, listen, emit } from './core/event/events-bus'
 
 let Components = {}
 
@@ -19,6 +18,8 @@ export default class Glide {
     this.selector = selector
     this.settings = Object.assign(defaults, options)
     this.index = this.settings.startAt
+
+    this.events = new EventsBus()
   }
 
   /**
@@ -28,15 +29,15 @@ export default class Glide {
    * @return {Void}
    */
   mount (extensions = {}) {
-    emit('mount.before', this)
+    emit(this.events, 'mount.before', this)
 
     if (isObject(extensions)) {
-      Components = mount(this, extensions, Events)
+      Components = mount(this, extensions, this.events)
     } else {
       warn('You need to provide a components object on `mount()`')
     }
 
-    emit('mount.after', this)
+    emit(this.events, 'mount.after', this)
 
     return this
   }
@@ -54,17 +55,29 @@ export default class Glide {
   }
 
   /**
-   * Move glide by specified distance with animation. Distance must be in special pattern:
+   * Change slide with specified pattern. Pattern must be in special format:
    * `>` - Move one forward
    * `<` - Move one backward
    * `={i}` - Go to {i} zero-based slide (eq. '=3', will go to second slide)
    * `>>` - Rewinds to end (last slide)
    * `<<` - Rewinds to start (first slide)
    *
+   * @param {String} pattern
+   */
+  go (pattern) {
+    Components.Run.make(pattern)
+
+    return this
+  }
+
+  /**
+   * Move track by specified distance.
+   *
    * @param {String} distance
    */
-  go (distance) {
-    Components.Run.make(distance)
+  move (distance) {
+    Components.Transition.disable()
+    Components.Move.make(distance)
 
     return this
   }

@@ -8,7 +8,7 @@ const MOVE_EVENTS = ['touchmove', 'mousemove']
 const END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave']
 const MOUSE_EVENTS = ['mousedown', 'mousemove', 'mouseup', 'mouseleave']
 
-export default function (Glide, Components) {
+export default function (Glide, Components, Events) {
   const Binder = new EventsBinder()
 
   let swipeSin = 0
@@ -46,7 +46,7 @@ export default function (Glide, Components) {
         this.bindSwipeMove()
         this.bindSwipeEnd()
 
-        emit('swipe.start')
+        emit(Events, 'swipe.start')
       }
     },
 
@@ -85,7 +85,7 @@ export default function (Glide, Components) {
 
           Components.Html.root.classList.add(settings.classes.dragging)
 
-          emit('swipe.move')
+          emit(Events, 'swipe.move')
         } else {
           return false
         }
@@ -146,7 +146,7 @@ export default function (Glide, Components) {
         this.unbindSwipeEnd()
         this.enable()
 
-        emit('swipe.end')
+        emit(Events, 'swipe.end')
       }
     },
 
@@ -273,7 +273,7 @@ export default function (Glide, Components) {
    * Add component class:
    * - after initial building
    */
-  listen('build.after', () => {
+  listen(Events, 'build.after', () => {
     Components.Html.root.classList.add(Glide.settings.classes.swipeable)
   })
 

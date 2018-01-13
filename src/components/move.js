@@ -31,12 +31,12 @@ export default function (Glide, Components, Events) {
     make (offset = 0) {
       this.offset = offset
 
-      emit('move', {
+      emit(Events, 'move', {
         movement: this.value
       })
 
       Components.Transition.after(() => {
-        emit('move.after')
+        emit(Events, 'move.after')
       })
     }
   }
@@ -95,7 +95,7 @@ export default function (Glide, Components, Events) {
    * - before build, so glide will start at `startAt` index
    * - on each standard run to move to newly calculated index
    */
-  listen(['build.before', 'run'], () => {
+  listen(Events, ['build.before', 'run'], () => {
     MOVE.make()
   })
 

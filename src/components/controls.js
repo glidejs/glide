@@ -5,7 +5,7 @@ import EventsBinder from '../core/event/events-binder'
 const NAV_SELECTOR = '[data-glide-el="controls[nav]"]'
 const CONTROLS_SELECTOR = '[data-glide-el^="controls"]'
 
-export default function (Glide, Components) {
+export default function (Glide, Components, Events) {
   const Binder = new EventsBinder()
 
   const CONTROLS = {
@@ -107,7 +107,7 @@ export default function (Glide, Components) {
    * Swap active class of current navigation item:
    * - after each move to the new index
    */
-  listen('move.after', () => {
+  listen(Events, 'move.after', () => {
     CONTROLS.activeClass()
   })
 

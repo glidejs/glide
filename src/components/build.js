@@ -8,13 +8,13 @@ export default function (Glide, Components, Events) {
      * dimensions and setups initial state.
      */
     mount () {
-      emit('build.before', Glide)
+      emit(Events, 'build.before', Glide)
 
       this.dirClass()
       this.typeClass()
       this.activeClass()
 
-      emit('build.after', Glide)
+      emit(Events, 'build.after', Glide)
     },
 
     /**
@@ -59,7 +59,7 @@ export default function (Glide, Components, Events) {
    * - on resizing of the window to calculate new dimentions
    * - on reiniting via API to recalculate dimentions
    */
-  listen(['resize', 'reinit'], () => {
+  listen(Events, ['resize', 'reinit'], () => {
     BUILD.mount()
   })
 
@@ -67,7 +67,7 @@ export default function (Glide, Components, Events) {
    * Swap active class of current slide:
    * - after each move to the new index
    */
-  listen('move.after', () => {
+  listen(Events, 'move.after', () => {
     BUILD.activeClass()
   })
 

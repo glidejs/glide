@@ -2,7 +2,7 @@ import { define } from '../utils/object'
 import { emit } from '../core/event/events-bus'
 import { toInt, isNumber } from '../utils/unit'
 
-export default function (Glide, Components) {
+export default function (Glide, Components, Events) {
   const RUN = {
     /**
      * Initializes autorunning of the glide.
@@ -25,11 +25,11 @@ export default function (Glide, Components) {
 
         this.move = move
 
-        emit('run.before', this.move)
+        emit(Events, 'run.before', this.move)
 
         this.calculate()
 
-        emit('run', this.move)
+        emit(Events, 'run', this.move)
 
         Components.Transition.after(() => {
           Glide.enable()
@@ -37,10 +37,10 @@ export default function (Glide, Components) {
           if (this.isOffset('<') || this.isOffset('>')) {
             this._f = false
 
-            emit('run.offset', this.move)
+            emit(Events, 'run.offset', this.move)
           }
 
-          emit('run.after', this.move)
+          emit(Events, 'run.after', this.move)
         })
       }
     },
@@ -69,7 +69,7 @@ export default function (Glide, Components) {
               Glide.index = 0
             }
 
-            emit('run.end', move)
+            emit(Events, 'run.end', move)
           } else {
             Glide.index++
           }
@@ -87,7 +87,7 @@ export default function (Glide, Components) {
               Glide.index = length
             }
 
-            emit('run.start', move)
+            emit(Events, 'run.start', move)
           } else {
             Glide.index--
           }

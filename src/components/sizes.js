@@ -94,7 +94,7 @@ export default function (Glide, Components, Events) {
    * - before building, so other dimentions (e.g. translate) will be calculated propertly
    * - when resizing window to recalculate sildes dimensions
    */
-  listen(['build.before', 'resize'], () => {
+  listen(Events, ['build.before', 'resize'], () => {
     SIZES.apply()
   })
 

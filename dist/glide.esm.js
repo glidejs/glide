@@ -303,7 +303,7 @@ var possibleConstructorReturn = function (self, call) {
 };
 
 /**
- * Converts value entered as number 
+ * Converts value entered as number
  * or string to integer value.
  *
  * @param {Number|String} value
@@ -328,7 +328,7 @@ function isString(value) {
  *
  * @param  {Mixed}   value
  * @return {Boolean}
- * 
+ *
  * @see https://github.com/jashkenas/underscore
  */
 function isObject(value) {
@@ -450,40 +450,40 @@ var EventsBus = function () {
   return EventsBus;
 }();
 
-var Events = new EventsBus();
-
 /**
  * Registers a event listener inside the events bus.
  *
+ * @param  {EventsBus} bus
  * @param  {String|Array} event
  * @param  {Function} handler
  * @return {Object}
  */
-function listen(event, handler) {
+function listen(bus, event, handler) {
   if (isArray(event)) {
     for (var i = 0; i < event.length; i++) {
-      listen(event[i], handler);
+      listen(bus, event[i], handler);
     }
   }
 
-  return Events.listen(event, handler);
+  return bus.listen(event, handler);
 }
 
 /**
  * Calls registered handlers for passed event.
  *
+ * @param  {EventsBus} bus
  * @param  {String|Array} event
  * @param  {Mixed} context
  * @return {Void}
  */
-function emit(event, context) {
+function emit(bus, event, context) {
   if (isArray(event)) {
     for (var i = 0; i < event.length; i++) {
-      emit(event[i], context);
+      emit(bus, event[i], context);
     }
   }
 
-  return Events.emit(event, context);
+  return bus.emit(event, context);
 }
 
 var Components = {};
@@ -503,6 +503,8 @@ var Glide$2 = function () {
     this.selector = selector;
     this.settings = _extends(defaults, options);
     this.index = this.settings.startAt;
+
+    this.events = new EventsBus();
   }
 
   /**
@@ -518,23 +520,23 @@ var Glide$2 = function () {
     value: function mount$$1() {
       var extensions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-      emit('mount.before', this);
+      emit(this.events, 'mount.before', this);
 
       if (isObject(extensions)) {
-        Components = mount(this, extensions, Events);
+        Components = mount(this, extensions, this.events);
       } else {
         warn('You need to provide a components object on `mount()`');
       }
 
-      emit('mount.after', this);
+      emit(this.events, 'mount.after', this);
 
       return this;
     }
 
     /**
      * Reinits glide with specified settings.
-     * 
-     * @param {Object} settings 
+     *
+     * @param {Object} settings
      */
 
   }, {
@@ -549,20 +551,35 @@ var Glide$2 = function () {
     }
 
     /**
-     * Move glide by specified distance with animation. Distance must be in special pattern:
+     * Change slide with specified pattern. Pattern must be in special format:
      * `>` - Move one forward
      * `<` - Move one backward
      * `={i}` - Go to {i} zero-based slide (eq. '=3', will go to second slide)
      * `>>` - Rewinds to end (last slide)
      * `<<` - Rewinds to start (first slide)
-     * 
-     * @param {String} distance 
+     *
+     * @param {String} pattern
      */
 
   }, {
     key: 'go',
-    value: function go(distance) {
-      Components.Run.make(distance);
+    value: function go(pattern) {
+      Components.Run.make(pattern);
+
+      return this;
+    }
+
+    /**
+     * Move track by specified distance.
+     *
+     * @param {String} distance
+     */
+
+  }, {
+    key: 'move',
+    value: function move(distance) {
+      Components.Transition.disable();
+      Components.Move.make(distance);
 
       return this;
     }
@@ -734,7 +751,7 @@ function define(obj, prop, definition) {
   Object.defineProperty(obj, prop, definition);
 }
 
-var Run = function (Glide, Components) {
+var Run = function (Glide, Components, Events) {
   var RUN = {
     /**
      * Initializes autorunning of the glide.
@@ -760,11 +777,11 @@ var Run = function (Glide, Components) {
 
         this.move = move;
 
-        emit('run.before', this.move);
+        emit(Events, 'run.before', this.move);
 
         this.calculate();
 
-        emit('run', this.move);
+        emit(Events, 'run', this.move);
 
         Components.Transition.after(function () {
           Glide.enable();
@@ -772,10 +789,10 @@ var Run = function (Glide, Components) {
           if (_this.isOffset('<') || _this.isOffset('>')) {
             _this._f = false;
 
-            emit('run.offset', _this.move);
+            emit(Events, 'run.offset', _this.move);
           }
 
-          emit('run.after', _this.move);
+          emit(Events, 'run.after', _this.move);
         });
       }
     },
@@ -808,7 +825,7 @@ var Run = function (Glide, Components) {
               Glide.index = 0;
             }
 
-            emit('run.end', move);
+            emit(Events, 'run.end', move);
           } else {
             Glide.index++;
           }
@@ -826,7 +843,7 @@ var Run = function (Glide, Components) {
               Glide.index = length;
             }
 
-            emit('run.start', move);
+            emit(Events, 'run.start', move);
           } else {
             Glide.index--;
           }
@@ -966,7 +983,7 @@ var Html = function (Glide, Components) {
      * @return {Object}
      */
     get: function get() {
-      return HTML._e;
+      return HTML._r;
     },
 
 
@@ -975,15 +992,15 @@ var Html = function (Glide, Components) {
      *
      * @return {Object}
      */
-    set: function set(el) {
-      if (isString(el)) {
-        el = document.querySelector(el);
+    set: function set(root) {
+      if (isString(root)) {
+        root = document.querySelector(root);
       }
 
-      if (exist(el)) {
-        HTML._e = el;
+      if (exist(root)) {
+        HTML._r = root;
       } else {
-        warn('Main element must be a existing HTML node');
+        warn('Root element must be a existing HTML node');
       }
     }
   });
@@ -1027,7 +1044,7 @@ var Html = function (Glide, Components) {
   return HTML;
 };
 
-var Peek = function (Glide, Components, Events$$1) {
+var Peek = function (Glide, Components, Events) {
   var PEEK = {
     /**
      * Setups how much to peek based on settings.
@@ -1074,7 +1091,7 @@ var Peek = function (Glide, Components, Events$$1) {
    * Recalculate peeking sizes on:
    * - when resizing window to update to proper percents
    */
-  listen('resize', function () {
+  listen(Events, 'resize', function () {
     PEEK.mount();
   });
 
@@ -1291,7 +1308,7 @@ var TYPES = {
   Carousel: Carousel
 };
 
-var Move = function (Glide, Components, Events$$1) {
+var Move = function (Glide, Components, Events) {
   var MOVE = {
     /**
      * Constructs animation component.
@@ -1314,12 +1331,12 @@ var Move = function (Glide, Components, Events$$1) {
 
       this.offset = offset;
 
-      emit('move', {
+      emit(Events, 'move', {
         movement: this.value
       });
 
       Components.Transition.after(function () {
-        emit('move.after');
+        emit(Events, 'move.after');
       });
     }
   };
@@ -1379,14 +1396,14 @@ var Move = function (Glide, Components, Events$$1) {
    * - before build, so glide will start at `startAt` index
    * - on each standard run to move to newly calculated index
    */
-  listen(['build.before', 'run'], function () {
+  listen(Events, ['build.before', 'run'], function () {
     MOVE.make();
   });
 
   return MOVE;
 };
 
-var Sizes = function (Glide, Components, Events$$1) {
+var Sizes = function (Glide, Components, Events) {
   var SIZES = {
     /**
      * Applys dimentions to the glide HTML elements.
@@ -1480,27 +1497,27 @@ var Sizes = function (Glide, Components, Events$$1) {
    * - before building, so other dimentions (e.g. translate) will be calculated propertly
    * - when resizing window to recalculate sildes dimensions
    */
-  listen(['build.before', 'resize'], function () {
+  listen(Events, ['build.before', 'resize'], function () {
     SIZES.apply();
   });
 
   return SIZES;
 };
 
-var Build = function (Glide, Components, Events$$1) {
+var Build = function (Glide, Components, Events) {
   var BUILD = {
     /**
      * Init glide building. Adds classes, sets
      * dimensions and setups initial state.
      */
     mount: function mount() {
-      emit('build.before', Glide);
+      emit(Events, 'build.before', Glide);
 
       this.dirClass();
       this.typeClass();
       this.activeClass();
 
-      emit('build.after', Glide);
+      emit(Events, 'build.after', Glide);
     },
 
 
@@ -1548,7 +1565,7 @@ var Build = function (Glide, Components, Events$$1) {
    * - on resizing of the window to calculate new dimentions
    * - on reiniting via API to recalculate dimentions
    */
-  listen(['resize', 'reinit'], function () {
+  listen(Events, ['resize', 'reinit'], function () {
     BUILD.mount();
   });
 
@@ -1556,14 +1573,14 @@ var Build = function (Glide, Components, Events$$1) {
    * Swap active class of current slide:
    * - after each move to the new index
    */
-  listen('move.after', function () {
+  listen(Events, 'move.after', function () {
     BUILD.activeClass();
   });
 
   return BUILD;
 };
 
-var Clones = function (Glide, Components, Events$$1) {
+var Clones = function (Glide, Components, Events) {
   var pattern = [];
 
   var CLONES = {
@@ -1673,7 +1690,7 @@ var Clones = function (Glide, Components, Events$$1) {
    * Append additional slide's clones:
    * - while glide's type is `carousel`
    */
-  listen('build.before', function () {
+  listen(Events, 'build.before', function () {
     if (Glide.isType('carousel')) {
       CLONES.append();
     }
@@ -1692,14 +1709,14 @@ function now() {
 }
 
 /**
- * Returns a function, that, when invoked, will only be triggered 
- * at most once during a given window of time. 
- * 
- * @param {Function} func 
- * @param {Number} wait 
- * @param {Object} options 
+ * Returns a function, that, when invoked, will only be triggered
+ * at most once during a given window of time.
+ *
+ * @param {Function} func
+ * @param {Number} wait
+ * @param {Object} options
  * @return {Function}
- * 
+ *
  * @see https://github.com/jashkenas/underscore
  */
 function throttle(func, wait, options) {
@@ -1842,7 +1859,7 @@ var Resize = function (Glide, Components) {
   };
 };
 
-var Translate = function (Glide, Components) {
+var Translate = function (Glide, Components, Events) {
   var TRANSLATE = {
     /**
      * Gets value of translate.
@@ -1873,14 +1890,14 @@ var Translate = function (Glide, Components) {
    * - standard moving on index change
    * - on jumping from offset transition at start and end edges in `carousel` type
    */
-  listen(['move', 'carousel.jumping'], function (context) {
+  listen(Events, ['move', 'carousel.jumping'], function (context) {
     TRANSLATE.set(context.movement);
   });
 
   return TRANSLATE;
 };
 
-var Transition = function (Glide, Components, Events$$1) {
+var Transition = function (Glide, Components, Events) {
   var disabled = false;
 
   var TRANSITION = {
@@ -1957,7 +1974,7 @@ var Transition = function (Glide, Components, Events$$1) {
    * Set transition `style` value:
    * - on each moving, because it may be cleared by offset move
    */
-  listen('move', function () {
+  listen(Events, 'move', function () {
     TRANSITION.set();
   });
 
@@ -1967,7 +1984,7 @@ var Transition = function (Glide, Components, Events$$1) {
    * - while resizing window and recalculating dimentions
    * - on jumping from offset transition at start and end edges in `carousel` type
    */
-  listen(['build.before', 'resize', 'carousel.jumping'], function () {
+  listen(Events, ['build.before', 'resize', 'carousel.jumping'], function () {
     TRANSITION.disable();
   });
 
@@ -1975,7 +1992,7 @@ var Transition = function (Glide, Components, Events$$1) {
    * Enable transition:
    * - on each running, because it may be disabled by offset move
    */
-  listen(['run'], function () {
+  listen(Events, 'run', function () {
     TRANSITION.enable();
   });
 
@@ -1987,7 +2004,7 @@ var MOVE_EVENTS = ['touchmove', 'mousemove'];
 var END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave'];
 var MOUSE_EVENTS = ['mousedown', 'mousemove', 'mouseup', 'mouseleave'];
 
-var Swipe = function (Glide, Components) {
+var Swipe = function (Glide, Components, Events) {
   var Binder = new EventsBinder();
 
   var swipeSin = 0;
@@ -2026,7 +2043,7 @@ var Swipe = function (Glide, Components) {
         this.bindSwipeMove();
         this.bindSwipeEnd();
 
-        emit('swipe.start');
+        emit(Events, 'swipe.start');
       }
     },
 
@@ -2066,7 +2083,7 @@ var Swipe = function (Glide, Components) {
 
           Components.Html.root.classList.add(settings.classes.dragging);
 
-          emit('swipe.move');
+          emit(Events, 'swipe.move');
         } else {
           return false;
         }
@@ -2125,7 +2142,7 @@ var Swipe = function (Glide, Components) {
         this.unbindSwipeEnd();
         this.enable();
 
-        emit('swipe.end');
+        emit(Events, 'swipe.end');
       }
     },
 
@@ -2201,8 +2218,8 @@ var Swipe = function (Glide, Components) {
 
     /**
      * Normalizes event touches points accorting to different types.
-     * 
-     * @param {Object} event 
+     *
+     * @param {Object} event
      */
     touches: function touches(event) {
       if (MOUSE_EVENTS.includes(event.type)) {
@@ -2262,14 +2279,14 @@ var Swipe = function (Glide, Components) {
    * Add component class:
    * - after initial building
    */
-  listen('build.after', function () {
+  listen(Events, 'build.after', function () {
     Components.Html.root.classList.add(Glide.settings.classes.swipeable);
   });
 
   return SWIPE;
 };
 
-var Height = function (Glide, Components, Events$$1) {
+var Height = function (Glide, Components, Events) {
   var HEIGHT = {
     /**
      * Sets height of the slider.
@@ -2303,7 +2320,7 @@ var Height = function (Glide, Components, Events$$1) {
    * - building, so it starts with proper dimensions
    * - each run, when slide changed
    */
-  listen(['build.after', 'run'], function () {
+  listen(Events, ['build.after', 'run'], function () {
     HEIGHT.set();
   });
 
@@ -2355,7 +2372,7 @@ var Images = function (Glide, Components) {
   };
 };
 
-var Anchors = function (Glide, Components) {
+var Anchors = function (Glide, Components, Events) {
   var Binder = new EventsBinder();
 
   var detached = false;
@@ -2482,7 +2499,7 @@ var Anchors = function (Glide, Components) {
    * Unbind anchors inside slides:
    * - on swiping, so they won't redirect to its `href` attributes
    */
-  listen('swipe.move', function () {
+  listen(Events, 'swipe.move', function () {
     ANCHORS.prevent().detach();
   });
 
@@ -2490,7 +2507,7 @@ var Anchors = function (Glide, Components) {
    * Bind anchors inside slides:
    * - after swiping and transitions ends, so they can redirect after click again
    */
-  listen('swipe.end', function () {
+  listen(Events, 'swipe.end', function () {
     Components.Transition.after(function () {
       ANCHORS.unprevent().attach();
     });
@@ -2502,7 +2519,7 @@ var Anchors = function (Glide, Components) {
 var NAV_SELECTOR = '[data-glide-el="controls[nav]"]';
 var CONTROLS_SELECTOR = '[data-glide-el^="controls"]';
 
-var Controls = function (Glide, Components) {
+var Controls = function (Glide, Components, Events) {
   var Binder = new EventsBinder();
 
   var CONTROLS = {
@@ -2610,7 +2627,7 @@ var Controls = function (Glide, Components) {
    * Swap active class of current navigation item:
    * - after each move to the new index
    */
-  listen('move.after', function () {
+  listen(Events, 'move.after', function () {
     CONTROLS.activeClass();
   });
 
@@ -2770,14 +2787,14 @@ var Autoplay = function (Glide, Components) {
   return AUTOPLAY;
 };
 
-var Breakpoints = function (Glide, Components) {
+var Breakpoints = function (Glide, Components, Events) {
   var defaults = _extends({}, Glide.settings);
 
   var BREAKPOINTS = {
     /**
-     * Matches settings for currectly matching media breakpoint. 
-     * 
-     * @param {Object} breakpoints 
+     * Matches settings for currectly matching media breakpoint.
+     *
+     * @param {Object} breakpoints
      * @returns {Object}
      */
     match: function match(breakpoints) {
@@ -2803,7 +2820,7 @@ var Breakpoints = function (Glide, Components) {
    * Reinit glide on:
    * - window resize with proper settings for matched breakpoint
    */
-  listen('resize', function () {
+  listen(Events, 'resize', function () {
     Glide.reinit(BREAKPOINTS.match(Glide.settings.breakpoints));
   });
 

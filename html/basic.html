@@ -22,7 +22,39 @@
   }
 </style>
 
-<div class="glide">
+<div id="glide1" class="glide">
+  <div data-glide-el="controls" class="glide__arrows">
+    <button class="glide__arrow glide__arrow--prev" data-glide-dir="<">prev</button>
+    <button class="glide__arrow glide__arrow--next" data-glide-dir=">">next</button>
+  </div>
+
+  <div data-glide-el="track" class="glide__track">
+    <ul class="glide__slides">
+      <li class="glide__slide box">0</li>
+      <li class="glide__slide box">1</li>
+      <li class="glide__slide box">2</li>
+      <li class="glide__slide box">3</li>
+      <li class="glide__slide box">4</li>
+      <li class="glide__slide box">5</li>
+    </ul>
+  </div>
+
+  <div class="glide__bullets" data-glide-el="controls[nav]">
+    <button class="glide__bullet" data-glide-dir="=0"></button>
+    <button class="glide__bullet" data-glide-dir="=1"></button>
+    <button class="glide__bullet" data-glide-dir="=2"></button>
+    <button class="glide__bullet" data-glide-dir="=3"></button>
+    <button class="glide__bullet" data-glide-dir="=4"></button>
+    <button class="glide__bullet" data-glide-dir="=5"></button>
+  </div>
+
+  <!-- <div data-glide-el="controls">
+    <button data-glide-dir="<<">start</button>
+    <button data-glide-dir=">>">end</button>
+  </div> -->
+</div>
+
+<div id="glide2" class="glide">
   <div data-glide-el="controls" class="glide__arrows">
     <button class="glide__arrow glide__arrow--prev" data-glide-dir="<">prev</button>
     <button class="glide__arrow glide__arrow--next" data-glide-dir=">">next</button>
@@ -57,49 +89,17 @@
 <script src="../dist/glide.js"></script>
 
 <script>
-  var el = document.querySelector('.glide')
+  var el = document.querySelector('#glide1')
+  var glide1 = new Glide(el, { autoplay: false })
+  glide1.mount()
 
-  var glide = new Glide(el, {
-    type: 'carousel',
-    perView: 3,
-    startAt: 0,
-    focusAt: 'center',
-    peek: {
-      before: 50,
-      after: 50
-    },
-    autoplay: false,
-    breakpoints: {
-      '600px': {
-        focusAt: 0,
-        perView: 2,
-        peek: {
-          before: 10,
-          after: 10
-        },
-      }
-    }
-  })
+  var el2 = document.querySelector('#glide2')
+  var glide2 = new Glide(el2, { autoplay: false })
+  // glide2.on('move', function (distance) {
+  //   glide.move(distance)
+  // })
+  glide2.mount()
 
-  glide.on(['mount.after', 'build.after'], function (glide) {
-    // console.log(glide)
-  })
-
-  glide.mount({
-    Nav: function (Glide, Components) {
-      return {
-        mount: function () {
-          // console.log('Nav', { Glide, Components })
-        }
-      }
-    }
-  })
-
-  setTimeout(function() {
-    glide.reinit({
-      startAt: 2,
-      perView: 4, 
-      focusAt: 2 
-    })
-  }, 1000)
+  console.log(glide1)
+  console.log(glide2)
 </script>

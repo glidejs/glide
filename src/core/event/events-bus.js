@@ -1,6 +1,6 @@
 import { isArray } from '../../utils/unit'
 
-export default class EventsBus {
+export class EventsBus {
   constructor (topics = {}) {
     this.topics = topics
     this.hOP = topics.hasOwnProperty
@@ -36,38 +36,38 @@ export default class EventsBus {
   }
 }
 
-export const Events = new EventsBus()
-
 /**
  * Registers a event listener inside the events bus.
  *
+ * @param  {EventsBus} bus
  * @param  {String|Array} event
  * @param  {Function} handler
  * @return {Object}
  */
-export function listen (event, handler) {
+export function listen (bus, event, handler) {
   if (isArray(event)) {
     for (let i = 0; i < event.length; i++) {
-      listen(event[i], handler)
+      listen(bus, event[i], handler)
     }
   }
 
-  return Events.listen(event, handler)
+  return bus.listen(event, handler)
 }
 
 /**
  * Calls registered handlers for passed event.
  *
+ * @param  {EventsBus} bus
  * @param  {String|Array} event
  * @param  {Mixed} context
  * @return {Void}
  */
-export function emit (event, context) {
+export function emit (bus, event, context) {
   if (isArray(event)) {
     for (let i = 0; i < event.length; i++) {
-      emit(event[i], context)
+      emit(bus, event[i], context)
     }
   }
 
-  return Events.emit(event, context)
+  return bus.emit(event, context)
 }

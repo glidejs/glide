@@ -107,7 +107,7 @@ export default function (Glide, Components, Events) {
    * Append additional slide's clones:
    * - while glide's type is `carousel`
    */
-  listen('build.before', () => {
+  listen(Events, 'build.before', () => {
     if (Glide.isType('carousel')) {
       CLONES.append()
     }

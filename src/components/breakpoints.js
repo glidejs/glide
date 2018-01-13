@@ -1,6 +1,6 @@
 import { listen } from '../core/event/events-bus'
 
-export default function (Glide, Components) {
+export default function (Glide, Components, Events) {
   const defaults = Object.assign({}, Glide.settings)
 
   const BREAKPOINTS = {
@@ -33,7 +33,7 @@ export default function (Glide, Components) {
    * Reinit glide on:
    * - window resize with proper settings for matched breakpoint
    */
-  listen('resize', () => {
+  listen(Events, 'resize', () => {
     Glide.reinit(BREAKPOINTS.match(Glide.settings.breakpoints))
   })
 

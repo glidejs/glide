@@ -28,7 +28,7 @@ export default function (Glide, Components) {
      * @return {Object}
      */
     get () {
-      return HTML._e
+      return HTML._r
     },
 
     /**
@@ -36,15 +36,15 @@ export default function (Glide, Components) {
      *
      * @return {Object}
      */
-    set (el) {
-      if (isString(el)) {
-        el = document.querySelector(el)
+    set (root) {
+      if (isString(root)) {
+        root = document.querySelector(root)
       }
 
-      if (exist(el)) {
-        HTML._e = el
+      if (exist(root)) {
+        HTML._r = root
       } else {
-        warn('Main element must be a existing HTML node')
+        warn('Root element must be a existing HTML node')
       }
     }
   })

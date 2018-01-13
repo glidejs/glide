@@ -2,8 +2,9 @@ import defaults from './defaults'
 import { warn } from './utils/log'
 import { mount } from './core/index'
 import { toInt, isObject } from './utils/unit'
-import { EventsBus, listen, emit } from './core/event/events-bus'
+import { EventsBus } from './core/event/events-bus'
 
+let Events = null
 let Components = {}
 
 export default class Glide {
@@ -14,12 +15,12 @@ export default class Glide {
    * @param  {Object} options
    */
   constructor (selector, options = {}) {
+    Events = new EventsBus()
+
     this.disabled = false
     this.selector = selector
     this.settings = Object.assign({}, defaults, options)
     this.index = this.settings.startAt
-
-    this.events = new EventsBus()
   }
 
   /**
@@ -29,15 +30,15 @@ export default class Glide {
    * @return {Void}
    */
   mount (extensions = {}) {
-    emit(this.events, 'mount.before')
+    Events.emit('mount.before')
 
     if (isObject(extensions)) {
-      Components = mount(this, extensions, this.events)
+      Components = mount(this, extensions, Events)
     } else {
       warn('You need to provide a components object on `mount()`')
     }
 
-    emit(this.events, 'mount.after')
+    Events.emit('mount.after')
 
     return this
   }
@@ -51,7 +52,22 @@ export default class Glide {
     this.settings = Object.assign(this.settings, settings)
     this.index = this.settings.startAt
 
-    emit('reinit')
+    Events.emit('reinit')
+
+    return this
+  }
+
+  /**
+   * Reinits glide with specified settings.
+   *
+   * @param {Object} settings
+   */
+  update (settings = {}) {
+    this.settings = Object.assign(this.settings, settings)
+
+    Events.emit('update')
+
+    return this
   }
 
   /**
@@ -112,7 +128,7 @@ export default class Glide {
    * @return {Void}
    */
   on (event, handler) {
-    listen(this.events, event, handler)
+    Events.listen(event, handler)
 
     return this
   }

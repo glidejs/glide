@@ -1,5 +1,4 @@
 import { define } from '../utils/object'
-import { listen } from '../core/event/events-bus'
 
 export default function (Glide, Components, Events) {
   let pattern = []
@@ -107,7 +106,7 @@ export default function (Glide, Components, Events) {
    * Append additional slide's clones:
    * - while glide's type is `carousel`
    */
-  listen(Events, 'build.before', () => {
+  Events.listen('build.before', () => {
     if (Glide.isType('carousel')) {
       CLONES.append()
     }

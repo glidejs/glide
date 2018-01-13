@@ -1,6 +1,5 @@
 import { define } from '../utils/object'
 import { toInt, isObject } from '../utils/unit'
-import { listen } from '../core/event/events-bus'
 
 export default function (Glide, Components, Events) {
   const PEEK = {
@@ -48,7 +47,7 @@ export default function (Glide, Components, Events) {
    * Recalculate peeking sizes on:
    * - when resizing window to update to proper percents
    */
-  listen(Events, 'resize', () => {
+  Events.listen('resize', () => {
     PEEK.mount()
   })
 

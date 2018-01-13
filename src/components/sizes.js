@@ -1,6 +1,5 @@
 import { define } from '../utils/object'
 import { isObject } from '../utils/unit'
-import { listen } from '../core/event/events-bus'
 
 export default function (Glide, Components, Events) {
   const SIZES = {
@@ -94,7 +93,7 @@ export default function (Glide, Components, Events) {
    * - before building, so other dimentions (e.g. translate) will be calculated propertly
    * - when resizing window to recalculate sildes dimensions
    */
-  listen(Events, ['build.before', 'resize'], () => {
+  Events.listen(['build.before', 'resize'], () => {
     SIZES.apply()
   })
 

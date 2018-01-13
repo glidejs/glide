@@ -1,5 +1,3 @@
-import { listen } from '../core/event/events-bus'
-
 export default function (Glide, Components, Events) {
   let disabled = false
 
@@ -71,7 +69,7 @@ export default function (Glide, Components, Events) {
    * Set transition `style` value:
    * - on each moving, because it may be cleared by offset move
    */
-  listen(Events, 'move', () => {
+  Events.listen('move', () => {
     TRANSITION.set()
   })
 
@@ -81,7 +79,7 @@ export default function (Glide, Components, Events) {
    * - while resizing window and recalculating dimentions
    * - on jumping from offset transition at start and end edges in `carousel` type
    */
-  listen(Events, ['build.before', 'resize', 'carousel.jumping'], () => {
+  Events.listen(['build.before', 'resize', 'carousel.jumping'], () => {
     TRANSITION.disable()
   })
 
@@ -89,7 +87,7 @@ export default function (Glide, Components, Events) {
    * Enable transition:
    * - on each running, because it may be disabled by offset move
    */
-  listen(Events, 'run', () => {
+  Events.listen('run', () => {
     TRANSITION.enable()
   })
 

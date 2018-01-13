@@ -1,9 +1,8 @@
 import { throttle } from '../utils/wait'
-import { emit } from '../core/event/events-bus'
 
 import EventsBinder from '../core/event/events-binder'
 
-export default function (Glide, Components) {
+export default function (Glide, Components, Events) {
   const Binder = new EventsBinder()
 
   return {
@@ -22,7 +21,7 @@ export default function (Glide, Components) {
      */
     bind () {
       Binder.on('resize', window, throttle(() => {
-        emit('resize')
+        Events.emit('resize')
       }, Glide.settings.throttle))
     },
 

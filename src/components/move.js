@@ -1,7 +1,6 @@
 import { define } from '../utils/object'
 import { ucfirst } from '../utils/string'
 import { toInt, isUndefined } from '../utils/unit'
-import { listen, emit } from '../core/event/events-bus'
 
 import Slider from '../types/slider'
 import Carousel from '../types/carousel'
@@ -31,12 +30,12 @@ export default function (Glide, Components, Events) {
     make (offset = 0) {
       this.offset = offset
 
-      emit(Events, 'move', {
+      Events.emit('move', {
         movement: this.value
       })
 
       Components.Transition.after(() => {
-        emit(Events, 'move.after')
+        Events.emit('move.after')
       })
     }
   }
@@ -68,7 +67,7 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      return TYPES[ucfirst(Glide.type)](Glide, Components)
+      return TYPES[ucfirst(Glide.type)](Glide, Components, Events)
     }
   })
 
@@ -95,7 +94,7 @@ export default function (Glide, Components, Events) {
    * - before build, so glide will start at `startAt` index
    * - on each standard run to move to newly calculated index
    */
-  listen(Events, ['build.before', 'run'], () => {
+  Events.listen(['build.before', 'run'], () => {
     MOVE.make()
   })
 

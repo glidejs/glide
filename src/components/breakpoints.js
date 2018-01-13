@@ -1,5 +1,3 @@
-import { listen } from '../core/event/events-bus'
-
 export default function (Glide, Components, Events) {
   const defaults = Object.assign({}, Glide.settings)
 
@@ -16,10 +14,10 @@ export default function (Glide, Components, Events) {
           if (window.matchMedia(`(max-width: ${point})`).matches) {
             return breakpoints[point]
           }
-
-          return defaults
         }
       }
+
+      return defaults
     }
   }
 
@@ -33,8 +31,8 @@ export default function (Glide, Components, Events) {
    * Reinit glide on:
    * - window resize with proper settings for matched breakpoint
    */
-  listen(Events, 'resize', () => {
-    Glide.reinit(BREAKPOINTS.match(Glide.settings.breakpoints))
+  Events.listen('resize', () => {
+    Glide.update(BREAKPOINTS.match(Glide.settings.breakpoints))
   })
 
   return BREAKPOINTS

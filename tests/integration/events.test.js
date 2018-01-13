@@ -20,8 +20,8 @@ describe('Events on', () => {
 
     glide.mount()
 
-    expect(beforeCallback).toHaveBeenCalledWith(glide)
-    expect(afterCallback).toHaveBeenCalledWith(glide)
+    expect(beforeCallback).toHaveBeenCalled()
+    expect(afterCallback).toHaveBeenCalled()
   })
 
   test('building should be called', () => {
@@ -33,7 +33,7 @@ describe('Events on', () => {
 
     glide.mount()
 
-    expect(beforeCallback).toHaveBeenCalledWith(glide)
-    expect(afterCallback).toHaveBeenCalledWith(glide)
+    expect(beforeCallback).toHaveBeenCalled()
+    expect(afterCallback).toHaveBeenCalled()
   })
 })

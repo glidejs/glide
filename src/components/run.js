@@ -1,5 +1,4 @@
 import { define } from '../utils/object'
-import { emit } from '../core/event/events-bus'
 import { toInt, isNumber } from '../utils/unit'
 
 export default function (Glide, Components, Events) {
@@ -25,11 +24,11 @@ export default function (Glide, Components, Events) {
 
         this.move = move
 
-        emit(Events, 'run.before', this.move)
+        Events.emit('run.before', this.move)
 
         this.calculate()
 
-        emit(Events, 'run', this.move)
+        Events.emit('run', this.move)
 
         Components.Transition.after(() => {
           Glide.enable()
@@ -37,10 +36,10 @@ export default function (Glide, Components, Events) {
           if (this.isOffset('<') || this.isOffset('>')) {
             this._f = false
 
-            emit(Events, 'run.offset', this.move)
+            Events.emit('run.offset', this.move)
           }
 
-          emit(Events, 'run.after', this.move)
+          Events.emit('run.after', this.move)
         })
       }
     },
@@ -69,7 +68,7 @@ export default function (Glide, Components, Events) {
               Glide.index = 0
             }
 
-            emit(Events, 'run.end', move)
+            Events.emit('run.end', move)
           } else {
             Glide.index++
           }
@@ -87,7 +86,7 @@ export default function (Glide, Components, Events) {
               Glide.index = length
             }
 
-            emit(Events, 'run.start', move)
+            Events.emit('run.start', move)
           } else {
             Glide.index--
           }

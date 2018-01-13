@@ -1,5 +1,3 @@
-import { listen } from '../core/event/events-bus'
-
 export default function (Glide, Components, Events) {
   const TRANSLATE = {
     /**
@@ -30,7 +28,7 @@ export default function (Glide, Components, Events) {
    * - standard moving on index change
    * - on jumping from offset transition at start and end edges in `carousel` type
    */
-  listen(Events, ['move', 'carousel.jumping'], (context) => {
+  Events.listen(['move', 'carousel.jumping'], (context) => {
     TRANSLATE.set(context.movement)
   })
 

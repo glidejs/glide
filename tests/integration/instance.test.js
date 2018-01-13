@@ -23,13 +23,13 @@ describe('Glide', () => {
   test('unmodified settings should return defaults', () => {
     let glide = new Glide('#glide').mount()
 
-    expect(glide.settings).toBe(defaults)
+    expect(glide.settings).toEqual(defaults)
   })
 
   test('modified settings should return defaults extended by options', () => {
     let glide = new Glide('#glide', { startAt: 2 }).mount()
 
-    expect(glide.settings).toBe(Object.assign(defaults, { startAt: 2 }))
+    expect(glide.settings).toEqual(Object.assign(defaults, { startAt: 2 }))
   })
 
   test('should not be disabled at start', () => {

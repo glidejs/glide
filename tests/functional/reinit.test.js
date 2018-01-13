@@ -20,7 +20,7 @@ describe('Calling `reinit()` method with', () => {
 
     glide.reinit(options)
 
-    expect(glide.settings).toBe(Object.assign(defaults, options))
+    expect(glide.settings).toEqual(Object.assign(defaults, options))
   })
 
   test('new `startAt` option should change active slide', () => {

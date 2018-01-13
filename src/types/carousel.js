@@ -1,5 +1,4 @@
 import transformer from './transformers/index'
-import { emit } from '../core/event/events-bus'
 
 /**
  * Provide a transform value of the `carousel` type glide.
@@ -8,7 +7,7 @@ import { emit } from '../core/event/events-bus'
  * @param  {Object} Components
  * @return {Number}
  */
-export default function (Glide, Components) {
+export default function (Glide, Components, Events) {
   const mutator = transformer(Glide, Components)
 
   let slideWidth = Components.Sizes.slideWidth
@@ -16,7 +15,7 @@ export default function (Glide, Components) {
 
   if (Components.Run.isOffset('<')) {
     Components.Transition.after(() => {
-      emit('carousel.jumping', {
+      Events.emit('carousel.jumping', {
         movement: mutator.transform(slideWidth * (slidesLength - 1))
       })
     })
@@ -26,7 +25,7 @@ export default function (Glide, Components) {
 
   if (Components.Run.isOffset('>')) {
     Components.Transition.after(() => {
-      emit('carousel.jumping', {
+      Events.emit('carousel.jumping', {
         movement: mutator.transform(0)
       })
     })

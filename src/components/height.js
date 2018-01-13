@@ -1,5 +1,4 @@
 import { define } from '../utils/object'
-import { listen } from '../core/event/events-bus'
 
 export default function (Glide, Components, Events) {
   const HEIGHT = {
@@ -35,7 +34,7 @@ export default function (Glide, Components, Events) {
    * - building, so it starts with proper dimensions
    * - each run, when slide changed
    */
-  listen(Events, ['build.after', 'run'], () => {
+  Events.listen(['build.after', 'run'], () => {
     HEIGHT.set()
   })
 

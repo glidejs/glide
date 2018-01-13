@@ -1,5 +1,4 @@
 import { define } from '../utils/object'
-import { listen } from '../core/event/events-bus'
 
 import EventsBinder from '../core/event/events-binder'
 
@@ -124,7 +123,7 @@ export default function (Glide, Components, Events) {
    * Unbind anchors inside slides:
    * - on swiping, so they won't redirect to its `href` attributes
    */
-  listen(Events, 'swipe.move', () => {
+  Events.listen('swipe.move', () => {
     ANCHORS.prevent().detach()
   })
 
@@ -132,7 +131,7 @@ export default function (Glide, Components, Events) {
    * Bind anchors inside slides:
    * - after swiping and transitions ends, so they can redirect after click again
    */
-  listen(Events, 'swipe.end', () => {
+  Events.listen('swipe.end', () => {
     Components.Transition.after(() => {
       ANCHORS.unprevent().attach()
     })

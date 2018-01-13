@@ -1,5 +1,4 @@
 import { siblings } from '../utils/dom'
-import { listen, emit } from '../core/event/events-bus'
 
 export default function (Glide, Components, Events) {
   const BUILD = {
@@ -8,13 +7,13 @@ export default function (Glide, Components, Events) {
      * dimensions and setups initial state.
      */
     mount () {
-      emit(Events, 'build.before', Glide)
+      Events.emit('build.before', Glide)
 
       this.dirClass()
       this.typeClass()
       this.activeClass()
 
-      emit(Events, 'build.after', Glide)
+      Events.emit('build.after', Glide)
     },
 
     /**
@@ -58,8 +57,9 @@ export default function (Glide, Components, Events) {
    * Reinit building of the glide:
    * - on resizing of the window to calculate new dimentions
    * - on reiniting via API to recalculate dimentions
+   * - on updating settings via API to recalculate dimentions
    */
-  listen(Events, ['resize', 'reinit'], () => {
+  Events.listen(['resize', 'reinit', 'update'], () => {
     BUILD.mount()
   })
 
@@ -67,7 +67,7 @@ export default function (Glide, Components, Events) {
    * Swap active class of current slide:
    * - after each move to the new index
    */
-  listen(Events, 'move.after', () => {
+  Events.listen('move.after', () => {
     BUILD.activeClass()
   })
 

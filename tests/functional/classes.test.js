@@ -64,4 +64,12 @@ describe('Class', () => {
 
     expect(root.classList.contains(defaults.classes.swipeable)).toBe(true)
   })
+
+  test('`classes.rtl` should be applied on the root element', () => {
+    let { root } = query(document)
+
+    new Glide('#glide', { rtl: true }).mount()
+
+    expect(root.classList.contains(defaults.classes.rtl)).toBe(true)
+  })
 })

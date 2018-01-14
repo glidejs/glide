@@ -74,7 +74,7 @@ export default class Glide {
    * Change slide with specified pattern. Pattern must be in special format:
    * `>` - Move one forward
    * `<` - Move one backward
-   * `={i}` - Go to {i} zero-based slide (eq. '=3', will go to second slide)
+   * `={i}` - Go to {i} zero-based slide (eq. '=1', will go to second slide)
    * `>>` - Rewinds to end (last slide)
    * `<<` - Rewinds to start (first slide)
    *

@@ -1,6 +1,6 @@
 [![glide.js](//glide.jedrzejchalubek.com/images/glide-logotype.png)](//glide.jedrzejchalubek.com)
 
-[Glide.js](//glide.jedrzejchalubek.com) is a dependency-free JavaScript ES6 slider and carousel. It’s simple, lightweight and fast. Designed to slide. No less, no more
+[Glide.js](//glide.jedrzejchalubek.com) is a dependency-free JavaScript ES6 slider and carousel. It’s simple, lightweight and fast. Designed to slide. No less, no more.
 
 What can convince you:
 - **Dependency-free**. Everything included, ready for action.

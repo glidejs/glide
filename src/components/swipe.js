@@ -33,7 +33,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     start (event) {
-      if (!disabled && !Glide.isDisabled()) {
+      if (!disabled && !Glide.disabled) {
         this.disable()
 
         let swipe = this.touches(event)
@@ -56,7 +56,7 @@ export default function (Glide, Components, Events) {
      * @param {Object} event
      */
     move (event) {
-      if (!Glide.isDisabled()) {
+      if (!Glide.disabled) {
         let settings = Glide.settings
 
         let swipe = this.touches(event)
@@ -99,7 +99,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     end (event) {
-      if (!Glide.isDisabled()) {
+      if (!Glide.disabled) {
         let settings = Glide.settings
 
         let swipe = this.touches(event)

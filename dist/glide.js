@@ -557,7 +557,7 @@ var Glide$2 = function () {
      * Change slide with specified pattern. Pattern must be in special format:
      * `>` - Move one forward
      * `<` - Move one backward
-     * `={i}` - Go to {i} zero-based slide (eq. '=3', will go to second slide)
+     * `={i}` - Go to {i} zero-based slide (eq. '=1', will go to second slide)
      * `>>` - Rewinds to end (last slide)
      * `<<` - Rewinds to start (first slide)
      *
@@ -642,18 +642,6 @@ var Glide$2 = function () {
     key: 'isType',
     value: function isType(name) {
       return this.settings.type === name;
-    }
-
-    /**
-     * Checks if glide is idle.
-     *
-     * @return {Boolean}
-     */
-
-  }, {
-    key: 'isDisabled',
-    value: function isDisabled() {
-      return this.disabled === true;
     }
 
     /**
@@ -775,7 +763,7 @@ var Run = function (Glide, Components, Events) {
     make: function make(move, callback) {
       var _this = this;
 
-      if (!Glide.isDisabled()) {
+      if (!Glide.disabled) {
         Glide.disable();
 
         this.move = move;
@@ -1330,6 +1318,8 @@ var Move = function (Glide, Components, Events) {
      * @return {self}
      */
     make: function make() {
+      var _this = this;
+
       var offset = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 
       this.offset = offset;
@@ -1339,7 +1329,9 @@ var Move = function (Glide, Components, Events) {
       });
 
       Components.Transition.after(function () {
-        Events.emit('move.after');
+        Events.emit('move.after', {
+          movement: _this.value
+        });
       });
     }
   };
@@ -2035,7 +2027,7 @@ var Swipe = function (Glide, Components, Events) {
      * @return {Void}
      */
     start: function start(event) {
-      if (!disabled && !Glide.isDisabled()) {
+      if (!disabled && !Glide.disabled) {
         this.disable();
 
         var swipe = this.touches(event);
@@ -2059,7 +2051,7 @@ var Swipe = function (Glide, Components, Events) {
      * @param {Object} event
      */
     move: function move(event) {
-      if (!Glide.isDisabled()) {
+      if (!Glide.disabled) {
         var settings = Glide.settings;
 
         var swipe = this.touches(event);
@@ -2103,7 +2095,7 @@ var Swipe = function (Glide, Components, Events) {
      * @return {Void}
      */
     end: function end(event) {
-      if (!Glide.isDisabled()) {
+      if (!Glide.disabled) {
         var settings = Glide.settings;
 
         var swipe = this.touches(event);

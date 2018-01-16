@@ -144,15 +144,6 @@ export default class Glide {
   }
 
   /**
-   * Checks if glide is idle.
-   *
-   * @return {Boolean}
-   */
-  isDisabled () {
-    return this.disabled === true
-  }
-
-  /**
    * Gets value of the core options.
    *
    * @return {Object}

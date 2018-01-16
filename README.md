@@ -4,9 +4,9 @@
 
 What can convince you:
 - **Dependency-free**. Everything included, ready for action.
-- Lightweight. Only **~18kb (~6kb gzipped)** with every function on board.
+- Lightweight. Only **~18kb (~6kb gzipped)** with every functionality on board.
 - **Modular**. Remove unused modules and drop script weight even more.
-- **Extendable**. Plug-in your own modules with additional functions.
+- **Extendable**. Plug-in your own modules with additional functionalities.
 - **Bundlers ready**. Using Rollup or Webpack? We have your back.
 
 [![Build Status](//api.travis-ci.org/jedrzejchalubek/glidejs.svg?branch=3.0.0)](//travis-ci.org/jedrzejchalubek/glidejs)

@@ -19,7 +19,7 @@ export default function (Glide, Components, Events) {
      * @param {Function} callback
      */
     make (move, callback) {
-      if (!Glide.isDisabled()) {
+      if (!Glide.disabled) {
         Glide.disable()
 
         this.move = move

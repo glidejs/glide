@@ -35,7 +35,9 @@ export default function (Glide, Components, Events) {
       })
 
       Components.Transition.after(() => {
-        Events.emit('move.after')
+        Events.emit('move.after', {
+          movement: this.value
+        })
       })
     }
   }

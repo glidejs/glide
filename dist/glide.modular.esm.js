@@ -1371,8 +1371,12 @@ var Clones = function (Glide, Components, Events) {
       this.items = [];
 
       if (Glide.isType('carousel')) {
-        this.map();
-        this.collect();
+        if (Components.Html.slides.length <= Glide.settings.perView) {
+          warn('Glide needs at least ' + (Glide.settings.perView + 1) + ' slides, but your carousel contains only ' + Components.Html.slides.length);
+        } else {
+          this.map();
+          this.collect();
+        }
       }
     },
 
@@ -1385,7 +1389,7 @@ var Clones = function (Glide, Components, Events) {
     map: function map() {
       // We should have one more slides clones, than we have slides per view.
       // This give us confidence that viewport will always filled with slides.
-      var total = Glide.settings.perView + 1;
+      var total = Glide.settings.perView;
 
       // Fill pattern with indexes of slides at the beginning of track.
       for (var i = 0; i < total; i++) {

@@ -1371,12 +1371,8 @@ var Clones = function (Glide, Components, Events) {
       this.items = [];
 
       if (Glide.isType('carousel')) {
-        if (Components.Html.slides.length <= Glide.settings.perView) {
-          warn('Glide needs at least ' + (Glide.settings.perView + 1) + ' slides, but your carousel contains only ' + Components.Html.slides.length);
-        } else {
-          this.map();
-          this.collect();
-        }
+        this.map();
+        this.collect();
       }
     },
 
@@ -1387,18 +1383,21 @@ var Clones = function (Glide, Components, Events) {
      * @return {Void}
      */
     map: function map() {
-      // We should have one more slides clones, than we have slides per view.
-      // This give us confidence that viewport will always filled with slides.
-      var total = Glide.settings.perView;
+      var perView = Glide.settings.perView;
+      var length = Components.Html.slides.length;
 
-      // Fill pattern with indexes of slides at the beginning of track.
-      for (var i = 0; i < total; i++) {
-        pattern.push(i);
-      }
+      // Repet creating pattern based on the ratio calculated
+      // by number in `perView` per actual number of slides.
+      for (var r = 0; r < Math.max(1, Math.floor(perView / length)); r++) {
+        // Fill pattern with indexes of slides at the beginning of track.
+        for (var i = 0; i <= Math.min(perView, length - 1); i++) {
+          pattern.push('' + i);
+        }
 
-      // Fill pattern with indexes of slides from the end of track.
-      for (var _i = total - 1; _i >= 0; _i--) {
-        pattern.push(-(Components.Html.slides.length - 1) + _i);
+        // Fill pattern with indexes of slides from the end of track.
+        for (var _i = length - 1; _i >= 0; _i--) {
+          pattern.unshift('-' + _i);
+        }
       }
     },
 
@@ -1434,10 +1433,10 @@ var Clones = function (Glide, Components, Events) {
 
         // Append clone if pattern position is positive.
         // Prepend clone if pattern position is negative.
-        if (pattern[i] >= 0) {
-          Components.Html.wrapper.appendChild(item);
-        } else {
+        if (pattern[i][0] === '-') {
           Components.Html.wrapper.insertBefore(item, Components.Html.slides[0]);
+        } else {
+          Components.Html.wrapper.appendChild(item);
         }
       }
     },

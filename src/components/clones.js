@@ -10,8 +10,10 @@ export default function (Glide, Components, Events) {
     mount () {
       this.items = []
 
-      this.map()
-      this.collect()
+      if (Glide.isType('carousel')) {
+        this.map()
+        this.collect()
+      }
     },
 
     /**

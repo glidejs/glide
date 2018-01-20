@@ -1586,8 +1586,10 @@ var Clones = function (Glide, Components, Events) {
     mount: function mount() {
       this.items = [];
 
-      this.map();
-      this.collect();
+      if (Glide.isType('carousel')) {
+        this.map();
+        this.collect();
+      }
     },
 
 

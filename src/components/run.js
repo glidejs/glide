@@ -31,8 +31,6 @@ export default function (Glide, Components, Events) {
         Events.emit('run', this.move)
 
         Components.Transition.after(() => {
-          Glide.enable()
-
           if (this.isOffset('<') || this.isOffset('>')) {
             this._f = false
 
@@ -40,6 +38,8 @@ export default function (Glide, Components, Events) {
           }
 
           Events.emit('run.after', this.move)
+
+          Glide.enable()
         })
       }
     },
@@ -122,7 +122,7 @@ export default function (Glide, Components, Events) {
      * @return {Boolean}
      */
     isOffset (direction) {
-      return this._f && this.move.direction === direction
+      return Glide.isType('carousel') && this._f && this.move.direction === direction
     }
   }
 

@@ -13,7 +13,7 @@ export default function (Glide, Components) {
      * @param  {Number} translate
      * @return {Number}
      */
-    translate (translate) {
+    modify (translate) {
       if (Glide.isType('carousel')) {
         return translate + (Components.Clones.grow / 2)
       }

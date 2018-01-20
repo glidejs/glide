@@ -13,7 +13,7 @@ export default function (Glide, Components) {
      * @param  {Number} translate
      * @return {Number}
      */
-    translate (translate) {
+    modify (translate) {
       let focusAt = Glide.settings.focusAt
       let width = Components.Sizes.width
       let slideWidth = Components.Sizes.slideWidth

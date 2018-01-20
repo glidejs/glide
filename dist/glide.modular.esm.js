@@ -769,8 +769,6 @@ var Run = function (Glide, Components, Events) {
         Events.emit('run', this.move);
 
         Components.Transition.after(function () {
-          Glide.enable();
-
           if (_this.isOffset('<') || _this.isOffset('>')) {
             _this._f = false;
 
@@ -778,6 +776,8 @@ var Run = function (Glide, Components, Events) {
           }
 
           Events.emit('run.after', _this.move);
+
+          Glide.enable();
         });
       }
     },
@@ -867,7 +867,7 @@ var Run = function (Glide, Components, Events) {
      * @return {Boolean}
      */
     isOffset: function isOffset(direction) {
-      return this._f && this.move.direction === direction;
+      return Glide.isType('carousel') && this._f && this.move.direction === direction;
     }
   };
 
@@ -1083,216 +1083,6 @@ var Peek = function (Glide, Components, Events) {
   return PEEK;
 };
 
-/**
- * Makes a string's first character uppercase.
- *
- * @param  {String} string
- * @return {String}
- */
-function ucfirst(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-/**
- * Reflects value of glide movement.
- *
- * @param  {Glide} Glide
- * @param  {Array} Components
- * @return {Object}
- */
-var Rtl = function (Glide, Components) {
-  return {
-    /**
-     * Negates the passed translate if glide is in RTL option.
-     *
-     * @param  {Number} translate
-     * @return {Number}
-     */
-    translate: function translate(_translate) {
-      if (Glide.settings.rtl) {
-        return -_translate;
-      }
-
-      return _translate;
-    }
-  };
-};
-
-/**
- * Updates glide movement with width of additional clones width.
- *
- * @param  {Glide} Glide
- * @param  {Array} Components
- * @return {Object}
- */
-var Grow = function (Glide, Components) {
-  return {
-    /**
-     * Adds to the passed translate width of the half of clones.
-     *
-     * @param  {Number} translate
-     * @return {Number}
-     */
-    translate: function translate(_translate) {
-      if (Glide.isType('carousel')) {
-        return _translate + Components.Clones.grow / 2;
-      }
-
-      return _translate;
-    }
-  };
-};
-
-/**
- * Updates glide movement with a `peek` settings.
- *
- * @param  {Glide} Glide
- * @param  {Array} Components
- * @return {Object}
- */
-var Peeking = function (Glide, Components) {
-  return {
-    /**
-     * Modifies passed translate value with a `peek` setting.
-     *
-     * @param  {Number} translate
-     * @return {Number}
-     */
-    translate: function translate(_translate) {
-      if (Glide.settings.focusAt >= 0) {
-        var peek = Components.Peek.value;
-
-        if (isObject(peek)) {
-          return _translate - peek.before;
-        }
-
-        return _translate - peek;
-      }
-
-      return _translate;
-    }
-  };
-};
-
-/**
- * Updates glide movement with a `focusAt` settings.
- *
- * @param  {Glide} Glide
- * @param  {Array} Components
- * @return {Object}
- */
-var Focusing = function (Glide, Components) {
-  return {
-    /**
-     * Modifies passed translate value with index in the `focusAt` setting.
-     *
-     * @param  {Number} translate
-     * @return {Number}
-     */
-    translate: function translate(_translate) {
-      var focusAt = Glide.settings.focusAt;
-      var width = Components.Sizes.width;
-      var slideWidth = Components.Sizes.slideWidth;
-
-      if (focusAt === 'center') {
-        return _translate - (width / 2 - slideWidth / 2);
-      }
-
-      return _translate - slideWidth * focusAt;
-    }
-  };
-};
-
-/**
- * Collection of transformers.
- *
- * @type {Array}
- */
-var TRANSFORMERS = [Grow, Peeking, Focusing,
-// It's important that the Rtl component
-// be last on the list, so it reflects
-// all previous transformations.
-Rtl];
-
-/**
- * Applies diffrent transformers on translate value.
- *
- * @param  {Glide} Glide
- * @param  {Components} Components
- * @return {Object}
- */
-var transformer = function (Glide, Components) {
-  return {
-    /**
-     * Piplines translate value with registered transformers.
-     *
-     * @param  {Number} translate
-     * @return {Number}
-     */
-    transform: function transform(translate) {
-      for (var i = 0; i < TRANSFORMERS.length; i++) {
-        translate = TRANSFORMERS[i](Glide, Components).translate(translate);
-      }
-
-      return translate;
-    }
-  };
-};
-
-/**
- * Provide a transform value of the `slider` type glide.
- *
- * @param  {Glide}  Glide
- * @param  {Object} Components
- * @return {Number}
- */
-var Slider = function (Glide, Components) {
-  var translate = Components.Sizes.slideWidth * Glide.index;
-
-  return transformer(Glide, Components).transform(translate);
-};
-
-/**
- * Provide a transform value of the `carousel` type glide.
- *
- * @param  {Glide}  Glide
- * @param  {Object} Components
- * @return {Number}
- */
-var Carousel = function (Glide, Components, Events) {
-  var mutator = transformer(Glide, Components);
-
-  var slideWidth = Components.Sizes.slideWidth;
-  var slidesLength = Components.Html.slides.length;
-
-  if (Components.Run.isOffset('<')) {
-    Components.Transition.after(function () {
-      Events.emit('carousel.jumping', {
-        movement: mutator.transform(slideWidth * (slidesLength - 1))
-      });
-    });
-
-    return mutator.transform(-slideWidth);
-  }
-
-  if (Components.Run.isOffset('>')) {
-    Components.Transition.after(function () {
-      Events.emit('carousel.jumping', {
-        movement: mutator.transform(0)
-      });
-    });
-
-    return mutator.transform(slideWidth * slidesLength);
-  }
-
-  return mutator.transform(slideWidth * Glide.index);
-};
-
-var TYPES = {
-  Slider: Slider,
-  Carousel: Carousel
-};
-
 var Move = function (Glide, Components, Events) {
   var MOVE = {
     /**
@@ -1358,7 +1148,7 @@ var Move = function (Glide, Components, Events) {
      * @return {Number}
      */
     get: function get() {
-      return TYPES[ucfirst(Glide.type)](Glide, Components, Events);
+      return Components.Sizes.slideWidth * Glide.index;
     }
   });
 
@@ -1851,6 +1641,152 @@ var Resize = function (Glide, Components, Events) {
   };
 };
 
+/**
+ * Reflects value of glide movement.
+ *
+ * @param  {Glide} Glide
+ * @param  {Array} Components
+ * @return {Object}
+ */
+var Rtl = function (Glide, Components) {
+  return {
+    /**
+     * Negates the passed translate if glide is in RTL option.
+     *
+     * @param  {Number} translate
+     * @return {Number}
+     */
+    modify: function modify(translate) {
+      if (Glide.settings.rtl) {
+        return -translate;
+      }
+
+      return translate;
+    }
+  };
+};
+
+/**
+ * Updates glide movement with width of additional clones width.
+ *
+ * @param  {Glide} Glide
+ * @param  {Array} Components
+ * @return {Object}
+ */
+var Grow = function (Glide, Components) {
+  return {
+    /**
+     * Adds to the passed translate width of the half of clones.
+     *
+     * @param  {Number} translate
+     * @return {Number}
+     */
+    modify: function modify(translate) {
+      if (Glide.isType('carousel')) {
+        return translate + Components.Clones.grow / 2;
+      }
+
+      return translate;
+    }
+  };
+};
+
+/**
+ * Updates glide movement with a `peek` settings.
+ *
+ * @param  {Glide} Glide
+ * @param  {Array} Components
+ * @return {Object}
+ */
+var Peeking = function (Glide, Components) {
+  return {
+    /**
+     * Modifies passed translate value with a `peek` setting.
+     *
+     * @param  {Number} translate
+     * @return {Number}
+     */
+    modify: function modify(translate) {
+      if (Glide.settings.focusAt >= 0) {
+        var peek = Components.Peek.value;
+
+        if (isObject(peek)) {
+          return translate - peek.before;
+        }
+
+        return translate - peek;
+      }
+
+      return translate;
+    }
+  };
+};
+
+/**
+ * Updates glide movement with a `focusAt` settings.
+ *
+ * @param  {Glide} Glide
+ * @param  {Array} Components
+ * @return {Object}
+ */
+var Focusing = function (Glide, Components) {
+  return {
+    /**
+     * Modifies passed translate value with index in the `focusAt` setting.
+     *
+     * @param  {Number} translate
+     * @return {Number}
+     */
+    modify: function modify(translate) {
+      var focusAt = Glide.settings.focusAt;
+      var width = Components.Sizes.width;
+      var slideWidth = Components.Sizes.slideWidth;
+
+      if (focusAt === 'center') {
+        return translate - (width / 2 - slideWidth / 2);
+      }
+
+      return translate - slideWidth * focusAt;
+    }
+  };
+};
+
+/**
+ * Collection of transformers.
+ *
+ * @type {Array}
+ */
+var MUTATORS = [Grow, Peeking, Focusing,
+// It's important that the Rtl component
+// be last on the list, so it reflects
+// all previous transformations.
+Rtl];
+
+/**
+ * Applies diffrent transformers on translate value.
+ *
+ * @param  {Glide} Glide
+ * @param  {Components} Components
+ * @return {Object}
+ */
+var transformer = function (Glide, Components) {
+  return {
+    /**
+     * Piplines translate value with registered transformers.
+     *
+     * @param  {Number} translate
+     * @return {Number}
+     */
+    mutate: function mutate(translate) {
+      for (var i = 0; i < MUTATORS.length; i++) {
+        translate = MUTATORS[i](Glide, Components).modify(translate);
+      }
+
+      return translate;
+    }
+  };
+};
+
 var Translate = function (Glide, Components, Events) {
   var TRANSLATE = {
     /**
@@ -1871,7 +1807,9 @@ var Translate = function (Glide, Components, Events) {
      * @return {self}
      */
     set: function set(value) {
-      Components.Html.wrapper.style.transform = this.get(value);
+      var transform = transformer(Glide, Components).mutate(value);
+
+      Components.Html.wrapper.style.transform = this.get(transform);
 
       return this;
     }
@@ -1882,8 +1820,31 @@ var Translate = function (Glide, Components, Events) {
    * - standard moving on index change
    * - on jumping from offset transition at start and end edges in `carousel` type
    */
-  Events.listen(['move', 'carousel.jumping'], function (context) {
-    TRANSLATE.set(context.movement);
+  Events.listen(['move'], function (context) {
+    var width = Components.Sizes.slideWidth;
+    var length = Components.Html.slides.length;
+
+    if (Components.Run.isOffset('<')) {
+      Components.Transition.after(function () {
+        Events.emit('translate.jump');
+
+        TRANSLATE.set(width * (length - 1));
+      });
+
+      return TRANSLATE.set(-width);
+    }
+
+    if (Components.Run.isOffset('>')) {
+      Components.Transition.after(function () {
+        Events.emit('translate.jump');
+
+        TRANSLATE.set(0);
+      });
+
+      return TRANSLATE.set(width * length);
+    }
+
+    return TRANSLATE.set(context.movement);
   });
 
   return TRANSLATE;
@@ -1934,7 +1895,7 @@ var Transition = function (Glide, Components, Events) {
     after: function after(callback) {
       setTimeout(function () {
         callback();
-      }, Glide.settings.animationDuration + 10);
+      }, Glide.settings.animationDuration);
     },
 
 
@@ -1976,7 +1937,7 @@ var Transition = function (Glide, Components, Events) {
    * - while resizing window and recalculating dimentions
    * - on jumping from offset transition at start and end edges in `carousel` type
    */
-  Events.listen(['build.before', 'resize', 'carousel.jumping'], function () {
+  Events.listen(['build.before', 'resize', 'translate.jump'], function () {
     TRANSITION.disable();
   });
 

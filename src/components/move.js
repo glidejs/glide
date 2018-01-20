@@ -1,14 +1,5 @@
 import { define } from '../utils/object'
-import { ucfirst } from '../utils/string'
 import { toInt, isUndefined } from '../utils/unit'
-
-import Slider from '../types/slider'
-import Carousel from '../types/carousel'
-
-const TYPES = {
-  Slider,
-  Carousel
-}
 
 export default function (Glide, Components, Events) {
   const MOVE = {
@@ -69,7 +60,7 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      return TYPES[ucfirst(Glide.type)](Glide, Components, Events)
+      return Components.Sizes.slideWidth * Glide.index
     }
   })
 

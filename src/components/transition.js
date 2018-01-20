@@ -39,7 +39,7 @@ export default function (Glide, Components, Events) {
     after (callback) {
       setTimeout(() => {
         callback()
-      }, Glide.settings.animationDuration + 10)
+      }, Glide.settings.animationDuration)
     },
 
     /**
@@ -79,7 +79,7 @@ export default function (Glide, Components, Events) {
    * - while resizing window and recalculating dimentions
    * - on jumping from offset transition at start and end edges in `carousel` type
    */
-  Events.listen(['build.before', 'resize', 'carousel.jumping'], () => {
+  Events.listen(['build.before', 'resize', 'translate.jump'], () => {
     TRANSITION.disable()
   })
 

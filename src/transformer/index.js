@@ -1,14 +1,14 @@
-import Rtl from './rtl'
-import Grow from './grow'
-import Peeking from './peeking'
-import Focusing from './focusing'
+import Rtl from './mutators/rtl'
+import Grow from './mutators/grow'
+import Peeking from './mutators/peeking'
+import Focusing from './mutators/focusing'
 
 /**
  * Collection of transformers.
  *
  * @type {Array}
  */
-const TRANSFORMERS = [
+const MUTATORS = [
   Grow,
   Peeking,
   Focusing,
@@ -33,9 +33,9 @@ export default function (Glide, Components) {
      * @param  {Number} translate
      * @return {Number}
      */
-    transform (translate) {
-      for (var i = 0; i < TRANSFORMERS.length; i++) {
-        translate = TRANSFORMERS[i](Glide, Components).translate(translate)
+    mutate (translate) {
+      for (var i = 0; i < MUTATORS.length; i++) {
+        translate = MUTATORS[i](Glide, Components).modify(translate)
       }
 
       return translate

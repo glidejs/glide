@@ -31,11 +31,11 @@
   <div data-glide-el="track" class="glide__track">
     <ul class="glide__slides">
       <li class="glide__slide box">0</li>
-      <!-- <li class="glide__slide box">1</li> -->
-      <!-- <li class="glide__slide box">2</li> -->
-      <!-- <li class="glide__slide box">3</li> -->
-      <!-- <li class="glide__slide box">4</li> -->
-      <!-- <li class="glide__slide box">5</li> -->
+      <li class="glide__slide box">1</li>
+      <li class="glide__slide box">2</li>
+      <li class="glide__slide box">3</li>
+      <li class="glide__slide box">4</li>
+      <li class="glide__slide box">5</li>
     </ul>
   </div>
 
@@ -63,8 +63,8 @@
   <div data-glide-el="track" class="glide__track">
     <ul class="glide__slides">
       <li class="glide__slide box">0</li>
-      <!-- <li class="glide__slide box">1</li> -->
-      <!-- <li class="glide__slide box">2</li> -->
+      <li class="glide__slide box">1</li>
+      <li class="glide__slide box">2</li>
       <!-- <li class="glide__slide box">3</li> -->
       <!-- <li class="glide__slide box">4</li> -->
       <!-- <li class="glide__slide box">5</li> -->
@@ -91,14 +91,18 @@
 <script>
   var el = document.querySelector('#glide1')
   var glide1 = new Glide(el, { 
-    perView: 3,
-    // autoplay: false,
+    type: 'carousel',
+    perView: 2,
+    autoplay: false,
     breakpoints: {
       '800px': {
         focusAt: 0,
-        perView: 2
+        perView: 1
       }
     }
+  })
+  glide1.on('move', function () {
+    // console.log(glide1.disabled)
   })
   glide1.mount()
 

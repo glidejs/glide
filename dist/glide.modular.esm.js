@@ -88,7 +88,7 @@ var defaults = {
    *
    * @type {Number}
    */
-  touchRatio: 0.75,
+  touchRatio: 0.5,
 
   /**
    * Angle required to activate slides moving on swiping or dragging.

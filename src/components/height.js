@@ -5,15 +5,28 @@ export default function (Glide, Components, Events) {
     /**
      * Sets height of the slider.
      *
-     * @param {Boolean} force Force height setting even if option is turn off.
      * @return {Void}
      */
-    set (force) {
-      if (Glide.settings.autoheight || force) {
+    set () {
+      if (Glide.settings.autoheight) {
         let style = Components.Html.track.style
 
         style.transition = Components.Transition.compose('height')
         style.height = this.value
+      }
+    },
+
+    /**
+     * Unsets height of the slider.
+     *
+     * @return {Void}
+     */
+    unset () {
+      if (Glide.settings.autoheight) {
+        let style = Components.Html.track.style
+
+        style.transition = null
+        style.height = null
       }
     }
   }
@@ -36,6 +49,14 @@ export default function (Glide, Components, Events) {
    */
   Events.listen(['build.after', 'run'], () => {
     HEIGHT.set()
+  })
+
+  /**
+   * Clear applied height styles:
+   * - on destroying, to bring HTML to its initial state
+   */
+  Events.listen('destroy', () => {
+    HEIGHT.unset()
   })
 
   return HEIGHT

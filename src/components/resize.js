@@ -5,7 +5,7 @@ import EventsBinder from '../core/event/events-binder'
 export default function (Glide, Components, Events) {
   const Binder = new EventsBinder()
 
-  return {
+  const RESIZE = {
     /**
      * Initializes window bindings.
      */
@@ -34,4 +34,14 @@ export default function (Glide, Components, Events) {
       Binder.off('resize', window)
     }
   }
+
+  /**
+   * Remove bindings from window:
+   * - on destroying, to remove added EventListener
+   */
+  Events.listen('destroy', () => {
+    RESIZE.unbind()
+  })
+
+  return RESIZE
 }

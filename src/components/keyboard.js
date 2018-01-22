@@ -1,9 +1,9 @@
 import EventsBinder from '../core/event/events-binder'
 
-export default function (Glide, Components) {
+export default function (Glide, Components, Events) {
   const Binder = new EventsBinder()
 
-  return {
+  const KEYBOARD = {
     /**
      * Binds keyboard events on component mount.
      *
@@ -30,7 +30,7 @@ export default function (Glide, Components) {
      * @return {Void}
      */
     unbind () {
-      Binder.on('keyup', document, this.press)
+      Binder.on('keyup', document)
     },
 
     /**
@@ -57,4 +57,14 @@ export default function (Glide, Components) {
       }
     }
   }
+
+  /**
+   * Remove bindings from keyboard:
+   * - on destroying, to remove added EventListeners
+   */
+  Events.listen('destroy', () => {
+    KEYBOARD.unbind()
+  })
+
+  return KEYBOARD
 }

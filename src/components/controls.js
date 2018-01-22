@@ -20,7 +20,7 @@ export default function (Glide, Components, Events) {
       this._e = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR)
 
       this.activeClass()
-      this.bindEvents()
+      this.addBindings()
     },
 
     /**
@@ -52,13 +52,24 @@ export default function (Glide, Components, Events) {
     },
 
     /**
-     * Binds handles to the each group of controls.
+     * Adds handles to the each group of controls.
      *
      * @return {Void}
      */
-    bindEvents () {
+    addBindings () {
       for (let i = 0; i < this._e.length; i++) {
         this.bind(this._e[i])
+      }
+    },
+
+    /**
+     * Removes handles from the each group of controls.
+     *
+     * @return {Void}
+     */
+    removeBindings () {
+      for (let i = 0; i < this._e.length; i++) {
+        this.unbind(this._e[i])
       }
     },
 
@@ -109,6 +120,14 @@ export default function (Glide, Components, Events) {
    */
   Events.listen('move.after', () => {
     CONTROLS.activeClass()
+  })
+
+  /**
+   * Remove bindings from controls:
+   * - on destroying, to remove added EventListeners
+   */
+  Events.listen('destroy', () => {
+    CONTROLS.removeBindings()
   })
 
   return CONTROLS

@@ -117,5 +117,13 @@ export default function (Glide, Components, Events) {
     }
   })
 
+  /**
+   * Remove clones HTMLElements:
+   * - on destroying, to bring HTML to its initial state
+   */
+  Events.listen('destroy', () => {
+    CLONES.remove()
+  })
+
   return CLONES
 }

@@ -1,9 +1,9 @@
 import EventsBinder from '../core/event/events-binder'
 
-export default function (Glide, Components) {
+export default function (Glide, Components, Events) {
   const Binder = new EventsBinder()
 
-  return {
+  const IMAGES = {
     /**
      * Binds listener to glide wrapper.
      *
@@ -28,7 +28,7 @@ export default function (Glide, Components) {
      * @return {Void}
      */
     unbind () {
-      Binder.off('dragstart', Components.Html.wrapper, this.dragstart)
+      Binder.off('dragstart', Components.Html.wrapper)
     },
 
     /**
@@ -40,4 +40,14 @@ export default function (Glide, Components) {
       event.preventDefault()
     }
   }
+
+  /**
+   * Remove bindings from images:
+   * - on destroying, to remove added EventListeners
+   */
+  Events.listen('destroy', () => {
+    IMAGES.unbind()
+  })
+
+  return IMAGES
 }

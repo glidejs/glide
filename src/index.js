@@ -99,6 +99,17 @@ export default class Glide {
   }
 
   /**
+   * Move track by specified distance.
+   *
+   * @param {String} distance
+   */
+  destroy () {
+    Events.emit('destroy')
+
+    return this
+  }
+
+  /**
    * Sets glide into a idle status.
    *
    * @return {Void}

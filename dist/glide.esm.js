@@ -9,8 +9,8 @@ var defaults = {
    * Type of the movement.
    *
    * Available types:
-   * `slider` - Rewinds slider to the start/end when it reaches first or last slide.
-   * `carousel` - Changes slides without starting over when it reaches first or last slide.
+   * `slider` - Rewinds slider to the start/end when it reaches the first or last slide.
+   * `carousel` - Changes slides without starting over when it reaches the first or last slide.
    *
    * @type {String}
    */
@@ -70,7 +70,7 @@ var defaults = {
   swipeThreshold: 80,
 
   /**
-   * Minimal mouse drag distance needed to change slide. Use `false` for turning off a dragging.
+   * Minimal mouse drag distance needed to change the slide. Use `false` for turning off a dragging.
    *
    * @type {Number}
    */
@@ -133,10 +133,11 @@ var defaults = {
   rtl: false,
 
   /**
-   * Distance value of the next and previous viewports which have to be
-   * peeked in current view. Accepts number and pixels as string.
-   * Left and right peeking can be setup separetly with a
-   * directions object. For example:
+   * The distance value of the next and previous viewports which
+   * have to peek in the current view. Accepts number and
+   * pixels as a string. Left and right peeking can be
+   * set up separately with a directions object.
+   * For example:
    * `100`, `'100'`, `'100px'` - Peek 100px on the both sides.
    * { left: 100, right: 50 }` - Peek 100px on the left side and 50px on the right side.
    *
@@ -548,7 +549,7 @@ var Glide$2 = function () {
     }
 
     /**
-     * Change slide with specified pattern. Pattern must be in special format:
+     * Change slide with specified pattern. A pattern must be in the special format:
      * `>` - Move one forward
      * `<` - Move one backward
      * `={i}` - Go to {i} zero-based slide (eq. '=1', will go to second slide)
@@ -577,6 +578,20 @@ var Glide$2 = function () {
     value: function move(distance) {
       Components.Transition.disable();
       Components.Move.make(distance);
+
+      return this;
+    }
+
+    /**
+     * Move track by specified distance.
+     *
+     * @param {String} distance
+     */
+
+  }, {
+    key: 'destroy',
+    value: function destroy() {
+      Events.emit('destroy');
 
       return this;
     }
@@ -1328,13 +1343,31 @@ var Build = function (Glide, Components, Events) {
      * @return {Void}
      */
     activeClass: function activeClass() {
-      var settings = Glide.settings;
+      var classes = Glide.settings.classes;
       var slide = Components.Html.slides[Glide.index];
 
-      slide.classList.add(settings.classes.activeSlide);
+      slide.classList.add(classes.activeSlide);
 
       siblings(slide).forEach(function (sibling) {
-        sibling.classList.remove(settings.classes.activeSlide);
+        sibling.classList.remove(classes.activeSlide);
+      });
+    },
+
+
+    /**
+     * Removes HTML classes applied at building.
+     *
+     * @return {Void}
+     */
+    removeClasses: function removeClasses() {
+      var classes = Glide.settings.classes;
+
+      Components.Html.root.classList.remove(classes[Glide.settings.type]);
+
+      Components.Html.root.classList.remove(classes.rtl);
+
+      Components.Html.slides.forEach(function (sibling) {
+        sibling.classList.remove(classes.activeSlide);
       });
     }
   };
@@ -1355,6 +1388,14 @@ var Build = function (Glide, Components, Events) {
    */
   Events.listen('move.after', function () {
     BUILD.activeClass();
+  });
+
+  /**
+   * Clear building classes:
+   * - on destroying, to bring HTML to its initial state
+   */
+  Events.listen('destroy', function () {
+    BUILD.removeClasses();
   });
 
   return BUILD;
@@ -1479,6 +1520,14 @@ var Clones = function (Glide, Components, Events) {
     if (Glide.isType('carousel')) {
       CLONES.append();
     }
+  });
+
+  /**
+   * Remove clones HTMLElements:
+   * - on destroying, to bring HTML to its initial state
+   */
+  Events.listen('destroy', function () {
+    CLONES.remove();
   });
 
   return CLONES;
@@ -1611,7 +1660,7 @@ var EventsBinder = function () {
 var Resize = function (Glide, Components, Events) {
   var Binder = new EventsBinder();
 
-  return {
+  var RESIZE = {
     /**
      * Initializes window bindings.
      */
@@ -1642,6 +1691,16 @@ var Resize = function (Glide, Components, Events) {
       Binder.off('resize', window);
     }
   };
+
+  /**
+   * Remove bindings from window:
+   * - on destroying, to remove added EventListener
+   */
+  Events.listen('destroy', function () {
+    RESIZE.unbind();
+  });
+
+  return RESIZE;
 };
 
 /**
@@ -2239,6 +2298,16 @@ var Swipe = function (Glide, Components, Events) {
     Components.Html.root.classList.add(Glide.settings.classes.swipeable);
   });
 
+  /**
+   * Remove swiping bindings:
+   * - on destroying, to remove added EventListeners
+   */
+  Events.listen('destroy', function () {
+    SWIPE.unbindSwipeStart();
+    SWIPE.unbindSwipeMove();
+    SWIPE.unbindSwipeEnd();
+  });
+
   return SWIPE;
 };
 
@@ -2247,15 +2316,29 @@ var Height = function (Glide, Components, Events) {
     /**
      * Sets height of the slider.
      *
-     * @param {Boolean} force Force height setting even if option is turn off.
      * @return {Void}
      */
-    set: function set(force) {
-      if (Glide.settings.autoheight || force) {
+    set: function set() {
+      if (Glide.settings.autoheight) {
         var style = Components.Html.track.style;
 
         style.transition = Components.Transition.compose('height');
         style.height = this.value;
+      }
+    },
+
+
+    /**
+     * Unsets height of the slider.
+     *
+     * @return {Void}
+     */
+    unset: function unset() {
+      if (Glide.settings.autoheight) {
+        var style = Components.Html.track.style;
+
+        style.transition = null;
+        style.height = null;
       }
     }
   };
@@ -2280,13 +2363,21 @@ var Height = function (Glide, Components, Events) {
     HEIGHT.set();
   });
 
+  /**
+   * Clear applied height styles:
+   * - on destroying, to bring HTML to its initial state
+   */
+  Events.listen('destroy', function () {
+    HEIGHT.unset();
+  });
+
   return HEIGHT;
 };
 
-var Images = function (Glide, Components) {
+var Images = function (Glide, Components, Events) {
   var Binder = new EventsBinder();
 
-  return {
+  var IMAGES = {
     /**
      * Binds listener to glide wrapper.
      *
@@ -2313,7 +2404,7 @@ var Images = function (Glide, Components) {
      * @return {Void}
      */
     unbind: function unbind() {
-      Binder.off('dragstart', Components.Html.wrapper, this.dragstart);
+      Binder.off('dragstart', Components.Html.wrapper);
     },
 
 
@@ -2326,6 +2417,16 @@ var Images = function (Glide, Components) {
       event.preventDefault();
     }
   };
+
+  /**
+   * Remove bindings from images:
+   * - on destroying, to remove added EventListeners
+   */
+  Events.listen('destroy', function () {
+    IMAGES.unbind();
+  });
+
+  return IMAGES;
 };
 
 var Anchors = function (Glide, Components, Events) {
@@ -2354,6 +2455,16 @@ var Anchors = function (Glide, Components, Events) {
      */
     bind: function bind() {
       Binder.on('click', Components.Html.wrapper, this.click.bind(this));
+    },
+
+
+    /**
+     * Unbinds events attached to anchors inside a track.
+     *
+     * @return {Void}
+     */
+    unbind: function unbind() {
+      Binder.off('click', Components.Html.wrapper);
     },
 
 
@@ -2452,7 +2563,7 @@ var Anchors = function (Glide, Components, Events) {
   });
 
   /**
-   * Unbind anchors inside slides:
+   * Detach anchors inside slides:
    * - on swiping, so they won't redirect to its `href` attributes
    */
   Events.listen('swipe.move', function () {
@@ -2460,13 +2571,21 @@ var Anchors = function (Glide, Components, Events) {
   });
 
   /**
-   * Bind anchors inside slides:
+   * Attach anchors inside slides:
    * - after swiping and transitions ends, so they can redirect after click again
    */
   Events.listen('swipe.end', function () {
     Components.Transition.after(function () {
       ANCHORS.unprevent().attach();
     });
+  });
+
+  /**
+   * Unbind anchors inside slides:
+   * - on destroying, to bring anchors to its initial state
+   */
+  Events.listen('destroy', function () {
+    ANCHORS.unprevent().attach().unbind();
   });
 
   return ANCHORS;
@@ -2490,7 +2609,7 @@ var Controls = function (Glide, Components, Events) {
       this._e = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR);
 
       this.activeClass();
-      this.bindEvents();
+      this.addBindings();
     },
 
 
@@ -2525,13 +2644,25 @@ var Controls = function (Glide, Components, Events) {
 
 
     /**
-     * Binds handles to the each group of controls.
+     * Adds handles to the each group of controls.
      *
      * @return {Void}
      */
-    bindEvents: function bindEvents() {
+    addBindings: function addBindings() {
       for (var i = 0; i < this._e.length; i++) {
         this.bind(this._e[i]);
+      }
+    },
+
+
+    /**
+     * Removes handles from the each group of controls.
+     *
+     * @return {Void}
+     */
+    removeBindings: function removeBindings() {
+      for (var i = 0; i < this._e.length; i++) {
+        this.unbind(this._e[i]);
       }
     },
 
@@ -2587,13 +2718,21 @@ var Controls = function (Glide, Components, Events) {
     CONTROLS.activeClass();
   });
 
+  /**
+   * Remove bindings from controls:
+   * - on destroying, to remove added EventListeners
+   */
+  Events.listen('destroy', function () {
+    CONTROLS.removeBindings();
+  });
+
   return CONTROLS;
 };
 
-var Keyboard = function (Glide, Components) {
+var Keyboard = function (Glide, Components, Events) {
   var Binder = new EventsBinder();
 
-  return {
+  var KEYBOARD = {
     /**
      * Binds keyboard events on component mount.
      *
@@ -2622,7 +2761,7 @@ var Keyboard = function (Glide, Components) {
      * @return {Void}
      */
     unbind: function unbind() {
-      Binder.on('keyup', document, this.press);
+      Binder.on('keyup', document);
     },
 
 
@@ -2650,9 +2789,19 @@ var Keyboard = function (Glide, Components) {
       }
     }
   };
+
+  /**
+   * Remove bindings from keyboard:
+   * - on destroying, to remove added EventListeners
+   */
+  Events.listen('destroy', function () {
+    KEYBOARD.unbind();
+  });
+
+  return KEYBOARD;
 };
 
-var Autoplay = function (Glide, Components) {
+var Autoplay = function (Glide, Components, Events) {
   var Binder = new EventsBinder();
 
   var AUTOPLAY = {
@@ -2738,6 +2887,14 @@ var Autoplay = function (Glide, Components) {
 
       return toInt(Glide.settings.autoplay);
     }
+  });
+
+  /**
+   * Stop autoplaying:
+   * - on destroying, to clear defined interval
+   */
+  Events.listen('destroy', function () {
+    AUTOPLAY.stop();
   });
 
   return AUTOPLAY;

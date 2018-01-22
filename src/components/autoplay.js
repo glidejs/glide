@@ -3,7 +3,7 @@ import { toInt, isUndefined } from '../utils/unit'
 
 import EventsBinder from '../core/event/events-binder'
 
-export default function (Glide, Components) {
+export default function (Glide, Components, Events) {
   const Binder = new EventsBinder()
 
   const AUTOPLAY = {
@@ -82,6 +82,14 @@ export default function (Glide, Components) {
 
       return toInt(Glide.settings.autoplay)
     }
+  })
+
+  /**
+   * Stop autoplaying:
+   * - on destroying, to clear defined interval
+   */
+  Events.listen('destroy', () => {
+    AUTOPLAY.stop()
   })
 
   return AUTOPLAY

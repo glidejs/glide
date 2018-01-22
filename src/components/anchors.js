@@ -30,6 +30,15 @@ export default function (Glide, Components, Events) {
     },
 
     /**
+     * Unbinds events attached to anchors inside a track.
+     *
+     * @return {Void}
+     */
+    unbind () {
+      Binder.off('click', Components.Html.wrapper)
+    },
+
+    /**
      * Handler for click event. Prevents clicks when glide is in `prevent` status.
      *
      * @param  {Object} event
@@ -120,7 +129,7 @@ export default function (Glide, Components, Events) {
   })
 
   /**
-   * Unbind anchors inside slides:
+   * Detach anchors inside slides:
    * - on swiping, so they won't redirect to its `href` attributes
    */
   Events.listen('swipe.move', () => {
@@ -128,13 +137,21 @@ export default function (Glide, Components, Events) {
   })
 
   /**
-   * Bind anchors inside slides:
+   * Attach anchors inside slides:
    * - after swiping and transitions ends, so they can redirect after click again
    */
   Events.listen('swipe.end', () => {
     Components.Transition.after(() => {
       ANCHORS.unprevent().attach()
     })
+  })
+
+  /**
+   * Unbind anchors inside slides:
+   * - on destroying, to bring anchors to its initial state
+   */
+  Events.listen('destroy', () => {
+    ANCHORS.unprevent().attach().unbind()
   })
 
   return ANCHORS

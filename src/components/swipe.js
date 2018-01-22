@@ -276,5 +276,15 @@ export default function (Glide, Components, Events) {
     Components.Html.root.classList.add(Glide.settings.classes.swipeable)
   })
 
+  /**
+   * Remove swiping bindings:
+   * - on destroying, to remove added EventListeners
+   */
+  Events.listen('destroy', () => {
+    SWIPE.unbindSwipeStart()
+    SWIPE.unbindSwipeMove()
+    SWIPE.unbindSwipeEnd()
+  })
+
   return SWIPE
 }

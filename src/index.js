@@ -71,7 +71,7 @@ export default class Glide {
   }
 
   /**
-   * Change slide with specified pattern. Pattern must be in special format:
+   * Change slide with specified pattern. A pattern must be in the special format:
    * `>` - Move one forward
    * `<` - Move one backward
    * `={i}` - Go to {i} zero-based slide (eq. '=1', will go to second slide)

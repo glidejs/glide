@@ -3,8 +3,8 @@ export default {
    * Type of the movement.
    *
    * Available types:
-   * `slider` - Rewinds slider to the start/end when it reaches first or last slide.
-   * `carousel` - Changes slides without starting over when it reaches first or last slide.
+   * `slider` - Rewinds slider to the start/end when it reaches the first or last slide.
+   * `carousel` - Changes slides without starting over when it reaches the first or last slide.
    *
    * @type {String}
    */
@@ -64,7 +64,7 @@ export default {
   swipeThreshold: 80,
 
   /**
-   * Minimal mouse drag distance needed to change slide. Use `false` for turning off a dragging.
+   * Minimal mouse drag distance needed to change the slide. Use `false` for turning off a dragging.
    *
    * @type {Number}
    */
@@ -127,10 +127,11 @@ export default {
   rtl: false,
 
   /**
-   * Distance value of the next and previous viewports which have to be
-   * peeked in current view. Accepts number and pixels as string.
-   * Left and right peeking can be setup separetly with a
-   * directions object. For example:
+   * The distance value of the next and previous viewports which
+   * have to peek in the current view. Accepts number and
+   * pixels as a string. Left and right peeking can be
+   * set up separately with a directions object.
+   * For example:
    * `100`, `'100'`, `'100px'` - Peek 100px on the both sides.
    * { left: 100, right: 50 }` - Peek 100px on the left side and 50px on the right side.
    *

@@ -27,7 +27,7 @@ export default class Glide {
    * Initializes glide components.
    *
    * @param {Object} extensions Collection of extensions to initialize.
-   * @return {Void}
+   * @return {Self}
    */
   mount (extensions = {}) {
     Events.emit('mount.before')
@@ -47,6 +47,7 @@ export default class Glide {
    * Reinits glide with specified settings.
    *
    * @param {Object} settings
+   * @return {Self}
    */
   reinit (settings = {}) {
     this.settings = Object.assign(this.settings, settings)
@@ -61,6 +62,7 @@ export default class Glide {
    * Reinits glide with specified settings.
    *
    * @param {Object} settings
+   * @return {Self}
    */
   update (settings = {}) {
     this.settings = Object.assign(this.settings, settings)
@@ -79,6 +81,7 @@ export default class Glide {
    * `<<` - Rewinds to start (first slide)
    *
    * @param {String} pattern
+   * @return {Self}
    */
   go (pattern) {
     Components.Run.make(pattern)
@@ -90,6 +93,7 @@ export default class Glide {
    * Move track by specified distance.
    *
    * @param {String} distance
+   * @return {Self}
    */
   move (distance) {
     Components.Transition.disable()
@@ -99,12 +103,34 @@ export default class Glide {
   }
 
   /**
-   * Move track by specified distance.
+   * Destroy instance and revert all changes done by components.
    *
-   * @param {String} distance
+   * @return {Self}
    */
   destroy () {
     Events.emit('destroy')
+
+    return this
+  }
+
+  /**
+   * Unpause instance autoplaying.
+   *
+   * @return {Self}
+   */
+  play () {
+    Events.emit('play')
+
+    return this
+  }
+
+  /**
+   * Unpause instance autoplaying.
+   *
+   * @return {Self}
+   */
+  pause () {
+    Events.emit('pause')
 
     return this
   }

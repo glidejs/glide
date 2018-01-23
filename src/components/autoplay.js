@@ -85,10 +85,18 @@ export default function (Glide, Components, Events) {
   })
 
   /**
+   * Start autoplaying:
+   * - on starting with API method call
+   */
+  Events.listen('play', () => {
+    AUTOPLAY.start()
+  })
+
+  /**
    * Stop autoplaying:
    * - on destroying, to clear defined interval
    */
-  Events.listen('destroy', () => {
+  Events.listen(['pause', 'destroy'], () => {
     AUTOPLAY.stop()
   })
 

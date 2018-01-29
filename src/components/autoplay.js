@@ -86,7 +86,7 @@ export default function (Glide, Components, Events) {
 
   /**
    * Start autoplaying:
-   * - on starting with API method call
+   * - on playing with API call
    */
   Events.listen('play', () => {
     AUTOPLAY.start()

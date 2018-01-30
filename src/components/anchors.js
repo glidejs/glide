@@ -58,6 +58,8 @@ export default function (Glide, Components, Events) {
      * @return {self}
      */
     detach () {
+      prevented = true
+
       if (!detached) {
         for (var i = 0; i < this.items.length; i++) {
           this.items[i].draggable = false
@@ -79,6 +81,8 @@ export default function (Glide, Components, Events) {
      * @return {self}
      */
     attach () {
+      prevented = false
+
       if (detached) {
         for (var i = 0; i < this.items.length; i++) {
           this.items[i].draggable = true
@@ -90,28 +94,6 @@ export default function (Glide, Components, Events) {
 
         detached = false
       }
-
-      return this
-    },
-
-    /**
-     * Sets `prevented` status so anchors inside track are not clickable.
-     *
-     * @return {self}
-     */
-    prevent () {
-      prevented = true
-
-      return this
-    },
-
-    /**
-     * Unsets `prevented` status so anchors inside track are clickable.
-     *
-     * @return {self}
-     */
-    unprevent () {
-      prevented = false
 
       return this
     }
@@ -133,7 +115,7 @@ export default function (Glide, Components, Events) {
    * - on swiping, so they won't redirect to its `href` attributes
    */
   Events.listen('swipe.move', () => {
-    ANCHORS.prevent().detach()
+    ANCHORS.detach()
   })
 
   /**
@@ -142,7 +124,7 @@ export default function (Glide, Components, Events) {
    */
   Events.listen('swipe.end', () => {
     Components.Transition.after(() => {
-      ANCHORS.unprevent().attach()
+      ANCHORS.attach()
     })
   })
 
@@ -151,7 +133,7 @@ export default function (Glide, Components, Events) {
    * - on destroying, to bring anchors to its initial state
    */
   Events.listen('destroy', () => {
-    ANCHORS.unprevent().attach().unbind()
+    ANCHORS.attach().unbind()
   })
 
   return ANCHORS

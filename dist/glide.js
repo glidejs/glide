@@ -495,7 +495,7 @@ var Glide$2 = function () {
    * Initializes glide components.
    *
    * @param {Object} extensions Collection of extensions to initialize.
-   * @return {Void}
+   * @return {Self}
    */
 
 
@@ -521,6 +521,7 @@ var Glide$2 = function () {
      * Reinits glide with specified settings.
      *
      * @param {Object} settings
+     * @return {Self}
      */
 
   }, {
@@ -540,6 +541,7 @@ var Glide$2 = function () {
      * Reinits glide with specified settings.
      *
      * @param {Object} settings
+     * @return {Self}
      */
 
   }, {
@@ -563,6 +565,7 @@ var Glide$2 = function () {
      * `<<` - Rewinds to start (first slide)
      *
      * @param {String} pattern
+     * @return {Self}
      */
 
   }, {
@@ -577,6 +580,7 @@ var Glide$2 = function () {
      * Move track by specified distance.
      *
      * @param {String} distance
+     * @return {Self}
      */
 
   }, {
@@ -589,15 +593,43 @@ var Glide$2 = function () {
     }
 
     /**
-     * Move track by specified distance.
+     * Destroy instance and revert all changes done by components.
      *
-     * @param {String} distance
+     * @return {Self}
      */
 
   }, {
     key: 'destroy',
     value: function destroy() {
       Events.emit('destroy');
+
+      return this;
+    }
+
+    /**
+     * Unpause instance autoplaying.
+     *
+     * @return {Self}
+     */
+
+  }, {
+    key: 'play',
+    value: function play() {
+      Events.emit('play');
+
+      return this;
+    }
+
+    /**
+     * Unpause instance autoplaying.
+     *
+     * @return {Self}
+     */
+
+  }, {
+    key: 'pause',
+    value: function pause() {
+      Events.emit('pause');
 
       return this;
     }
@@ -2495,6 +2527,8 @@ var Anchors = function (Glide, Components, Events) {
      * @return {self}
      */
     detach: function detach() {
+      prevented = true;
+
       if (!detached) {
         for (var i = 0; i < this.items.length; i++) {
           this.items[i].draggable = false;
@@ -2517,6 +2551,8 @@ var Anchors = function (Glide, Components, Events) {
      * @return {self}
      */
     attach: function attach() {
+      prevented = false;
+
       if (detached) {
         for (var i = 0; i < this.items.length; i++) {
           this.items[i].draggable = true;
@@ -2528,30 +2564,6 @@ var Anchors = function (Glide, Components, Events) {
 
         detached = false;
       }
-
-      return this;
-    },
-
-
-    /**
-     * Sets `prevented` status so anchors inside track are not clickable.
-     *
-     * @return {self}
-     */
-    prevent: function prevent() {
-      prevented = true;
-
-      return this;
-    },
-
-
-    /**
-     * Unsets `prevented` status so anchors inside track are clickable.
-     *
-     * @return {self}
-     */
-    unprevent: function unprevent() {
-      prevented = false;
 
       return this;
     }
@@ -2573,7 +2585,7 @@ var Anchors = function (Glide, Components, Events) {
    * - on swiping, so they won't redirect to its `href` attributes
    */
   Events.listen('swipe.move', function () {
-    ANCHORS.prevent().detach();
+    ANCHORS.detach();
   });
 
   /**
@@ -2582,7 +2594,7 @@ var Anchors = function (Glide, Components, Events) {
    */
   Events.listen('swipe.end', function () {
     Components.Transition.after(function () {
-      ANCHORS.unprevent().attach();
+      ANCHORS.attach();
     });
   });
 
@@ -2591,7 +2603,7 @@ var Anchors = function (Glide, Components, Events) {
    * - on destroying, to bring anchors to its initial state
    */
   Events.listen('destroy', function () {
-    ANCHORS.unprevent().attach().unbind();
+    ANCHORS.attach().unbind();
   });
 
   return ANCHORS;
@@ -2896,10 +2908,18 @@ var Autoplay = function (Glide, Components, Events) {
   });
 
   /**
+   * Start autoplaying:
+   * - on playing with API call
+   */
+  Events.listen('play', function () {
+    AUTOPLAY.start();
+  });
+
+  /**
    * Stop autoplaying:
    * - on destroying, to clear defined interval
    */
-  Events.listen('destroy', function () {
+  Events.listen(['pause', 'destroy'], function () {
     AUTOPLAY.stop();
   });
 

@@ -37,7 +37,7 @@ npm install glidejs
 
 ```html
 <div class="glide">
-  <div data-glide="track" class="glide__track">
+  <div data-glide-el="track" class="glide__track">
     <ul class="glide__slides">
       <li class="glide__slide"></li>
       <li class="glide__slide"></li>

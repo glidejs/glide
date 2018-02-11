@@ -1,4 +1,13 @@
+import { isObject } from '../utils/unit'
+import { sortKeys } from '../utils/object'
+
 export default function (Glide, Components, Events) {
+  // If there are breakpoints, sort it smaller to larger.
+  if (isObject(Glide.settings.breakpoints)) {
+    Glide.settings.breakpoints = sortKeys(Glide.settings.breakpoints)
+  }
+
+  // Cache default settings before we overwritting.
   const defaults = Object.assign({}, Glide.settings)
 
   const BREAKPOINTS = {

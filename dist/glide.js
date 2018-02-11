@@ -186,7 +186,7 @@ var defaults = {
  * @param  {String} msg
  * @return {Void}
  */
-function warn(msg) {
+function warn$1(msg) {
   console.error("[Glide warn]: " + msg);
 }
 
@@ -400,7 +400,7 @@ function mount(glide, extensions, events) {
     if (isFunction(extensions[name])) {
       components[name] = extensions[name](glide, components, events);
     } else {
-      warn('Extension must be a function');
+      warn$1('Extension must be a function');
     }
   }
 
@@ -509,7 +509,7 @@ var Glide$2 = function () {
       if (isObject(extensions)) {
         Components = mount(this, extensions, Events);
       } else {
-        warn('You need to provide a components object on `mount()`');
+        warn$1('You need to provide a components object on `mount()`');
       }
 
       Events.emit('mount.after');
@@ -714,7 +714,7 @@ var Glide$2 = function () {
       if (isObject(opt)) {
         this._o = opt;
       } else {
-        warn('Options must be an `object` instance.');
+        warn$1('Options must be an `object` instance.');
       }
     }
 
@@ -787,6 +787,18 @@ var Glide$2 = function () {
  */
 function define(obj, prop, definition) {
   Object.defineProperty(obj, prop, definition);
+}
+
+/**
+ * Sorts aphabetically object keys.
+ *
+ * @param  {Object} obj
+ * @return {Object}
+ */
+function sortKeys(obj) {
+  return Object.keys(obj).sort().reduce(function (r, k) {
+    return r[k] = obj[k], r;
+  }, {});
 }
 
 var Run = function (Glide, Components, Events) {
@@ -1038,7 +1050,7 @@ var Html = function (Glide, Components) {
       if (exist(root)) {
         HTML._r = root;
       } else {
-        warn('Root element must be a existing HTML node');
+        warn$1('Root element must be a existing HTML node');
       }
     }
   });
@@ -1063,7 +1075,7 @@ var Html = function (Glide, Components) {
       if (exist(tr)) {
         HTML._t = tr;
       } else {
-        warn('Could not find track element. Please use ' + TRACK_SELECTOR + ' attribute.');
+        warn$1('Could not find track element. Please use ' + TRACK_SELECTOR + ' attribute.');
       }
     }
   });
@@ -2927,6 +2939,12 @@ var Autoplay = function (Glide, Components, Events) {
 };
 
 var Breakpoints = function (Glide, Components, Events) {
+  // If there are breakpoints, sort it smaller to larger.
+  if (isObject(Glide.settings.breakpoints)) {
+    Glide.settings.breakpoints = sortKeys(Glide.settings.breakpoints);
+  }
+
+  // Cache default settings before we overwritting.
   var defaults = _extends({}, Glide.settings);
 
   var BREAKPOINTS = {
@@ -2937,12 +2955,16 @@ var Breakpoints = function (Glide, Components, Events) {
      * @returns {Object}
      */
     match: function match(breakpoints) {
-      for (var point in breakpoints) {
-        if (breakpoints.hasOwnProperty(point)) {
-          if (window.matchMedia('(max-width: ' + point + ')').matches) {
-            return breakpoints[point];
+      if (window.matchMedia) {
+        for (var point in breakpoints) {
+          if (breakpoints.hasOwnProperty(point)) {
+            if (window.matchMedia('(max-width: ' + point + 'px)').matches) {
+              return breakpoints[point];
+            }
           }
         }
+      } else {
+        warn('The `window.matchMedia` function is not supported. Please, add polyfill to be able to use `Breakpoint` component.');
       }
 
       return defaults;

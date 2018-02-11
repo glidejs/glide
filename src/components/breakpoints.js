@@ -9,12 +9,16 @@ export default function (Glide, Components, Events) {
      * @returns {Object}
      */
     match (breakpoints) {
-      for (const point in breakpoints) {
-        if (breakpoints.hasOwnProperty(point)) {
-          if (window.matchMedia(`(max-width: ${point})`).matches) {
-            return breakpoints[point]
+      if (window.matchMedia) {
+        for (const point in breakpoints) {
+          if (breakpoints.hasOwnProperty(point)) {
+            if (window.matchMedia(`(max-width: ${point})`).matches) {
+              return breakpoints[point]
+            }
           }
         }
+      } else {
+        warn('The `window.matchMedia` function is not supported. Please, add polyfill to be able to use `Breakpoint` component.')
       }
 
       return defaults

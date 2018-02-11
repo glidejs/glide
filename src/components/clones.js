@@ -66,7 +66,7 @@ export default function (Glide, Components, Events) {
       for (let i = 0; i < this.items.length; i++) {
         let item = this.items[i]
 
-        item.style.width = Components.Sizes.slideWidth
+        item.style.width = `${Components.Sizes.slideWidth}px`
 
         // Append clone if pattern position is positive.
         // Prepend clone if pattern position is negative.

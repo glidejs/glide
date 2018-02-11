@@ -1508,7 +1508,7 @@ var Clones = function (Glide, Components, Events) {
       for (var i = 0; i < this.items.length; i++) {
         var item = this.items[i];
 
-        item.style.width = Components.Sizes.slideWidth;
+        item.style.width = Components.Sizes.slideWidth + 'px';
 
         // Append clone if pattern position is positive.
         // Prepend clone if pattern position is negative.

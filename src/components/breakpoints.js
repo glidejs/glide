@@ -12,7 +12,7 @@ export default function (Glide, Components, Events) {
       if (window.matchMedia) {
         for (const point in breakpoints) {
           if (breakpoints.hasOwnProperty(point)) {
-            if (window.matchMedia(`(max-width: ${point})`).matches) {
+            if (window.matchMedia(`(max-width: ${point}px)`).matches) {
               return breakpoints[point]
             }
           }

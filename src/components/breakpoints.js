@@ -18,7 +18,7 @@ export default function (Glide, Components, Events) {
      * @returns {Object}
      */
     match (breakpoints) {
-      if (window.matchMedia) {
+      if (typeof window.matchMedia !== 'undefined') {
         for (const point in breakpoints) {
           if (breakpoints.hasOwnProperty(point)) {
             if (window.matchMedia(`(max-width: ${point}px)`).matches) {

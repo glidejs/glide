@@ -116,7 +116,7 @@ var defaults = {
    *
    * @type {Number}
    */
-  throttle: 25,
+  throttle: 10,
 
   /**
    * Set height of the slider based on current slide content.
@@ -2949,7 +2949,7 @@ var breakpoints = function (Glide, Components, Events) {
      * @returns {Object}
      */
     match: function match(breakpoints) {
-      if (window.matchMedia) {
+      if (typeof window.matchMedia !== 'undefined') {
         for (var point in breakpoints) {
           if (breakpoints.hasOwnProperty(point)) {
             if (window.matchMedia('(max-width: ' + point + 'px)').matches) {

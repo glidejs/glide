@@ -1,4 +1,5 @@
 import { toInt } from '../utils/unit'
+import { throttle } from '../utils/wait'
 
 import EventsBinder from '../core/event/events-binder'
 
@@ -182,7 +183,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     bindSwipeMove () {
-      Binder.on(MOVE_EVENTS, Components.Html.wrapper, this.move.bind(this))
+      Binder.on(MOVE_EVENTS, Components.Html.wrapper, throttle(this.move.bind(this), Glide.settings.throttle))
     },
 
     /**

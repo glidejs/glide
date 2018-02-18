@@ -2241,7 +2241,7 @@ var swipe = function (Glide, Components, Events) {
      * @return {Void}
      */
     bindSwipeMove: function bindSwipeMove() {
-      Binder.on(MOVE_EVENTS, Components.Html.wrapper, this.move.bind(this));
+      Binder.on(MOVE_EVENTS, Components.Html.wrapper, throttle(this.move.bind(this), Glide.settings.throttle));
     },
 
 

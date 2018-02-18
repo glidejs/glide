@@ -100,5 +100,14 @@ export default function (Glide, Components, Events) {
     AUTOPLAY.stop()
   })
 
+  /**
+   * Restart autoplaying timer:
+   * - on each run, to restet defined interval
+   */
+  Events.listen('run', () => {
+    AUTOPLAY.stop()
+    AUTOPLAY.start()
+  })
+
   return AUTOPLAY
 }

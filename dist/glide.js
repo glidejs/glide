@@ -2931,6 +2931,15 @@ var Autoplay = function (Glide, Components, Events) {
     AUTOPLAY.stop();
   });
 
+  /**
+   * Restart autoplaying timer:
+   * - on each run, to restet defined interval
+   */
+  Events.listen('run', function () {
+    AUTOPLAY.stop();
+    AUTOPLAY.start();
+  });
+
   return AUTOPLAY;
 };
 

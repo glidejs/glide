@@ -186,7 +186,7 @@ var defaults = {
  * @param  {String} msg
  * @return {Void}
  */
-function warn$1(msg) {
+function warn(msg) {
   console.error("[Glide warn]: " + msg);
 }
 
@@ -400,7 +400,7 @@ function mount(glide, extensions, events) {
     if (isFunction(extensions[name])) {
       components[name] = extensions[name](glide, components, events);
     } else {
-      warn$1('Extension must be a function');
+      warn('Extension must be a function');
     }
   }
 
@@ -509,7 +509,7 @@ var Glide$2 = function () {
       if (isObject(extensions)) {
         Components = mount(this, extensions, Events);
       } else {
-        warn$1('You need to provide a components object on `mount()`');
+        warn('You need to provide a components object on `mount()`');
       }
 
       Events.emit('mount.after');
@@ -714,7 +714,7 @@ var Glide$2 = function () {
       if (isObject(opt)) {
         this._o = opt;
       } else {
-        warn$1('Options must be an `object` instance.');
+        warn('Options must be an `object` instance.');
       }
     }
 
@@ -1050,7 +1050,7 @@ var Html = function (Glide, Components) {
       if (exist(root)) {
         HTML._r = root;
       } else {
-        warn$1('Root element must be a existing HTML node');
+        warn('Root element must be a existing HTML node');
       }
     }
   });
@@ -1075,7 +1075,7 @@ var Html = function (Glide, Components) {
       if (exist(tr)) {
         HTML._t = tr;
       } else {
-        warn$1('Could not find track element. Please use ' + TRACK_SELECTOR + ' attribute.');
+        warn('Could not find track element. Please use ' + TRACK_SELECTOR + ' attribute.');
       }
     }
   });
@@ -2939,7 +2939,7 @@ var Autoplay = function (Glide, Components, Events) {
 };
 
 var Breakpoints = function (Glide, Components, Events) {
-  // If there are breakpoints, sort it smaller to larger.
+  // If there are breakpoints, sort it from smaller to larger.
   if (isObject(Glide.settings.breakpoints)) {
     Glide.settings.breakpoints = sortKeys(Glide.settings.breakpoints);
   }
@@ -2963,8 +2963,6 @@ var Breakpoints = function (Glide, Components, Events) {
             }
           }
         }
-      } else {
-        warn('The `window.matchMedia` function is not supported. Please, add polyfill to be able to use `Breakpoint` component.');
       }
 
       return defaults;

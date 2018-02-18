@@ -2,7 +2,7 @@ import { isObject } from '../utils/unit'
 import { sortKeys } from '../utils/object'
 
 export default function (Glide, Components, Events) {
-  // If there are breakpoints, sort it smaller to larger.
+  // If there are breakpoints, sort it from smaller to larger.
   if (isObject(Glide.settings.breakpoints)) {
     Glide.settings.breakpoints = sortKeys(Glide.settings.breakpoints)
   }
@@ -26,8 +26,6 @@ export default function (Glide, Components, Events) {
             }
           }
         }
-      } else {
-        warn('The `window.matchMedia` function is not supported. Please, add polyfill to be able to use `Breakpoint` component.')
       }
 
       return defaults

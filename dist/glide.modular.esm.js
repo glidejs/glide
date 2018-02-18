@@ -72,7 +72,7 @@ var defaults = {
   /**
    * Minimal mouse drag distance needed to change the slide. Use `false` for turning off a dragging.
    *
-   * @type {Number}
+   * @type {Number|Boolean}
    */
   dragThreshold: 120,
 
@@ -865,9 +865,7 @@ var Run = function (Glide, Components, Events) {
           } else if (this.isEnd()) {
             this._f = true;
 
-            if (Glide.isType('carousel')) {
-              Glide.index = 0;
-            }
+            Glide.index = 0;
 
             Events.emit('run.end', move);
           } else {
@@ -883,9 +881,7 @@ var Run = function (Glide, Components, Events) {
           } else if (this.isStart()) {
             this._f = true;
 
-            if (Glide.isType('carousel')) {
-              Glide.index = length;
-            }
+            Glide.index = length;
 
             Events.emit('run.start', move);
           } else {

@@ -66,7 +66,7 @@ export default {
   /**
    * Minimal mouse drag distance needed to change the slide. Use `false` for turning off a dragging.
    *
-   * @type {Number}
+   * @type {Number|Boolean}
    */
   dragThreshold: 120,
 

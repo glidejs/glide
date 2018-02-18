@@ -64,9 +64,7 @@ export default function (Glide, Components, Events) {
           } else if (this.isEnd()) {
             this._f = true
 
-            if (Glide.isType('carousel')) {
-              Glide.index = 0
-            }
+            Glide.index = 0
 
             Events.emit('run.end', move)
           } else {
@@ -82,9 +80,7 @@ export default function (Glide, Components, Events) {
           } else if (this.isStart()) {
             this._f = true
 
-            if (Glide.isType('carousel')) {
-              Glide.index = length
-            }
+            Glide.index = length
 
             Events.emit('run.start', move)
           } else {

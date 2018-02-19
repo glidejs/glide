@@ -110,6 +110,8 @@ export default function (Glide, Components, Events) {
         let swipeDeg = swipeSin * 180 / Math.PI
         let steps = Math.round(swipeDistance / Components.Sizes.slideWidth)
 
+        this.enable()
+
         if (swipeDistance > threshold && swipeDeg < settings.touchAngle) {
           // While swipe is positive and greater than threshold move backward.
           if (settings.perTouch) {
@@ -144,7 +146,6 @@ export default function (Glide, Components, Events) {
 
         this.unbindSwipeMove()
         this.unbindSwipeEnd()
-        this.enable()
 
         Events.emit('swipe.end')
       }

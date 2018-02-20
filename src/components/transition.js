@@ -12,6 +12,10 @@ export default function (Glide, Components, Events) {
       let settings = Glide.settings
 
       if (!disabled) {
+        if (Glide.isType('slider') && Components.Run.isOffset('<') || Components.Run.isOffset('>')) {
+          return `${property} ${settings.animationDuration * 3}ms ${settings.animationTimingFunc}`
+        }
+
         return `${property} ${settings.animationDuration}ms ${settings.animationTimingFunc}`
       }
 

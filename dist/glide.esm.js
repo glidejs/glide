@@ -922,7 +922,7 @@ var Run = function (Glide, Components, Events) {
      * @return {Boolean}
      */
     isOffset: function isOffset(direction) {
-      return Glide.isType('carousel') && this._f && this.move.direction === direction;
+      return this._f && this.move.direction === direction;
     }
   };
 
@@ -1926,7 +1926,7 @@ var Translate = function (Glide, Components, Events) {
     var width = Components.Sizes.slideWidth;
     var length = Components.Html.slides.length;
 
-    if (Components.Run.isOffset('<')) {
+    if (Glide.isType('carousel') && Components.Run.isOffset('<')) {
       Components.Transition.after(function () {
         Events.emit('translate.jump');
 
@@ -1936,7 +1936,7 @@ var Translate = function (Glide, Components, Events) {
       return TRANSLATE.set(-width);
     }
 
-    if (Components.Run.isOffset('>')) {
+    if (Glide.isType('carousel') && Components.Run.isOffset('>')) {
       Components.Transition.after(function () {
         Events.emit('translate.jump');
 
@@ -1968,6 +1968,10 @@ var Transition = function (Glide, Components, Events) {
       var settings = Glide.settings;
 
       if (!disabled) {
+        if (Glide.isType('slider') && Components.Run.isOffset('<') || Components.Run.isOffset('>')) {
+          return property + ' ' + settings.animationDuration * 3 + 'ms ' + settings.animationTimingFunc;
+        }
+
         return property + ' ' + settings.animationDuration + 'ms ' + settings.animationTimingFunc;
       }
 

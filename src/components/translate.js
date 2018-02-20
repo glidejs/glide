@@ -36,7 +36,7 @@ export default function (Glide, Components, Events) {
     let width = Components.Sizes.slideWidth
     let length = Components.Html.slides.length
 
-    if (Components.Run.isOffset('<')) {
+    if (Glide.isType('carousel') && Components.Run.isOffset('<')) {
       Components.Transition.after(() => {
         Events.emit('translate.jump')
 
@@ -46,7 +46,7 @@ export default function (Glide, Components, Events) {
       return TRANSLATE.set(-width)
     }
 
-    if (Components.Run.isOffset('>')) {
+    if (Glide.isType('carousel') && Components.Run.isOffset('>')) {
       Components.Transition.after(() => {
         Events.emit('translate.jump')
 

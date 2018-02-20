@@ -118,7 +118,7 @@ export default function (Glide, Components, Events) {
      * @return {Boolean}
      */
     isOffset (direction) {
-      return Glide.isType('carousel') && this._f && this.move.direction === direction
+      return this._f && this.move.direction === direction
     }
   }
 

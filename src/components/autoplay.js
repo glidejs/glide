@@ -18,14 +18,6 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     mount () {
-      /**
-       * Holds autoplaying interval number.
-       *
-       * @private
-       * @type {Number}
-       */
-      this._i = 0
-
       this.start()
 
       if (Glide.settings.hoverpause) {

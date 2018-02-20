@@ -110,7 +110,7 @@ export default function (Glide, Components, Events) {
     click (event) {
       event.preventDefault()
 
-      Components.Run.make(event.target.dataset.glideDir)
+      Components.Run.make(event.currentTarget.dataset.glideDir)
     }
   }
 

@@ -809,6 +809,7 @@ var Run = function (Glide, Components, Events) {
      * @return {self}
      */
     mount: function mount() {
+      this._m = {};
       this._f = false;
     },
 
@@ -822,10 +823,10 @@ var Run = function (Glide, Components, Events) {
     make: function make(move, callback) {
       var _this = this;
 
+      this.move = move;
+
       if (!Glide.disabled) {
         Glide.disable();
-
-        this.move = move;
 
         Events.emit('run.before', this.move);
 
@@ -951,7 +952,7 @@ var Run = function (Glide, Components, Events) {
     set: function set(value) {
       this._m = {
         direction: value.substr(0, 1),
-        steps: value.substr(1) ? value.substr(1) : 0
+        steps: isString(value) && value.substr(1) ? value.substr(1) : 0
       };
     }
   });

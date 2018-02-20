@@ -1,5 +1,5 @@
 import { define } from '../utils/object'
-import { toInt, isNumber } from '../utils/unit'
+import { toInt, isNumber, isString } from '../utils/unit'
 
 export default function (Glide, Components, Events) {
   const RUN = {
@@ -9,6 +9,7 @@ export default function (Glide, Components, Events) {
      * @return {self}
      */
     mount () {
+      this._m = {}
       this._f = false
     },
 
@@ -19,10 +20,10 @@ export default function (Glide, Components, Events) {
      * @param {Function} callback
      */
     make (move, callback) {
+      this.move = move
+
       if (!Glide.disabled) {
         Glide.disable()
-
-        this.move = move
 
         Events.emit('run.before', this.move)
 
@@ -140,7 +141,7 @@ export default function (Glide, Components, Events) {
     set (value) {
       this._m = {
         direction: value.substr(0, 1),
-        steps: value.substr(1) ? value.substr(1) : 0
+        steps: (isString(value) && value.substr(1)) ? value.substr(1) : 0
       }
     }
   })

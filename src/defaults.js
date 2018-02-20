@@ -99,6 +99,13 @@ export default {
   animationDuration: 400,
 
   /**
+   * Duration of the rewinding animation of the `slider` type in milliseconds.
+   *
+   * @type {Number}
+   */
+  rewindDuration: 800,
+
+  /**
    * Easing function for the animation.
    *
    * @type {String}

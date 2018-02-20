@@ -2477,9 +2477,29 @@ var Images = function (Glide, Components, Events) {
 };
 
 var Anchors = function (Glide, Components, Events) {
+  /**
+   * Instance of the binder for DOM Events.
+   *
+   * @type {EventsBinder}
+   */
   var Binder = new EventsBinder();
 
+  /**
+   * Holds detaching status of anchors.
+   * Prevents detaching of already detached anchors.
+   *
+   * @private
+   * @type {Boolean}
+   */
   var detached = false;
+
+  /**
+   * Holds preventing status of anchors.
+   * If `true` redirection after click will be disabled.
+   *
+   * @private
+   * @type {Boolean}
+   */
   var prevented = false;
 
   var ANCHORS = {
@@ -2489,6 +2509,12 @@ var Anchors = function (Glide, Components, Events) {
      * @returns {Void}
      */
     mount: function mount() {
+      /**
+       * Holds collection of anchors elements.
+       *
+       * @private
+       * @type {HTMLCollection}
+       */
       this._a = Components.Html.wrapper.querySelectorAll('a');
 
       this.bind();
@@ -2829,6 +2855,11 @@ var Keyboard = function (Glide, Components, Events) {
 };
 
 var Autoplay = function (Glide, Components, Events) {
+  /**
+   * Instance of the binder for DOM Events.
+   *
+   * @type {EventsBinder}
+   */
   var Binder = new EventsBinder();
 
   var AUTOPLAY = {
@@ -2838,10 +2869,18 @@ var Autoplay = function (Glide, Components, Events) {
      * @return {Void}
      */
     mount: function mount() {
+      /**
+       * Holds autoplaying interval number.
+       *
+       * @private
+       * @type {Number}
+       */
+      this._i = 0;
+
       this.start();
 
       if (Glide.settings.hoverpause) {
-        this.events();
+        this.bind();
       }
     },
 
@@ -2885,7 +2924,7 @@ var Autoplay = function (Glide, Components, Events) {
      *
      * @return {Void}
      */
-    events: function events() {
+    bind: function bind() {
       var _this2 = this;
 
       Binder.on('mouseover', Components.Html.root, function () {
@@ -2919,7 +2958,7 @@ var Autoplay = function (Glide, Components, Events) {
   /**
    * Start autoplaying:
    * - on playing via API
-   * - while ending swipeing
+   * - while ending swiping
    */
   Events.listen(['play', 'swipe.end'], function () {
     AUTOPLAY.start();
@@ -2937,7 +2976,7 @@ var Autoplay = function (Glide, Components, Events) {
 
   /**
    * Restart autoplaying timer:
-   * - on each run, to restet defined interval
+   * - on each run, to restart defined interval
    */
   Events.listen('run', function () {
     AUTOPLAY.stop();
@@ -2948,12 +2987,20 @@ var Autoplay = function (Glide, Components, Events) {
 };
 
 var Breakpoints = function (Glide, Components, Events) {
-  // If there are breakpoints, sort it from smaller to larger.
+  /**
+   * If there are breakpoints, sort it from smaller to larger.
+   * This step is required in order to proper matching
+   * currently active breakpoint settings.
+   */
   if (isObject(Glide.settings.breakpoints)) {
     Glide.settings.breakpoints = sortKeys(Glide.settings.breakpoints);
   }
 
-  // Cache default settings before we overwritting.
+  /**
+   * Cache initial settings before overwritting.
+   *
+   * @type {Object}
+   */
   var defaults = _extends({}, Glide.settings);
 
   var BREAKPOINTS = {

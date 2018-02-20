@@ -3,9 +3,29 @@ import { define } from '../utils/object'
 import EventsBinder from '../core/event/events-binder'
 
 export default function (Glide, Components, Events) {
+  /**
+   * Instance of the binder for DOM Events.
+   *
+   * @type {EventsBinder}
+   */
   const Binder = new EventsBinder()
 
+  /**
+   * Holds detaching status of anchors.
+   * Prevents detaching of already detached anchors.
+   *
+   * @private
+   * @type {Boolean}
+   */
   let detached = false
+
+  /**
+   * Holds preventing status of anchors.
+   * If `true` redirection after click will be disabled.
+   *
+   * @private
+   * @type {Boolean}
+   */
   let prevented = false
 
   const ANCHORS = {
@@ -15,6 +35,12 @@ export default function (Glide, Components, Events) {
      * @returns {Void}
      */
     mount () {
+      /**
+       * Holds collection of anchors elements.
+       *
+       * @private
+       * @type {HTMLCollection}
+       */
       this._a = Components.Html.wrapper.querySelectorAll('a')
 
       this.bind()

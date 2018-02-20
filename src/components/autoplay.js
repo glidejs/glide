@@ -4,6 +4,11 @@ import { toInt, isUndefined } from '../utils/unit'
 import EventsBinder from '../core/event/events-binder'
 
 export default function (Glide, Components, Events) {
+  /**
+   * Instance of the binder for DOM Events.
+   *
+   * @type {EventsBinder}
+   */
   const Binder = new EventsBinder()
 
   const AUTOPLAY = {
@@ -13,10 +18,18 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     mount () {
+      /**
+       * Holds autoplaying interval number.
+       *
+       * @private
+       * @type {Number}
+       */
+      this._i = 0
+
       this.start()
 
       if (Glide.settings.hoverpause) {
-        this.events()
+        this.bind()
       }
     },
 
@@ -55,7 +68,7 @@ export default function (Glide, Components, Events) {
      *
      * @return {Void}
      */
-    events () {
+    bind () {
       Binder.on('mouseover', Components.Html.root, () => {
         this.stop()
       })
@@ -87,7 +100,7 @@ export default function (Glide, Components, Events) {
   /**
    * Start autoplaying:
    * - on playing via API
-   * - while ending swipeing
+   * - while ending swiping
    */
   Events.listen(['play', 'swipe.end'], () => {
     AUTOPLAY.start()
@@ -105,7 +118,7 @@ export default function (Glide, Components, Events) {
 
   /**
    * Restart autoplaying timer:
-   * - on each run, to restet defined interval
+   * - on each run, to restart defined interval
    */
   Events.listen('run', () => {
     AUTOPLAY.stop()

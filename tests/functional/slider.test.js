@@ -16,7 +16,7 @@ describe('Glide initialized as `slider`', () => {
     expect(glide.isType('slider')).toBe(true)
   })
 
-  test('should stay at same slide when we are on the first slide and moving backward', (done) => {
+  test('should move to the last slide when we are on the first slide and moving backward', (done) => {
     let { slides } = query(document)
 
     let glide = new Glide('#glide', { startAt: 0 }).mount()
@@ -24,14 +24,14 @@ describe('Glide initialized as `slider`', () => {
     glide.go('<')
 
     afterTransition(() => {
-      expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(true)
-      expect(slides[slides.length - 1].classList.contains(defaults.classes.activeSlide)).toBe(false)
+      expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(false)
+      expect(slides[slides.length - 1].classList.contains(defaults.classes.activeSlide)).toBe(true)
 
       done()
     })
   })
 
-  test('should stay at same slide when we are on the last slide and moving forward', (done) => {
+  test('should move to the first slide when we are on the last slide and moving forward', (done) => {
     let { slides } = query(document)
 
     let glide = new Glide('#glide', { startAt: slides.length - 1 }).mount()
@@ -39,8 +39,8 @@ describe('Glide initialized as `slider`', () => {
     glide.go('>')
 
     afterTransition(() => {
-      expect(slides[slides.length - 1].classList.contains(defaults.classes.activeSlide)).toBe(true)
-      expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(false)
+      expect(slides[slides.length - 1].classList.contains(defaults.classes.activeSlide)).toBe(false)
+      expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(true)
 
       done()
     })

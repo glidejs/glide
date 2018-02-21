@@ -9,7 +9,7 @@ export default function (Glide, Components, Events) {
      * @return {self}
      */
     mount () {
-      this._f = false
+      this._o = false
     },
 
     /**
@@ -32,7 +32,7 @@ export default function (Glide, Components, Events) {
 
         Components.Transition.after(() => {
           if (this.isOffset('<') || this.isOffset('>')) {
-            this._f = false
+            this._o = false
 
             Events.emit('run.offset', this.move)
           }
@@ -62,7 +62,7 @@ export default function (Glide, Components, Events) {
           } else if (steps === '>') {
             Glide.index = length
           } else if (this.isEnd()) {
-            this._f = true
+            this._o = true
 
             Glide.index = 0
 
@@ -78,7 +78,7 @@ export default function (Glide, Components, Events) {
           } else if (steps === '<') {
             Glide.index = 0
           } else if (this.isStart()) {
-            this._f = true
+            this._o = true
 
             Glide.index = length
 
@@ -118,7 +118,7 @@ export default function (Glide, Components, Events) {
      * @return {Boolean}
      */
     isOffset (direction) {
-      return this._f && this.move.direction === direction
+      return this._o && this.move.direction === direction
     }
   }
 
@@ -154,6 +154,17 @@ export default function (Glide, Components, Events) {
      */
     get () {
       return Components.Html.slides.length - 1
+    }
+  })
+
+  define(RUN, 'offset', {
+    /**
+     * Gets status of the offsetting flag.
+     *
+     * @return {Boolean}
+     */
+    get () {
+      return this._o
     }
   })
 

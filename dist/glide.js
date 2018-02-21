@@ -111,6 +111,13 @@ var defaults = {
   animationDuration: 400,
 
   /**
+   * Duration of the rewinding animation of the `slider` type in milliseconds.
+   *
+   * @type {Number}
+   */
+  rewindDuration: 800,
+
+  /**
    * Easing function for the animation.
    *
    * @type {String}
@@ -809,7 +816,7 @@ var Run = function (Glide, Components, Events) {
      * @return {self}
      */
     mount: function mount() {
-      this._f = false;
+      this._o = false;
     },
 
 
@@ -835,7 +842,7 @@ var Run = function (Glide, Components, Events) {
 
         Components.Transition.after(function () {
           if (_this.isOffset('<') || _this.isOffset('>')) {
-            _this._f = false;
+            _this._o = false;
 
             Events.emit('run.offset', _this.move);
           }
@@ -869,7 +876,7 @@ var Run = function (Glide, Components, Events) {
           } else if (steps === '>') {
             Glide.index = length;
           } else if (this.isEnd()) {
-            this._f = true;
+            this._o = true;
 
             Glide.index = 0;
 
@@ -885,7 +892,7 @@ var Run = function (Glide, Components, Events) {
           } else if (steps === '<') {
             Glide.index = 0;
           } else if (this.isStart()) {
-            this._f = true;
+            this._o = true;
 
             Glide.index = length;
 
@@ -928,7 +935,7 @@ var Run = function (Glide, Components, Events) {
      * @return {Boolean}
      */
     isOffset: function isOffset(direction) {
-      return this._f && this.move.direction === direction;
+      return this._o && this.move.direction === direction;
     }
   };
 
@@ -965,6 +972,17 @@ var Run = function (Glide, Components, Events) {
      */
     get: function get() {
       return Components.Html.slides.length - 1;
+    }
+  });
+
+  define(RUN, 'offset', {
+    /**
+     * Gets status of the offsetting flag.
+     *
+     * @return {Boolean}
+     */
+    get: function get() {
+      return this._o;
     }
   });
 
@@ -1959,6 +1977,13 @@ var Translate = function (Glide, Components, Events) {
 };
 
 var Transition = function (Glide, Components, Events) {
+  /**
+   * Holds inactivity status of transition.
+   * When true transition is not applied.
+   *
+   * @private
+   * @type {Boolean}
+   */
   var disabled = false;
 
   var TRANSITION = {
@@ -1974,11 +1999,7 @@ var Transition = function (Glide, Components, Events) {
       var settings = Glide.settings;
 
       if (!disabled) {
-        if (Glide.isType('slider') && Components.Run.isOffset('<') || Components.Run.isOffset('>')) {
-          return property + ' ' + settings.animationDuration * 3 + 'ms ' + settings.animationTimingFunc;
-        }
-
-        return property + ' ' + settings.animationDuration + 'ms ' + settings.animationTimingFunc;
+        return property + ' ' + this.duration + 'ms ' + settings.animationTimingFunc;
       }
 
       return property + ' 0ms ' + settings.animationTimingFunc;
@@ -2007,7 +2028,7 @@ var Transition = function (Glide, Components, Events) {
     after: function after(callback) {
       setTimeout(function () {
         callback();
-      }, Glide.settings.animationDuration);
+      }, this.duration);
     },
 
 
@@ -2034,6 +2055,24 @@ var Transition = function (Glide, Components, Events) {
       return this.set();
     }
   };
+
+  define(TRANSITION, 'duration', {
+    /**
+     * Gets duration of the transition based
+     * on currently running animation type.
+     *
+     * @return {Number}
+     */
+    get: function get() {
+      var settings = Glide.settings;
+
+      if (Glide.isType('slider') && Components.Run.offset) {
+        return settings.rewindDuration;
+      }
+
+      return settings.animationDuration;
+    }
+  });
 
   /**
    * Set transition `style` value:
@@ -2873,14 +2912,6 @@ var Autoplay = function (Glide, Components, Events) {
      * @return {Void}
      */
     mount: function mount() {
-      /**
-       * Holds autoplaying interval number.
-       *
-       * @private
-       * @type {Number}
-       */
-      this._i = 0;
-
       this.start();
 
       if (Glide.settings.hoverpause) {
@@ -2961,30 +2992,23 @@ var Autoplay = function (Glide, Components, Events) {
 
   /**
    * Start autoplaying:
+   * - after each run, to restart autoplaying
    * - on playing via API
    * - while ending swiping
    */
-  Events.listen(['play', 'swipe.end'], function () {
+  Events.listen(['run.after', 'play', 'swipe.end'], function () {
     AUTOPLAY.start();
   });
 
   /**
    * Stop autoplaying:
+   * - before each run, to restart autoplaying
    * - on pausing via API
    * - on destroying, to clear defined interval
    * - when starting a swiping
    */
-  Events.listen(['pause', 'destroy', 'swipe.start'], function () {
+  Events.listen(['run.before', 'pause', 'destroy', 'swipe.start'], function () {
     AUTOPLAY.stop();
-  });
-
-  /**
-   * Restart autoplaying timer:
-   * - on each run, to restart defined interval
-   */
-  Events.listen('run', function () {
-    AUTOPLAY.stop();
-    AUTOPLAY.start();
   });
 
   return AUTOPLAY;

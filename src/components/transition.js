@@ -1,4 +1,13 @@
+import { define } from '../utils/object'
+
 export default function (Glide, Components, Events) {
+  /**
+   * Holds inactivity status of transition.
+   * When true transition is not applied.
+   *
+   * @private
+   * @type {Boolean}
+   */
   let disabled = false
 
   const TRANSITION = {
@@ -12,11 +21,7 @@ export default function (Glide, Components, Events) {
       let settings = Glide.settings
 
       if (!disabled) {
-        if (Glide.isType('slider') && Components.Run.isOffset('<') || Components.Run.isOffset('>')) {
-          return `${property} ${settings.rewindDuration}ms ${settings.animationTimingFunc}`
-        }
-
-        return `${property} ${settings.animationDuration}ms ${settings.animationTimingFunc}`
+        return `${property} ${this.duration}ms ${settings.animationTimingFunc}`
       }
 
       return `${property} 0ms ${settings.animationTimingFunc}`
@@ -43,7 +48,7 @@ export default function (Glide, Components, Events) {
     after (callback) {
       setTimeout(() => {
         callback()
-      }, Glide.settings.animationDuration)
+      }, this.duration)
     },
 
     /**
@@ -68,6 +73,24 @@ export default function (Glide, Components, Events) {
       return this.set()
     }
   }
+
+  define(TRANSITION, 'duration', {
+    /**
+     * Gets duration of the transition based
+     * on currently running animation type.
+     *
+     * @return {Number}
+     */
+    get () {
+      let settings = Glide.settings
+
+      if (Glide.isType('slider') && Components.Run.offset) {
+        return settings.rewindDuration
+      }
+
+      return settings.animationDuration
+    }
+  })
 
   /**
    * Set transition `style` value:

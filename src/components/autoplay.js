@@ -91,30 +91,23 @@ export default function (Glide, Components, Events) {
 
   /**
    * Start autoplaying:
+   * - after each run, to restart autoplaying
    * - on playing via API
    * - while ending swiping
    */
-  Events.listen(['play', 'swipe.end'], () => {
+  Events.listen(['run.after', 'play', 'swipe.end'], () => {
     AUTOPLAY.start()
   })
 
   /**
    * Stop autoplaying:
+   * - before each run, to restart autoplaying
    * - on pausing via API
    * - on destroying, to clear defined interval
    * - when starting a swiping
    */
-  Events.listen(['pause', 'destroy', 'swipe.start'], () => {
+  Events.listen(['run.before', 'pause', 'destroy', 'swipe.start'], () => {
     AUTOPLAY.stop()
-  })
-
-  /**
-   * Restart autoplaying timer:
-   * - on each run, to restart defined interval
-   */
-  Events.listen('run', () => {
-    AUTOPLAY.stop()
-    AUTOPLAY.start()
   })
 
   return AUTOPLAY

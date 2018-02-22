@@ -3,6 +3,11 @@ import { throttle } from '../utils/wait'
 import EventsBinder from '../core/event/events-binder'
 
 export default function (Glide, Components, Events) {
+  /**
+   * Instance of the binder for DOM Events.
+   *
+   * @type {EventsBinder}
+   */
   const Binder = new EventsBinder()
 
   const RESIZE = {

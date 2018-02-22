@@ -1,6 +1,11 @@
 import { define } from '../utils/object'
 
 export default function (Glide, Components, Events) {
+  /**
+   * Holds cloning order pattern under whose cloned slides are appended.
+   *
+   * @type {Array}
+   */
   let pattern = []
 
   const CLONES = {

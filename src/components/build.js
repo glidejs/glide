@@ -5,6 +5,8 @@ export default function (Glide, Components, Events) {
     /**
      * Init glide building. Adds classes, sets
      * dimensions and setups initial state.
+     *
+     * @return {Void}
      */
     mount () {
       Events.emit('build.before', Glide)

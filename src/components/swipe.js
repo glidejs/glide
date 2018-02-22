@@ -9,6 +9,11 @@ const END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave']
 const MOUSE_EVENTS = ['mousedown', 'mousemove', 'mouseup', 'mouseleave']
 
 export default function (Glide, Components, Events) {
+  /**
+   * Instance of the binder for DOM Events.
+   *
+   * @type {EventsBinder}
+   */
   const Binder = new EventsBinder()
 
   let swipeSin = 0

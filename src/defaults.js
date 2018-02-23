@@ -33,7 +33,7 @@ export default {
    *
    * @type {String|Number}
    */
-  focusAt: 'center',
+  focusAt: 0,
 
   /**
    * Change slides after a specified interval. Use `false` for turning off autoplay.

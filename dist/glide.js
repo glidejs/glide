@@ -45,7 +45,7 @@ var defaults = {
    *
    * @type {String|Number}
    */
-  focusAt: 'center',
+  focusAt: 0,
 
   /**
    * Change slides after a specified interval. Use `false` for turning off autoplay.
@@ -1367,6 +1367,8 @@ var Build = function (Glide, Components, Events) {
     /**
      * Init glide building. Adds classes, sets
      * dimensions and setups initial state.
+     *
+     * @return {Void}
      */
     mount: function mount() {
       Events.emit('build.before', Glide);
@@ -1466,6 +1468,11 @@ var Build = function (Glide, Components, Events) {
 };
 
 var Clones = function (Glide, Components, Events) {
+  /**
+   * Holds cloning order pattern under whose cloned slides are appended.
+   *
+   * @type {Array}
+   */
   var pattern = [];
 
   var CLONES = {
@@ -1722,6 +1729,11 @@ var EventsBinder = function () {
 }();
 
 var Resize = function (Glide, Components, Events) {
+  /**
+   * Instance of the binder for DOM Events.
+   *
+   * @type {EventsBinder}
+   */
   var Binder = new EventsBinder();
 
   var RESIZE = {
@@ -2109,6 +2121,11 @@ var END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave'];
 var MOUSE_EVENTS = ['mousedown', 'mousemove', 'mouseup', 'mouseleave'];
 
 var Swipe = function (Glide, Components, Events) {
+  /**
+   * Instance of the binder for DOM Events.
+   *
+   * @type {EventsBinder}
+   */
   var Binder = new EventsBinder();
 
   var swipeSin = 0;
@@ -2465,6 +2482,11 @@ var Height = function (Glide, Components, Events) {
 };
 
 var Images = function (Glide, Components, Events) {
+  /**
+   * Instance of the binder for DOM Events.
+   *
+   * @type {EventsBinder}
+   */
   var Binder = new EventsBinder();
 
   var IMAGES = {
@@ -2691,6 +2713,11 @@ var NAV_SELECTOR = '[data-glide-el="controls[nav]"]';
 var CONTROLS_SELECTOR = '[data-glide-el^="controls"]';
 
 var Controls = function (Glide, Components, Events) {
+  /**
+   * Instance of the binder for DOM Events.
+   *
+   * @type {EventsBinder}
+   */
   var Binder = new EventsBinder();
 
   var CONTROLS = {
@@ -2826,6 +2853,11 @@ var Controls = function (Glide, Components, Events) {
 };
 
 var Keyboard = function (Glide, Components, Events) {
+  /**
+   * Instance of the binder for DOM Events.
+   *
+   * @type {EventsBinder}
+   */
   var Binder = new EventsBinder();
 
   var KEYBOARD = {

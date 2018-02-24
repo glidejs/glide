@@ -13,8 +13,6 @@
     line-height: 300px;
     text-align: center;
     background-color: grey;
-    border-left: 1px solid white;
-    border-right: 1px solid white;
   }
 
   .box.glide__slide--active {
@@ -92,8 +90,10 @@
   var el = document.querySelector('#glide1')
   var glide1 = new Glide(el, {
     type: 'carousel',
-    perView: 5,
-    // autoplay: false,
+    focusAt: 0,
+    gap: 20,
+    perView: 2,
+    autoplay: false,
     breakpoints: {
       800: {
         focusAt: 0,

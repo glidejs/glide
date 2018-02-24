@@ -35,6 +35,8 @@ export default {
    */
   focusAt: 0,
 
+  gap: 10,
+
   /**
    * Change slides after a specified interval. Use `false` for turning off autoplay.
    *

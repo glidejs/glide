@@ -1,4 +1,5 @@
 import Rtl from './mutators/rtl'
+import Gap from './mutators/gap'
 import Grow from './mutators/grow'
 import Peeking from './mutators/peeking'
 import Focusing from './mutators/focusing'
@@ -9,6 +10,7 @@ import Focusing from './mutators/focusing'
  * @type {Array}
  */
 const MUTATORS = [
+  Gap,
   Grow,
   Peeking,
   Focusing,

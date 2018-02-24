@@ -33,6 +33,7 @@ export default function (Glide, Components, Events) {
    * - on jumping from offset transition at start and end edges in `carousel` type
    */
   Events.listen(['move'], (context) => {
+    let gap = Glide.settings.gap
     let width = Components.Sizes.slideWidth
     let length = Components.Html.slides.length
 
@@ -43,7 +44,7 @@ export default function (Glide, Components, Events) {
         TRANSLATE.set(width * (length - 1))
       })
 
-      return TRANSLATE.set(-width)
+      return TRANSLATE.set(-width - (gap * length))
     }
 
     if (Glide.isType('carousel') && Components.Run.isOffset('>')) {
@@ -53,7 +54,7 @@ export default function (Glide, Components, Events) {
         TRANSLATE.set(0)
       })
 
-      return TRANSLATE.set(width * length)
+      return TRANSLATE.set((width * length) + (gap * length))
     }
 
     return TRANSLATE.set(context.movement)

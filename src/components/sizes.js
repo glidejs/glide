@@ -4,25 +4,30 @@ import { isObject } from '../utils/unit'
 export default function (Glide, Components, Events) {
   const SIZES = {
     /**
-     * Applys dimentions to the glide HTML elements.
-     *
-     * @return {Void}
-     */
-    apply () {
-      this.setupSlides()
-      this.setupWrapper()
-    },
-
-    /**
      * Setups dimentions of slides.
      *
      * @return {Void}
      */
-    setupSlides (dimention) {
+    setupSlides () {
       let slides = Components.Html.slides
 
       for (var i = 0; i < slides.length; i++) {
         slides[i].style.width = `${this.slideWidth}px`
+      }
+    },
+
+    /**
+     * Setups gaps between slides.
+     *
+     * @return {Void}
+     */
+    setupGaps () {
+      let items = Components.Html.wrapper.children
+
+      for (let i = 0; i < items.length; i++) {
+        if (i !== 0) {
+          items[i].style.marginLeft = `${Glide.settings.gap}px`
+        }
       }
     },
 
@@ -43,7 +48,7 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      return (SIZES.slideWidth * SIZES.length) + Components.Clones.grow
+      return (SIZES.slideWidth * SIZES.length) + (Glide.settings.gap * (SIZES.length - 1)) + Components.Clones.grow
     }
   })
 
@@ -76,15 +81,16 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
+      let gap = Glide.settings.gap
       let peek = Components.Peek.value
       let perView = Glide.settings.perView
       let rootWidth = Components.Html.root.offsetWidth
 
       if (isObject(peek)) {
-        return (rootWidth / perView) - (peek.before / perView) - (peek.after / perView)
+        return (rootWidth / perView) - (peek.before / perView) - (peek.after / perView) - ((gap * (perView - 1)) / perView)
       }
 
-      return (rootWidth / perView) - (peek * 2 / perView)
+      return (rootWidth / perView) - (peek * 2 / perView) - ((gap * (perView - 1)) / perView)
     }
   })
 
@@ -94,7 +100,15 @@ export default function (Glide, Components, Events) {
    * - when resizing window to recalculate sildes dimensions
    */
   Events.listen(['build.before', 'resize'], () => {
-    SIZES.apply()
+    SIZES.setupSlides()
+    SIZES.setupWrapper()
+  })
+
+  /**
+   * Apply calculated gaps on:
+   */
+  Events.listen(['build.after'], () => {
+    SIZES.setupGaps()
   })
 
   return SIZES

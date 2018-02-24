@@ -47,6 +47,8 @@ var defaults = {
    */
   focusAt: 0,
 
+  gap: 10,
+
   /**
    * Change slides after a specified interval. Use `false` for turning off autoplay.
    *
@@ -1264,26 +1266,31 @@ var Move = function (Glide, Components, Events) {
 var Sizes = function (Glide, Components, Events) {
   var SIZES = {
     /**
-     * Applys dimentions to the glide HTML elements.
-     *
-     * @return {Void}
-     */
-    apply: function apply() {
-      this.setupSlides();
-      this.setupWrapper();
-    },
-
-
-    /**
      * Setups dimentions of slides.
      *
      * @return {Void}
      */
-    setupSlides: function setupSlides(dimention) {
+    setupSlides: function setupSlides() {
       var slides = Components.Html.slides;
 
       for (var i = 0; i < slides.length; i++) {
         slides[i].style.width = this.slideWidth + 'px';
+      }
+    },
+
+
+    /**
+     * Setups gaps between slides.
+     *
+     * @return {Void}
+     */
+    setupGaps: function setupGaps() {
+      var items = Components.Html.wrapper.children;
+
+      for (var i = 0; i < items.length; i++) {
+        if (i !== 0) {
+          items[i].style.marginLeft = Glide.settings.gap + 'px';
+        }
       }
     },
 
@@ -1305,7 +1312,7 @@ var Sizes = function (Glide, Components, Events) {
      * @return {Number}
      */
     get: function get() {
-      return SIZES.slideWidth * SIZES.length + Components.Clones.grow;
+      return SIZES.slideWidth * SIZES.length + Glide.settings.gap * (SIZES.length - 1) + Components.Clones.grow;
     }
   });
 
@@ -1338,15 +1345,16 @@ var Sizes = function (Glide, Components, Events) {
      * @return {Number}
      */
     get: function get() {
+      var gap = Glide.settings.gap;
       var peek = Components.Peek.value;
       var perView = Glide.settings.perView;
       var rootWidth = Components.Html.root.offsetWidth;
 
       if (isObject(peek)) {
-        return rootWidth / perView - peek.before / perView - peek.after / perView;
+        return rootWidth / perView - peek.before / perView - peek.after / perView - gap * (perView - 1) / perView;
       }
 
-      return rootWidth / perView - peek * 2 / perView;
+      return rootWidth / perView - peek * 2 / perView - gap * (perView - 1) / perView;
     }
   });
 
@@ -1356,7 +1364,15 @@ var Sizes = function (Glide, Components, Events) {
    * - when resizing window to recalculate sildes dimensions
    */
   Events.listen(['build.before', 'resize'], function () {
-    SIZES.apply();
+    SIZES.setupSlides();
+    SIZES.setupWrapper();
+  });
+
+  /**
+   * Apply calculated gaps on:
+   */
+  Events.listen(['build.after'], function () {
+    SIZES.setupGaps();
   });
 
   return SIZES;
@@ -1805,6 +1821,31 @@ var Rtl = function (Glide, Components) {
 };
 
 /**
+ * Updates glide movement with a `gap` settings.
+ *
+ * @param  {Glide} Glide
+ * @param  {Array} Components
+ * @return {Object}
+ */
+var Gap = function (Glide, Components) {
+  return {
+    /**
+     * Modifies passed translate value with number in the `gap` settings.
+     *
+     * @param  {Number} translate
+     * @return {Number}
+     */
+    modify: function modify(translate) {
+      var index = Glide.index;
+      var gap = Glide.settings.gap;
+      var clones = Components.Clones.items;
+
+      return translate + gap * index + gap * clones.length / 2;
+    }
+  };
+};
+
+/**
  * Updates glide movement with width of additional clones width.
  *
  * @param  {Glide} Glide
@@ -1894,7 +1935,7 @@ var Focusing = function (Glide, Components) {
  *
  * @type {Array}
  */
-var MUTATORS = [Grow, Peeking, Focusing,
+var MUTATORS = [Gap, Grow, Peeking, Focusing,
 // It's important that the Rtl component
 // be last on the list, so it reflects
 // all previous transformations.
@@ -1959,6 +2000,7 @@ var Translate = function (Glide, Components, Events) {
    * - on jumping from offset transition at start and end edges in `carousel` type
    */
   Events.listen(['move'], function (context) {
+    var gap = Glide.settings.gap;
     var width = Components.Sizes.slideWidth;
     var length = Components.Html.slides.length;
 
@@ -1969,7 +2011,7 @@ var Translate = function (Glide, Components, Events) {
         TRANSLATE.set(width * (length - 1));
       });
 
-      return TRANSLATE.set(-width);
+      return TRANSLATE.set(-width - gap * length);
     }
 
     if (Glide.isType('carousel') && Components.Run.isOffset('>')) {
@@ -1979,7 +2021,7 @@ var Translate = function (Glide, Components, Events) {
         TRANSLATE.set(0);
       });
 
-      return TRANSLATE.set(width * length);
+      return TRANSLATE.set(width * length + gap * length);
     }
 
     return TRANSLATE.set(context.movement);

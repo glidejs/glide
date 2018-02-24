@@ -1,10 +1,10 @@
+import { toInt } from '../utils/unit'
 import { define } from '../utils/object'
-import { toInt, isObject } from '../utils/unit'
 
 export default function (Glide, Components, Events) {
   const GAP = {
     /**
-     * Setups how much to peek based on settings.
+     * Setups gap value based on settings.
      *
      * @return {Void}
      */
@@ -13,7 +13,8 @@ export default function (Glide, Components, Events) {
     },
 
     /**
-     * Setups gaps between slides.
+     * Applies gaps between slides. First and last
+     * slides do not receive it's edge margins.
      *
      * @return {Void}
      */
@@ -45,7 +46,7 @@ export default function (Glide, Components, Events) {
     /**
      * Sets value of the gap.
      *
-     * @param {Number} value
+     * @param {Number|String} value
      * @return {Void}
      */
     set (value) {
@@ -56,6 +57,7 @@ export default function (Glide, Components, Events) {
   define(GAP, 'grow', {
     /**
      * Gets additional dimentions value caused by gaps.
+     * Used to increase width of the slides wrapper.
      *
      * @returns {Number}
      */
@@ -67,20 +69,20 @@ export default function (Glide, Components, Events) {
   define(GAP, 'reductor', {
     /**
      * Gets reduction value caused by gaps.
+     * Used to subtract width of the slides.
      *
      * @returns {Number}
      */
     get () {
-      let value = GAP.value
       let perView = Glide.settings.perView
 
-      return (value * (perView - 1)) / perView
+      return (GAP.value * (perView - 1)) / perView
     }
   })
 
   /**
-   * Apply calculated gaps on:
-   * - after building, so all slides (including clones) will receive proper gap
+   * Apply calculated gaps:
+   * - after building, so slides (including clones) will receive proper margins
    */
   Events.listen(['build.after'], () => {
     GAP.setup()

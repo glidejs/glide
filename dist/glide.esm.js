@@ -985,6 +985,96 @@ var Run = function (Glide, Components, Events) {
   return RUN;
 };
 
+var Gap = function (Glide, Components, Events) {
+  var GAP = {
+    /**
+     * Setups how much to peek based on settings.
+     *
+     * @return {Void}
+     */
+    mount: function mount() {
+      this.value = Glide.settings.gap;
+    },
+
+
+    /**
+     * Setups gaps between slides.
+     *
+     * @return {Void}
+     */
+    setup: function setup() {
+      var items = Components.Html.wrapper.children;
+
+      for (var i = 0; i < items.length; i++) {
+        if (i !== 0) {
+          items[i].style.marginLeft = this.value / 2 + 'px';
+        }
+
+        if (i !== items.length) {
+          items[i].style.marginRight = this.value / 2 + 'px';
+        }
+      }
+    }
+  };
+
+  define(GAP, 'value', {
+    /**
+     * Gets value of the gap.
+     *
+     * @returns {Number}
+     */
+    get: function get() {
+      return GAP._v;
+    },
+
+
+    /**
+     * Sets value of the gap.
+     *
+     * @param {Number} value
+     * @return {Void}
+     */
+    set: function set(value) {
+      GAP._v = toInt(value);
+    }
+  });
+
+  define(GAP, 'grow', {
+    /**
+     * Gets additional dimentions value caused by gaps.
+     *
+     * @returns {Number}
+     */
+    get: function get() {
+      return GAP.value * (Components.Sizes.length - 1);
+    }
+  });
+
+  define(GAP, 'reductor', {
+    /**
+     * Gets reduction value caused by gaps.
+     *
+     * @returns {Number}
+     */
+    get: function get() {
+      var value = GAP.value;
+      var perView = Glide.settings.perView;
+
+      return value * (perView - 1) / perView;
+    }
+  });
+
+  /**
+   * Apply calculated gaps on:
+   * - after building, so all slides (including clones) will receive proper gap
+   */
+  Events.listen(['build.after'], function () {
+    GAP.setup();
+  });
+
+  return GAP;
+};
+
 /**
  * Finds siblings nodes of the passed node.
  *
@@ -1147,6 +1237,24 @@ var Peek = function (Glide, Components, Events) {
     }
   });
 
+  define(PEEK, 'reductor', {
+    /**
+     * Gets reduction value caused by peek.
+     *
+     * @returns {Number}
+     */
+    get: function get() {
+      var value = PEEK.value;
+      var perView = Glide.settings.perView;
+
+      if (isObject(value)) {
+        return value.before / perView - value.after / perView;
+      }
+
+      return value * 2 / perView;
+    }
+  });
+
   /**
    * Recalculate peeking sizes on:
    * - when resizing window to update to proper percents
@@ -1274,22 +1382,6 @@ var Sizes = function (Glide, Components, Events) {
 
 
     /**
-     * Setups gaps between slides.
-     *
-     * @return {Void}
-     */
-    setupGaps: function setupGaps() {
-      var items = Components.Html.wrapper.children;
-
-      for (var i = 0; i < items.length; i++) {
-        if (i !== 0) {
-          items[i].style.marginLeft = Glide.settings.gap + 'px';
-        }
-      }
-    },
-
-
-    /**
      * Setups dimentions of slides wrapper.
      *
      * @return {Void}
@@ -1298,17 +1390,6 @@ var Sizes = function (Glide, Components, Events) {
       Components.Html.wrapper.style.width = this.wrapperSize + 'px';
     }
   };
-
-  define(SIZES, 'wrapperSize', {
-    /**
-     * Gets size of the slides wrapper.
-     *
-     * @return {Number}
-     */
-    get: function get() {
-      return SIZES.slideWidth * SIZES.length + Glide.settings.gap * (SIZES.length - 1) + Components.Clones.grow;
-    }
-  });
 
   define(SIZES, 'length', {
     /**
@@ -1332,6 +1413,17 @@ var Sizes = function (Glide, Components, Events) {
     }
   });
 
+  define(SIZES, 'wrapperSize', {
+    /**
+     * Gets size of the slides wrapper.
+     *
+     * @return {Number}
+     */
+    get: function get() {
+      return SIZES.slideWidth * SIZES.length + Components.Gap.grow + Components.Clones.grow;
+    }
+  });
+
   define(SIZES, 'slideWidth', {
     /**
      * Gets width value of the single slide.
@@ -1339,17 +1431,7 @@ var Sizes = function (Glide, Components, Events) {
      * @return {Number}
      */
     get: function get() {
-      var peek = Components.Peek.value;
-      var perView = Glide.settings.perView;
-
-      var baseWidth = Components.Html.root.offsetWidth / perView;
-      var gapReductor = Glide.settings.gap * (perView - 1) / perView;
-
-      if (isObject(peek)) {
-        return baseWidth - peek.before / perView - peek.after / perView - gapReductor;
-      }
-
-      return baseWidth - peek * 2 / perView - gapReductor;
+      return SIZES.width / Glide.settings.perView - Components.Peek.reductor - Components.Gap.reductor;
     }
   });
 
@@ -1361,13 +1443,6 @@ var Sizes = function (Glide, Components, Events) {
   Events.listen(['build.before', 'resize'], function () {
     SIZES.setupSlides();
     SIZES.setupWrapper();
-  });
-
-  /**
-   * Apply calculated gaps on:
-   */
-  Events.listen(['build.after'], function () {
-    SIZES.setupGaps();
   });
 
   return SIZES;
@@ -1586,7 +1661,7 @@ var Clones = function (Glide, Components, Events) {
      * @return {Number}
      */
     get: function get() {
-      return (Components.Sizes.slideWidth + Glide.settings.gap) * CLONES.items.length;
+      return (Components.Sizes.slideWidth + Components.Gap.value) * CLONES.items.length;
     }
   });
 
@@ -1818,7 +1893,7 @@ var Rtl = function (Glide, Components) {
  * @param  {Array} Components
  * @return {Object}
  */
-var Gap = function (Glide, Components) {
+var Gap$1 = function (Glide, Components) {
   return {
     /**
      * Modifies passed translate value with number in the `gap` settings.
@@ -1827,11 +1902,7 @@ var Gap = function (Glide, Components) {
      * @return {Number}
      */
     modify: function modify(translate) {
-      var index = Glide.index;
-      var gap = Glide.settings.gap;
-      var clones = Components.Clones.items;
-
-      return translate + gap * index;
+      return translate + Components.Gap.value * Glide.index;
     }
   };
 };
@@ -1904,7 +1975,7 @@ var Focusing = function (Glide, Components) {
      * @return {Number}
      */
     modify: function modify(translate) {
-      var gap = Glide.settings.gap;
+      var gap = Components.Gap.value;
       var width = Components.Sizes.width;
       var focusAt = Glide.settings.focusAt;
       var slideWidth = Components.Sizes.slideWidth;
@@ -1923,7 +1994,7 @@ var Focusing = function (Glide, Components) {
  *
  * @type {Array}
  */
-var MUTATORS = [Gap, Grow, Peeking, Focusing,
+var MUTATORS = [Gap$1, Grow, Peeking, Focusing,
 // It's important that the Rtl component
 // be last on the list, so it reflects
 // all previous transformations.
@@ -1988,9 +2059,9 @@ var Translate = function (Glide, Components, Events) {
    * - on jumping from offset transition at start and end edges in `carousel` type
    */
   Events.listen(['move'], function (context) {
-    var gap = Glide.settings.gap;
+    var gap = Components.Gap.value;
+    var length = Components.Sizes.length;
     var width = Components.Sizes.slideWidth;
-    var length = Components.Html.slides.length;
 
     if (Glide.isType('carousel') && Components.Run.isOffset('<')) {
       Components.Transition.after(function () {
@@ -3141,6 +3212,7 @@ var COMPONENTS = {
   Transition: Transition,
   Peek: Peek,
   Sizes: Sizes,
+  Gap: Gap,
   Move: Move,
   Clones: Clones,
   Resize: Resize,

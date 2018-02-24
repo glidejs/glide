@@ -14,11 +14,7 @@ export default function (Glide, Components) {
      * @return {Number}
      */
     modify (translate) {
-      let index = Glide.index
-      let gap = Glide.settings.gap
-      let clones = Components.Clones.items
-
-      return translate + (gap * index)
+      return translate + (Components.Gap.value * Glide.index)
     }
   }
 }

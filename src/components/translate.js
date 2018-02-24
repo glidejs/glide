@@ -33,9 +33,9 @@ export default function (Glide, Components, Events) {
    * - on jumping from offset transition at start and end edges in `carousel` type
    */
   Events.listen(['move'], (context) => {
-    let gap = Glide.settings.gap
+    let gap = Components.Gap.value
+    let length = Components.Sizes.length
     let width = Components.Sizes.slideWidth
-    let length = Components.Html.slides.length
 
     if (Glide.isType('carousel') && Components.Run.isOffset('<')) {
       Components.Transition.after(() => {

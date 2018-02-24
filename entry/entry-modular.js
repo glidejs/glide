@@ -1,6 +1,7 @@
 import Core from '../src/index'
 
 import Run from '../src/components/run'
+import Gap from '../src/components/gap'
 import Html from '../src/components/html'
 import Peek from '../src/components/peek'
 import Move from '../src/components/move'
@@ -26,6 +27,7 @@ const COMPONENTS = {
   Transition,
   Peek,
   Sizes,
+  Gap,
   Move,
   Clones,
   Resize,

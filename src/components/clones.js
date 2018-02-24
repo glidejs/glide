@@ -104,7 +104,7 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      return (Components.Sizes.slideWidth + Glide.settings.gap) * CLONES.items.length
+      return (Components.Sizes.slideWidth + Components.Gap.value) * CLONES.items.length
     }
   })
 

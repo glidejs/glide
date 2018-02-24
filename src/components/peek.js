@@ -43,6 +43,24 @@ export default function (Glide, Components, Events) {
     }
   })
 
+  define(PEEK, 'reductor', {
+    /**
+     * Gets reduction value caused by peek.
+     *
+     * @returns {Number}
+     */
+    get () {
+      let value = PEEK.value
+      let perView = Glide.settings.perView
+
+      if (isObject(value)) {
+        return (value.before / perView) - (value.after / perView)
+      }
+
+      return value * 2 / perView
+    }
+  })
+
   /**
    * Recalculate peeking sizes on:
    * - when resizing window to update to proper percents

@@ -14,7 +14,7 @@ export default function (Glide, Components) {
      * @return {Number}
      */
     modify (translate) {
-      let gap = Glide.settings.gap
+      let gap = Components.Gap.value
       let width = Components.Sizes.width
       let focusAt = Glide.settings.focusAt
       let slideWidth = Components.Sizes.slideWidth

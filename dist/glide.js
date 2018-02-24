@@ -1345,16 +1345,17 @@ var Sizes = function (Glide, Components, Events) {
      * @return {Number}
      */
     get: function get() {
-      var gap = Glide.settings.gap;
       var peek = Components.Peek.value;
       var perView = Glide.settings.perView;
-      var rootWidth = Components.Html.root.offsetWidth;
+
+      var baseWidth = Components.Html.root.offsetWidth / perView;
+      var gapReductor = Glide.settings.gap * (perView - 1) / perView;
 
       if (isObject(peek)) {
-        return rootWidth / perView - peek.before / perView - peek.after / perView - gap * (perView - 1) / perView;
+        return baseWidth - peek.before / perView - peek.after / perView - gapReductor;
       }
 
-      return rootWidth / perView - peek * 2 / perView - gap * (perView - 1) / perView;
+      return baseWidth - peek * 2 / perView - gapReductor;
     }
   });
 
@@ -1518,7 +1519,7 @@ var Clones = function (Glide, Components, Events) {
       // by number in `perView` per actual number of slides.
       for (var r = 0; r < Math.max(1, Math.floor(perView / length)); r++) {
         // Fill pattern with indexes of slides at the beginning of track.
-        for (var i = 0; i <= Math.min(perView, length - 1); i++) {
+        for (var i = 0; i <= length - 1; i++) {
           pattern.push('' + i);
         }
 
@@ -1591,11 +1592,7 @@ var Clones = function (Glide, Components, Events) {
      * @return {Number}
      */
     get: function get() {
-      if (Glide.isType('carousel')) {
-        return Components.Sizes.slideWidth * CLONES.items.length;
-      }
-
-      return 0;
+      return (Components.Sizes.slideWidth + Glide.settings.gap) * CLONES.items.length;
     }
   });
 
@@ -1840,7 +1837,7 @@ var Gap = function (Glide, Components) {
       var gap = Glide.settings.gap;
       var clones = Components.Clones.items;
 
-      return translate + gap * index + gap * clones.length / 2;
+      return translate + gap * index;
     }
   };
 };
@@ -1861,11 +1858,7 @@ var Grow = function (Glide, Components) {
      * @return {Number}
      */
     modify: function modify(translate) {
-      if (Glide.isType('carousel')) {
-        return translate + Components.Clones.grow / 2;
-      }
-
-      return translate;
+      return translate + Components.Clones.grow / 2;
     }
   };
 };
@@ -1917,15 +1910,16 @@ var Focusing = function (Glide, Components) {
      * @return {Number}
      */
     modify: function modify(translate) {
-      var focusAt = Glide.settings.focusAt;
+      var gap = Glide.settings.gap;
       var width = Components.Sizes.width;
+      var focusAt = Glide.settings.focusAt;
       var slideWidth = Components.Sizes.slideWidth;
 
       if (focusAt === 'center') {
         return translate - (width / 2 - slideWidth / 2);
       }
 
-      return translate - slideWidth * focusAt;
+      return translate - slideWidth * focusAt - gap * focusAt;
     }
   };
 };

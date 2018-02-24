@@ -62,10 +62,10 @@
     <ul class="glide__slides">
       <li class="glide__slide box">0</li>
       <li class="glide__slide box">1</li>
-      <!-- <li class="glide__slide box">2</li> -->
-      <!-- <li class="glide__slide box">3</li> -->
-      <!-- <li class="glide__slide box">4</li> -->
-      <!-- <li class="glide__slide box">5</li> -->
+      <li class="glide__slide box">2</li>
+      <li class="glide__slide box">3</li>
+      <li class="glide__slide box">4</li>
+      <li class="glide__slide box">5</li>
     </ul>
   </div>
 
@@ -90,9 +90,8 @@
   var el = document.querySelector('#glide1')
   var glide1 = new Glide(el, {
     type: 'carousel',
-    focusAt: 0,
-    gap: 20,
-    perView: 2,
+    focusAt: 'center',
+    perView: 4,
     autoplay: false,
     breakpoints: {
       800: {
@@ -107,7 +106,11 @@
   glide1.mount()
 
   var el2 = document.querySelector('#glide2')
-  var glide2 = new Glide(el2, { autoplay: false })
+  var glide2 = new Glide(el2, {
+    autoplay: false,
+    focusAt: 'center',
+    perView: 4
+  })
   glide2.mount()
 
   console.log(glide1)

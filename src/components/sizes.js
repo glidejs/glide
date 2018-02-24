@@ -81,16 +81,17 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      let gap = Glide.settings.gap
       let peek = Components.Peek.value
       let perView = Glide.settings.perView
-      let rootWidth = Components.Html.root.offsetWidth
+
+      let baseWidth = Components.Html.root.offsetWidth / perView
+      let gapReductor = (Glide.settings.gap * (perView - 1)) / perView
 
       if (isObject(peek)) {
-        return (rootWidth / perView) - (peek.before / perView) - (peek.after / perView) - ((gap * (perView - 1)) / perView)
+        return baseWidth - (peek.before / perView) - (peek.after / perView) - gapReductor
       }
 
-      return (rootWidth / perView) - (peek * 2 / perView) - ((gap * (perView - 1)) / perView)
+      return baseWidth - (peek * 2 / perView) - gapReductor
     }
   })
 

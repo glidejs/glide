@@ -18,7 +18,7 @@ export default function (Glide, Components) {
       let gap = Glide.settings.gap
       let clones = Components.Clones.items
 
-      return translate + (gap * index) + (gap * clones.length/2)
+      return translate + (gap * index)
     }
   }
 }

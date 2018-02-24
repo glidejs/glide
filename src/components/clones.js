@@ -34,7 +34,7 @@ export default function (Glide, Components, Events) {
       // by number in `perView` per actual number of slides.
       for (let r = 0; r < Math.max(1, Math.floor(perView / length)); r++) {
         // Fill pattern with indexes of slides at the beginning of track.
-        for (let i = 0; i <= Math.min(perView, length - 1); i++) {
+        for (let i = 0; i <= length - 1; i++) {
           pattern.push(`${i}`)
         }
 
@@ -104,11 +104,7 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      if (Glide.isType('carousel')) {
-        return Components.Sizes.slideWidth * CLONES.items.length
-      }
-
-      return 0
+      return (Components.Sizes.slideWidth + Glide.settings.gap) * CLONES.items.length
     }
   })
 

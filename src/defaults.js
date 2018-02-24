@@ -35,6 +35,11 @@ export default {
    */
   focusAt: 0,
 
+  /**
+   * A gap value added between slides.
+   *
+   * @type {Number}
+   */
   gap: 10,
 
   /**

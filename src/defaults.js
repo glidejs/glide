@@ -47,7 +47,7 @@ export default {
    *
    * @type {Number|Boolean}
    */
-  autoplay: 4000,
+  autoplay: false,
 
   /**
    * Stop autoplay on mouseover event.

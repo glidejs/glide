@@ -28,11 +28,11 @@ export default function (Glide, Components, Events) {
   }
 
   /**
-   * Set new translate value on:
-   * - standard moving on index change
-   * - on jumping from offset transition at start and end edges in `carousel` type
+   * Set new translate value:
+   * - on move to reflect index change
+   * - on updating via API to reflect possible changes in options
    */
-  Events.listen(['move', 'reinit'], (context) => {
+  Events.listen(['move', 'update'], (context) => {
     let gap = Components.Gap.value
     let length = Components.Sizes.length
     let width = Components.Sizes.slideWidth

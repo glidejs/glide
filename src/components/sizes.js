@@ -71,11 +71,12 @@ export default function (Glide, Components, Events) {
   })
 
   /**
-   * Apply calculated glide's dimensions on:
+   * Apply calculated glide's dimensions:
    * - before building, so other dimentions (e.g. translate) will be calculated propertly
    * - when resizing window to recalculate sildes dimensions
+   * - on updating via API, to calculate dimensions based on new options
    */
-  Events.listen(['build.before', 'resize', 'reinit'], () => {
+  Events.listen(['build.before', 'resize', 'update'], () => {
     SIZES.setupSlides()
     SIZES.setupWrapper()
   })

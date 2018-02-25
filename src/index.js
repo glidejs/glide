@@ -4,9 +4,6 @@ import { mount } from './core/index'
 import { toInt, isObject } from './utils/unit'
 import { EventsBus } from './core/event/events-bus'
 
-let Events = null
-let Components = {}
-
 export default class Glide {
   /**
    * Construct glide.
@@ -15,7 +12,8 @@ export default class Glide {
    * @param  {Object} options
    */
   constructor (selector, options = {}) {
-    Events = new EventsBus()
+    this._c = {}
+    this._e = new EventsBus()
 
     this.disabled = false
     this.selector = selector
@@ -24,50 +22,35 @@ export default class Glide {
   }
 
   /**
-   * Initializes glide components.
+   * Initializes glide.
    *
    * @param {Object} extensions Collection of extensions to initialize.
    * @return {Self}
    */
   mount (extensions = {}) {
-    Events.emit('mount.before')
+    this._e.emit('mount.before')
 
     if (isObject(extensions)) {
-      Components = mount(this, extensions, Events)
+      this._c = mount(this, extensions, this._e)
     } else {
-      warn('You need to provide a components object on `mount()`')
+      warn('You need to provide a object on `mount()`')
     }
 
-    Events.emit('mount.after')
+    this._e.emit('mount.after')
 
     return this
   }
 
   /**
-   * Reinits glide with specified settings.
-   *
-   * @param {Object} settings
-   * @return {Self}
-   */
-  reinit (settings = {}) {
-    this.settings = Object.assign(this.settings, settings)
-    this.index = this.settings.startAt
-
-    Events.emit('reinit')
-
-    return this
-  }
-
-  /**
-   * Reinits glide with specified settings.
+   * Updates glide with specified settings.
    *
    * @param {Object} settings
    * @return {Self}
    */
   update (settings = {}) {
-    this.settings = Object.assign(this.settings, settings)
+    this.settings = Object.assign({}, this.settings, settings)
 
-    Events.emit('update')
+    this._e.emit('update')
 
     return this
   }
@@ -84,7 +67,7 @@ export default class Glide {
    * @return {Self}
    */
   go (pattern) {
-    Components.Run.make(pattern)
+    this._c.Run.make(pattern)
 
     return this
   }
@@ -96,19 +79,19 @@ export default class Glide {
    * @return {Self}
    */
   move (distance) {
-    Components.Transition.disable()
-    Components.Move.make(distance)
+    this._c.Transition.disable()
+    this._c.Move.make(distance)
 
     return this
   }
 
   /**
-   * Destroy instance and revert all changes done by components.
+   * Destroy instance and revert all changes done by this._c.
    *
    * @return {Self}
    */
   destroy () {
-    Events.emit('destroy')
+    this._e.emit('destroy')
 
     return this
   }
@@ -119,7 +102,7 @@ export default class Glide {
    * @return {Self}
    */
   play () {
-    Events.emit('play')
+    this._e.emit('play')
 
     return this
   }
@@ -130,7 +113,7 @@ export default class Glide {
    * @return {Self}
    */
   pause () {
-    Events.emit('pause')
+    this._e.emit('pause')
 
     return this
   }
@@ -165,7 +148,7 @@ export default class Glide {
    * @return {Void}
    */
   on (event, handler) {
-    Events.listen(event, handler)
+    this._e.listen(event, handler)
 
     return this
   }
@@ -192,12 +175,12 @@ export default class Glide {
   /**
    * Sets value of the core options.
    *
-   * @param  {Object} opt
+   * @param  {Object} o
    * @return {Void}
    */
-  set settings (opt) {
-    if (isObject(opt)) {
-      this._o = opt
+  set settings (o) {
+    if (isObject(o)) {
+      this._o = o
     } else {
       warn('Options must be an `object` instance.')
     }

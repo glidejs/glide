@@ -19,7 +19,10 @@
     background-color: silver;
   }
 </style>
-
+<select id="type-select">
+  <option value="slider" selected>slider</option>
+  <option value="carousel">carousel</option>
+</select>
 <div id="glide1" class="glide">
   <div data-glide-el="controls" class="glide__arrows">
     <button class="glide__arrow glide__arrow--prev" data-glide-dir="<">prev</button>
@@ -89,7 +92,7 @@
 <script>
   var el = document.querySelector('#glide1')
   var glide1 = new Glide(el, {
-    type: 'carousel',
+    // type: 'carousel',
     focusAt: 1,
     perView: 4,
     autoplay: false,
@@ -100,6 +103,13 @@
       }
     }
   })
+  var select = document.querySelector('#type-select')
+  select.addEventListener('change', function (event) {
+    glide1.update({
+      type: event.target.value
+    })
+  })
+
   glide1.on('move', function () {
     // console.log(glide1.disabled)
   })

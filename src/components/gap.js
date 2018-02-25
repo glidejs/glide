@@ -1,5 +1,6 @@
 import { toInt } from '../utils/unit'
 import { define } from '../utils/object'
+import { throttle } from '../utils/wait'
 
 export default function (Glide, Components, Events) {
   const GAP = {
@@ -18,18 +19,16 @@ export default function (Glide, Components, Events) {
      *
      * @return {Void}
      */
-    setup () {
+    apply () {
       let items = Components.Html.wrapper.children
 
       for (let i = 0; i < items.length; i++) {
-        if (i !== 0) {
-          items[i].style.marginLeft = `${this.value/2}px`
-        }
-
-        if (i !== items.length) {
-          items[i].style.marginRight = `${this.value/2}px`
-        }
+        items[i].style.marginLeft = `${this.value / 2}px`
+        items[i].style.marginRight = `${this.value / 2}px`
       }
+
+      items[0].style.marginLeft = ''
+      items[items.length - 1].style.marginRight = ''
     }
   }
 
@@ -83,10 +82,11 @@ export default function (Glide, Components, Events) {
   /**
    * Apply calculated gaps:
    * - after building, so slides (including clones) will receive proper margins
+   * - on updating via API, to recalculate gaps with new options
    */
-  Events.listen(['build.after', 'reinit'], () => {
-    GAP.setup()
-  })
+  Events.listen(['build.after', 'update'], throttle(() => {
+    GAP.apply()
+  }, 30))
 
   return GAP
 }

@@ -112,7 +112,16 @@ export default function (Glide, Components, Events) {
    * Append additional slide's clones:
    * - while glide's type is `carousel`
    */
-  Events.listen(['build.before', 'reinit'], () => {
+  Events.listen('update', () => {
+    CLONES.remove().mount()
+    CLONES.append()
+  })
+
+  /**
+   * Append additional slide's clones:
+   * - while glide's type is `carousel`
+   */
+  Events.listen('build.before', () => {
     if (Glide.isType('carousel')) {
       CLONES.append()
     }

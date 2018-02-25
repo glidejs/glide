@@ -477,9 +477,6 @@ var EventsBus = function () {
   return EventsBus;
 }();
 
-var Events = null;
-var Components = {};
-
 var Glide$2 = function () {
   /**
    * Construct glide.
@@ -491,7 +488,8 @@ var Glide$2 = function () {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     classCallCheck(this, Glide);
 
-    Events = new EventsBus();
+    this._c = {};
+    this._e = new EventsBus();
 
     this.disabled = false;
     this.selector = selector;
@@ -500,7 +498,7 @@ var Glide$2 = function () {
   }
 
   /**
-   * Initializes glide components.
+   * Initializes glide.
    *
    * @param {Object} extensions Collection of extensions to initialize.
    * @return {Self}
@@ -512,41 +510,21 @@ var Glide$2 = function () {
     value: function mount$$1() {
       var extensions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-      Events.emit('mount.before');
+      this._e.emit('mount.before');
 
       if (isObject(extensions)) {
-        Components = mount(this, extensions, Events);
+        this._c = mount(this, extensions, this._e);
       } else {
-        warn('You need to provide a components object on `mount()`');
+        warn('You need to provide a object on `mount()`');
       }
 
-      Events.emit('mount.after');
+      this._e.emit('mount.after');
 
       return this;
     }
 
     /**
-     * Reinits glide with specified settings.
-     *
-     * @param {Object} settings
-     * @return {Self}
-     */
-
-  }, {
-    key: 'reinit',
-    value: function reinit() {
-      var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-      this.settings = _extends(this.settings, settings);
-      this.index = this.settings.startAt;
-
-      Events.emit('reinit');
-
-      return this;
-    }
-
-    /**
-     * Reinits glide with specified settings.
+     * Updates glide with specified settings.
      *
      * @param {Object} settings
      * @return {Self}
@@ -557,9 +535,9 @@ var Glide$2 = function () {
     value: function update() {
       var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-      this.settings = _extends(this.settings, settings);
+      this.settings = _extends({}, this.settings, settings);
 
-      Events.emit('update');
+      this._e.emit('update');
 
       return this;
     }
@@ -579,7 +557,7 @@ var Glide$2 = function () {
   }, {
     key: 'go',
     value: function go(pattern) {
-      Components.Run.make(pattern);
+      this._c.Run.make(pattern);
 
       return this;
     }
@@ -594,14 +572,14 @@ var Glide$2 = function () {
   }, {
     key: 'move',
     value: function move(distance) {
-      Components.Transition.disable();
-      Components.Move.make(distance);
+      this._c.Transition.disable();
+      this._c.Move.make(distance);
 
       return this;
     }
 
     /**
-     * Destroy instance and revert all changes done by components.
+     * Destroy instance and revert all changes done by this._c.
      *
      * @return {Self}
      */
@@ -609,7 +587,7 @@ var Glide$2 = function () {
   }, {
     key: 'destroy',
     value: function destroy() {
-      Events.emit('destroy');
+      this._e.emit('destroy');
 
       return this;
     }
@@ -623,7 +601,7 @@ var Glide$2 = function () {
   }, {
     key: 'play',
     value: function play() {
-      Events.emit('play');
+      this._e.emit('play');
 
       return this;
     }
@@ -637,7 +615,7 @@ var Glide$2 = function () {
   }, {
     key: 'pause',
     value: function pause() {
-      Events.emit('pause');
+      this._e.emit('pause');
 
       return this;
     }
@@ -681,7 +659,7 @@ var Glide$2 = function () {
   }, {
     key: 'on',
     value: function on(event, handler) {
-      Events.listen(event, handler);
+      this._e.listen(event, handler);
 
       return this;
     }
@@ -714,13 +692,13 @@ var Glide$2 = function () {
     /**
      * Sets value of the core options.
      *
-     * @param  {Object} opt
+     * @param  {Object} o
      * @return {Void}
      */
     ,
-    set: function set$$1(opt) {
-      if (isObject(opt)) {
-        this._o = opt;
+    set: function set$$1(o) {
+      if (isObject(o)) {
+        this._o = o;
       } else {
         warn('Options must be an `object` instance.');
       }
@@ -990,6 +968,70 @@ var Run = function (Glide, Components, Events) {
   return RUN;
 };
 
+/**
+ * Returns a current time.
+ *
+ * @return {Number}
+ */
+function now() {
+  return new Date().getTime();
+}
+
+/**
+ * Returns a function, that, when invoked, will only be triggered
+ * at most once during a given window of time.
+ *
+ * @param {Function} func
+ * @param {Number} wait
+ * @param {Object} options
+ * @return {Function}
+ *
+ * @see https://github.com/jashkenas/underscore
+ */
+function throttle(func, wait, options) {
+  var timeout = void 0,
+      context = void 0,
+      args = void 0,
+      result = void 0;
+  var previous = 0;
+  if (!options) options = {};
+
+  var later = function later() {
+    previous = options.leading === false ? 0 : now();
+    timeout = null;
+    result = func.apply(context, args);
+    if (!timeout) context = args = null;
+  };
+
+  var throttled = function throttled() {
+    var at = now();
+    if (!previous && options.leading === false) previous = at;
+    var remaining = wait - (at - previous);
+    context = this;
+    args = arguments;
+    if (remaining <= 0 || remaining > wait) {
+      if (timeout) {
+        clearTimeout(timeout);
+        timeout = null;
+      }
+      previous = at;
+      result = func.apply(context, args);
+      if (!timeout) context = args = null;
+    } else if (!timeout && options.trailing !== false) {
+      timeout = setTimeout(later, remaining);
+    }
+    return result;
+  };
+
+  throttled.cancel = function () {
+    clearTimeout(timeout);
+    previous = 0;
+    timeout = context = args = null;
+  };
+
+  return throttled;
+}
+
 var Gap = function (Glide, Components, Events) {
   var GAP = {
     /**
@@ -1008,18 +1050,16 @@ var Gap = function (Glide, Components, Events) {
      *
      * @return {Void}
      */
-    setup: function setup() {
+    apply: function apply() {
       var items = Components.Html.wrapper.children;
 
       for (var i = 0; i < items.length; i++) {
-        if (i !== 0) {
-          items[i].style.marginLeft = this.value / 2 + 'px';
-        }
-
-        if (i !== items.length) {
-          items[i].style.marginRight = this.value / 2 + 'px';
-        }
+        items[i].style.marginLeft = this.value / 2 + 'px';
+        items[i].style.marginRight = this.value / 2 + 'px';
       }
+
+      items[0].style.marginLeft = '';
+      items[items.length - 1].style.marginRight = '';
     }
   };
 
@@ -1074,10 +1114,11 @@ var Gap = function (Glide, Components, Events) {
   /**
    * Apply calculated gaps:
    * - after building, so slides (including clones) will receive proper margins
+   * - on updating via API, to recalculate gaps with new options
    */
-  Events.listen(['build.after', 'reinit'], function () {
-    GAP.setup();
-  });
+  Events.listen(['build.after', 'update'], throttle(function () {
+    GAP.apply();
+  }, 30));
 
   return GAP;
 };
@@ -1443,11 +1484,12 @@ var Sizes = function (Glide, Components, Events) {
   });
 
   /**
-   * Apply calculated glide's dimensions on:
+   * Apply calculated glide's dimensions:
    * - before building, so other dimentions (e.g. translate) will be calculated propertly
    * - when resizing window to recalculate sildes dimensions
+   * - on updating via API, to calculate dimensions based on new options
    */
-  Events.listen(['build.before', 'resize', 'reinit'], function () {
+  Events.listen(['build.before', 'resize', 'update'], function () {
     SIZES.setupSlides();
     SIZES.setupWrapper();
   });
@@ -1534,10 +1576,9 @@ var Build = function (Glide, Components, Events) {
   /**
    * Reinit building of the glide:
    * - on resizing of the window to calculate new dimentions
-   * - on reiniting via API to recalculate dimentions
    * - on updating settings via API to recalculate dimentions
    */
-  Events.listen(['resize', 'reinit', 'update'], function () {
+  Events.listen(['resize', 'update'], function () {
     BUILD.mount();
   });
 
@@ -1676,7 +1717,16 @@ var Clones = function (Glide, Components, Events) {
    * Append additional slide's clones:
    * - while glide's type is `carousel`
    */
-  Events.listen(['build.before', 'reinit'], function () {
+  Events.listen('update', function () {
+    CLONES.remove().mount();
+    CLONES.append();
+  });
+
+  /**
+   * Append additional slide's clones:
+   * - while glide's type is `carousel`
+   */
+  Events.listen('build.before', function () {
     if (Glide.isType('carousel')) {
       CLONES.append();
     }
@@ -1692,70 +1742,6 @@ var Clones = function (Glide, Components, Events) {
 
   return CLONES;
 };
-
-/**
- * Returns a current time.
- *
- * @return {Number}
- */
-function now() {
-  return new Date().getTime();
-}
-
-/**
- * Returns a function, that, when invoked, will only be triggered
- * at most once during a given window of time.
- *
- * @param {Function} func
- * @param {Number} wait
- * @param {Object} options
- * @return {Function}
- *
- * @see https://github.com/jashkenas/underscore
- */
-function throttle(func, wait, options) {
-  var timeout = void 0,
-      context = void 0,
-      args = void 0,
-      result = void 0;
-  var previous = 0;
-  if (!options) options = {};
-
-  var later = function later() {
-    previous = options.leading === false ? 0 : now();
-    timeout = null;
-    result = func.apply(context, args);
-    if (!timeout) context = args = null;
-  };
-
-  var throttled = function throttled() {
-    var at = now();
-    if (!previous && options.leading === false) previous = at;
-    var remaining = wait - (at - previous);
-    context = this;
-    args = arguments;
-    if (remaining <= 0 || remaining > wait) {
-      if (timeout) {
-        clearTimeout(timeout);
-        timeout = null;
-      }
-      previous = at;
-      result = func.apply(context, args);
-      if (!timeout) context = args = null;
-    } else if (!timeout && options.trailing !== false) {
-      timeout = setTimeout(later, remaining);
-    }
-    return result;
-  };
-
-  throttled.cancel = function () {
-    clearTimeout(timeout);
-    previous = 0;
-    timeout = context = args = null;
-  };
-
-  return throttled;
-}
 
 var EventsBinder = function () {
   /**
@@ -2061,11 +2047,11 @@ var Translate = function (Glide, Components, Events) {
   };
 
   /**
-   * Set new translate value on:
-   * - standard moving on index change
-   * - on jumping from offset transition at start and end edges in `carousel` type
+   * Set new translate value:
+   * - on move to reflect index change
+   * - on updating via API to reflect possible changes in options
    */
-  Events.listen(['move', 'reinit'], function (context) {
+  Events.listen(['move', 'update'], function (context) {
     var gap = Components.Gap.value;
     var length = Components.Sizes.length;
     var width = Components.Sizes.slideWidth;
@@ -3154,15 +3140,28 @@ var Autoplay = function (Glide, Components, Events) {
   return AUTOPLAY;
 };
 
+/**
+ * Sorts keys of breakpoint object so they will be ordered from lower to bigger.
+ *
+ * @param {Object} breakpoints
+ * @returns {Object}
+ */
+function sortBreakpoints(breakpoints) {
+  if (isObject(breakpoints)) {
+    return sortKeys(breakpoints);
+  } else {
+    warn('Breakpoints option must be an object');
+  }
+
+  return {};
+}
+
 var Breakpoints = function (Glide, Components, Events) {
   /**
-   * If there are breakpoints, sort it from smaller to larger.
-   * This step is required in order to proper matching
-   * currently active breakpoint settings.
+   * Sort brekpoints from smaller to larger. It is required in order
+   * to proper matching currently active breakpoint settings.
    */
-  if (isObject(Glide.settings.breakpoints)) {
-    Glide.settings.breakpoints = sortKeys(Glide.settings.breakpoints);
-  }
+  Glide.settings.breakpoints = sortBreakpoints(Glide.settings.breakpoints);
 
   /**
    * Cache initial settings before overwritting.
@@ -3200,11 +3199,21 @@ var Breakpoints = function (Glide, Components, Events) {
   Glide.settings = _extends(Glide.settings, BREAKPOINTS.match(Glide.settings.breakpoints));
 
   /**
-   * Reinit glide on:
-   * - window resize with proper settings for matched breakpoint
+   * Update glide with settings of matched brekpoint:
+   * - window resize to update slider
    */
   Events.listen('resize', function () {
-    Glide.update(BREAKPOINTS.match(Glide.settings.breakpoints));
+    Glide.settings = _extends(Glide.settings, BREAKPOINTS.match(Glide.settings.breakpoints));
+  });
+
+  /**
+   * Resort and update default settings:
+   * - on reinit via API, so breakpoint matching will be performed with options
+   */
+  Events.listen('update', function () {
+    Glide.settings.breakpoints = sortBreakpoints(Glide.settings.breakpoints);
+
+    defaults = _extends({}, Glide.settings);
   });
 
   return BREAKPOINTS;

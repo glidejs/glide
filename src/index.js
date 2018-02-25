@@ -50,6 +50,10 @@ export default class Glide {
   update (settings = {}) {
     this.settings = Object.assign({}, this.settings, settings)
 
+    if (settings.hasOwnProperty('startAt')) {
+      this.index = settings.startAt
+    }
+
     this._e.emit('update')
 
     return this

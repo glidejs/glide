@@ -88,6 +88,14 @@ export default function (Glide, Components, Events) {
   })
 
   /**
+   * Remount component:
+   * - on updating via API, to update gap value
+   */
+  Events.listen('update', () => {
+    GAP.mount()
+  })
+
+  /**
    * Apply calculated gaps:
    * - after building, so slides (including clones) will receive proper margins
    * - on updating via API, to recalculate gaps with new options

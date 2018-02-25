@@ -32,7 +32,7 @@ export default function (Glide, Components, Events) {
    * - on move to reflect index change
    * - on updating via API to reflect possible changes in options
    */
-  Events.listen(['move', 'update'], (context) => {
+  Events.listen('move', (context) => {
     let gap = Components.Gap.value
     let length = Components.Sizes.length
     let width = Components.Sizes.slideWidth

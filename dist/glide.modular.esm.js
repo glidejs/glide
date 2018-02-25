@@ -537,6 +537,10 @@ var Glide$2 = function () {
 
       this.settings = _extends({}, this.settings, settings);
 
+      if (settings.hasOwnProperty('startAt')) {
+        this.index = settings.startAt;
+      }
+
       this._e.emit('update');
 
       return this;
@@ -1117,6 +1121,14 @@ var Gap = function (Glide, Components, Events) {
 
       return GAP.value * (perView - 1) / perView;
     }
+  });
+
+  /**
+   * Remount component:
+   * - on updating via API, to update gap value
+   */
+  Events.listen('update', function () {
+    GAP.mount();
   });
 
   /**
@@ -2059,7 +2071,7 @@ var Translate = function (Glide, Components, Events) {
    * - on move to reflect index change
    * - on updating via API to reflect possible changes in options
    */
-  Events.listen(['move', 'update'], function (context) {
+  Events.listen('move', function (context) {
     var gap = Components.Gap.value;
     var length = Components.Sizes.length;
     var width = Components.Sizes.slideWidth;

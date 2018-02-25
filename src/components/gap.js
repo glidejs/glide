@@ -84,7 +84,7 @@ export default function (Glide, Components, Events) {
    * Apply calculated gaps:
    * - after building, so slides (including clones) will receive proper margins
    */
-  Events.listen(['build.after'], () => {
+  Events.listen(['build.after', 'reinit'], () => {
     GAP.setup()
   })
 

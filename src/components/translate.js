@@ -32,7 +32,7 @@ export default function (Glide, Components, Events) {
    * - standard moving on index change
    * - on jumping from offset transition at start and end edges in `carousel` type
    */
-  Events.listen(['move'], (context) => {
+  Events.listen(['move', 'reinit'], (context) => {
     let gap = Components.Gap.value
     let length = Components.Sizes.length
     let width = Components.Sizes.slideWidth

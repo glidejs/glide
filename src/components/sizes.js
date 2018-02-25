@@ -75,7 +75,7 @@ export default function (Glide, Components, Events) {
    * - before building, so other dimentions (e.g. translate) will be calculated propertly
    * - when resizing window to recalculate sildes dimensions
    */
-  Events.listen(['build.before', 'resize'], () => {
+  Events.listen(['build.before', 'resize', 'reinit'], () => {
     SIZES.setupSlides()
     SIZES.setupWrapper()
   })

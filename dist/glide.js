@@ -47,6 +47,11 @@ var defaults = {
    */
   focusAt: 0,
 
+  /**
+   * A gap value added between slides.
+   *
+   * @type {Number}
+   */
   gap: 10,
 
   /**
@@ -54,7 +59,7 @@ var defaults = {
    *
    * @type {Number|Boolean}
    */
-  autoplay: 4000,
+  autoplay: false,
 
   /**
    * Stop autoplay on mouseover event.
@@ -1076,7 +1081,7 @@ var Gap = function (Glide, Components, Events) {
    * Apply calculated gaps:
    * - after building, so slides (including clones) will receive proper margins
    */
-  Events.listen(['build.after'], function () {
+  Events.listen(['build.after', 'reinit'], function () {
     GAP.setup();
   });
 
@@ -1448,7 +1453,7 @@ var Sizes = function (Glide, Components, Events) {
    * - before building, so other dimentions (e.g. translate) will be calculated propertly
    * - when resizing window to recalculate sildes dimensions
    */
-  Events.listen(['build.before', 'resize'], function () {
+  Events.listen(['build.before', 'resize', 'reinit'], function () {
     SIZES.setupSlides();
     SIZES.setupWrapper();
   });
@@ -1677,7 +1682,7 @@ var Clones = function (Glide, Components, Events) {
    * Append additional slide's clones:
    * - while glide's type is `carousel`
    */
-  Events.listen('build.before', function () {
+  Events.listen(['build.before', 'reinit'], function () {
     if (Glide.isType('carousel')) {
       CLONES.append();
     }
@@ -2066,7 +2071,7 @@ var Translate = function (Glide, Components, Events) {
    * - standard moving on index change
    * - on jumping from offset transition at start and end edges in `carousel` type
    */
-  Events.listen(['move'], function (context) {
+  Events.listen(['move', 'reinit'], function (context) {
     var gap = Components.Gap.value;
     var length = Components.Sizes.length;
     var width = Components.Sizes.slideWidth;

@@ -1060,12 +1060,20 @@ var Gap = function (Glide, Components, Events) {
       var items = Components.Html.wrapper.children;
 
       for (var i = 0; i < items.length; i++) {
-        items[i].style.marginLeft = this.value / 2 + 'px';
-        items[i].style.marginRight = this.value / 2 + 'px';
-      }
+        var style = items[i].style;
 
-      items[0].style.marginLeft = '';
-      items[items.length - 1].style.marginRight = '';
+        if (i !== 0) {
+          style.marginLeft = this.value / 2 + 'px';
+        } else {
+          style.marginLeft = '';
+        }
+
+        if (i !== items.length - 1) {
+          style.marginRight = this.value / 2 + 'px';
+        } else {
+          style.marginRight = '';
+        }
+      }
     }
   };
 

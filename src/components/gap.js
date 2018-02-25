@@ -23,12 +23,20 @@ export default function (Glide, Components, Events) {
       let items = Components.Html.wrapper.children
 
       for (let i = 0; i < items.length; i++) {
-        items[i].style.marginLeft = `${this.value / 2}px`
-        items[i].style.marginRight = `${this.value / 2}px`
-      }
+        let style = items[i].style
 
-      items[0].style.marginLeft = ''
-      items[items.length - 1].style.marginRight = ''
+        if (i !== 0) {
+          style.marginLeft = `${this.value / 2}px`
+        } else {
+          style.marginLeft = ''
+        }
+
+        if (i !== items.length - 1) {
+          style.marginRight = `${this.value / 2}px`
+        } else {
+          style.marginRight = ''
+        }
+      }
     }
   }
 

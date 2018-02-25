@@ -1053,7 +1053,7 @@ var Gap = function (Glide, Components, Events) {
     apply: function apply() {
       var items = Components.Html.wrapper.children;
 
-      for (var i = 0; i < items.length; i++) {
+      for (var i = 0, len = items.length; i < len; i++) {
         var style = items[i].style;
 
         if (i !== 0) {

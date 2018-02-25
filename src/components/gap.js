@@ -22,7 +22,7 @@ export default function (Glide, Components, Events) {
     apply () {
       let items = Components.Html.wrapper.children
 
-      for (let i = 0; i < items.length; i++) {
+      for (let i = 0, len = items.length; i < len; i++) {
         let style = items[i].style
 
         if (i !== 0) {

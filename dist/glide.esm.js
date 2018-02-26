@@ -3113,6 +3113,16 @@ var Autoplay = function (Glide, Components, Events) {
       Binder.on('mouseout', Components.Html.root, function () {
         _this2.start();
       });
+    },
+
+
+    /**
+     * Unbind mouseover events.
+     *
+     * @returns {Void}
+     */
+    unbind: function unbind() {
+      Binder.off(['mouseover', 'mouseout'], Components.Html.root);
     }
   };
 
@@ -3135,11 +3145,20 @@ var Autoplay = function (Glide, Components, Events) {
   });
 
   /**
+   * Stop autoplaying and unbind events:
+   * - on destroying, to clear defined interval
+   * - on updating via API to reset interval that may changed
+   */
+  Events.listen(['destroy', 'update'], function () {
+    AUTOPLAY.unbind();
+  });
+
+  /**
    * Stop autoplaying:
    * - before each run, to restart autoplaying
    * - on pausing via API
    * - on destroying, to clear defined interval
-   * - when starting a swiping
+   * - while starting a swipe
    * - on updating via API to reset interval that may changed
    */
   Events.listen(['run.before', 'pause', 'destroy', 'swipe.start', 'update'], function () {
@@ -3150,11 +3169,18 @@ var Autoplay = function (Glide, Components, Events) {
    * Start autoplaying:
    * - after each run, to restart autoplaying
    * - on playing via API
-   * - while ending swiping
-   * - on updating via API, to rerun autoplaying
+   * - while ending a swipe
    */
-  Events.listen(['run.after', 'play', 'swipe.end', 'update'], function () {
+  Events.listen(['run.after', 'play', 'swipe.end'], function () {
     AUTOPLAY.start();
+  });
+
+  /**
+   * Remount autoplaying:
+   * - on updating via API to reset interval that may changed
+   */
+  Events.listen('update', function () {
+    AUTOPLAY.mount();
   });
 
   return AUTOPLAY;

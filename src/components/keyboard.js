@@ -35,7 +35,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     unbind () {
-      Binder.on('keyup', document)
+      Binder.off('keyup', document)
     },
 
     /**
@@ -65,10 +65,19 @@ export default function (Glide, Components, Events) {
 
   /**
    * Remove bindings from keyboard:
-   * - on destroying, to remove added EventListeners
+   * - on destroying to remove added events
+   * - on updating to remove events before remounting
    */
-  Events.listen('destroy', () => {
+  Events.listen(['destroy', 'update'], () => {
     KEYBOARD.unbind()
+  })
+
+  /**
+   * Remount component
+   * - on updating to reflect potential changes in settings
+   */
+  Events.listen('update', () => {
+    KEYBOARD.mount()
   })
 
   return KEYBOARD

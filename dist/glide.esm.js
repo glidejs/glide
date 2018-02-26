@@ -3003,7 +3003,7 @@ var Keyboard = function (Glide, Components, Events) {
      * @return {Void}
      */
     unbind: function unbind() {
-      Binder.on('keyup', document);
+      Binder.off('keyup', document);
     },
 
 
@@ -3034,10 +3034,19 @@ var Keyboard = function (Glide, Components, Events) {
 
   /**
    * Remove bindings from keyboard:
-   * - on destroying, to remove added EventListeners
+   * - on destroying to remove added events
+   * - on updating to remove events before remounting
    */
-  Events.listen('destroy', function () {
+  Events.listen(['destroy', 'update'], function () {
     KEYBOARD.unbind();
+  });
+
+  /**
+   * Remount component
+   * - on updating to reflect potential changes in settings
+   */
+  Events.listen('update', function () {
+    KEYBOARD.mount();
   });
 
   return KEYBOARD;

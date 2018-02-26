@@ -850,7 +850,7 @@ var Run = function (Glide, Components, Events) {
           direction = move.direction;
 
 
-      var countableSteps = isNumber(steps) && toInt(steps) !== 0;
+      var countableSteps = isNumber(toInt(steps)) && toInt(steps) !== 0;
 
       switch (direction) {
         case '>':

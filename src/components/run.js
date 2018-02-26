@@ -53,7 +53,7 @@ export default function (Glide, Components, Events) {
       let { move, length } = this
       let { steps, direction } = move
 
-      let countableSteps = (isNumber(steps)) && (toInt(steps) !== 0)
+      let countableSteps = (isNumber(toInt(steps))) && (toInt(steps) !== 0)
 
       switch (direction) {
         case '>':

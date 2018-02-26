@@ -3094,9 +3094,7 @@ var Autoplay = function (Glide, Components, Events) {
      * @return {self}
      */
     stop: function stop() {
-      if (Glide.settings.autoplay) {
-        this._i = clearInterval(this._i);
-      }
+      this._i = clearInterval(this._i);
     },
 
 
@@ -3137,24 +3135,26 @@ var Autoplay = function (Glide, Components, Events) {
   });
 
   /**
-   * Start autoplaying:
-   * - after each run, to restart autoplaying
-   * - on playing via API
-   * - while ending swiping
-   */
-  Events.listen(['run.after', 'play', 'swipe.end'], function () {
-    AUTOPLAY.start();
-  });
-
-  /**
    * Stop autoplaying:
    * - before each run, to restart autoplaying
    * - on pausing via API
    * - on destroying, to clear defined interval
    * - when starting a swiping
+   * - on updating via API to reset interval that may changed
    */
-  Events.listen(['run.before', 'pause', 'destroy', 'swipe.start'], function () {
+  Events.listen(['run.before', 'pause', 'destroy', 'swipe.start', 'update'], function () {
     AUTOPLAY.stop();
+  });
+
+  /**
+   * Start autoplaying:
+   * - after each run, to restart autoplaying
+   * - on playing via API
+   * - while ending swiping
+   * - on updating via API, to rerun autoplaying
+   */
+  Events.listen(['run.after', 'play', 'swipe.end', 'update'], function () {
+    AUTOPLAY.start();
   });
 
   return AUTOPLAY;

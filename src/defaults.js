@@ -36,7 +36,7 @@ export default {
   focusAt: 0,
 
   /**
-   * A gap value added between slides.
+   * A size of the gap added between slides.
    *
    * @type {Number}
    */
@@ -78,7 +78,7 @@ export default {
   dragThreshold: 120,
 
   /**
-   * A maximum number of slides to whom movement is made on swiping or dragging. Use `false` for unlimited.
+   * A maximum number of slides to which movement will be made on swiping or dragging. Use `false` for unlimited.
    *
    * @type {Number|Boolean}
    */

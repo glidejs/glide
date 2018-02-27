@@ -55,6 +55,8 @@ export default function (Glide, Components, Events) {
 
       let countableSteps = (isNumber(toInt(steps))) && (toInt(steps) !== 0)
 
+      console.log(steps)
+
       switch (direction) {
         case '>':
           if (countableSteps) {

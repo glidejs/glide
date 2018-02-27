@@ -25,8 +25,8 @@
 </select>
 <div id="glide1" class="glide">
   <div data-glide-el="controls" class="glide__arrows">
-    <button class="glide__arrow glide__arrow--prev" data-glide-dir="<">prev</button>
-    <button class="glide__arrow glide__arrow--next" data-glide-dir=">">next</button>
+    <button class="glide__arrow glide__arrow--left" data-glide-dir="<">left</button>
+    <button class="glide__arrow glide__arrow--right" data-glide-dir=">">right</button>
   </div>
 
   <div data-glide-el="track" class="glide__track">
@@ -57,8 +57,8 @@
 
 <div id="glide2" class="glide">
   <div data-glide-el="controls" class="glide__arrows">
-    <button class="glide__arrow glide__arrow--prev" data-glide-dir="<">prev</button>
-    <button class="glide__arrow glide__arrow--next" data-glide-dir=">">next</button>
+    <button class="glide__arrow glide__arrow--left" data-glide-dir="<">left</button>
+    <button class="glide__arrow glide__arrow--right" data-glide-dir=">">right</button>
   </div>
 
   <div data-glide-el="track" class="glide__track">
@@ -93,9 +93,10 @@
   var el = document.querySelector('#glide1')
   var glide1 = new Glide(el, {
     // type: 'carousel',
-    focusAt: 1,
+    rtl: true,
+    // focusAt: 1,
     perView: 4,
-    perTouch: false,
+    perTouch: 1,
     touchRatio: 1,
     autoplay: false,
     breakpoints: {

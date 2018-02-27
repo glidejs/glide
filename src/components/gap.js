@@ -20,22 +20,17 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     apply () {
-      let items = Components.Html.wrapper.children
+      let wrapper = Components.Html.wrapper
+      let items = wrapper.children
+
+      wrapper.style.marginLeft = `-${this.value / 2}px`
+      wrapper.style.marginRight = `-${this.value / 2}px`
 
       for (let i = 0, len = items.length; i < len; i++) {
         let style = items[i].style
 
-        if (i !== 0) {
-          style.marginLeft = `${this.value / 2}px`
-        } else {
-          style.marginLeft = ''
-        }
-
-        if (i !== items.length - 1) {
-          style.marginRight = `${this.value / 2}px`
-        } else {
-          style.marginRight = ''
-        }
+        style.marginLeft = `${this.value / 2}px`
+        style.marginRight = `${this.value / 2}px`
       }
     }
   }

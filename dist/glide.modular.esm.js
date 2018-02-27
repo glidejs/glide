@@ -852,6 +852,8 @@ var Run = function (Glide, Components, Events) {
 
       var countableSteps = isNumber(toInt(steps)) && toInt(steps) !== 0;
 
+      console.log(steps);
+
       switch (direction) {
         case '>':
           if (countableSteps) {
@@ -1055,22 +1057,17 @@ var Gap = function (Glide, Components, Events) {
      * @return {Void}
      */
     apply: function apply() {
-      var items = Components.Html.wrapper.children;
+      var wrapper = Components.Html.wrapper;
+      var items = wrapper.children;
+
+      wrapper.style.marginLeft = '-' + this.value / 2 + 'px';
+      wrapper.style.marginRight = '-' + this.value / 2 + 'px';
 
       for (var i = 0, len = items.length; i < len; i++) {
         var style = items[i].style;
 
-        if (i !== 0) {
-          style.marginLeft = this.value / 2 + 'px';
-        } else {
-          style.marginLeft = '';
-        }
-
-        if (i !== items.length - 1) {
-          style.marginRight = this.value / 2 + 'px';
-        } else {
-          style.marginRight = '';
-        }
+        style.marginLeft = this.value / 2 + 'px';
+        style.marginRight = this.value / 2 + 'px';
       }
     }
   };
@@ -2305,11 +2302,7 @@ var swipe = function (Glide, Components, Events) {
         swipeSin = Math.asin(swipeCathetus / swipeHypotenuse);
 
         if (swipeSin * 180 / Math.PI < settings.touchAngle) {
-          if (settings.rtl) {
-            Components.Move.make(-subExSx * parseFloat(settings.touchRatio));
-          } else {
-            Components.Move.make(subExSx * parseFloat(settings.touchRatio));
-          }
+          Components.Move.make(subExSx * parseFloat(settings.touchRatio));
         }
 
         if (swipeSin * 180 / Math.PI < settings.touchAngle) {
@@ -2353,7 +2346,7 @@ var swipe = function (Glide, Components, Events) {
           }
 
           if (settings.rtl) {
-            Components.Run.make('>' + steps);
+            Components.Run.make('>' + -steps);
           } else {
             Components.Run.make('<' + steps);
           }
@@ -2364,7 +2357,7 @@ var swipe = function (Glide, Components, Events) {
           }
 
           if (settings.rtl) {
-            Components.Run.make('<' + steps);
+            Components.Run.make('<' + -steps);
           } else {
             Components.Run.make('>' + steps);
           }
@@ -2825,6 +2818,10 @@ var anchors = function (Glide, Components, Events) {
 
 var NAV_SELECTOR = '[data-glide-el="controls[nav]"]';
 var CONTROLS_SELECTOR = '[data-glide-el^="controls"]';
+var REVERSE_DIRECTIONS = {
+  '>': '<',
+  '<': '>'
+};
 
 var controls = function (Glide, Components, Events) {
   /**
@@ -2943,7 +2940,9 @@ var controls = function (Glide, Components, Events) {
     click: function click(event) {
       event.preventDefault();
 
-      Components.Run.make(event.currentTarget.dataset.glideDir);
+      var direction = event.currentTarget.dataset.glideDir;
+
+      Components.Run.make(Glide.settings.rtl ? REVERSE_DIRECTIONS[direction] : direction);
     }
   };
 

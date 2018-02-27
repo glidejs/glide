@@ -10,7 +10,7 @@
   border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 4px;
   box-shadow: 0 0.25em 0.5em 0 rgba(0, 0, 0, 0.1);
-  text-shadow: 0px 0.25em 0.5em rgba(0, 0, 0, 0.1);
+  text-shadow: 0 0.25em 0.5em rgba(0, 0, 0, 0.1);
   opacity: 1;
   cursor: pointer;
   transition: opacity 150ms ease, border 300ms ease-in-out;
@@ -20,9 +20,9 @@
     outline: none; }
   .glide__arrow:hover {
     border-color: white; }
-  .glide__arrow--prev {
+  .glide__arrow--left {
     left: 2em; }
-  .glide__arrow--next {
+  .glide__arrow--right {
     right: 2em; }
   .glide__arrow--disabled {
     opacity: 0.33; }
@@ -65,11 +65,3 @@
   cursor: grabbing;
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing; }
-
-.glide--rtl .glide__arrow--prev {
-  left: auto;
-  right: 2em; }
-
-.glide--rtl .glide__arrow--next {
-  right: auto;
-  left: 2em; }

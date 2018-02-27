@@ -77,11 +77,7 @@ export default function (Glide, Components, Events) {
         swipeSin = Math.asin(swipeCathetus / swipeHypotenuse)
 
         if (swipeSin * 180 / Math.PI < settings.touchAngle) {
-          if (settings.rtl) {
-            Components.Move.make(-subExSx * parseFloat(settings.touchRatio))
-          } else {
-            Components.Move.make(subExSx * parseFloat(settings.touchRatio))
-          }
+          Components.Move.make(subExSx * parseFloat(settings.touchRatio))
         }
 
         if (swipeSin * 180 / Math.PI < settings.touchAngle) {
@@ -124,7 +120,7 @@ export default function (Glide, Components, Events) {
           }
 
           if (settings.rtl) {
-            Components.Run.make(`>${steps}`)
+            Components.Run.make(`>${-steps}`)
           } else {
             Components.Run.make(`<${steps}`)
           }
@@ -138,7 +134,7 @@ export default function (Glide, Components, Events) {
           }
 
           if (settings.rtl) {
-            Components.Run.make(`<${steps}`)
+            Components.Run.make(`<${-steps}`)
           } else {
             Components.Run.make(`>${steps}`)
           }

@@ -4,6 +4,10 @@ import EventsBinder from '../core/event/events-binder'
 
 const NAV_SELECTOR = '[data-glide-el="controls[nav]"]'
 const CONTROLS_SELECTOR = '[data-glide-el^="controls"]'
+const REVERSE_DIRECTIONS = {
+  '>': '<',
+  '<': '>'
+}
 
 export default function (Glide, Components, Events) {
   /**
@@ -115,7 +119,9 @@ export default function (Glide, Components, Events) {
     click (event) {
       event.preventDefault()
 
-      Components.Run.make(event.currentTarget.dataset.glideDir)
+      let direction = event.currentTarget.dataset.glideDir
+
+      Components.Run.make((Glide.settings.rtl) ? REVERSE_DIRECTIONS[direction] : direction)
     }
   }
 

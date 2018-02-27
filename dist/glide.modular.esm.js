@@ -1589,9 +1589,18 @@ var Build = function (Glide, Components, Events) {
   };
 
   /**
-   * Reinit building of the glide:
+   * Clear building classes:
+   * - on destroying to bring HTML to its initial state
+   * - on updating to remove classes before remounting component
+   */
+  Events.listen(['destroy', 'update'], function () {
+    BUILD.removeClasses();
+  });
+
+  /**
+   * Remount component:
    * - on resizing of the window to calculate new dimentions
-   * - on updating settings via API to recalculate dimentions
+   * - on updating settings via API
    */
   Events.listen(['resize', 'update'], function () {
     BUILD.mount();
@@ -1603,14 +1612,6 @@ var Build = function (Glide, Components, Events) {
    */
   Events.listen('move.after', function () {
     BUILD.activeClass();
-  });
-
-  /**
-   * Clear building classes:
-   * - on destroying, to bring HTML to its initial state
-   */
-  Events.listen('destroy', function () {
-    BUILD.removeClasses();
   });
 
   return BUILD;

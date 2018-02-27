@@ -73,9 +73,18 @@ export default function (Glide, Components, Events) {
   }
 
   /**
-   * Reinit building of the glide:
+   * Clear building classes:
+   * - on destroying to bring HTML to its initial state
+   * - on updating to remove classes before remounting component
+   */
+  Events.listen(['destroy', 'update'], () => {
+    BUILD.removeClasses()
+  })
+
+  /**
+   * Remount component:
    * - on resizing of the window to calculate new dimentions
-   * - on updating settings via API to recalculate dimentions
+   * - on updating settings via API
    */
   Events.listen(['resize', 'update'], () => {
     BUILD.mount()
@@ -87,14 +96,6 @@ export default function (Glide, Components, Events) {
    */
   Events.listen('move.after', () => {
     BUILD.activeClass()
-  })
-
-  /**
-   * Clear building classes:
-   * - on destroying, to bring HTML to its initial state
-   */
-  Events.listen('destroy', () => {
-    BUILD.removeClasses()
   })
 
   return BUILD

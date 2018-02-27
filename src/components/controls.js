@@ -126,6 +126,7 @@ export default function (Glide, Components, Events) {
     /**
      * Resolves pattern based on ltr/rtl moving direction
      *
+     * @todo Move to direction component. It should be responsible for resolving moving patterns.
      * @param {String} pattern
      * @returns {String}
      */

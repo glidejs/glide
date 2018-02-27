@@ -1061,17 +1061,30 @@ var Gap = function (Glide, Components, Events) {
      * @return {Void}
      */
     apply: function apply() {
-      var wrapper = Components.Html.wrapper;
-      var items = wrapper.children;
-
-      wrapper.style.marginLeft = '-' + this.value / 2 + 'px';
-      wrapper.style.marginRight = '-' + this.value / 2 + 'px';
+      var items = Components.Html.wrapper.children;
 
       for (var i = 0, len = items.length; i < len; i++) {
         var style = items[i].style;
 
-        style.marginLeft = this.value / 2 + 'px';
-        style.marginRight = this.value / 2 + 'px';
+        var ml = style.marginLeft;
+        var mr = style.marginRight;
+
+        if (Glide.settings.rtl) {
+          var _ml = style.marginRight;
+          var _mr = style.marginLeft;
+        }
+
+        if (i !== 0) {
+          ml = this.value / 2 + 'px';
+        } else {
+          ml = '';
+        }
+
+        if (i !== items.length - 1) {
+          mr = this.value / 2 + 'px';
+        } else {
+          mr = '';
+        }
       }
     }
   };

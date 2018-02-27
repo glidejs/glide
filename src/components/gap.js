@@ -17,20 +17,26 @@ export default function (Glide, Components, Events) {
      * Applies gaps between slides. First and last
      * slides do not receive it's edge margins.
      *
+     * @todo Refactor after introducing direction component. Margin side should be choosen by map where key is direction and value is margin property name.
      * @return {Void}
      */
     apply () {
-      let wrapper = Components.Html.wrapper
-      let items = wrapper.children
-
-      wrapper.style.marginLeft = `-${this.value / 2}px`
-      wrapper.style.marginRight = `-${this.value / 2}px`
+      let items = Components.Html.wrapper.children
 
       for (let i = 0, len = items.length; i < len; i++) {
         let style = items[i].style
 
-        style.marginLeft = `${this.value / 2}px`
-        style.marginRight = `${this.value / 2}px`
+        if (i !== 0) {
+          style.marginLeft = `${this.value / 2}px`
+        } else {
+          style.marginLeft = ''
+        }
+
+        if (i !== items.length - 1) {
+          style.marginRight = `${this.value / 2}px`
+        } else {
+          style.marginRight = ''
+        }
       }
     }
   }

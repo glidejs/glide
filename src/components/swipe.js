@@ -97,6 +97,7 @@ export default function (Glide, Components, Events) {
      * Handler for `swipeend` event. Finitializes
      * user's tap and decides about glide move.
      *
+     * @todo Use direction component to resolve moving direction instead of multiple ifs.
      * @param {Object} event
      * @return {Void}
      */

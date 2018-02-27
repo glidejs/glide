@@ -136,6 +136,7 @@ export default {
   /**
    * Switch to "right to left" moving mode.
    *
+   * @todo Refactor this option to `direction` with will take `ltr` and `rtl` values
    * @type {Boolean}
    */
   rtl: false,

@@ -41,6 +41,7 @@ export default function (Glide, Components, Events) {
     /**
      * Handles keyboard's arrows press and moving glide foward and backward.
      *
+     * @todo Use direction component to resolve moving direction instead of multiple ifs.
      * @param  {Object} event
      * @return {Void}
      */

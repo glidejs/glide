@@ -4,9 +4,10 @@ import EventsBinder from '../core/event/events-binder'
 
 const NAV_SELECTOR = '[data-glide-el="controls[nav]"]'
 const CONTROLS_SELECTOR = '[data-glide-el^="controls"]'
-const REVERSE_DIRECTIONS = {
+const FLIPED_DIRECTIONS = {
   '>': '<',
-  '<': '>'
+  '<': '>',
+  '=': '='
 }
 
 export default function (Glide, Components, Events) {
@@ -26,7 +27,7 @@ export default function (Glide, Components, Events) {
      */
     mount () {
       this._n = Components.Html.root.querySelectorAll(NAV_SELECTOR)
-      this._e = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR)
+      this._c = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR)
 
       this.activeClass()
       this.addBindings()
@@ -66,8 +67,8 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     addBindings () {
-      for (let i = 0; i < this._e.length; i++) {
-        this.bind(this._e[i])
+      for (let i = 0; i < this._c.length; i++) {
+        this.bind(this._c[i])
       }
     },
 
@@ -77,8 +78,8 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     removeBindings () {
-      for (let i = 0; i < this._e.length; i++) {
-        this.unbind(this._e[i])
+      for (let i = 0; i < this._c.length; i++) {
+        this.unbind(this._c[i])
       }
     },
 
@@ -91,7 +92,7 @@ export default function (Glide, Components, Events) {
       let children = wrapper.children
 
       for (var i = 0; i < children.length; i++) {
-        Binder.on(['click', 'touchstart'], children[i], this.click)
+        Binder.on(['click', 'touchstart'], children[i], this.click.bind(this))
       }
     },
 
@@ -119,9 +120,23 @@ export default function (Glide, Components, Events) {
     click (event) {
       event.preventDefault()
 
-      let direction = event.currentTarget.dataset.glideDir
+      Components.Run.make(this.resolveDir(event.currentTarget.dataset.glideDir))
+    },
 
-      Components.Run.make((Glide.settings.rtl) ? REVERSE_DIRECTIONS[direction] : direction)
+    /**
+     * Resolves pattern based on ltr/rtl moving direction
+     *
+     * @param {String} pattern
+     * @returns {String}
+     */
+    resolveDir (pattern) {
+      let token = pattern.slice(0, 1)
+
+      if (Glide.settings.rtl) {
+        return pattern.split(token).join(FLIPED_DIRECTIONS[token])
+      }
+
+      return pattern
     }
   }
 

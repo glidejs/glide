@@ -858,14 +858,12 @@ var Run = function (Glide, Components, Events) {
 
       var countableSteps = isNumber(toInt(steps)) && toInt(steps) !== 0;
 
-      console.log(steps);
-
       switch (direction) {
         case '>':
-          if (countableSteps) {
-            Glide.index += Math.min(length - Glide.index, -toInt(steps));
-          } else if (steps === '>') {
+          if (steps === '>') {
             Glide.index = length;
+          } else if (countableSteps) {
+            Glide.index += Math.min(length - Glide.index, -toInt(steps));
           } else if (this.isEnd()) {
             this._o = true;
 
@@ -878,10 +876,10 @@ var Run = function (Glide, Components, Events) {
           break;
 
         case '<':
-          if (countableSteps) {
-            Glide.index -= Math.min(Glide.index, toInt(steps));
-          } else if (steps === '<') {
+          if (steps === '<') {
             Glide.index = 0;
+          } else if (countableSteps) {
+            Glide.index -= Math.min(Glide.index, toInt(steps));
           } else if (this.isStart()) {
             this._o = true;
 
@@ -2824,9 +2822,10 @@ var Anchors = function (Glide, Components, Events) {
 
 var NAV_SELECTOR = '[data-glide-el="controls[nav]"]';
 var CONTROLS_SELECTOR = '[data-glide-el^="controls"]';
-var REVERSE_DIRECTIONS = {
+var FLIPED_DIRECTIONS = {
   '>': '<',
-  '<': '>'
+  '<': '>',
+  '=': '='
 };
 
 var Controls = function (Glide, Components, Events) {
@@ -2846,7 +2845,7 @@ var Controls = function (Glide, Components, Events) {
      */
     mount: function mount() {
       this._n = Components.Html.root.querySelectorAll(NAV_SELECTOR);
-      this._e = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR);
+      this._c = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR);
 
       this.activeClass();
       this.addBindings();
@@ -2889,8 +2888,8 @@ var Controls = function (Glide, Components, Events) {
      * @return {Void}
      */
     addBindings: function addBindings() {
-      for (var i = 0; i < this._e.length; i++) {
-        this.bind(this._e[i]);
+      for (var i = 0; i < this._c.length; i++) {
+        this.bind(this._c[i]);
       }
     },
 
@@ -2901,8 +2900,8 @@ var Controls = function (Glide, Components, Events) {
      * @return {Void}
      */
     removeBindings: function removeBindings() {
-      for (var i = 0; i < this._e.length; i++) {
-        this.unbind(this._e[i]);
+      for (var i = 0; i < this._c.length; i++) {
+        this.unbind(this._c[i]);
       }
     },
 
@@ -2916,7 +2915,7 @@ var Controls = function (Glide, Components, Events) {
       var children = wrapper.children;
 
       for (var i = 0; i < children.length; i++) {
-        Binder.on(['click', 'touchstart'], children[i], this.click);
+        Binder.on(['click', 'touchstart'], children[i], this.click.bind(this));
       }
     },
 
@@ -2946,9 +2945,24 @@ var Controls = function (Glide, Components, Events) {
     click: function click(event) {
       event.preventDefault();
 
-      var direction = event.currentTarget.dataset.glideDir;
+      Components.Run.make(this.resolveDir(event.currentTarget.dataset.glideDir));
+    },
 
-      Components.Run.make(Glide.settings.rtl ? REVERSE_DIRECTIONS[direction] : direction);
+
+    /**
+     * Resolves pattern based on ltr/rtl moving direction
+     *
+     * @param {String} pattern
+     * @returns {String}
+     */
+    resolveDir: function resolveDir(pattern) {
+      var token = pattern.slice(0, 1);
+
+      if (Glide.settings.rtl) {
+        return pattern.split(token).join(FLIPED_DIRECTIONS[token]);
+      }
+
+      return pattern;
     }
   };
 

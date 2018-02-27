@@ -55,14 +55,12 @@ export default function (Glide, Components, Events) {
 
       let countableSteps = (isNumber(toInt(steps))) && (toInt(steps) !== 0)
 
-      console.log(steps)
-
       switch (direction) {
         case '>':
-          if (countableSteps) {
-            Glide.index += Math.min(length - Glide.index, -toInt(steps))
-          } else if (steps === '>') {
+          if (steps === '>') {
             Glide.index = length
+          } else if (countableSteps) {
+            Glide.index += Math.min(length - Glide.index, -toInt(steps))
           } else if (this.isEnd()) {
             this._o = true
 
@@ -75,10 +73,10 @@ export default function (Glide, Components, Events) {
           break
 
         case '<':
-          if (countableSteps) {
-            Glide.index -= Math.min(Glide.index, toInt(steps))
-          } else if (steps === '<') {
+          if (steps === '<') {
             Glide.index = 0
+          } else if (countableSteps) {
+            Glide.index -= Math.min(Glide.index, toInt(steps))
           } else if (this.isStart()) {
             this._o = true
 

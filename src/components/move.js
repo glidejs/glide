@@ -68,14 +68,13 @@ export default function (Glide, Components, Events) {
     /**
      * Gets translate value based on configured glide type.
      *
-     * @todo Use isDir method on direction component for this if.
      * @return {Number}
      */
     get () {
       let offset = this.offset
       let translate = this.translate
 
-      if (Glide.settings.rtl) {
+      if (Components.Direction.is('rtl')) {
         return translate + offset
       }
 

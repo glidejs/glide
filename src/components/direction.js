@@ -12,6 +12,16 @@ export default function (Glide, Components, Events) {
     },
 
     /**
+     * Checks value of direction mode.
+     *
+     * @param {String} direction
+     * @returns {Boolean}
+     */
+    is (direction) {
+      return this.value === direction
+    },
+
+    /**
      * Applies direction class to the root HTML element.
      *
      * @return {Void}

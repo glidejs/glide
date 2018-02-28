@@ -1422,14 +1422,13 @@ var Move = function (Glide, Components, Events) {
     /**
      * Gets translate value based on configured glide type.
      *
-     * @todo Use isDir method on direction component for this if.
      * @return {Number}
      */
     get: function get() {
       var offset = this.offset;
       var translate = this.translate;
 
-      if (Glide.settings.rtl) {
+      if (Components.Direction.is('rtl')) {
         return translate + offset;
       }
 
@@ -1889,6 +1888,17 @@ var Direction = function (Glide, Components, Events) {
 
 
     /**
+     * Checks value of direction mode.
+     *
+     * @param {String} direction
+     * @returns {Boolean}
+     */
+    is: function is(direction) {
+      return this.value === direction;
+    },
+
+
+    /**
      * Applies direction class to the root HTML element.
      *
      * @return {Void}
@@ -1963,12 +1973,11 @@ var Rtl = function (Glide, Components) {
     /**
      * Negates the passed translate if glide is in RTL option.
      *
-     * @todo Use isDir method on direction component for this if.
      * @param  {Number} translate
      * @return {Number}
      */
     modify: function modify(translate) {
-      if (Glide.settings.rtl) {
+      if (Components.Direction.is('rtl')) {
         return -translate;
       }
 

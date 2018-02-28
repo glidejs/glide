@@ -10,12 +10,11 @@ export default function (Glide, Components) {
     /**
      * Negates the passed translate if glide is in RTL option.
      *
-     * @todo Use isDir method on direction component for this if.
      * @param  {Number} translate
      * @return {Number}
      */
     modify (translate) {
-      if (Glide.settings.rtl) {
+      if (Components.Direction.is('rtl')) {
         return -translate
       }
 

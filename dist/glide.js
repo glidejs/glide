@@ -1074,11 +1074,11 @@ var Gap = function (Glide, Components, Events) {
      * @return {Void}
      */
     apply: function apply() {
-      var direction = Components.Direction.value;
       var items = Components.Html.wrapper.children;
 
       for (var i = 0, len = items.length; i < len; i++) {
         var style = items[i].style;
+        var direction = Components.Direction.value;
 
         if (i !== 0) {
           style[MARGIN_TYPE[direction][0]] = this.value / 2 + 'px';
@@ -1880,7 +1880,8 @@ var Resize = function (Glide, Components, Events) {
   return RESIZE;
 };
 
-var FLIPED_DIRECTIONS = {
+var DIRECTONS = ['ltr', 'rtl'];
+var FLIPED_MOVEMENTS = {
   '>': '<',
   '<': '>',
   '=': '='
@@ -1908,7 +1909,7 @@ var Direction = function (Glide, Components, Events) {
       var token = pattern.slice(0, 1);
 
       if (this.is('rtl')) {
-        return pattern.split(token).join(FLIPED_DIRECTIONS[token]);
+        return pattern.split(token).join(FLIPED_MOVEMENTS[token]);
       }
 
       return pattern;
@@ -1964,7 +1965,11 @@ var Direction = function (Glide, Components, Events) {
      * @return {Void}
      */
     set: function set(value) {
-      DIRECTION._v = value;
+      if (DIRECTONS.includes(value)) {
+        DIRECTION._v = value;
+      } else {
+        warn('Direction value must be `ltr` or `rtl`');
+      }
     }
   });
 
@@ -1975,6 +1980,14 @@ var Direction = function (Glide, Components, Events) {
    */
   Events.listen(['destroy', 'update'], function () {
     DIRECTION.removeClass();
+  });
+
+  /**
+   * Remount component:
+   * - on update to reflect changes in direction value
+   */
+  Events.listen('update', function () {
+    DIRECTION.mount();
   });
 
   /**

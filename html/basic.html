@@ -20,8 +20,8 @@
   }
 </style>
 <select id="type-select">
-  <option value="slider" selected>slider</option>
-  <option value="carousel">carousel</option>
+  <option value="ltr" selected>slider</option>
+  <option value="rtl">carousel</option>
 </select>
 <div id="glide1" class="glide">
   <div data-glide-el="controls" class="glide__arrows">
@@ -97,7 +97,7 @@
   var el = document.querySelector('#glide1')
   var glide1 = new Glide(el, {
     // type: 'carousel',
-    direction: 'rtl',
+    direction: 'ltr',
     // focusAt: 1,
     perView: 4,
     perTouch: 1,
@@ -113,7 +113,7 @@
   var select = document.querySelector('#type-select')
   select.addEventListener('change', function (event) {
     glide1.update({
-      type: event.target.value
+      direction: event.target.value
     })
   })
 

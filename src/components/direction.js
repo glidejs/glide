@@ -1,6 +1,8 @@
+import { warn } from '../utils/log'
 import { define } from '../utils/object'
 
-const FLIPED_DIRECTIONS = {
+const DIRECTONS = ['ltr', 'rtl']
+const FLIPED_MOVEMENTS = {
   '>': '<',
   '<': '>',
   '=': '='
@@ -27,7 +29,7 @@ export default function (Glide, Components, Events) {
       let token = pattern.slice(0, 1)
 
       if (this.is('rtl')) {
-        return pattern.split(token).join(FLIPED_DIRECTIONS[token])
+        return pattern.split(token).join(FLIPED_MOVEMENTS[token])
       }
 
       return pattern
@@ -79,7 +81,11 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     set (value) {
-      DIRECTION._v = value
+      if (DIRECTONS.includes(value)) {
+        DIRECTION._v = value
+      } else {
+        warn('Direction value must be `ltr` or `rtl`')
+      }
     }
   })
 
@@ -90,6 +96,14 @@ export default function (Glide, Components, Events) {
    */
   Events.listen(['destroy', 'update'], () => {
     DIRECTION.removeClass()
+  })
+
+  /**
+   * Remount component:
+   * - on update to reflect changes in direction value
+   */
+  Events.listen('update', () => {
+    DIRECTION.mount()
   })
 
   /**

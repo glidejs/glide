@@ -25,11 +25,11 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     apply () {
-      let direction = Components.Direction.value
       let items = Components.Html.wrapper.children
 
       for (let i = 0, len = items.length; i < len; i++) {
         let style = items[i].style
+        let direction = Components.Direction.value
 
         if (i !== 0) {
           style[MARGIN_TYPE[direction][0]] = `${this.value / 2}px`

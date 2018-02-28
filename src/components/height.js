@@ -12,7 +12,7 @@ export default function (Glide, Components, Events) {
         let style = Components.Html.track.style
 
         style.transition = Components.Transition.compose('height')
-        style.height = this.value
+        style.height = `${this.value}px`
       }
     },
 

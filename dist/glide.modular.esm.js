@@ -2662,7 +2662,7 @@ var height = function (Glide, Components, Events) {
         var style = Components.Html.track.style;
 
         style.transition = Components.Transition.compose('height');
-        style.height = this.value;
+        style.height = this.value + 'px';
       }
     },
 

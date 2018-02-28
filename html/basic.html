@@ -122,20 +122,21 @@
     // console.log(glide1.disabled)
   })
   glide1.mount({
-  RandomHeight: function (Glide, Components) {
-    return {
-      mount: function () {
-        var slides = Components.Html.slides
+    RandomHeight: function (Glide, Components) {
+      return {
+        mount: function () {
+          var slides = Components.Html.slides
 
-        for (var i = 0; i < slides.length; i++) {
-          var height = Math.floor(Math.random() * (250 - 150)) + 150
+          for (var i = 0; i < slides.length; i++) {
+            var height = Math.floor(Math.random() * (250 - 150)) + 150
 
-          slides[i].style.height = height + 'px'
+            slides[i].style.height = height + 'px'
+            slides[i].style.lineHeight = height + 'px'
+          }
         }
       }
     }
-  }
-})
+  })
 
   var el2 = document.querySelector('#glide2')
   var glide2 = new Glide(el2, {

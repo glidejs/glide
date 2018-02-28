@@ -134,12 +134,15 @@ export default {
   autoheight: false,
 
   /**
-   * Switch to "right to left" moving mode.
+   * Moving direction mode.
    *
-   * @todo Refactor this option to `direction` with will take `ltr` and `rtl` values
-   * @type {Boolean}
+   * Available inputs:
+   * - 'ltr' - left to right movement,
+   * - 'rtl' - right to left movement.
+   *
+   * @type {String}
    */
-  rtl: false,
+  direction: 'ltr',
 
   /**
    * The distance value of the next and previous viewports which
@@ -168,10 +171,14 @@ export default {
   /**
    * Collection of internally used HTML classes.
    *
+   * @todo Refactor `slider` and `carousel` properties to single `type: { slider: '', carousel: '' }` object
    * @type {Object}
    */
   classes: {
-    rtl: 'glide--rtl',
+    direction: {
+      ltr: 'glide--ltr',
+      rtl: 'glide--rtl'
+    },
     slider: 'glide--slider',
     carousel: 'glide--carousel',
     swipeable: 'glide--swipeable',

@@ -140,11 +140,15 @@ var defaults = {
   autoheight: false,
 
   /**
-   * Switch to "right to left" moving mode.
+   * Moving direction mode.
    *
-   * @type {Boolean}
+   * Available inputs:
+   * - 'ltr' - left to right movement,
+   * - 'rtl' - right to left movement.
+   *
+   * @type {String}
    */
-  rtl: false,
+  direction: 'ltr',
 
   /**
    * The distance value of the next and previous viewports which
@@ -173,10 +177,14 @@ var defaults = {
   /**
    * Collection of internally used HTML classes.
    *
+   * @todo Refactor `slider` and `carousel` properties to single `type: { slider: '', carousel: '' }` object
    * @type {Object}
    */
   classes: {
-    rtl: 'glide--rtl',
+    direction: {
+      ltr: 'glide--ltr',
+      rtl: 'glide--rtl'
+    },
     slider: 'glide--slider',
     carousel: 'glide--carousel',
     swipeable: 'glide--swipeable',
@@ -1052,6 +1060,7 @@ var Gap = function (Glide, Components, Events) {
      * Applies gaps between slides. First and last
      * slides do not receive it's edge margins.
      *
+     * @todo Refactor after introducing direction component. Margin side should be choosen by map where key is direction and value is margin property name.
      * @return {Void}
      */
     apply: function apply() {
@@ -1060,24 +1069,16 @@ var Gap = function (Glide, Components, Events) {
       for (var i = 0, len = items.length; i < len; i++) {
         var style = items[i].style;
 
-        var ml = style.marginLeft;
-        var mr = style.marginRight;
-
-        if (Glide.settings.rtl) {
-          var _ml = style.marginRight;
-          var _mr = style.marginLeft;
-        }
-
         if (i !== 0) {
-          ml = this.value / 2 + 'px';
+          style.marginLeft = this.value / 2 + 'px';
         } else {
-          ml = '';
+          style.marginLeft = '';
         }
 
         if (i !== items.length - 1) {
-          mr = this.value / 2 + 'px';
+          style.marginRight = this.value / 2 + 'px';
         } else {
-          mr = '';
+          style.marginRight = '';
         }
       }
     }
@@ -1415,6 +1416,7 @@ var Move = function (Glide, Components, Events) {
     /**
      * Gets translate value based on configured glide type.
      *
+     * @todo Use isDir method on direction component for this if.
      * @return {Number}
      */
     get: function get() {
@@ -1536,23 +1538,10 @@ var Build = function (Glide, Components, Events) {
     mount: function mount() {
       Events.emit('build.before', Glide);
 
-      this.dirClass();
       this.typeClass();
       this.activeClass();
 
       Events.emit('build.after', Glide);
-    },
-
-
-    /**
-     * Adds `rtl` class to the glide element.
-     *
-     * @return {Void}
-     */
-    dirClass: function dirClass() {
-      if (Glide.settings.rtl) {
-        Components.Html.root.classList.add(Glide.settings.classes.rtl);
-      }
     },
 
 
@@ -1592,8 +1581,6 @@ var Build = function (Glide, Components, Events) {
       var classes = Glide.settings.classes;
 
       Components.Html.root.classList.remove(classes[Glide.settings.type]);
-
-      Components.Html.root.classList.remove(classes.rtl);
 
       Components.Html.slides.forEach(function (sibling) {
         sibling.classList.remove(classes.activeSlide);
@@ -1883,6 +1870,81 @@ var Resize = function (Glide, Components, Events) {
   return RESIZE;
 };
 
+var Direction = function (Glide, Components, Events) {
+  var DIRECTION = {
+    /**
+     * Setups gap value based on settings.
+     *
+     * @return {Void}
+     */
+    mount: function mount() {
+      this.value = Glide.settings.direction;
+    },
+
+
+    /**
+     * Applies direction class to the root HTML element.
+     *
+     * @return {Void}
+     */
+    addClass: function addClass() {
+      Components.Html.root.classList.add(Glide.settings.classes.direction[this.value]);
+    },
+
+
+    /**
+     * Removes direction class from the root HTML element.
+     *
+     * @return {Void}
+     */
+    removeClass: function removeClass() {
+      Components.Html.root.classList.remove(Glide.settings.classes.direction[this.value]);
+    }
+  };
+
+  define(DIRECTION, 'value', {
+    /**
+     * Gets value of the direction.
+     *
+     * @returns {Number}
+     */
+    get: function get() {
+      return DIRECTION._v;
+    },
+
+
+    /**
+     * Sets value of the direction.
+     *
+     * @param {Number|String} value
+     * @return {Void}
+     */
+    set: function set(value) {
+      DIRECTION._v = value;
+    }
+  });
+
+  /**
+   * Clear direction class:
+   * - on destroy to bring HTML to its initial state
+   * - on update to remove class before reappling bellow
+   */
+  Events.listen(['destroy', 'update'], function () {
+    DIRECTION.removeClass();
+  });
+
+  /**
+   * Apply direction class:
+   * - before building to apply class for the first time
+   * - on updating to reapply direction class that may changed
+   */
+  Events.listen(['build.before', 'update'], function () {
+    DIRECTION.addClass();
+  });
+
+  return DIRECTION;
+};
+
 /**
  * Reflects value of glide movement.
  *
@@ -1895,6 +1957,7 @@ var Rtl = function (Glide, Components) {
     /**
      * Negates the passed translate if glide is in RTL option.
      *
+     * @todo Use isDir method on direction component for this if.
      * @param  {Number} translate
      * @return {Number}
      */
@@ -2335,6 +2398,7 @@ var swipe = function (Glide, Components, Events) {
      * Handler for `swipeend` event. Finitializes
      * user's tap and decides about glide move.
      *
+     * @todo Use direction component to resolve moving direction instead of multiple ifs.
      * @param {Object} event
      * @return {Void}
      */
@@ -2960,6 +3024,7 @@ var controls = function (Glide, Components, Events) {
     /**
      * Resolves pattern based on ltr/rtl moving direction
      *
+     * @todo Move to direction component. It should be responsible for resolving moving patterns.
      * @param {String} pattern
      * @returns {String}
      */
@@ -3037,6 +3102,7 @@ var keyboard = function (Glide, Components, Events) {
     /**
      * Handles keyboard's arrows press and moving glide foward and backward.
      *
+     * @todo Use direction component to resolve moving direction instead of multiple ifs.
      * @param  {Object} event
      * @return {Void}
      */
@@ -3305,6 +3371,7 @@ var COMPONENTS = {
   Html: Html,
   Translate: Translate,
   Transition: Transition,
+  Direction: Direction,
   Peek: Peek,
   Sizes: Sizes,
   Gap: Gap,

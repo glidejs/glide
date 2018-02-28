@@ -65,11 +65,19 @@ describe('Class', () => {
     expect(root.classList.contains(defaults.classes.swipeable)).toBe(true)
   })
 
-  test('`classes.rtl` should be applied on the root element', () => {
+  test('`classes.direction.ltr` should be applied on the root element in `ltr` mode', () => {
     let { root } = query(document)
 
-    new Glide('#glide', { rtl: true }).mount()
+    new Glide('#glide').mount()
 
-    expect(root.classList.contains(defaults.classes.rtl)).toBe(true)
+    expect(root.classList.contains(defaults.classes.direction.ltr)).toBe(true)
+  })
+
+  test('`classes.direction.rtl` should be applied on the root element in `rtl` mode', () => {
+    let { root } = query(document)
+
+    new Glide('#glide', { direction: 'rtl' }).mount()
+
+    expect(root.classList.contains(defaults.classes.direction.rtl)).toBe(true)
   })
 })

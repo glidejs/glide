@@ -11,23 +11,10 @@ export default function (Glide, Components, Events) {
     mount () {
       Events.emit('build.before', Glide)
 
-      this.dirClass()
       this.typeClass()
       this.activeClass()
 
       Events.emit('build.after', Glide)
-    },
-
-    /**
-     * Adds `rtl` class to the glide element.
-     *
-     * @todo move this method to direction component. It should be responsible for appling class.
-     * @return {Void}
-     */
-    dirClass () {
-      if (Glide.settings.rtl) {
-        Components.Html.root.classList.add(Glide.settings.classes.rtl)
-      }
     },
 
     /**
@@ -58,15 +45,12 @@ export default function (Glide, Components, Events) {
     /**
      * Removes HTML classes applied at building.
      *
-     * @todo Move removing rtl class logic to direction component.
      * @return {Void}
      */
     removeClasses () {
       let classes = Glide.settings.classes
 
       Components.Html.root.classList.remove(classes[Glide.settings.type])
-
-      Components.Html.root.classList.remove(classes.rtl)
 
       Components.Html.slides.forEach((sibling) => {
         sibling.classList.remove(classes.activeSlide)

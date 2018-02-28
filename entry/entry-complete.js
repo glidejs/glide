@@ -10,6 +10,7 @@ import Sizes from '../src/components/sizes'
 import Build from '../src/components/build'
 import Clones from '../src/components/clones'
 import Resize from '../src/components/resize'
+import Direction from '../src/components/direction'
 import Translate from '../src/components/translate'
 import Transition from '../src/components/transition'
 
@@ -28,6 +29,7 @@ const COMPONENTS = {
   Html,
   Translate,
   Transition,
+  Direction,
   Peek,
   Sizes,
   Gap,

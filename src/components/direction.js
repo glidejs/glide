@@ -1,5 +1,11 @@
 import { define } from '../utils/object'
 
+const FLIPED_DIRECTIONS = {
+  '>': '<',
+  '<': '>',
+  '=': '='
+}
+
 export default function (Glide, Components, Events) {
   const DIRECTION = {
     /**
@@ -9,6 +15,22 @@ export default function (Glide, Components, Events) {
      */
     mount () {
       this.value = Glide.settings.direction
+    },
+
+    /**
+     * Resolves pattern based on direction value
+     *
+     * @param {String} pattern
+     * @returns {String}
+     */
+    resolve (pattern) {
+      let token = pattern.slice(0, 1)
+
+      if (this.is('rtl')) {
+        return pattern.split(token).join(FLIPED_DIRECTIONS[token])
+      }
+
+      return pattern
     },
 
     /**

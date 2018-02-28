@@ -4,11 +4,6 @@ import EventsBinder from '../core/event/events-binder'
 
 const NAV_SELECTOR = '[data-glide-el="controls[nav]"]'
 const CONTROLS_SELECTOR = '[data-glide-el^="controls"]'
-const FLIPED_DIRECTIONS = {
-  '>': '<',
-  '<': '>',
-  '=': '='
-}
 
 export default function (Glide, Components, Events) {
   /**
@@ -120,24 +115,7 @@ export default function (Glide, Components, Events) {
     click (event) {
       event.preventDefault()
 
-      Components.Run.make(this.resolveDir(event.currentTarget.dataset.glideDir))
-    },
-
-    /**
-     * Resolves pattern based on ltr/rtl moving direction
-     *
-     * @todo Move to direction component. It should be responsible for resolving moving patterns.
-     * @param {String} pattern
-     * @returns {String}
-     */
-    resolveDir (pattern) {
-      let token = pattern.slice(0, 1)
-
-      if (Glide.settings.rtl) {
-        return pattern.split(token).join(FLIPED_DIRECTIONS[token])
-      }
-
-      return pattern
+      Components.Run.make(Components.Direction.resolve(event.currentTarget.dataset.glideDir))
     }
   }
 

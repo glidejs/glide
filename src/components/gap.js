@@ -2,6 +2,11 @@ import { toInt } from '../utils/unit'
 import { define } from '../utils/object'
 import { throttle } from '../utils/wait'
 
+const MARGIN_TYPE = {
+  ltr: ['marginLeft', 'marginRight'],
+  rtl: ['marginRight', 'marginLeft']
+}
+
 export default function (Glide, Components, Events) {
   const GAP = {
     /**
@@ -17,25 +22,25 @@ export default function (Glide, Components, Events) {
      * Applies gaps between slides. First and last
      * slides do not receive it's edge margins.
      *
-     * @todo Refactor after introducing direction component. Margin side should be choosen by map where key is direction and value is margin property name.
      * @return {Void}
      */
     apply () {
+      let direction = Components.Direction.value
       let items = Components.Html.wrapper.children
 
       for (let i = 0, len = items.length; i < len; i++) {
         let style = items[i].style
 
         if (i !== 0) {
-          style.marginLeft = `${this.value / 2}px`
+          style[MARGIN_TYPE[direction][0]] = `${this.value / 2}px`
         } else {
-          style.marginLeft = ''
+          style[MARGIN_TYPE[direction][0]] = ''
         }
 
         if (i !== items.length - 1) {
-          style.marginRight = `${this.value / 2}px`
+          style[MARGIN_TYPE[direction][1]] = `${this.value / 2}px`
         } else {
-          style.marginRight = ''
+          style[MARGIN_TYPE[direction][1]] = ''
         }
       }
     }

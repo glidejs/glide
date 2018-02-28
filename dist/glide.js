@@ -1050,6 +1050,11 @@ function throttle(func, wait, options) {
   return throttled;
 }
 
+var MARGIN_TYPE = {
+  ltr: ['marginLeft', 'marginRight'],
+  rtl: ['marginRight', 'marginLeft']
+};
+
 var Gap = function (Glide, Components, Events) {
   var GAP = {
     /**
@@ -1066,25 +1071,25 @@ var Gap = function (Glide, Components, Events) {
      * Applies gaps between slides. First and last
      * slides do not receive it's edge margins.
      *
-     * @todo Refactor after introducing direction component. Margin side should be choosen by map where key is direction and value is margin property name.
      * @return {Void}
      */
     apply: function apply() {
+      var direction = Components.Direction.value;
       var items = Components.Html.wrapper.children;
 
       for (var i = 0, len = items.length; i < len; i++) {
         var style = items[i].style;
 
         if (i !== 0) {
-          style.marginLeft = this.value / 2 + 'px';
+          style[MARGIN_TYPE[direction][0]] = this.value / 2 + 'px';
         } else {
-          style.marginLeft = '';
+          style[MARGIN_TYPE[direction][0]] = '';
         }
 
         if (i !== items.length - 1) {
-          style.marginRight = this.value / 2 + 'px';
+          style[MARGIN_TYPE[direction][1]] = this.value / 2 + 'px';
         } else {
-          style.marginRight = '';
+          style[MARGIN_TYPE[direction][1]] = '';
         }
       }
     }
@@ -1875,6 +1880,12 @@ var Resize = function (Glide, Components, Events) {
   return RESIZE;
 };
 
+var FLIPED_DIRECTIONS = {
+  '>': '<',
+  '<': '>',
+  '=': '='
+};
+
 var Direction = function (Glide, Components, Events) {
   var DIRECTION = {
     /**
@@ -1884,6 +1895,23 @@ var Direction = function (Glide, Components, Events) {
      */
     mount: function mount() {
       this.value = Glide.settings.direction;
+    },
+
+
+    /**
+     * Resolves pattern based on direction value
+     *
+     * @param {String} pattern
+     * @returns {String}
+     */
+    resolve: function resolve(pattern) {
+      var token = pattern.slice(0, 1);
+
+      if (this.is('rtl')) {
+        return pattern.split(token).join(FLIPED_DIRECTIONS[token]);
+      }
+
+      return pattern;
     },
 
 
@@ -2413,7 +2441,6 @@ var Swipe = function (Glide, Components, Events) {
      * Handler for `swipeend` event. Finitializes
      * user's tap and decides about glide move.
      *
-     * @todo Use direction component to resolve moving direction instead of multiple ifs.
      * @param {Object} event
      * @return {Void}
      */
@@ -2436,22 +2463,22 @@ var Swipe = function (Glide, Components, Events) {
             steps = Math.min(steps, toInt(settings.perTouch));
           }
 
-          if (settings.rtl) {
-            Components.Run.make('>' + -steps);
-          } else {
-            Components.Run.make('<' + steps);
+          if (Components.Direction.is('rtl')) {
+            steps = -steps;
           }
+
+          Components.Run.make(Components.Direction.resolve('<' + steps));
         } else if (swipeDistance < -threshold && swipeDeg < settings.touchAngle) {
           // While swipe is negative and lower than negative threshold move forward.
           if (settings.perTouch) {
             steps = Math.max(steps, -toInt(settings.perTouch));
           }
 
-          if (settings.rtl) {
-            Components.Run.make('<' + -steps);
-          } else {
-            Components.Run.make('>' + steps);
+          if (Components.Direction.is('rtl')) {
+            steps = -steps;
           }
+
+          Components.Run.make(Components.Direction.resolve('>' + steps));
         } else {
           // While swipe don't reach distance apply previous transform.
           Components.Move.make();
@@ -2909,11 +2936,6 @@ var Anchors = function (Glide, Components, Events) {
 
 var NAV_SELECTOR = '[data-glide-el="controls[nav]"]';
 var CONTROLS_SELECTOR = '[data-glide-el^="controls"]';
-var FLIPED_DIRECTIONS = {
-  '>': '<',
-  '<': '>',
-  '=': '='
-};
 
 var Controls = function (Glide, Components, Events) {
   /**
@@ -3032,25 +3054,7 @@ var Controls = function (Glide, Components, Events) {
     click: function click(event) {
       event.preventDefault();
 
-      Components.Run.make(this.resolveDir(event.currentTarget.dataset.glideDir));
-    },
-
-
-    /**
-     * Resolves pattern based on ltr/rtl moving direction
-     *
-     * @todo Move to direction component. It should be responsible for resolving moving patterns.
-     * @param {String} pattern
-     * @returns {String}
-     */
-    resolveDir: function resolveDir(pattern) {
-      var token = pattern.slice(0, 1);
-
-      if (Glide.settings.rtl) {
-        return pattern.split(token).join(FLIPED_DIRECTIONS[token]);
-      }
-
-      return pattern;
+      Components.Run.make(Components.Direction.resolve(event.currentTarget.dataset.glideDir));
     }
   };
 
@@ -3117,25 +3121,16 @@ var Keyboard = function (Glide, Components, Events) {
     /**
      * Handles keyboard's arrows press and moving glide foward and backward.
      *
-     * @todo Use direction component to resolve moving direction instead of multiple ifs.
      * @param  {Object} event
      * @return {Void}
      */
     press: function press(event) {
       if (event.keyCode === 39) {
-        if (Glide.settings.rtl) {
-          Components.Run.make('<');
-        } else {
-          Components.Run.make('>');
-        }
+        Components.Run.make(Components.Direction.resolve('>'));
       }
 
       if (event.keyCode === 37) {
-        if (Glide.settings.rtl) {
-          Components.Run.make('>');
-        } else {
-          Components.Run.make('<');
-        }
+        Components.Run.make(Components.Direction.resolve('<'));
       }
     }
   };

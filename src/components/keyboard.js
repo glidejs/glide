@@ -41,25 +41,16 @@ export default function (Glide, Components, Events) {
     /**
      * Handles keyboard's arrows press and moving glide foward and backward.
      *
-     * @todo Use direction component to resolve moving direction instead of multiple ifs.
      * @param  {Object} event
      * @return {Void}
      */
     press (event) {
       if (event.keyCode === 39) {
-        if (Glide.settings.rtl) {
-          Components.Run.make('<')
-        } else {
-          Components.Run.make('>')
-        }
+        Components.Run.make(Components.Direction.resolve('>'))
       }
 
       if (event.keyCode === 37) {
-        if (Glide.settings.rtl) {
-          Components.Run.make('>')
-        } else {
-          Components.Run.make('<')
-        }
+        Components.Run.make(Components.Direction.resolve('<'))
       }
     }
   }

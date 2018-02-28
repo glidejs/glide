@@ -97,7 +97,6 @@ export default function (Glide, Components, Events) {
      * Handler for `swipeend` event. Finitializes
      * user's tap and decides about glide move.
      *
-     * @todo Use direction component to resolve moving direction instead of multiple ifs.
      * @param {Object} event
      * @return {Void}
      */
@@ -120,11 +119,11 @@ export default function (Glide, Components, Events) {
             steps = Math.min(steps, toInt(settings.perTouch))
           }
 
-          if (settings.rtl) {
-            Components.Run.make(`>${-steps}`)
-          } else {
-            Components.Run.make(`<${steps}`)
+          if (Components.Direction.is('rtl')) {
+            steps = -steps
           }
+
+          Components.Run.make(Components.Direction.resolve(`<${steps}`))
         } else if (
           swipeDistance < -threshold &&
           swipeDeg < settings.touchAngle
@@ -134,11 +133,11 @@ export default function (Glide, Components, Events) {
             steps = Math.max(steps, -toInt(settings.perTouch))
           }
 
-          if (settings.rtl) {
-            Components.Run.make(`<${-steps}`)
-          } else {
-            Components.Run.make(`>${steps}`)
+          if (Components.Direction.is('rtl')) {
+            steps = -steps
           }
+
+          Components.Run.make(Components.Direction.resolve(`>${steps}`))
         } else {
           // While swipe don't reach distance apply previous transform.
           Components.Move.make()

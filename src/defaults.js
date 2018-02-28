@@ -127,13 +127,6 @@ export default {
   throttle: 10,
 
   /**
-   * Set height of the slider based on current slide content.
-   *
-   * @type {Boolean}
-   */
-  autoheight: false,
-
-  /**
    * Moving direction mode.
    *
    * Available inputs:

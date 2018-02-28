@@ -133,13 +133,6 @@ var defaults = {
   throttle: 10,
 
   /**
-   * Set height of the slider based on current slide content.
-   *
-   * @type {Boolean}
-   */
-  autoheight: false,
-
-  /**
    * Moving direction mode.
    *
    * Available inputs:
@@ -2650,69 +2643,6 @@ var Swipe = function (Glide, Components, Events) {
   return SWIPE;
 };
 
-var Height = function (Glide, Components, Events) {
-  var HEIGHT = {
-    /**
-     * Sets height of the slider.
-     *
-     * @return {Void}
-     */
-    set: function set() {
-      if (Glide.settings.autoheight) {
-        var style = Components.Html.track.style;
-
-        style.transition = Components.Transition.compose('height');
-        style.height = this.value + 'px';
-      }
-    },
-
-
-    /**
-     * Unsets height of the slider.
-     *
-     * @return {Void}
-     */
-    unset: function unset() {
-      if (Glide.settings.autoheight) {
-        var style = Components.Html.track.style;
-
-        style.transition = '';
-        style.height = '';
-      }
-    }
-  };
-
-  define(HEIGHT, 'value', {
-    /**
-     * Gets height of the current slide.
-     *
-     * @return {Number}
-     */
-    get: function get() {
-      return Components.Html.slides[Glide.index].offsetHeight;
-    }
-  });
-
-  /**
-   * Set height of the current slide:
-   * - before building, so it starts with proper dimensions
-   * - on each run, when slide changed
-   */
-  Events.listen(['build.after', 'run', 'update'], function () {
-    HEIGHT.set();
-  });
-
-  /**
-   * Clear applied height styles:
-   * - on destroying, to bring HTML to its initial state
-   */
-  Events.listen('destroy', function () {
-    HEIGHT.unset();
-  });
-
-  return HEIGHT;
-};
-
 var Images = function (Glide, Components, Events) {
   /**
    * Instance of the binder for DOM Events.
@@ -3403,7 +3333,6 @@ var COMPONENTS = {
 
   // Optional
   Swipe: Swipe,
-  Height: Height,
   Images: Images,
   Anchors: Anchors,
   Controls: Controls,

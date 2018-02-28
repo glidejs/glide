@@ -14,7 +14,6 @@ import Translate from '../src/components/translate'
 import Transition from '../src/components/transition'
 
 import Swipe from '../src/components/swipe'
-import Height from '../src/components/height'
 import Images from '../src/components/images'
 import Anchors from '../src/components/anchors'
 import Controls from '../src/components/controls'
@@ -39,7 +38,6 @@ const COMPONENTS = {
 
 export {
   Swipe,
-  Height,
   Images,
   Anchors,
   Controls,

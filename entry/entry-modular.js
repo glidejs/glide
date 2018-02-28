@@ -50,6 +50,6 @@ export {
 
 export default class Glide extends Core {
   mount (extensions = {}) {
-    return super.mount(Object.assign(COMPONENTS, extensions))
+    return super.mount(Object.assign({}, COMPONENTS, extensions))
   }
 }

@@ -25,8 +25,8 @@ export default function (Glide, Components, Events) {
       if (Glide.settings.autoheight) {
         let style = Components.Html.track.style
 
-        style.transition = null
-        style.height = null
+        style.transition = ''
+        style.height = ''
       }
     }
   }

@@ -34,7 +34,7 @@
   <div data-glide-el="track" class="glide__track">
     <ul class="glide__slides">
       <li class="glide__slide box">0</li>
-      <li class="glide__slide box" style="height: 400px;">1</li>
+      <li class="glide__slide box">1</li>
       <li class="glide__slide box">2</li>
       <li class="glide__slide box">3</li>
       <li class="glide__slide box">4</li>
@@ -121,7 +121,21 @@
   glide1.on('move', function () {
     // console.log(glide1.disabled)
   })
-  glide1.mount()
+  glide1.mount({
+  RandomHeight: function (Glide, Components) {
+    return {
+      mount: function () {
+        var slides = Components.Html.slides
+
+        for (var i = 0; i < slides.length; i++) {
+          var height = Math.floor(Math.random() * (250 - 150)) + 150
+
+          slides[i].style.height = height + 'px'
+        }
+      }
+    }
+  }
+})
 
   var el2 = document.querySelector('#glide2')
   var glide2 = new Glide(el2, {

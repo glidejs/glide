@@ -11,7 +11,7 @@ import { isFunction } from '../utils/unit'
  * @returns {Object}
  */
 export function mount (glide, extensions, events) {
-  const components = {}
+  let components = {}
 
   for (let name in extensions) {
     if (isFunction(extensions[name])) {

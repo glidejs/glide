@@ -2682,8 +2682,8 @@ var Height = function (Glide, Components, Events) {
       if (Glide.settings.autoheight) {
         var style = Components.Html.track.style;
 
-        style.transition = null;
-        style.height = null;
+        style.transition = '';
+        style.height = '';
       }
     }
   };
@@ -3431,7 +3431,7 @@ var Glide = function (_Core) {
     value: function mount() {
       var extensions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-      return get(Glide.prototype.__proto__ || Object.getPrototypeOf(Glide.prototype), 'mount', this).call(this, _extends(COMPONENTS, extensions));
+      return get(Glide.prototype.__proto__ || Object.getPrototypeOf(Glide.prototype), 'mount', this).call(this, _extends({}, COMPONENTS, extensions));
     }
   }]);
   return Glide;

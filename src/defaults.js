@@ -142,9 +142,10 @@ export default {
    * have to peek in the current view. Accepts number and
    * pixels as a string. Left and right peeking can be
    * set up separately with a directions object.
+   *
    * For example:
-   * `100`, `'100'`, `'100px'` - Peek 100px on the both sides.
-   * { left: 100, right: 50 }` - Peek 100px on the left side and 50px on the right side.
+   * `100` - Peek 100px on the both sides.
+   * { before: 100, after: 50 }` - Peek 100px on the left side and 50px on the right side.
    *
    * @type {Number|String|Object}
    */

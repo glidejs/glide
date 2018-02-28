@@ -1330,7 +1330,7 @@ var Peek = function (Glide, Components, Events) {
       var perView = Glide.settings.perView;
 
       if (isObject(value)) {
-        return value.before / perView - value.after / perView;
+        return value.before / perView + value.after / perView;
       }
 
       return value * 2 / perView;

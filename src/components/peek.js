@@ -54,7 +54,7 @@ export default function (Glide, Components, Events) {
       let perView = Glide.settings.perView
 
       if (isObject(value)) {
-        return (value.before / perView) - (value.after / perView)
+        return (value.before / perView) + (value.after / perView)
       }
 
       return value * 2 / perView

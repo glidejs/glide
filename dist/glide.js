@@ -2700,11 +2700,11 @@ var Height = function (Glide, Components, Events) {
   });
 
   /**
-   * Set height of the current slide on:
-   * - building, so it starts with proper dimensions
-   * - each run, when slide changed
+   * Set height of the current slide:
+   * - before building, so it starts with proper dimensions
+   * - on each run, when slide changed
    */
-  Events.listen(['build.after', 'run'], function () {
+  Events.listen(['build.after', 'run', 'update'], function () {
     HEIGHT.set();
   });
 

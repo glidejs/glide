@@ -11,7 +11,7 @@ export default function (Glide, Components, Events) {
    */
   const Binder = new EventsBinder()
 
-  const AUTOPLAY = {
+  const Autoplay = {
     /**
      * Initializes autoplaying and events.
      *
@@ -78,7 +78,7 @@ export default function (Glide, Components, Events) {
     }
   }
 
-  define(AUTOPLAY, 'time', {
+  define(Autoplay, 'time', {
     /**
      * Gets time period value for the autoplay interval. Prioritizes
      * times in `data-glide-autoplay` attrubutes over options.
@@ -102,7 +102,7 @@ export default function (Glide, Components, Events) {
    * - on updating via API to reset interval that may changed
    */
   Events.listen(['destroy', 'update'], () => {
-    AUTOPLAY.unbind()
+    Autoplay.unbind()
   })
 
   /**
@@ -114,7 +114,7 @@ export default function (Glide, Components, Events) {
    * - on updating via API to reset interval that may changed
    */
   Events.listen(['run.before', 'pause', 'destroy', 'swipe.start', 'update'], () => {
-    AUTOPLAY.stop()
+    Autoplay.stop()
   })
 
   /**
@@ -124,7 +124,7 @@ export default function (Glide, Components, Events) {
    * - while ending a swipe
    */
   Events.listen(['run.after', 'play', 'swipe.end'], () => {
-    AUTOPLAY.start()
+    Autoplay.start()
   })
 
   /**
@@ -132,8 +132,16 @@ export default function (Glide, Components, Events) {
    * - on updating via API to reset interval that may changed
    */
   Events.listen('update', () => {
-    AUTOPLAY.mount()
+    Autoplay.mount()
   })
 
-  return AUTOPLAY
+  /**
+   * Destroy a binder:
+   * - on destroying glide instance to clearup listeners
+   */
+  Events.listen('destroy', () => {
+    Binder.destroy()
+  })
+
+  return Autoplay
 }

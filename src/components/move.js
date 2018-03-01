@@ -2,7 +2,7 @@ import { define } from '../utils/object'
 import { toInt, isUndefined } from '../utils/unit'
 
 export default function (Glide, Components, Events) {
-  const MOVE = {
+  const Move = {
     /**
      * Constructs animation component.
      *
@@ -33,14 +33,14 @@ export default function (Glide, Components, Events) {
     }
   }
 
-  define(MOVE, 'offset', {
+  define(Move, 'offset', {
     /**
      * Gets node of the glide track with slides.
      *
      * @return {Object}
      */
     get () {
-      return MOVE._o
+      return Move._o
     },
 
     /**
@@ -49,11 +49,11 @@ export default function (Glide, Components, Events) {
      * @return {Object}
      */
     set (value) {
-      MOVE._o = !isUndefined(value) ? toInt(value) : 0
+      Move._o = !isUndefined(value) ? toInt(value) : 0
     }
   })
 
-  define(MOVE, 'translate', {
+  define(Move, 'translate', {
     /**
      * Gets translate value based on configured glide type.
      *
@@ -64,7 +64,7 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  define(MOVE, 'value', {
+  define(Move, 'value', {
     /**
      * Gets translate value based on configured glide type.
      *
@@ -88,8 +88,8 @@ export default function (Glide, Components, Events) {
    * - on each standard run to move to newly calculated index
    */
   Events.listen(['build.before', 'run'], () => {
-    MOVE.make()
+    Move.make()
   })
 
-  return MOVE
+  return Move
 }

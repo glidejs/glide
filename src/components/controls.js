@@ -24,6 +24,7 @@ export default function (Glide, Components, Events) {
       /**
        * Collection of navigation HTML elements.
        *
+       * @private
        * @type {HTMLCollection}
        */
       this._n = Components.Html.root.querySelectorAll(NAV_SELECTOR)
@@ -31,6 +32,7 @@ export default function (Glide, Components, Events) {
       /**
        * Collection of controls HTML elements.
        *
+       * @private
        * @type {HTMLCollection}
        */
       this._c = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR)
@@ -43,27 +45,48 @@ export default function (Glide, Components, Events) {
      *
      * @return {Void}
      */
-    activeClass () {
+    setActive () {
       for (let i = 0; i < this._n.length; i++) {
-        this.class(this._n[i])
+        this.addClass(this._n[i].children)
+      }
+    },
+
+    /**
+     * Removes active class to current slide.
+     *
+     * @return {Void}
+     */
+    removeActive () {
+      for (let i = 0; i < this._n.length; i++) {
+        this.removeClass(this._n[i].children)
       }
     },
 
     /**
      * Toggles active class on items inside navigation.
      *
-     * @param  {HTMLElement} wrapper
+     * @param  {HTMLElement} controls
      * @return {Void}
      */
-    class (wrapper) {
+    addClass (controls) {
       let settings = Glide.settings
-      let item = wrapper.children[Glide.index]
+      let item = controls[Glide.index]
 
       item.classList.add(settings.classes.activeNav)
 
       siblings(item).forEach(sibling => {
         sibling.classList.remove(settings.classes.activeNav)
       })
+    },
+
+    /**
+     * Removes active class from active control.
+     *
+     * @param  {HTMLElement} controls
+     * @return {Void}
+     */
+    removeClass (controls) {
+      controls[Glide.index].classList.remove(Glide.settings.classes.activeNav)
     },
 
     /**
@@ -133,15 +156,16 @@ export default function (Glide, Components, Events) {
    * - after each move to the new index
    */
   Events.listen(['mount.after', 'move.after'], () => {
-    Controls.activeClass()
+    Controls.setActive()
   })
 
   /**
-   * Remove bindings from controls:
-   * - on destroying, to remove added EventListeners
+   * Remove bindings and HTML Classes:
+   * - on destroying, to bring markup to its initial state
    */
   Events.listen('destroy', () => {
     Controls.removeBindings()
+    Controls.removeActive()
     Binder.destroy()
   })
 

@@ -28,7 +28,7 @@ export default function (Glide, Components, Events) {
    */
   let prevented = false
 
-  const ANCHORS = {
+  const Anchors = {
     /**
      * Setups a initial state of anchors component.
      *
@@ -52,7 +52,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     bind () {
-      Binder.on('click', Components.Html.wrapper, this.click.bind(this))
+      Binder.on('click', Components.Html.wrapper, this.click)
     },
 
     /**
@@ -125,14 +125,14 @@ export default function (Glide, Components, Events) {
     }
   }
 
-  define(ANCHORS, 'items', {
+  define(Anchors, 'items', {
     /**
      * Gets collection of the arrows HTML elements.
      *
      * @return {HTMLElement[]}
      */
     get () {
-      return ANCHORS._a
+      return Anchors._a
     }
   })
 
@@ -141,7 +141,7 @@ export default function (Glide, Components, Events) {
    * - on swiping, so they won't redirect to its `href` attributes
    */
   Events.listen('swipe.move', () => {
-    ANCHORS.detach()
+    Anchors.detach()
   })
 
   /**
@@ -150,7 +150,7 @@ export default function (Glide, Components, Events) {
    */
   Events.listen('swipe.end', () => {
     Components.Transition.after(() => {
-      ANCHORS.attach()
+      Anchors.attach()
     })
   })
 
@@ -159,8 +159,9 @@ export default function (Glide, Components, Events) {
    * - on destroying, to bring anchors to its initial state
    */
   Events.listen('destroy', () => {
-    ANCHORS.attach().unbind()
+    Anchors.attach().unbind()
+    Binder.destroy()
   })
 
-  return ANCHORS
+  return Anchors
 }

@@ -10,7 +10,7 @@ export default function (Glide, Components, Events) {
    */
   const Binder = new EventsBinder()
 
-  const RESIZE = {
+  const Resize = {
     /**
      * Initializes window bindings.
      */
@@ -45,8 +45,9 @@ export default function (Glide, Components, Events) {
    * - on destroying, to remove added EventListener
    */
   Events.listen('destroy', () => {
-    RESIZE.unbind()
+    Resize.unbind()
+    Binder.destroy()
   })
 
-  return RESIZE
+  return Resize
 }

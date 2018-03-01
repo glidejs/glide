@@ -5,12 +5,11 @@ export default function (Glide, Components, Events) {
    * Holds inactivity status of transition.
    * When true transition is not applied.
    *
-   * @private
    * @type {Boolean}
    */
   let disabled = false
 
-  const TRANSITION = {
+  const Transition = {
     /**
      * Composes string of the CSS transition.
      *
@@ -28,15 +27,22 @@ export default function (Glide, Components, Events) {
     },
 
     /**
-     * Sets value of transition.
+     * Sets value of transition on HTML element.
      *
      * @param {String} property
-     * @return {self}
+     * @return {Void}
      */
     set (property) {
       Components.Html.wrapper.style.transition = this.compose(property)
+    },
 
-      return this
+    /**
+     * Removes value of transition from HTML element.
+     *
+     * @return {Void}
+     */
+    remove () {
+      Components.Html.wrapper.style.transition = ''
     },
 
     /**
@@ -74,7 +80,7 @@ export default function (Glide, Components, Events) {
     }
   }
 
-  define(TRANSITION, 'duration', {
+  define(Transition, 'duration', {
     /**
      * Gets duration of the transition based
      * on currently running animation type.
@@ -97,7 +103,7 @@ export default function (Glide, Components, Events) {
    * - on each moving, because it may be cleared by offset move
    */
   Events.listen('move', () => {
-    TRANSITION.set()
+    Transition.set()
   })
 
   /**
@@ -107,7 +113,7 @@ export default function (Glide, Components, Events) {
    * - on jumping from offset transition at start and end edges in `carousel` type
    */
   Events.listen(['build.before', 'resize', 'translate.jump'], () => {
-    TRANSITION.disable()
+    Transition.disable()
   })
 
   /**
@@ -115,8 +121,16 @@ export default function (Glide, Components, Events) {
    * - on each running, because it may be disabled by offset move
    */
   Events.listen('run', () => {
-    TRANSITION.enable()
+    Transition.enable()
   })
 
-  return TRANSITION
+  /**
+   * Remove transition:
+   * - on destroying to bring markup to its inital state
+   */
+  Events.listen('destroy', () => {
+    Transition.remove()
+  })
+
+  return Transition
 }

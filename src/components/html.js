@@ -6,7 +6,7 @@ import { isString } from '../utils/unit'
 const TRACK_SELECTOR = '[data-glide-el="track"]'
 
 export default function (Glide, Components) {
-  const HTML = {
+  const Html = {
     /**
      * Setup slider HTML nodes.
      *
@@ -21,14 +21,14 @@ export default function (Glide, Components) {
     }
   }
 
-  define(HTML, 'root', {
+  define(Html, 'root', {
     /**
      * Gets node of the glide main element.
      *
      * @return {Object}
      */
     get () {
-      return HTML._r
+      return Html._r
     },
 
     /**
@@ -42,21 +42,21 @@ export default function (Glide, Components) {
       }
 
       if (exist(root)) {
-        HTML._r = root
+        Html._r = root
       } else {
-        warn('Root element must be a existing HTML node')
+        warn('Root element must be a existing Html node')
       }
     }
   })
 
-  define(HTML, 'track', {
+  define(Html, 'track', {
     /**
      * Gets node of the glide track with slides.
      *
      * @return {Object}
      */
     get () {
-      return HTML._t
+      return Html._t
     },
 
     /**
@@ -66,23 +66,23 @@ export default function (Glide, Components) {
      */
     set (tr) {
       if (exist(tr)) {
-        HTML._t = tr
+        Html._t = tr
       } else {
         warn(`Could not find track element. Please use ${TRACK_SELECTOR} attribute.`)
       }
     }
   })
 
-  define(HTML, 'wrapper', {
+  define(Html, 'wrapper', {
     /**
      * Gets node of the slides wrapper.
      *
      * @return {Object}
      */
     get () {
-      return HTML.track.children[0]
+      return Html.track.children[0]
     }
   })
 
-  return HTML
+  return Html
 }

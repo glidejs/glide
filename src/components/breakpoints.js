@@ -5,12 +5,12 @@ import { sortKeys } from '../utils/object'
 /**
  * Sorts keys of breakpoint object so they will be ordered from lower to bigger.
  *
- * @param {Object} breakpoints
+ * @param {Object} points
  * @returns {Object}
  */
-function sortBreakpoints (breakpoints) {
-  if (isObject(breakpoints)) {
-    return sortKeys(breakpoints)
+function sortBreakpoints (points) {
+  if (isObject(points)) {
+    return sortKeys(points)
   } else {
     warn(`Breakpoints option must be an object`)
   }
@@ -20,31 +20,45 @@ function sortBreakpoints (breakpoints) {
 
 export default function (Glide, Components, Events) {
   /**
-   * Sort brekpoints from smaller to larger. It is required in order
+   * Holds reference to settings.
+   *
+   * @type {Object}
+   */
+  let settings = Glide.settings
+
+  /**
+   * Holds reference to breakpoints object in settings
+   *
+   * @type {Object}
+   */
+  let points = settings.breakpoints
+
+  /**
+   * Sort breakpoints from smaller to larger. It is required in order
    * to proper matching currently active breakpoint settings.
    */
-  Glide.settings.breakpoints = sortBreakpoints(Glide.settings.breakpoints)
+  points = sortBreakpoints(points)
 
   /**
    * Cache initial settings before overwritting.
    *
    * @type {Object}
    */
-  let defaults = Object.assign({}, Glide.settings)
+  let defaults = Object.assign({}, settings)
 
-  const BREAKPOINTS = {
+  const Breakpoints = {
     /**
      * Matches settings for currectly matching media breakpoint.
      *
-     * @param {Object} breakpoints
+     * @param {Object} points
      * @returns {Object}
      */
-    match (breakpoints) {
+    match (points) {
       if (typeof window.matchMedia !== 'undefined') {
-        for (const point in breakpoints) {
-          if (breakpoints.hasOwnProperty(point)) {
+        for (const point in points) {
+          if (points.hasOwnProperty(point)) {
             if (window.matchMedia(`(max-width: ${point}px)`).matches) {
-              return breakpoints[point]
+              return points[point]
             }
           }
         }
@@ -58,14 +72,14 @@ export default function (Glide, Components, Events) {
    * Overwrite instance settings with currently matching breakpoint settings.
    * This happens right after component initialization.
    */
-  Glide.settings = Object.assign(Glide.settings, BREAKPOINTS.match(Glide.settings.breakpoints))
+  settings = Object.assign(settings, Breakpoints.match(points))
 
   /**
    * Update glide with settings of matched brekpoint:
    * - window resize to update slider
    */
   Events.listen('resize', () => {
-    Glide.settings = Object.assign(Glide.settings, BREAKPOINTS.match(Glide.settings.breakpoints))
+    settings = Object.assign(settings, Breakpoints.match(points))
   })
 
   /**
@@ -73,10 +87,10 @@ export default function (Glide, Components, Events) {
    * - on reinit via API, so breakpoint matching will be performed with options
    */
   Events.listen('update', () => {
-    Glide.settings.breakpoints = sortBreakpoints(Glide.settings.breakpoints)
+    points = sortBreakpoints(points)
 
-    defaults = Object.assign({}, Glide.settings)
+    defaults = Object.assign({}, settings)
   })
 
-  return BREAKPOINTS
+  return Breakpoints
 }

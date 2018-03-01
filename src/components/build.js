@@ -1,7 +1,7 @@
 import { siblings } from '../utils/dom'
 
 export default function (Glide, Components, Events) {
-  const BUILD = {
+  const Build = {
     /**
      * Init glide building. Adds classes, sets
      * dimensions and setups initial state.
@@ -9,12 +9,12 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     mount () {
-      Events.emit('build.before', Glide)
+      Events.emit('build.before')
 
       this.typeClass()
       this.activeClass()
 
-      Events.emit('build.after', Glide)
+      Events.emit('build.after')
     },
 
     /**
@@ -64,7 +64,7 @@ export default function (Glide, Components, Events) {
    * - on updating to remove classes before remounting component
    */
   Events.listen(['destroy', 'update'], () => {
-    BUILD.removeClasses()
+    Build.removeClasses()
   })
 
   /**
@@ -73,7 +73,7 @@ export default function (Glide, Components, Events) {
    * - on updating settings via API
    */
   Events.listen(['resize', 'update'], () => {
-    BUILD.mount()
+    Build.mount()
   })
 
   /**
@@ -81,8 +81,8 @@ export default function (Glide, Components, Events) {
    * - after each move to the new index
    */
   Events.listen('move.after', () => {
-    BUILD.activeClass()
+    Build.activeClass()
   })
 
-  return BUILD
+  return Build
 }

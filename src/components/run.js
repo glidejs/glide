@@ -2,7 +2,7 @@ import { define } from '../utils/object'
 import { toInt, isNumber } from '../utils/unit'
 
 export default function (Glide, Components, Events) {
-  const RUN = {
+  const Run = {
     /**
      * Initializes autorunning of the glide.
      *
@@ -122,7 +122,7 @@ export default function (Glide, Components, Events) {
     }
   }
 
-  define(RUN, 'move', {
+  define(Run, 'move', {
     /**
      * Gets value of the move schema.
      *
@@ -145,7 +145,7 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  define(RUN, 'length', {
+  define(Run, 'length', {
     /**
      * Gets value of the running distance based
      * on zero-indexing number of slides.
@@ -157,7 +157,7 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  define(RUN, 'offset', {
+  define(Run, 'offset', {
     /**
      * Gets status of the offsetting flag.
      *
@@ -168,5 +168,5 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  return RUN
+  return Run
 }

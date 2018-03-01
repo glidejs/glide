@@ -2,7 +2,7 @@ import Core from '../src/index'
 
 // Required components
 import Run from '../src/components/run'
-import Gap from '../src/components/gap'
+import Gaps from '../src/components/gaps'
 import Html from '../src/components/html'
 import Peek from '../src/components/peek'
 import Move from '../src/components/move'
@@ -31,7 +31,7 @@ const COMPONENTS = {
   Direction,
   Peek,
   Sizes,
-  Gap,
+  Gaps,
   Move,
   Clones,
   Resize,

@@ -14,7 +14,7 @@ export default function (Glide, Components) {
      * @return {Number}
      */
     modify (translate) {
-      return translate + (Components.Gap.value * Glide.index)
+      return translate + (Components.Gaps.value * Glide.index)
     }
   }
 }

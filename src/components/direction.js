@@ -1,7 +1,7 @@
 import { warn } from '../utils/log'
 import { define } from '../utils/object'
 
-const DIRECTONS = ['ltr', 'rtl']
+const VALID_DIRECTIONS = ['ltr', 'rtl']
 const FLIPED_MOVEMENTS = {
   '>': '<',
   '<': '>',
@@ -9,7 +9,7 @@ const FLIPED_MOVEMENTS = {
 }
 
 export default function (Glide, Components, Events) {
-  const DIRECTION = {
+  const Direction = {
     /**
      * Setups gap value based on settings.
      *
@@ -64,14 +64,14 @@ export default function (Glide, Components, Events) {
     }
   }
 
-  define(DIRECTION, 'value', {
+  define(Direction, 'value', {
     /**
      * Gets value of the direction.
      *
      * @returns {Number}
      */
     get () {
-      return DIRECTION._v
+      return Direction._v
     },
 
     /**
@@ -81,8 +81,8 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     set (value) {
-      if (DIRECTONS.includes(value)) {
-        DIRECTION._v = value
+      if (VALID_DIRECTIONS.includes(value)) {
+        Direction._v = value
       } else {
         warn('Direction value must be `ltr` or `rtl`')
       }
@@ -95,7 +95,7 @@ export default function (Glide, Components, Events) {
    * - on update to remove class before reappling bellow
    */
   Events.listen(['destroy', 'update'], () => {
-    DIRECTION.removeClass()
+    Direction.removeClass()
   })
 
   /**
@@ -103,7 +103,7 @@ export default function (Glide, Components, Events) {
    * - on update to reflect changes in direction value
    */
   Events.listen('update', () => {
-    DIRECTION.mount()
+    Direction.mount()
   })
 
   /**
@@ -112,8 +112,8 @@ export default function (Glide, Components, Events) {
    * - on updating to reapply direction class that may changed
    */
   Events.listen(['build.before', 'update'], () => {
-    DIRECTION.addClass()
+    Direction.addClass()
   })
 
-  return DIRECTION
+  return Direction
 }

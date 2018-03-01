@@ -8,7 +8,7 @@ const MARGIN_TYPE = {
 }
 
 export default function (Glide, Components, Events) {
-  const GAP = {
+  const Gaps = {
     /**
      * Setups gap value based on settings.
      *
@@ -43,17 +43,33 @@ export default function (Glide, Components, Events) {
           style[MARGIN_TYPE[direction][1]] = ''
         }
       }
+    },
+
+    /**
+     * Removes gaps from the slides.
+     *
+     * @returns {Void}
+    */
+    remove () {
+      let items = Components.Html.wrapper.children
+
+      for (let i = 0, len = items.length; i < len; i++) {
+        let style = items[i].style
+
+        style.marginLeft = ''
+        style.marginRight = ''
+      }
     }
   }
 
-  define(GAP, 'value', {
+  define(Gaps, 'value', {
     /**
      * Gets value of the gap.
      *
      * @returns {Number}
      */
     get () {
-      return GAP._v
+      return Gaps._v
     },
 
     /**
@@ -63,11 +79,11 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     set (value) {
-      GAP._v = toInt(value)
+      Gaps._v = toInt(value)
     }
   })
 
-  define(GAP, 'grow', {
+  define(Gaps, 'grow', {
     /**
      * Gets additional dimentions value caused by gaps.
      * Used to increase width of the slides wrapper.
@@ -75,11 +91,11 @@ export default function (Glide, Components, Events) {
      * @returns {Number}
      */
     get () {
-      return GAP.value * (Components.Sizes.length - 1)
+      return Gaps.value * (Components.Sizes.length - 1)
     }
   })
 
-  define(GAP, 'reductor', {
+  define(Gaps, 'reductor', {
     /**
      * Gets reduction value caused by gaps.
      * Used to subtract width of the slides.
@@ -89,7 +105,7 @@ export default function (Glide, Components, Events) {
     get () {
       let perView = Glide.settings.perView
 
-      return (GAP.value * (perView - 1)) / perView
+      return (Gaps.value * (perView - 1)) / perView
     }
   })
 
@@ -98,7 +114,7 @@ export default function (Glide, Components, Events) {
    * - on updating via API, to update gap value
    */
   Events.listen('update', () => {
-    GAP.mount()
+    Gaps.mount()
   })
 
   /**
@@ -107,8 +123,16 @@ export default function (Glide, Components, Events) {
    * - on updating via API, to recalculate gaps with new options
    */
   Events.listen(['build.after', 'update'], throttle(() => {
-    GAP.apply()
+    Gaps.apply()
   }, 30))
 
-  return GAP
+  /**
+   * Remove gaps:
+   * - on destroying to bring markup to its inital state
+   */
+  Events.listen('destroy', () => {
+    Gaps.remove()
+  })
+
+  return Gaps
 }

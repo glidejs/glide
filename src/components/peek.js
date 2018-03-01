@@ -2,7 +2,7 @@ import { define } from '../utils/object'
 import { toInt, isObject } from '../utils/unit'
 
 export default function (Glide, Components, Events) {
-  const PEEK = {
+  const Peek = {
     /**
      * Setups how much to peek based on settings.
      *
@@ -13,14 +13,14 @@ export default function (Glide, Components, Events) {
     }
   }
 
-  define(PEEK, 'value', {
+  define(Peek, 'value', {
     /**
      * Gets value of the peek.
      *
      * @returns {Number}
      */
     get () {
-      return PEEK._v
+      return Peek._v
     },
 
     /**
@@ -39,18 +39,18 @@ export default function (Glide, Components, Events) {
         value = toInt(value, width)
       }
 
-      PEEK._v = value
+      Peek._v = value
     }
   })
 
-  define(PEEK, 'reductor', {
+  define(Peek, 'reductor', {
     /**
      * Gets reduction value caused by peek.
      *
      * @returns {Number}
      */
     get () {
-      let value = PEEK.value
+      let value = Peek.value
       let perView = Glide.settings.perView
 
       if (isObject(value)) {
@@ -66,8 +66,8 @@ export default function (Glide, Components, Events) {
    * - when resizing window to update to proper percents
    */
   Events.listen(['resize', 'update'], () => {
-    PEEK.mount()
+    Peek.mount()
   })
 
-  return PEEK
+  return Peek
 }

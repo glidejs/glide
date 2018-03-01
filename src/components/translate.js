@@ -1,11 +1,11 @@
 import transformer from '../transformer/index'
 
 export default function (Glide, Components, Events) {
-  const TRANSLATE = {
+  const Translate = {
     /**
      * Gets value of translate.
      *
-     * @param  {Integer} value
+     * @param  {Number} value
      * @return {String}
      */
     get (value) {
@@ -13,17 +13,24 @@ export default function (Glide, Components, Events) {
     },
 
     /**
-     * Sets value of translate.
+     * Sets value of translate on HTML element.
      *
-     * @param {HTMLElement} el
-     * @return {self}
+     * @param {Number} value
+     * @return {Void}
      */
     set (value) {
       let transform = transformer(Glide, Components).mutate(value)
 
       Components.Html.wrapper.style.transform = this.get(transform)
+    },
 
-      return this
+    /**
+     * Removes value of translate from HTML element.
+     *
+     * @return {Void}
+     */
+    remove () {
+      Components.Html.wrapper.style.transform = ''
     }
   }
 
@@ -33,7 +40,7 @@ export default function (Glide, Components, Events) {
    * - on updating via API to reflect possible changes in options
    */
   Events.listen('move', (context) => {
-    let gap = Components.Gap.value
+    let gap = Components.Gaps.value
     let length = Components.Sizes.length
     let width = Components.Sizes.slideWidth
 
@@ -41,24 +48,32 @@ export default function (Glide, Components, Events) {
       Components.Transition.after(() => {
         Events.emit('translate.jump')
 
-        TRANSLATE.set(width * (length - 1))
+        Translate.set(width * (length - 1))
       })
 
-      return TRANSLATE.set(-width - (gap * length))
+      return Translate.set(-width - (gap * length))
     }
 
     if (Glide.isType('carousel') && Components.Run.isOffset('>')) {
       Components.Transition.after(() => {
         Events.emit('translate.jump')
 
-        TRANSLATE.set(0)
+        Translate.set(0)
       })
 
-      return TRANSLATE.set((width * length) + (gap * length))
+      return Translate.set((width * length) + (gap * length))
     }
 
-    return TRANSLATE.set(context.movement)
+    return Translate.set(context.movement)
   })
 
-  return TRANSLATE
+  /**
+   * Remove translate:
+   * - on destroying to bring markup to its inital state
+   */
+  Events.listen('destroy', () => {
+    Translate.remove()
+  })
+
+  return Translate
 }

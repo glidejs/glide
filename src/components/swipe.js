@@ -21,7 +21,7 @@ export default function (Glide, Components, Events) {
   let swipeStartY = 0
   let disabled = false
 
-  const SWIPE = {
+  const Swipe = {
     /**
      * Initializes swipe bindings.
      *
@@ -284,10 +284,11 @@ export default function (Glide, Components, Events) {
    * - on destroying, to remove added EventListeners
    */
   Events.listen('destroy', () => {
-    SWIPE.unbindSwipeStart()
-    SWIPE.unbindSwipeMove()
-    SWIPE.unbindSwipeEnd()
+    Swipe.unbindSwipeStart()
+    Swipe.unbindSwipeMove()
+    Swipe.unbindSwipeEnd()
+    Binder.destroy()
   })
 
-  return SWIPE
+  return Swipe
 }

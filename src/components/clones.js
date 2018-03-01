@@ -8,7 +8,7 @@ export default function (Glide, Components, Events) {
    */
   let pattern = []
 
-  const CLONES = {
+  const Clones = {
     /**
      * Create pattern map and collect slides to be cloned.
      */
@@ -92,19 +92,17 @@ export default function (Glide, Components, Events) {
       for (let i = 0; i < this.items.length; i++) {
         this.items[i].remove()
       }
-
-      return this
     }
   }
 
-  define(CLONES, 'grow', {
+  define(Clones, 'grow', {
     /**
      * Gets additional dimentions value caused by clones.
      *
      * @return {Number}
      */
     get () {
-      return (Components.Sizes.slideWidth + Components.Gap.value) * CLONES.items.length
+      return (Components.Sizes.slideWidth + Components.Gaps.value) * Clones.items.length
     }
   })
 
@@ -113,8 +111,9 @@ export default function (Glide, Components, Events) {
    * - while glide's type is `carousel`
    */
   Events.listen('update', () => {
-    CLONES.remove().mount()
-    CLONES.append()
+    Clones.remove()
+    Clones.mount()
+    Clones.append()
   })
 
   /**
@@ -123,7 +122,7 @@ export default function (Glide, Components, Events) {
    */
   Events.listen('build.before', () => {
     if (Glide.isType('carousel')) {
-      CLONES.append()
+      Clones.append()
     }
   })
 
@@ -132,8 +131,8 @@ export default function (Glide, Components, Events) {
    * - on destroying, to bring HTML to its initial state
    */
   Events.listen('destroy', () => {
-    CLONES.remove()
+    Clones.remove()
   })
 
-  return CLONES
+  return Clones
 }

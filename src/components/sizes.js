@@ -1,8 +1,7 @@
 import { define } from '../utils/object'
-import { toInt, isObject } from '../utils/unit'
 
 export default function (Glide, Components, Events) {
-  const SIZES = {
+  const Sizes = {
     /**
      * Setups dimentions of slides.
      *
@@ -11,7 +10,7 @@ export default function (Glide, Components, Events) {
     setupSlides () {
       let slides = Components.Html.slides
 
-      for (var i = 0; i < slides.length; i++) {
+      for (let i = 0; i < slides.length; i++) {
         slides[i].style.width = `${this.slideWidth}px`
       }
     },
@@ -23,10 +22,25 @@ export default function (Glide, Components, Events) {
      */
     setupWrapper (dimention) {
       Components.Html.wrapper.style.width = `${this.wrapperSize}px`
+    },
+
+    /**
+     * Removes applied styles from HTML elements.
+     *
+     * @returns {Void}
+     */
+    remove () {
+      let slides = Components.Html.slides
+
+      for (let i = 0; i < slides.length; i++) {
+        slides[i].style.width = ''
+      }
+
+      Components.Html.wrapper.style.width = ''
     }
   }
 
-  define(SIZES, 'length', {
+  define(Sizes, 'length', {
     /**
      * Gets count number of the slides.
      *
@@ -37,7 +51,7 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  define(SIZES, 'width', {
+  define(Sizes, 'width', {
     /**
      * Gets width value of the glide.
      *
@@ -48,25 +62,25 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  define(SIZES, 'wrapperSize', {
+  define(Sizes, 'wrapperSize', {
     /**
      * Gets size of the slides wrapper.
      *
      * @return {Number}
      */
     get () {
-      return (SIZES.slideWidth * SIZES.length) + Components.Gap.grow + Components.Clones.grow
+      return (Sizes.slideWidth * Sizes.length) + Components.Gaps.grow + Components.Clones.grow
     }
   })
 
-  define(SIZES, 'slideWidth', {
+  define(Sizes, 'slideWidth', {
     /**
      * Gets width value of the single slide.
      *
      * @return {Number}
      */
     get () {
-      return (SIZES.width / Glide.settings.perView) - Components.Peek.reductor - Components.Gap.reductor
+      return (Sizes.width / Glide.settings.perView) - Components.Peek.reductor - Components.Gaps.reductor
     }
   })
 
@@ -77,9 +91,17 @@ export default function (Glide, Components, Events) {
    * - on updating via API, to calculate dimensions based on new options
    */
   Events.listen(['build.before', 'resize', 'update'], () => {
-    SIZES.setupSlides()
-    SIZES.setupWrapper()
+    Sizes.setupSlides()
+    Sizes.setupWrapper()
   })
 
-  return SIZES
+  /**
+   * Remove calculated glide's dimensions:
+   * - on destoting to bring markup to its inital state
+   */
+  Events.listen('destroy', () => {
+    Sizes.remove()
+  })
+
+  return Sizes
 }

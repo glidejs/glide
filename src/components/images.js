@@ -8,7 +8,7 @@ export default function (Glide, Components, Events) {
    */
   const Binder = new EventsBinder()
 
-  const IMAGES = {
+  const Images = {
     /**
      * Binds listener to glide wrapper.
      *
@@ -51,8 +51,9 @@ export default function (Glide, Components, Events) {
    * - on destroying, to remove added EventListeners
    */
   Events.listen('destroy', () => {
-    IMAGES.unbind()
+    Images.unbind()
+    Binder.destroy()
   })
 
-  return IMAGES
+  return Images
 }

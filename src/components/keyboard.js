@@ -8,7 +8,7 @@ export default function (Glide, Components, Events) {
    */
   const Binder = new EventsBinder()
 
-  const KEYBOARD = {
+  const Keyboard = {
     /**
      * Binds keyboard events on component mount.
      *
@@ -61,7 +61,7 @@ export default function (Glide, Components, Events) {
    * - on updating to remove events before remounting
    */
   Events.listen(['destroy', 'update'], () => {
-    KEYBOARD.unbind()
+    Keyboard.unbind()
   })
 
   /**
@@ -69,8 +69,16 @@ export default function (Glide, Components, Events) {
    * - on updating to reflect potential changes in settings
    */
   Events.listen('update', () => {
-    KEYBOARD.mount()
+    Keyboard.mount()
   })
 
-  return KEYBOARD
+  /**
+   * Destroy binder:
+   * - on destroying to remove listeners
+   */
+  Events.listen('destroy', () => {
+    Binder.destroy()
+  })
+
+  return Keyboard
 }

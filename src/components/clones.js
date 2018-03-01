@@ -110,7 +110,7 @@ export default function (Glide, Components, Events) {
    * Append additional slide's clones:
    * - while glide's type is `carousel`
    */
-  Events.listen('update', () => {
+  Events.on('update', () => {
     Clones.remove()
     Clones.mount()
     Clones.append()
@@ -120,7 +120,7 @@ export default function (Glide, Components, Events) {
    * Append additional slide's clones:
    * - while glide's type is `carousel`
    */
-  Events.listen('build.before', () => {
+  Events.on('build.before', () => {
     if (Glide.isType('carousel')) {
       Clones.append()
     }
@@ -130,7 +130,7 @@ export default function (Glide, Components, Events) {
    * Remove clones HTMLElements:
    * - on destroying, to bring HTML to its initial state
    */
-  Events.listen('destroy', () => {
+  Events.on('destroy', () => {
     Clones.remove()
   })
 

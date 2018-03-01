@@ -5,7 +5,7 @@ export default class EventsBinder {
    * Construct events.
    */
   constructor (listeners = {}) {
-    this.listeners = listeners
+    this.oners = listeners
   }
 
   /**
@@ -22,9 +22,9 @@ export default class EventsBinder {
     }
 
     for (let i = 0; i < events.length; i++) {
-      this.listeners[events[i]] = closure
+      this.oners[events[i]] = closure
 
-      el.addEventListener(events[i], this.listeners[events[i]], false)
+      el.addEventListener(events[i], this.oners[events[i]], false)
     }
   }
 
@@ -41,7 +41,7 @@ export default class EventsBinder {
     }
 
     for (let i = 0; i < events.length; i++) {
-      el.removeEventListener(events[i], this.listeners[events[i]], false)
+      el.removeEventListener(events[i], this.oners[events[i]], false)
     }
   }
 
@@ -51,6 +51,6 @@ export default class EventsBinder {
    * @returns {Void}
    */
   destroy () {
-    delete this.listeners
+    delete this.oners
   }
 }

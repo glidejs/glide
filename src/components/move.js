@@ -87,7 +87,7 @@ export default function (Glide, Components, Events) {
    * - before build, so glide will start at `startAt` index
    * - on each standard run to move to newly calculated index
    */
-  Events.listen(['build.before', 'run'], () => {
+  Events.on(['build.before', 'run'], () => {
     Move.make()
   })
 

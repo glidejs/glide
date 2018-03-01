@@ -60,7 +60,7 @@ export default function (Glide, Components, Events) {
    * - on destroying to remove added events
    * - on updating to remove events before remounting
    */
-  Events.listen(['destroy', 'update'], () => {
+  Events.on(['destroy', 'update'], () => {
     Keyboard.unbind()
   })
 
@@ -68,7 +68,7 @@ export default function (Glide, Components, Events) {
    * Remount component
    * - on updating to reflect potential changes in settings
    */
-  Events.listen('update', () => {
+  Events.on('update', () => {
     Keyboard.mount()
   })
 
@@ -76,7 +76,7 @@ export default function (Glide, Components, Events) {
    * Destroy binder:
    * - on destroying to remove listeners
    */
-  Events.listen('destroy', () => {
+  Events.on('destroy', () => {
     Binder.destroy()
   })
 

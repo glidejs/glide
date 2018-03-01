@@ -6,10 +6,10 @@ export class EventsBus {
     this.hOP = topics.hasOwnProperty
   }
 
-  listen (topic, listener) {
+  on (topic, listener) {
     if (isArray(topic)) {
       for (let i = 0; i < topic.length; i++) {
-        this.listen(topic[i], listener)
+        this.on(topic[i], listener)
       }
     }
 

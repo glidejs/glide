@@ -94,7 +94,7 @@ export default function (Glide, Components, Events) {
    * - on destroy to bring HTML to its initial state
    * - on update to remove class before reappling bellow
    */
-  Events.listen(['destroy', 'update'], () => {
+  Events.on(['destroy', 'update'], () => {
     Direction.removeClass()
   })
 
@@ -102,7 +102,7 @@ export default function (Glide, Components, Events) {
    * Remount component:
    * - on update to reflect changes in direction value
    */
-  Events.listen('update', () => {
+  Events.on('update', () => {
     Direction.mount()
   })
 
@@ -111,7 +111,7 @@ export default function (Glide, Components, Events) {
    * - before building to apply class for the first time
    * - on updating to reapply direction class that may changed
    */
-  Events.listen(['build.before', 'update'], () => {
+  Events.on(['build.before', 'update'], () => {
     Direction.addClass()
   })
 

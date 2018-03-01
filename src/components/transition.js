@@ -102,7 +102,7 @@ export default function (Glide, Components, Events) {
    * Set transition `style` value:
    * - on each moving, because it may be cleared by offset move
    */
-  Events.listen('move', () => {
+  Events.on('move', () => {
     Transition.set()
   })
 
@@ -112,7 +112,7 @@ export default function (Glide, Components, Events) {
    * - while resizing window and recalculating dimentions
    * - on jumping from offset transition at start and end edges in `carousel` type
    */
-  Events.listen(['build.before', 'resize', 'translate.jump'], () => {
+  Events.on(['build.before', 'resize', 'translate.jump'], () => {
     Transition.disable()
   })
 
@@ -120,7 +120,7 @@ export default function (Glide, Components, Events) {
    * Enable transition:
    * - on each running, because it may be disabled by offset move
    */
-  Events.listen('run', () => {
+  Events.on('run', () => {
     Transition.enable()
   })
 
@@ -128,7 +128,7 @@ export default function (Glide, Components, Events) {
    * Remove transition:
    * - on destroying to bring markup to its inital state
    */
-  Events.listen('destroy', () => {
+  Events.on('destroy', () => {
     Transition.remove()
   })
 

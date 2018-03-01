@@ -63,7 +63,7 @@ export default function (Glide, Components, Events) {
    * - on destroying to bring HTML to its initial state
    * - on updating to remove classes before remounting component
    */
-  Events.listen(['destroy', 'update'], () => {
+  Events.on(['destroy', 'update'], () => {
     Build.removeClasses()
   })
 
@@ -72,7 +72,7 @@ export default function (Glide, Components, Events) {
    * - on resizing of the window to calculate new dimentions
    * - on updating settings via API
    */
-  Events.listen(['resize', 'update'], () => {
+  Events.on(['resize', 'update'], () => {
     Build.mount()
   })
 
@@ -80,7 +80,7 @@ export default function (Glide, Components, Events) {
    * Swap active class of current slide:
    * - after each move to the new index
    */
-  Events.listen('move.after', () => {
+  Events.on('move.after', () => {
     Build.activeClass()
   })
 

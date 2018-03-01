@@ -39,7 +39,7 @@ export default function (Glide, Components, Events) {
    * - on move to reflect index change
    * - on updating via API to reflect possible changes in options
    */
-  Events.listen('move', (context) => {
+  Events.on('move', (context) => {
     let gap = Components.Gaps.value
     let length = Components.Sizes.length
     let width = Components.Sizes.slideWidth
@@ -71,7 +71,7 @@ export default function (Glide, Components, Events) {
    * Remove translate:
    * - on destroying to bring markup to its inital state
    */
-  Events.listen('destroy', () => {
+  Events.on('destroy', () => {
     Translate.remove()
   })
 

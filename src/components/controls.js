@@ -155,7 +155,7 @@ export default function (Glide, Components, Events) {
    * - after mounting to set it to initial index
    * - after each move to the new index
    */
-  Events.listen(['mount.after', 'move.after'], () => {
+  Events.on(['mount.after', 'move.after'], () => {
     Controls.setActive()
   })
 
@@ -163,7 +163,7 @@ export default function (Glide, Components, Events) {
    * Remove bindings and HTML Classes:
    * - on destroying, to bring markup to its initial state
    */
-  Events.listen('destroy', () => {
+  Events.on('destroy', () => {
     Controls.removeBindings()
     Controls.removeActive()
     Binder.destroy()

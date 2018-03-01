@@ -78,7 +78,7 @@ export default function (Glide, Components, Events) {
    * Update glide with settings of matched brekpoint:
    * - window resize to update slider
    */
-  Events.listen('resize', () => {
+  Events.on('resize', () => {
     settings = Object.assign(settings, Breakpoints.match(points))
   })
 
@@ -86,7 +86,7 @@ export default function (Glide, Components, Events) {
    * Resort and update default settings:
    * - on reinit via API, so breakpoint matching will be performed with options
    */
-  Events.listen('update', () => {
+  Events.on('update', () => {
     points = sortBreakpoints(points)
 
     defaults = Object.assign({}, settings)

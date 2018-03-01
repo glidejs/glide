@@ -433,11 +433,11 @@ var EventsBus = function () {
   }
 
   createClass(EventsBus, [{
-    key: 'listen',
-    value: function listen(topic, listener) {
+    key: 'on',
+    value: function on(topic, listener) {
       if (isArray(topic)) {
         for (var i = 0; i < topic.length; i++) {
-          this.listen(topic[i], listener);
+          this.on(topic[i], listener);
         }
       }
 
@@ -665,7 +665,7 @@ var Glide$2 = function () {
   }, {
     key: 'on',
     value: function on(event, handler) {
-      this._e.listen(event, handler);
+      this._e.on(event, handler);
 
       return this;
     }
@@ -1152,7 +1152,7 @@ var Gaps = function (Glide, Components, Events) {
    * Remount component:
    * - on updating via API, to update gap value
    */
-  Events.listen('update', function () {
+  Events.on('update', function () {
     Gaps.mount();
   });
 
@@ -1161,7 +1161,7 @@ var Gaps = function (Glide, Components, Events) {
    * - after building, so slides (including clones) will receive proper margins
    * - on updating via API, to recalculate gaps with new options
    */
-  Events.listen(['build.after', 'update'], throttle(function () {
+  Events.on(['build.after', 'update'], throttle(function () {
     Gaps.apply();
   }, 30));
 
@@ -1169,7 +1169,7 @@ var Gaps = function (Glide, Components, Events) {
    * Remove gaps:
    * - on destroying to bring markup to its inital state
    */
-  Events.listen('destroy', function () {
+  Events.on('destroy', function () {
     Gaps.remove();
   });
 
@@ -1360,7 +1360,7 @@ var Peek = function (Glide, Components, Events) {
    * Recalculate peeking sizes on:
    * - when resizing window to update to proper percents
    */
-  Events.listen(['resize', 'update'], function () {
+  Events.on(['resize', 'update'], function () {
     Peek.mount();
   });
 
@@ -1459,7 +1459,7 @@ var Move = function (Glide, Components, Events) {
    * - before build, so glide will start at `startAt` index
    * - on each standard run to move to newly calculated index
    */
-  Events.listen(['build.before', 'run'], function () {
+  Events.on(['build.before', 'run'], function () {
     Move.make();
   });
 
@@ -1558,7 +1558,7 @@ var Sizes = function (Glide, Components, Events) {
    * - when resizing window to recalculate sildes dimensions
    * - on updating via API, to calculate dimensions based on new options
    */
-  Events.listen(['build.before', 'resize', 'update'], function () {
+  Events.on(['build.before', 'resize', 'update'], function () {
     Sizes.setupSlides();
     Sizes.setupWrapper();
   });
@@ -1567,7 +1567,7 @@ var Sizes = function (Glide, Components, Events) {
    * Remove calculated glide's dimensions:
    * - on destoting to bring markup to its inital state
    */
-  Events.listen('destroy', function () {
+  Events.on('destroy', function () {
     Sizes.remove();
   });
 
@@ -1640,7 +1640,7 @@ var Build = function (Glide, Components, Events) {
    * - on destroying to bring HTML to its initial state
    * - on updating to remove classes before remounting component
    */
-  Events.listen(['destroy', 'update'], function () {
+  Events.on(['destroy', 'update'], function () {
     Build.removeClasses();
   });
 
@@ -1649,7 +1649,7 @@ var Build = function (Glide, Components, Events) {
    * - on resizing of the window to calculate new dimentions
    * - on updating settings via API
    */
-  Events.listen(['resize', 'update'], function () {
+  Events.on(['resize', 'update'], function () {
     Build.mount();
   });
 
@@ -1657,7 +1657,7 @@ var Build = function (Glide, Components, Events) {
    * Swap active class of current slide:
    * - after each move to the new index
    */
-  Events.listen('move.after', function () {
+  Events.on('move.after', function () {
     Build.activeClass();
   });
 
@@ -1778,7 +1778,7 @@ var Clones = function (Glide, Components, Events) {
    * Append additional slide's clones:
    * - while glide's type is `carousel`
    */
-  Events.listen('update', function () {
+  Events.on('update', function () {
     Clones.remove();
     Clones.mount();
     Clones.append();
@@ -1788,7 +1788,7 @@ var Clones = function (Glide, Components, Events) {
    * Append additional slide's clones:
    * - while glide's type is `carousel`
    */
-  Events.listen('build.before', function () {
+  Events.on('build.before', function () {
     if (Glide.isType('carousel')) {
       Clones.append();
     }
@@ -1798,7 +1798,7 @@ var Clones = function (Glide, Components, Events) {
    * Remove clones HTMLElements:
    * - on destroying, to bring HTML to its initial state
    */
-  Events.listen('destroy', function () {
+  Events.on('destroy', function () {
     Clones.remove();
   });
 
@@ -1813,7 +1813,7 @@ var EventsBinder = function () {
     var listeners = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     classCallCheck(this, EventsBinder);
 
-    this.listeners = listeners;
+    this.oners = listeners;
   }
 
   /**
@@ -1834,9 +1834,9 @@ var EventsBinder = function () {
       }
 
       for (var i = 0; i < events.length; i++) {
-        this.listeners[events[i]] = closure;
+        this.oners[events[i]] = closure;
 
-        el.addEventListener(events[i], this.listeners[events[i]], false);
+        el.addEventListener(events[i], this.oners[events[i]], false);
       }
     }
 
@@ -1856,7 +1856,7 @@ var EventsBinder = function () {
       }
 
       for (var i = 0; i < events.length; i++) {
-        el.removeEventListener(events[i], this.listeners[events[i]], false);
+        el.removeEventListener(events[i], this.oners[events[i]], false);
       }
     }
 
@@ -1869,7 +1869,7 @@ var EventsBinder = function () {
   }, {
     key: 'destroy',
     value: function destroy() {
-      delete this.listeners;
+      delete this.oners;
     }
   }]);
   return EventsBinder;
@@ -1919,7 +1919,7 @@ var Resize = function (Glide, Components, Events) {
    * Remove bindings from window:
    * - on destroying, to remove added EventListener
    */
-  Events.listen('destroy', function () {
+  Events.on('destroy', function () {
     Resize.unbind();
     Binder.destroy();
   });
@@ -2025,7 +2025,7 @@ var Direction = function (Glide, Components, Events) {
    * - on destroy to bring HTML to its initial state
    * - on update to remove class before reappling bellow
    */
-  Events.listen(['destroy', 'update'], function () {
+  Events.on(['destroy', 'update'], function () {
     Direction.removeClass();
   });
 
@@ -2033,7 +2033,7 @@ var Direction = function (Glide, Components, Events) {
    * Remount component:
    * - on update to reflect changes in direction value
    */
-  Events.listen('update', function () {
+  Events.on('update', function () {
     Direction.mount();
   });
 
@@ -2042,7 +2042,7 @@ var Direction = function (Glide, Components, Events) {
    * - before building to apply class for the first time
    * - on updating to reapply direction class that may changed
    */
-  Events.listen(['build.before', 'update'], function () {
+  Events.on(['build.before', 'update'], function () {
     Direction.addClass();
   });
 
@@ -2254,7 +2254,7 @@ var Translate = function (Glide, Components, Events) {
    * - on move to reflect index change
    * - on updating via API to reflect possible changes in options
    */
-  Events.listen('move', function (context) {
+  Events.on('move', function (context) {
     var gap = Components.Gaps.value;
     var length = Components.Sizes.length;
     var width = Components.Sizes.slideWidth;
@@ -2286,7 +2286,7 @@ var Translate = function (Glide, Components, Events) {
    * Remove translate:
    * - on destroying to bring markup to its inital state
    */
-  Events.listen('destroy', function () {
+  Events.on('destroy', function () {
     Translate.remove();
   });
 
@@ -2402,7 +2402,7 @@ var Transition = function (Glide, Components, Events) {
    * Set transition `style` value:
    * - on each moving, because it may be cleared by offset move
    */
-  Events.listen('move', function () {
+  Events.on('move', function () {
     Transition.set();
   });
 
@@ -2412,7 +2412,7 @@ var Transition = function (Glide, Components, Events) {
    * - while resizing window and recalculating dimentions
    * - on jumping from offset transition at start and end edges in `carousel` type
    */
-  Events.listen(['build.before', 'resize', 'translate.jump'], function () {
+  Events.on(['build.before', 'resize', 'translate.jump'], function () {
     Transition.disable();
   });
 
@@ -2420,7 +2420,7 @@ var Transition = function (Glide, Components, Events) {
    * Enable transition:
    * - on each running, because it may be disabled by offset move
    */
-  Events.listen('run', function () {
+  Events.on('run', function () {
     Transition.enable();
   });
 
@@ -2428,7 +2428,7 @@ var Transition = function (Glide, Components, Events) {
    * Remove transition:
    * - on destroying to bring markup to its inital state
    */
-  Events.listen('destroy', function () {
+  Events.on('destroy', function () {
     Transition.remove();
   });
 
@@ -2717,7 +2717,7 @@ var swipe = function (Glide, Components, Events) {
    * Add component class:
    * - after initial building
    */
-  Events.listen('build.after', function () {
+  Events.on('build.after', function () {
     Components.Html.root.classList.add(Glide.settings.classes.swipeable);
   });
 
@@ -2725,7 +2725,7 @@ var swipe = function (Glide, Components, Events) {
    * Remove swiping bindings:
    * - on destroying, to remove added EventListeners
    */
-  Events.listen('destroy', function () {
+  Events.on('destroy', function () {
     Swipe.unbindSwipeStart();
     Swipe.unbindSwipeMove();
     Swipe.unbindSwipeEnd();
@@ -2788,7 +2788,7 @@ var images = function (Glide, Components, Events) {
    * Remove bindings from images:
    * - on destroying, to remove added EventListeners
    */
-  Events.listen('destroy', function () {
+  Events.on('destroy', function () {
     Images.unbind();
     Binder.destroy();
   });
@@ -2939,7 +2939,7 @@ var anchors = function (Glide, Components, Events) {
    * Detach anchors inside slides:
    * - on swiping, so they won't redirect to its `href` attributes
    */
-  Events.listen('swipe.move', function () {
+  Events.on('swipe.move', function () {
     Anchors.detach();
   });
 
@@ -2947,7 +2947,7 @@ var anchors = function (Glide, Components, Events) {
    * Attach anchors inside slides:
    * - after swiping and transitions ends, so they can redirect after click again
    */
-  Events.listen('swipe.end', function () {
+  Events.on('swipe.end', function () {
     Components.Transition.after(function () {
       Anchors.attach();
     });
@@ -2957,7 +2957,7 @@ var anchors = function (Glide, Components, Events) {
    * Unbind anchors inside slides:
    * - on destroying, to bring anchors to its initial state
    */
-  Events.listen('destroy', function () {
+  Events.on('destroy', function () {
     Anchors.attach().unbind();
     Binder.destroy();
   });
@@ -3127,7 +3127,7 @@ var controls = function (Glide, Components, Events) {
    * - after mounting to set it to initial index
    * - after each move to the new index
    */
-  Events.listen(['mount.after', 'move.after'], function () {
+  Events.on(['mount.after', 'move.after'], function () {
     Controls.setActive();
   });
 
@@ -3135,7 +3135,7 @@ var controls = function (Glide, Components, Events) {
    * Remove bindings and HTML Classes:
    * - on destroying, to bring markup to its initial state
    */
-  Events.listen('destroy', function () {
+  Events.on('destroy', function () {
     Controls.removeBindings();
     Controls.removeActive();
     Binder.destroy();
@@ -3207,7 +3207,7 @@ var keyboard = function (Glide, Components, Events) {
    * - on destroying to remove added events
    * - on updating to remove events before remounting
    */
-  Events.listen(['destroy', 'update'], function () {
+  Events.on(['destroy', 'update'], function () {
     Keyboard.unbind();
   });
 
@@ -3215,7 +3215,7 @@ var keyboard = function (Glide, Components, Events) {
    * Remount component
    * - on updating to reflect potential changes in settings
    */
-  Events.listen('update', function () {
+  Events.on('update', function () {
     Keyboard.mount();
   });
 
@@ -3223,7 +3223,7 @@ var keyboard = function (Glide, Components, Events) {
    * Destroy binder:
    * - on destroying to remove listeners
    */
-  Events.listen('destroy', function () {
+  Events.on('destroy', function () {
     Binder.destroy();
   });
 
@@ -3336,7 +3336,7 @@ var autoplay = function (Glide, Components, Events) {
    * - on destroying, to clear defined interval
    * - on updating via API to reset interval that may changed
    */
-  Events.listen(['destroy', 'update'], function () {
+  Events.on(['destroy', 'update'], function () {
     Autoplay.unbind();
   });
 
@@ -3348,7 +3348,7 @@ var autoplay = function (Glide, Components, Events) {
    * - while starting a swipe
    * - on updating via API to reset interval that may changed
    */
-  Events.listen(['run.before', 'pause', 'destroy', 'swipe.start', 'update'], function () {
+  Events.on(['run.before', 'pause', 'destroy', 'swipe.start', 'update'], function () {
     Autoplay.stop();
   });
 
@@ -3358,7 +3358,7 @@ var autoplay = function (Glide, Components, Events) {
    * - on playing via API
    * - while ending a swipe
    */
-  Events.listen(['run.after', 'play', 'swipe.end'], function () {
+  Events.on(['run.after', 'play', 'swipe.end'], function () {
     Autoplay.start();
   });
 
@@ -3366,7 +3366,7 @@ var autoplay = function (Glide, Components, Events) {
    * Remount autoplaying:
    * - on updating via API to reset interval that may changed
    */
-  Events.listen('update', function () {
+  Events.on('update', function () {
     Autoplay.mount();
   });
 
@@ -3374,7 +3374,7 @@ var autoplay = function (Glide, Components, Events) {
    * Destroy a binder:
    * - on destroying glide instance to clearup listeners
    */
-  Events.listen('destroy', function () {
+  Events.on('destroy', function () {
     Binder.destroy();
   });
 
@@ -3457,7 +3457,7 @@ var breakpoints = function (Glide, Components, Events) {
    * Update glide with settings of matched brekpoint:
    * - window resize to update slider
    */
-  Events.listen('resize', function () {
+  Events.on('resize', function () {
     settings = _extends(settings, Breakpoints.match(points));
   });
 
@@ -3465,7 +3465,7 @@ var breakpoints = function (Glide, Components, Events) {
    * Resort and update default settings:
    * - on reinit via API, so breakpoint matching will be performed with options
    */
-  Events.listen('update', function () {
+  Events.on('update', function () {
     points = sortBreakpoints(points);
 
     defaults = _extends({}, settings);

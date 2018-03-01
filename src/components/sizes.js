@@ -90,7 +90,7 @@ export default function (Glide, Components, Events) {
    * - when resizing window to recalculate sildes dimensions
    * - on updating via API, to calculate dimensions based on new options
    */
-  Events.listen(['build.before', 'resize', 'update'], () => {
+  Events.on(['build.before', 'resize', 'update'], () => {
     Sizes.setupSlides()
     Sizes.setupWrapper()
   })
@@ -99,7 +99,7 @@ export default function (Glide, Components, Events) {
    * Remove calculated glide's dimensions:
    * - on destoting to bring markup to its inital state
    */
-  Events.listen('destroy', () => {
+  Events.on('destroy', () => {
     Sizes.remove()
   })
 

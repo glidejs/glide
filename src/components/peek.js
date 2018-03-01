@@ -65,7 +65,7 @@ export default function (Glide, Components, Events) {
    * Recalculate peeking sizes on:
    * - when resizing window to update to proper percents
    */
-  Events.listen(['resize', 'update'], () => {
+  Events.on(['resize', 'update'], () => {
     Peek.mount()
   })
 

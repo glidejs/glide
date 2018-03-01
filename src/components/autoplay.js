@@ -101,7 +101,7 @@ export default function (Glide, Components, Events) {
    * - on destroying, to clear defined interval
    * - on updating via API to reset interval that may changed
    */
-  Events.listen(['destroy', 'update'], () => {
+  Events.on(['destroy', 'update'], () => {
     Autoplay.unbind()
   })
 
@@ -113,7 +113,7 @@ export default function (Glide, Components, Events) {
    * - while starting a swipe
    * - on updating via API to reset interval that may changed
    */
-  Events.listen(['run.before', 'pause', 'destroy', 'swipe.start', 'update'], () => {
+  Events.on(['run.before', 'pause', 'destroy', 'swipe.start', 'update'], () => {
     Autoplay.stop()
   })
 
@@ -123,7 +123,7 @@ export default function (Glide, Components, Events) {
    * - on playing via API
    * - while ending a swipe
    */
-  Events.listen(['run.after', 'play', 'swipe.end'], () => {
+  Events.on(['run.after', 'play', 'swipe.end'], () => {
     Autoplay.start()
   })
 
@@ -131,7 +131,7 @@ export default function (Glide, Components, Events) {
    * Remount autoplaying:
    * - on updating via API to reset interval that may changed
    */
-  Events.listen('update', () => {
+  Events.on('update', () => {
     Autoplay.mount()
   })
 
@@ -139,7 +139,7 @@ export default function (Glide, Components, Events) {
    * Destroy a binder:
    * - on destroying glide instance to clearup listeners
    */
-  Events.listen('destroy', () => {
+  Events.on('destroy', () => {
     Binder.destroy()
   })
 

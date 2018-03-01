@@ -275,7 +275,7 @@ export default function (Glide, Components, Events) {
    * Add component class:
    * - after initial building
    */
-  Events.listen('build.after', () => {
+  Events.on('build.after', () => {
     Components.Html.root.classList.add(Glide.settings.classes.swipeable)
   })
 
@@ -283,7 +283,7 @@ export default function (Glide, Components, Events) {
    * Remove swiping bindings:
    * - on destroying, to remove added EventListeners
    */
-  Events.listen('destroy', () => {
+  Events.on('destroy', () => {
     Swipe.unbindSwipeStart()
     Swipe.unbindSwipeMove()
     Swipe.unbindSwipeEnd()

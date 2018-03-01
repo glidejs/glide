@@ -44,7 +44,7 @@ export default function (Glide, Components, Events) {
    * Remove bindings from window:
    * - on destroying, to remove added EventListener
    */
-  Events.listen('destroy', () => {
+  Events.on('destroy', () => {
     Resize.unbind()
     Binder.destroy()
   })

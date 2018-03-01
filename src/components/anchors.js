@@ -140,7 +140,7 @@ export default function (Glide, Components, Events) {
    * Detach anchors inside slides:
    * - on swiping, so they won't redirect to its `href` attributes
    */
-  Events.listen('swipe.move', () => {
+  Events.on('swipe.move', () => {
     Anchors.detach()
   })
 
@@ -148,7 +148,7 @@ export default function (Glide, Components, Events) {
    * Attach anchors inside slides:
    * - after swiping and transitions ends, so they can redirect after click again
    */
-  Events.listen('swipe.end', () => {
+  Events.on('swipe.end', () => {
     Components.Transition.after(() => {
       Anchors.attach()
     })
@@ -158,7 +158,7 @@ export default function (Glide, Components, Events) {
    * Unbind anchors inside slides:
    * - on destroying, to bring anchors to its initial state
    */
-  Events.listen('destroy', () => {
+  Events.on('destroy', () => {
     Anchors.attach().unbind()
     Binder.destroy()
   })

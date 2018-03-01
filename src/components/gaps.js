@@ -113,7 +113,7 @@ export default function (Glide, Components, Events) {
    * Remount component:
    * - on updating via API, to update gap value
    */
-  Events.listen('update', () => {
+  Events.on('update', () => {
     Gaps.mount()
   })
 
@@ -122,7 +122,7 @@ export default function (Glide, Components, Events) {
    * - after building, so slides (including clones) will receive proper margins
    * - on updating via API, to recalculate gaps with new options
    */
-  Events.listen(['build.after', 'update'], throttle(() => {
+  Events.on(['build.after', 'update'], throttle(() => {
     Gaps.apply()
   }, 30))
 
@@ -130,7 +130,7 @@ export default function (Glide, Components, Events) {
    * Remove gaps:
    * - on destroying to bring markup to its inital state
    */
-  Events.listen('destroy', () => {
+  Events.on('destroy', () => {
     Gaps.remove()
   })
 

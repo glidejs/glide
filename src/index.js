@@ -152,7 +152,7 @@ export default class Glide {
    * @return {Void}
    */
   on (event, handler) {
-    this._e.listen(event, handler)
+    this._e.on(event, handler)
 
     return this
   }

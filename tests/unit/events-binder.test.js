@@ -27,14 +27,14 @@ describe('EventsBinder should', () => {
   test('store created listeners when binding with `on`', () => {
     events.on(event, element, callback)
 
-    expect(events.listeners).toHaveProperty(event)
-    expect(events.listeners[event]).toBe(callback)
+    expect(events.oners).toHaveProperty(event)
+    expect(events.oners[event]).toBe(callback)
   })
 
   test('remove previously stored listeners when unbinding with `off`', () => {
     events.on(event, element, callback)
     events.off(event, element)
 
-    expect(events.listeners).not.toHaveProperty(event)
+    expect(events.oners).not.toHaveProperty(event)
   })
 })

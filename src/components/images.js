@@ -50,7 +50,7 @@ export default function (Glide, Components, Events) {
    * Remove bindings from images:
    * - on destroying, to remove added EventListeners
    */
-  Events.listen('destroy', () => {
+  Events.on('destroy', () => {
     Images.unbind()
     Binder.destroy()
   })

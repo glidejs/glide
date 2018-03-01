@@ -117,9 +117,7 @@
   })
   var select = document.querySelector('#type-select')
   select.addEventListener('change', function (event) {
-    glide1.update({
-      direction: event.target.value
-    })
+    glide1.destroy()
   })
 
   glide1.on('move', function () {
@@ -133,8 +131,8 @@
     focusAt: 1,
     perView: 4
   })
-  glide2.mount()
+  // glide2.mount()
 
   console.log(glide1)
-  console.log(glide2)
+  // console.log(glide2)
 </script>

@@ -13,7 +13,7 @@ export default function (Glide, Components, Events) {
    */
   const Binder = new EventsBinder()
 
-  const CONTROLS = {
+  const Controls = {
     /**
      * Inits arrows. Binds events listeners
      * to the arrows HTML elements.
@@ -21,10 +21,20 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     mount () {
+      /**
+       * Collection of navigation HTML elements.
+       *
+       * @type {HTMLCollection}
+       */
       this._n = Components.Html.root.querySelectorAll(NAV_SELECTOR)
+
+      /**
+       * Collection of controls HTML elements.
+       *
+       * @type {HTMLCollection}
+       */
       this._c = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR)
 
-      this.activeClass()
       this.addBindings()
     },
 
@@ -63,7 +73,7 @@ export default function (Glide, Components, Events) {
      */
     addBindings () {
       for (let i = 0; i < this._c.length; i++) {
-        this.bind(this._c[i])
+        this.bind(this._c[i].children)
       }
     },
 
@@ -74,32 +84,30 @@ export default function (Glide, Components, Events) {
      */
     removeBindings () {
       for (let i = 0; i < this._c.length; i++) {
-        this.unbind(this._c[i])
+        this.unbind(this._c[i].children)
       }
     },
 
     /**
      * Binds events to arrows HTML elements.
      *
+     * @param {HTMLCollection} children
      * @return {Void}
      */
-    bind (wrapper) {
-      let children = wrapper.children
-
-      for (var i = 0; i < children.length; i++) {
-        Binder.on(['click', 'touchstart'], children[i], this.click.bind(this))
+    bind (children) {
+      for (let i = 0; i < children.length; i++) {
+        Binder.on(['click', 'touchstart'], children[i], this.click)
       }
     },
 
     /**
      * Unbinds events binded to the arrows HTML elements.
      *
+     * @param {HTMLCollection} children
      * @return {Void}
      */
-    unbind (wrapper) {
-      let children = wrapper.children
-
-      for (var i = 0; i < children.length; i++) {
+    unbind (children) {
+      for (let i = 0; i < children.length; i++) {
         Binder.off(['click', 'touchstart'], children[i])
       }
     },
@@ -121,10 +129,11 @@ export default function (Glide, Components, Events) {
 
   /**
    * Swap active class of current navigation item:
+   * - after mounting to set it to initial index
    * - after each move to the new index
    */
-  Events.listen('move.after', () => {
-    CONTROLS.activeClass()
+  Events.listen(['mount.after', 'move.after'], () => {
+    Controls.activeClass()
   })
 
   /**
@@ -132,8 +141,9 @@ export default function (Glide, Components, Events) {
    * - on destroying, to remove added EventListeners
    */
   Events.listen('destroy', () => {
-    CONTROLS.removeBindings()
+    Controls.removeBindings()
+    Binder.destroy()
   })
 
-  return CONTROLS
+  return Controls
 }

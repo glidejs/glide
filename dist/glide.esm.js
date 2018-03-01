@@ -1788,7 +1788,7 @@ var EventsBinder = function () {
       for (var i = 0; i < events.length; i++) {
         this.listeners[events[i]] = closure;
 
-        el.addEventListener(events[i], this.listeners[events[i]]);
+        el.addEventListener(events[i], this.listeners[events[i]], false);
       }
     }
 
@@ -1808,10 +1808,20 @@ var EventsBinder = function () {
       }
 
       for (var i = 0; i < events.length; i++) {
-        el.removeEventListener(events[i], this.listeners[events[i]]);
-
-        delete this.listeners[events[i]];
+        el.removeEventListener(events[i], this.listeners[events[i]], false);
       }
+    }
+
+    /**
+     * Destroy collected listeners.
+     *
+     * @returns {Void}
+     */
+
+  }, {
+    key: 'destroy',
+    value: function destroy() {
+      delete this.listeners;
     }
   }]);
   return EventsBinder;
@@ -2883,7 +2893,7 @@ var Controls = function (Glide, Components, Events) {
    */
   var Binder = new EventsBinder();
 
-  var CONTROLS = {
+  var Controls = {
     /**
      * Inits arrows. Binds events listeners
      * to the arrows HTML elements.
@@ -2891,10 +2901,20 @@ var Controls = function (Glide, Components, Events) {
      * @return {Void}
      */
     mount: function mount() {
+      /**
+       * Collection of navigation HTML elements.
+       *
+       * @type {HTMLCollection}
+       */
       this._n = Components.Html.root.querySelectorAll(NAV_SELECTOR);
+
+      /**
+       * Collection of controls HTML elements.
+       *
+       * @type {HTMLCollection}
+       */
       this._c = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR);
 
-      this.activeClass();
       this.addBindings();
     },
 
@@ -2936,7 +2956,7 @@ var Controls = function (Glide, Components, Events) {
      */
     addBindings: function addBindings() {
       for (var i = 0; i < this._c.length; i++) {
-        this.bind(this._c[i]);
+        this.bind(this._c[i].children);
       }
     },
 
@@ -2948,7 +2968,7 @@ var Controls = function (Glide, Components, Events) {
      */
     removeBindings: function removeBindings() {
       for (var i = 0; i < this._c.length; i++) {
-        this.unbind(this._c[i]);
+        this.unbind(this._c[i].children);
       }
     },
 
@@ -2956,13 +2976,12 @@ var Controls = function (Glide, Components, Events) {
     /**
      * Binds events to arrows HTML elements.
      *
+     * @param {HTMLCollection} children
      * @return {Void}
      */
-    bind: function bind(wrapper) {
-      var children = wrapper.children;
-
+    bind: function bind(children) {
       for (var i = 0; i < children.length; i++) {
-        Binder.on(['click', 'touchstart'], children[i], this.click.bind(this));
+        Binder.on(['click', 'touchstart'], children[i], this.click);
       }
     },
 
@@ -2970,11 +2989,10 @@ var Controls = function (Glide, Components, Events) {
     /**
      * Unbinds events binded to the arrows HTML elements.
      *
+     * @param {HTMLCollection} children
      * @return {Void}
      */
-    unbind: function unbind(wrapper) {
-      var children = wrapper.children;
-
+    unbind: function unbind(children) {
       for (var i = 0; i < children.length; i++) {
         Binder.off(['click', 'touchstart'], children[i]);
       }
@@ -2998,10 +3016,11 @@ var Controls = function (Glide, Components, Events) {
 
   /**
    * Swap active class of current navigation item:
+   * - after mounting to set it to initial index
    * - after each move to the new index
    */
-  Events.listen('move.after', function () {
-    CONTROLS.activeClass();
+  Events.listen(['mount.after', 'move.after'], function () {
+    Controls.activeClass();
   });
 
   /**
@@ -3009,10 +3028,11 @@ var Controls = function (Glide, Components, Events) {
    * - on destroying, to remove added EventListeners
    */
   Events.listen('destroy', function () {
-    CONTROLS.removeBindings();
+    Controls.removeBindings();
+    Binder.destroy();
   });
 
-  return CONTROLS;
+  return Controls;
 };
 
 var Keyboard = function (Glide, Components, Events) {

@@ -21,10 +21,10 @@ export default class EventsBinder {
       events = [events]
     }
 
-    for (var i = 0; i < events.length; i++) {
+    for (let i = 0; i < events.length; i++) {
       this.listeners[events[i]] = closure
 
-      el.addEventListener(events[i], this.listeners[events[i]])
+      el.addEventListener(events[i], this.listeners[events[i]], false)
     }
   }
 
@@ -40,10 +40,17 @@ export default class EventsBinder {
       events = [events]
     }
 
-    for (var i = 0; i < events.length; i++) {
-      el.removeEventListener(events[i], this.listeners[events[i]])
-
-      delete this.listeners[events[i]]
+    for (let i = 0; i < events.length; i++) {
+      el.removeEventListener(events[i], this.listeners[events[i]], false)
     }
+  }
+
+  /**
+   * Destroy collected listeners.
+   *
+   * @returns {Void}
+   */
+  destroy () {
+    delete this.listeners
   }
 }

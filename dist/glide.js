@@ -430,55 +430,74 @@ function mount(glide, extensions, events) {
 }
 
 var EventsBus = function () {
+  /**
+   * Construct a EventBus instance.
+   */
   function EventsBus() {
-    var topics = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var events = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     classCallCheck(this, EventsBus);
 
-    this.topics = topics;
-    this.hOP = topics.hasOwnProperty;
+    this.events = events;
+    this.hop = events.hasOwnProperty;
   }
+
+  /**
+   * Adds listener to the specifed event.
+   *
+   * @param {String} event
+   * @param {Function} handler
+   */
+
 
   createClass(EventsBus, [{
     key: 'on',
-    value: function on(topic, listener) {
-      if (isArray(topic)) {
-        for (var i = 0; i < topic.length; i++) {
-          this.on(topic[i], listener);
+    value: function on(event, handler) {
+      if (isArray(event)) {
+        for (var i = 0; i < event.length; i++) {
+          this.on(event[i], handler);
         }
       }
 
-      // Create the topic's object if not yet created
-      if (!this.hOP.call(this.topics, topic)) {
-        this.topics[topic] = [];
+      // Create the event's object if not yet created
+      if (!this.hop.call(this.events, event)) {
+        this.events[event] = [];
       }
 
-      // Add the listener to queue
-      var index = this.topics[topic].push(listener) - 1;
+      // Add the handler to queue
+      var index = this.events[event].push(handler) - 1;
 
-      // Provide handle back for removal of topic
+      // Provide handle back for removal of event
       return {
         remove: function remove() {
-          delete this.topics[topic][index];
+          delete this.events[event][index];
         }
       };
     }
+
+    /**
+     * Runs registered handlers for specified event.
+     *
+     * @param {String} event
+     * @param {Mixed} context
+     */
+
   }, {
     key: 'emit',
-    value: function emit(topic, info) {
-      if (isArray(topic)) {
-        for (var i = 0; i < topic.length; i++) {
-          this.emit(topic[i], info);
+    value: function emit(event, context) {
+      if (isArray(event)) {
+        for (var i = 0; i < event.length; i++) {
+          this.emit(event[i], context);
         }
       }
 
-      // If the topic doesn't exist, or there's no listeners in queue, just leave
-      if (!this.hOP.call(this.topics, topic)) {
+      // If the event doesn't exist, or there's no handlers in queue, just leave
+      if (!this.hop.call(this.events, event)) {
         return;
       }
 
-      // Cycle through topics queue, fire!
-      this.topics[topic].forEach(function (item) {
-        item(info || {});
+      // Cycle through events queue, fire!
+      this.events[event].forEach(function (item) {
+        item(context || {});
       });
     }
   }]);
@@ -1813,13 +1832,13 @@ var Clones = function (Glide, Components, Events) {
 
 var EventsBinder = function () {
   /**
-   * Construct events.
+   * Construct a EventsBinder instance.
    */
   function EventsBinder() {
     var listeners = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     classCallCheck(this, EventsBinder);
 
-    this.oners = listeners;
+    this.listeners = listeners;
   }
 
   /**
@@ -1840,9 +1859,9 @@ var EventsBinder = function () {
       }
 
       for (var i = 0; i < events.length; i++) {
-        this.oners[events[i]] = closure;
+        this.listeners[events[i]] = closure;
 
-        el.addEventListener(events[i], this.oners[events[i]], false);
+        el.addEventListener(events[i], this.listeners[events[i]], false);
       }
     }
 
@@ -1862,7 +1881,7 @@ var EventsBinder = function () {
       }
 
       for (var i = 0; i < events.length; i++) {
-        el.removeEventListener(events[i], this.oners[events[i]], false);
+        el.removeEventListener(events[i], this.listeners[events[i]], false);
       }
     }
 
@@ -1875,7 +1894,7 @@ var EventsBinder = function () {
   }, {
     key: 'destroy',
     value: function destroy() {
-      delete this.oners;
+      delete this.listeners;
     }
   }]);
   return EventsBinder;

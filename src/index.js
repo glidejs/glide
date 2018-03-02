@@ -2,7 +2,8 @@ import defaults from './defaults'
 import { warn } from './utils/log'
 import { mount } from './core/index'
 import { toInt, isObject } from './utils/unit'
-import { EventsBus } from './core/event/events-bus'
+
+import EventsBus from './core/event/events-bus'
 
 export default class Glide {
   /**

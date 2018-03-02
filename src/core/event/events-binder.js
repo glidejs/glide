@@ -2,10 +2,10 @@ import { isString } from '../../utils/unit'
 
 export default class EventsBinder {
   /**
-   * Construct events.
+   * Construct a EventsBinder instance.
    */
   constructor (listeners = {}) {
-    this.oners = listeners
+    this.listeners = listeners
   }
 
   /**
@@ -22,9 +22,9 @@ export default class EventsBinder {
     }
 
     for (let i = 0; i < events.length; i++) {
-      this.oners[events[i]] = closure
+      this.listeners[events[i]] = closure
 
-      el.addEventListener(events[i], this.oners[events[i]], false)
+      el.addEventListener(events[i], this.listeners[events[i]], false)
     }
   }
 
@@ -41,7 +41,7 @@ export default class EventsBinder {
     }
 
     for (let i = 0; i < events.length; i++) {
-      el.removeEventListener(events[i], this.oners[events[i]], false)
+      el.removeEventListener(events[i], this.listeners[events[i]], false)
     }
   }
 
@@ -51,6 +51,6 @@ export default class EventsBinder {
    * @returns {Void}
    */
   destroy () {
-    delete this.oners
+    delete this.listeners
   }
 }

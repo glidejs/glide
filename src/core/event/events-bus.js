@@ -1,49 +1,64 @@
 import { isArray } from '../../utils/unit'
 
-export class EventsBus {
-  constructor (topics = {}) {
-    this.topics = topics
-    this.hOP = topics.hasOwnProperty
+export default class EventsBus {
+  /**
+   * Construct a EventBus instance.
+   */
+  constructor (events = {}) {
+    this.events = events
+    this.hop = events.hasOwnProperty
   }
 
-  on (topic, listener) {
-    if (isArray(topic)) {
-      for (let i = 0; i < topic.length; i++) {
-        this.on(topic[i], listener)
+  /**
+   * Adds listener to the specifed event.
+   *
+   * @param {String} event
+   * @param {Function} handler
+   */
+  on (event, handler) {
+    if (isArray(event)) {
+      for (let i = 0; i < event.length; i++) {
+        this.on(event[i], handler)
       }
     }
 
-    // Create the topic's object if not yet created
-    if (!this.hOP.call(this.topics, topic)) {
-      this.topics[topic] = []
+    // Create the event's object if not yet created
+    if (!this.hop.call(this.events, event)) {
+      this.events[event] = []
     }
 
-    // Add the listener to queue
-    var index = this.topics[topic].push(listener) - 1
+    // Add the handler to queue
+    var index = this.events[event].push(handler) - 1
 
-    // Provide handle back for removal of topic
+    // Provide handle back for removal of event
     return {
       remove () {
-        delete this.topics[topic][index]
+        delete this.events[event][index]
       }
     }
   }
 
-  emit (topic, info) {
-    if (isArray(topic)) {
-      for (let i = 0; i < topic.length; i++) {
-        this.emit(topic[i], info)
+  /**
+   * Runs registered handlers for specified event.
+   *
+   * @param {String} event
+   * @param {Mixed} context
+   */
+  emit (event, context) {
+    if (isArray(event)) {
+      for (let i = 0; i < event.length; i++) {
+        this.emit(event[i], context)
       }
     }
 
-    // If the topic doesn't exist, or there's no listeners in queue, just leave
-    if (!this.hOP.call(this.topics, topic)) {
+    // If the event doesn't exist, or there's no handlers in queue, just leave
+    if (!this.hop.call(this.events, event)) {
       return
     }
 
-    // Cycle through topics queue, fire!
-    this.topics[topic].forEach((item) => {
-      item(info || {})
+    // Cycle through events queue, fire!
+    this.events[event].forEach((item) => {
+      item(context || {})
     })
   }
 }

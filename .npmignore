@@ -1,9 +1,9 @@
 node_modules/
 coverage/
-html/
-docs/
 
 .editorconfig
 .vscode
 
 .DS_Store
+
+package-lock.json

@@ -1,13 +1,17 @@
 import EventsBinder from '../../src/core/event/events-binder'
 
 let events = null
-let event = 'click'
+let element = null
 let callback = jest.fn()
-let element = document.createElement('div')
 
 describe('EventsBinder should', () => {
   beforeEach(() => {
     events = new EventsBinder()
+    element = document.createElement('div')
+  })
+
+  afterEach(() => {
+    element.remove()
   })
 
   test('create and remove event listener from element', () => {
@@ -17,24 +21,33 @@ describe('EventsBinder should', () => {
     element.addEventListener = addFn
     element.removeEventListener = rmFn
 
-    events.on(event, element, callback)
-    expect(addFn).toHaveBeenCalledWith(event, callback)
+    events.on('click', element, callback)
+    expect(addFn).toHaveBeenCalledWith('click', callback, expect.any(Boolean))
 
-    events.off(event, element)
-    expect(rmFn).toHaveBeenCalledWith(event, callback)
+    events.off('click', element)
+    expect(rmFn).toHaveBeenCalledWith('click', callback, expect.any(Boolean))
   })
 
   test('store created listeners when binding with `on`', () => {
-    events.on(event, element, callback)
+    events.on('click', element, callback)
 
-    expect(events.oners).toHaveProperty(event)
-    expect(events.oners[event]).toBe(callback)
+    expect(events.listeners).toHaveProperty('click')
+    expect(events.listeners['click']).toBe(callback)
   })
 
-  test('remove previously stored listeners when unbinding with `off`', () => {
-    events.on(event, element, callback)
-    events.off(event, element)
+  test('hold previously stored listeners when unbinding with `off`', () => {
+    events.on('click', element, callback)
 
-    expect(events.oners).not.toHaveProperty(event)
+    events.off('click', element)
+
+    expect(events.listeners).toHaveProperty('click')
+  })
+
+  test('remove stored listeners when destroying', () => {
+    events.on('click', element, callback)
+
+    events.destroy()
+
+    expect(events).not.toHaveProperty('listeners')
   })
 })

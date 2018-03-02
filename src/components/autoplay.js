@@ -28,6 +28,7 @@ export default function (Glide, Components, Events) {
     /**
      * Starts autoplaying in configured interval.
      *
+     * @param {Boolean|Number} force Run autoplaying with passed interval regardless of `autoplay` settings
      * @return {Void}
      */
     start () {

@@ -624,21 +624,28 @@ var Glide$2 = function () {
     }
 
     /**
-     * Unpause instance autoplaying.
+     * Start instance autoplaying.
      *
+     * @param {Number} interval Run autoplaying with passed interval regardless of `autoplay` settings
      * @return {Self}
      */
 
   }, {
     key: 'play',
     value: function play() {
+      var interval = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+      if (interval) {
+        this.settings.autoplay = interval;
+      }
+
       this._e.emit('play');
 
       return this;
     }
 
     /**
-     * Unpause instance autoplaying.
+     * Stop instance autoplaying.
      *
      * @return {Self}
      */
@@ -3281,6 +3288,7 @@ var Autoplay = function (Glide, Components, Events) {
     /**
      * Starts autoplaying in configured interval.
      *
+     * @param {Boolean|Number} force Run autoplaying with passed interval regardless of `autoplay` settings
      * @return {Void}
      */
     start: function start() {

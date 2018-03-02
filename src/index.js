@@ -102,18 +102,23 @@ export default class Glide {
   }
 
   /**
-   * Unpause instance autoplaying.
+   * Start instance autoplaying.
    *
+   * @param {Number} interval Run autoplaying with passed interval regardless of `autoplay` settings
    * @return {Self}
    */
-  play () {
+  play (interval = false) {
+    if (interval) {
+      this.settings.autoplay = interval
+    }
+
     this._e.emit('play')
 
     return this
   }
 
   /**
-   * Unpause instance autoplaying.
+   * Stop instance autoplaying.
    *
    * @return {Self}
    */

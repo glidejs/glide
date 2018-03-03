@@ -1,7 +1,7 @@
 {
   "name": "glidejs",
   "version": "3.0.0",
-  "description": "Glide.js is a dependency-free JavaScript ES6 slider and carousel. It’s simple, lightweight and fast. Designed to slide. No less, no more",
+  "description": "Glide.js is a dependency-free JavaScript ES6 slider and carousel. It’s lightweight, flexible and fast. Designed to slide. No less, no more",
   "author": "Jędrzej Chałubek <jedrzej.chalubek@gmail.com> (http://jedrzejchalubek.com/)",
   "homepage": "https://glide.jedrzejchalubek.com",
   "main": "dist/glide.js",

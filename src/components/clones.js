@@ -30,7 +30,7 @@ export default function (Glide, Components, Events) {
       let perView = Glide.settings.perView
       let length = Components.Html.slides.length
 
-      // Repet creating pattern based on the ratio calculated
+      // Repeat creating pattern based on the ratio calculated
       // by number in `perView` per actual number of slides.
       for (let r = 0; r < Math.max(1, Math.floor(perView / length)); r++) {
         // Fill pattern with indexes of slides at the beginning of track.
@@ -51,10 +51,8 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     collect () {
-      let clone = null
-
       for (let i = 0; i < pattern.length; i++) {
-        clone = Components.Html.slides[Math.abs(pattern[i])].cloneNode(true)
+        let clone = Components.Html.slides[Math.abs(pattern[i])].cloneNode(true)
 
         clone.classList.add(Glide.settings.classes.cloneSlide)
 

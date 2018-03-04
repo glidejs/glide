@@ -1,8 +1,8 @@
 /**
  * Updates glide movement with a `focusAt` settings.
  *
- * @param  {Glide} Glide
- * @param  {Array} Components
+ * @param  {Object} Glide
+ * @param  {Object} Components
  * @return {Object}
  */
 export default function (Glide, Components) {

@@ -3,6 +3,8 @@ import { isArray } from '../../utils/unit'
 export default class EventsBus {
   /**
    * Construct a EventBus instance.
+   *
+   * @param {Object} events
    */
   constructor (events = {}) {
     this.events = events
@@ -12,7 +14,7 @@ export default class EventsBus {
   /**
    * Adds listener to the specifed event.
    *
-   * @param {String} event
+   * @param {String|Array} event
    * @param {Function} handler
    */
   on (event, handler) {
@@ -41,8 +43,8 @@ export default class EventsBus {
   /**
    * Runs registered handlers for specified event.
    *
-   * @param {String} event
-   * @param {Mixed} context
+   * @param {String|Array} event
+   * @param {Object=} context
    */
   emit (event, context) {
     if (isArray(event)) {

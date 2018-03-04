@@ -17,26 +17,24 @@ export default function (Glide, Components, Events) {
     /**
      * Gets value of the peek.
      *
-     * @returns {Number}
+     * @returns {Number|Object}
      */
     get () {
       return Peek._v
     },
 
     /**
-     * Sets node of the glide track with slides.
+     * Sets value of the peek.
      *
-     * @param {Number} value
+     * @param {Number|Object} value
      * @return {Void}
      */
     set (value) {
-      let width = Components.Sizes.width
-
       if (isObject(value)) {
         value.before = toInt(value.before)
         value.after = toInt(value.after)
       } else {
-        value = toInt(value, width)
+        value = toInt(value)
       }
 
       Peek._v = value

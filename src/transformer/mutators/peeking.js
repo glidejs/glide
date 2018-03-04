@@ -3,8 +3,8 @@ import { isObject } from '../../utils/unit'
 /**
  * Updates glide movement with a `peek` settings.
  *
- * @param  {Glide} Glide
- * @param  {Array} Components
+ * @param  {Object} Glide
+ * @param  {Object} Components
  * @return {Object}
  */
 export default function (Glide, Components) {

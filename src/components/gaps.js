@@ -75,7 +75,7 @@ export default function (Glide, Components, Events) {
     /**
      * Sets value of the gap.
      *
-     * @param {Number|String} value
+     * @param {String} value
      * @return {Void}
      */
     set (value) {

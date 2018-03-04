@@ -84,7 +84,7 @@ export default function (Glide, Components, Events) {
     /**
      * Remove all cloned slides.
      *
-     * @return {self}
+     * @return {Void}
      */
     remove () {
       for (let i = 0; i < this.items.length; i++) {

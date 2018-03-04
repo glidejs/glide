@@ -6,7 +6,7 @@ export default function (Glide, Components, Events) {
     /**
      * Initializes autorunning of the glide.
      *
-     * @return {self}
+     * @return {Void}
      */
     mount () {
       this._o = false

@@ -6,7 +6,7 @@ import { now } from './time'
  *
  * @param {Function} func
  * @param {Number} wait
- * @param {Object} options
+ * @param {Object=} options
  * @return {Function}
  *
  * @see https://github.com/jashkenas/underscore

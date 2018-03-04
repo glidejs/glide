@@ -11,9 +11,9 @@ export default class EventsBinder {
   /**
    * Adds events listeners to arrows HTML elements.
    *
-   * @param  {Array} events
-   * @param  {HTMLElement} el
-   * @param  {Closure} closure
+   * @param  {String|Array} events
+   * @param  {Element|Window|Document} el
+   * @param  {Function} closure
    * @return {Void}
    */
   on (events, el, closure) {
@@ -31,8 +31,8 @@ export default class EventsBinder {
   /**
    * Removes event listeners from arrows HTML elements.
    *
-   * @param  {Array} events
-   * @param  {HTMLElement} el
+   * @param  {String|Array} events
+   * @param  {Element|Window|Document} el
    * @return {Void}
    */
   off (events, el) {

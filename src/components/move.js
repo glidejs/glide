@@ -16,7 +16,7 @@ export default function (Glide, Components, Events) {
      * Makes configured animation type on slider.
      *
      * @param  {Number} offset
-     * @return {self}
+     * @return {Void}
      */
     make (offset = 0) {
       this.offset = offset

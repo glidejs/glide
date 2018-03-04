@@ -323,7 +323,7 @@ var possibleConstructorReturn = function (self, call) {
  * Converts value entered as number
  * or string to integer value.
  *
- * @param {Number|String} value
+ * @param {String} value
  * @returns {Number}
  */
 function toInt(value) {
@@ -333,7 +333,7 @@ function toInt(value) {
 /**
  * Indicates whether the specified value is a string.
  *
- * @param  {Mixed}   value
+ * @param  {*}   value
  * @return {Boolean}
  */
 function isString(value) {
@@ -343,7 +343,7 @@ function isString(value) {
 /**
  * Indicates whether the specified value is an object.
  *
- * @param  {Mixed}   value
+ * @param  {*} value
  * @return {Boolean}
  *
  * @see https://github.com/jashkenas/underscore
@@ -357,7 +357,7 @@ function isObject(value) {
 /**
  * Indicates whether the specified value is a number.
  *
- * @param  {Mixed}   value
+ * @param  {*} value
  * @return {Boolean}
  */
 function isNumber(value) {
@@ -367,7 +367,7 @@ function isNumber(value) {
 /**
  * Indicates whether the specified value is a function.
  *
- * @param  {Mixed}   value
+ * @param  {*} value
  * @return {Boolean}
  */
 function isFunction(value) {
@@ -377,7 +377,7 @@ function isFunction(value) {
 /**
  * Indicates whether the specified value is undefined.
  *
- * @param  {Mixed}   value
+ * @param  {*} value
  * @return {Boolean}
  */
 function isUndefined(value) {
@@ -387,7 +387,7 @@ function isUndefined(value) {
 /**
  * Indicates whether the specified value is an array.
  *
- * @param  {Mixed}   value
+ * @param  {*} value
  * @return {Boolean}
  */
 function isArray(value) {
@@ -398,7 +398,7 @@ function isArray(value) {
  * Creates and initializes specified collection of extensions.
  * Each extension receives access to instance of glide and rest of components.
  *
- * @param {Glide} glide
+ * @param {Object} glide
  * @param {Object} extensions
  *
  * @returns {Object}
@@ -426,6 +426,8 @@ function mount(glide, extensions, events) {
 var EventsBus = function () {
   /**
    * Construct a EventBus instance.
+   *
+   * @param {Object} events
    */
   function EventsBus() {
     var events = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -438,7 +440,7 @@ var EventsBus = function () {
   /**
    * Adds listener to the specifed event.
    *
-   * @param {String} event
+   * @param {String|Array} event
    * @param {Function} handler
    */
 
@@ -471,8 +473,8 @@ var EventsBus = function () {
     /**
      * Runs registered handlers for specified event.
      *
-     * @param {String} event
-     * @param {Mixed} context
+     * @param {String|Array} event
+     * @param {Object=} context
      */
 
   }, {
@@ -522,7 +524,7 @@ var Glide$2 = function () {
    * Initializes glide.
    *
    * @param {Object} extensions Collection of extensions to initialize.
-   * @return {Self}
+   * @return {Glide}
    */
 
 
@@ -548,7 +550,7 @@ var Glide$2 = function () {
      * Updates glide with specified settings.
      *
      * @param {Object} settings
-     * @return {Self}
+     * @return {Glide}
      */
 
   }, {
@@ -576,7 +578,7 @@ var Glide$2 = function () {
      * `<<` - Rewinds to start (first slide)
      *
      * @param {String} pattern
-     * @return {Self}
+     * @return {Glide}
      */
 
   }, {
@@ -591,7 +593,7 @@ var Glide$2 = function () {
      * Move track by specified distance.
      *
      * @param {String} distance
-     * @return {Self}
+     * @return {Glide}
      */
 
   }, {
@@ -606,7 +608,7 @@ var Glide$2 = function () {
     /**
      * Destroy instance and revert all changes done by this._c.
      *
-     * @return {Self}
+     * @return {Glide}
      */
 
   }, {
@@ -620,8 +622,8 @@ var Glide$2 = function () {
     /**
      * Start instance autoplaying.
      *
-     * @param {Number} interval Run autoplaying with passed interval regardless of `autoplay` settings
-     * @return {Self}
+     * @param {Boolean|Number} interval Run autoplaying with passed interval regardless of `autoplay` settings
+     * @return {Glide}
      */
 
   }, {
@@ -641,7 +643,7 @@ var Glide$2 = function () {
     /**
      * Stop instance autoplaying.
      *
-     * @return {Self}
+     * @return {Glide}
      */
 
   }, {
@@ -655,7 +657,7 @@ var Glide$2 = function () {
     /**
      * Sets glide into a idle status.
      *
-     * @return {Void}
+     * @return {Glide}
      */
 
   }, {
@@ -669,7 +671,7 @@ var Glide$2 = function () {
     /**
      * Sets glide into a active status.
      *
-     * @return {Void}
+     * @return {Glide}
      */
 
   }, {
@@ -685,7 +687,7 @@ var Glide$2 = function () {
      *
      * @param  {String|Array} event
      * @param  {Function} handler
-     * @return {Void}
+     * @return {Glide}
      */
 
   }, {
@@ -815,7 +817,9 @@ function define(obj, prop, definition) {
  */
 function sortKeys(obj) {
   return Object.keys(obj).sort().reduce(function (r, k) {
-    return r[k] = obj[k], r;
+    r[k] = obj[k];
+
+    return r[k], r;
   }, {});
 }
 
@@ -824,7 +828,7 @@ var Run = function (Glide, Components, Events) {
     /**
      * Initializes autorunning of the glide.
      *
-     * @return {self}
+     * @return {Void}
      */
     mount: function mount() {
       this._o = false;
@@ -1015,7 +1019,7 @@ function now() {
  *
  * @param {Function} func
  * @param {Number} wait
- * @param {Object} options
+ * @param {Object=} options
  * @return {Function}
  *
  * @see https://github.com/jashkenas/underscore
@@ -1140,7 +1144,7 @@ var Gaps = function (Glide, Components, Events) {
     /**
      * Sets value of the gap.
      *
-     * @param {Number|String} value
+     * @param {String} value
      * @return {Void}
      */
     set: function set(value) {
@@ -1205,7 +1209,7 @@ var Gaps = function (Glide, Components, Events) {
 /**
  * Finds siblings nodes of the passed node.
  *
- * @param  {HTMLElement} node
+ * @param  {Element} node
  * @return {Array}
  */
 function siblings(node) {
@@ -1224,7 +1228,7 @@ function siblings(node) {
 /**
  * Checks if passed node exist and is a valid element.
  *
- * @param  {HTMLElement} node
+ * @param  {Element} node
  * @return {Boolean}
  */
 function exist(node) {
@@ -1337,7 +1341,7 @@ var Peek = function (Glide, Components, Events) {
     /**
      * Gets value of the peek.
      *
-     * @returns {Number}
+     * @returns {Number|Object}
      */
     get: function get() {
       return Peek._v;
@@ -1345,19 +1349,17 @@ var Peek = function (Glide, Components, Events) {
 
 
     /**
-     * Sets node of the glide track with slides.
+     * Sets value of the peek.
      *
-     * @param {Number} value
+     * @param {Number|Object} value
      * @return {Void}
      */
     set: function set(value) {
-      var width = Components.Sizes.width;
-
       if (isObject(value)) {
         value.before = toInt(value.before);
         value.after = toInt(value.after);
       } else {
-        value = toInt(value, width);
+        value = toInt(value);
       }
 
       Peek._v = value;
@@ -1409,7 +1411,7 @@ var Move = function (Glide, Components, Events) {
      * Makes configured animation type on slider.
      *
      * @param  {Number} offset
-     * @return {self}
+     * @return {Void}
      */
     make: function make() {
       var _this = this;
@@ -1778,7 +1780,7 @@ var Clones = function (Glide, Components, Events) {
     /**
      * Remove all cloned slides.
      *
-     * @return {self}
+     * @return {Void}
      */
     remove: function remove() {
       for (var i = 0; i < this.items.length; i++) {
@@ -1843,9 +1845,9 @@ var EventsBinder = function () {
   /**
    * Adds events listeners to arrows HTML elements.
    *
-   * @param  {Array} events
-   * @param  {HTMLElement} el
-   * @param  {Closure} closure
+   * @param  {String|Array} events
+   * @param  {Element|Window|Document} el
+   * @param  {Function} closure
    * @return {Void}
    */
 
@@ -1867,8 +1869,8 @@ var EventsBinder = function () {
     /**
      * Removes event listeners from arrows HTML elements.
      *
-     * @param  {Array} events
-     * @param  {HTMLElement} el
+     * @param  {String|Array} events
+     * @param  {Element|Window|Document} el
      * @return {Void}
      */
 
@@ -2032,7 +2034,7 @@ var Direction = function (Glide, Components, Events) {
     /**
      * Sets value of the direction.
      *
-     * @param {Number|String} value
+     * @param {String} value
      * @return {Void}
      */
     set: function set(value) {
@@ -2076,8 +2078,8 @@ var Direction = function (Glide, Components, Events) {
 /**
  * Reflects value of glide movement.
  *
- * @param  {Glide} Glide
- * @param  {Array} Components
+ * @param  {Object} Glide
+ * @param  {Object} Components
  * @return {Object}
  */
 var Rtl = function (Glide, Components) {
@@ -2101,8 +2103,8 @@ var Rtl = function (Glide, Components) {
 /**
  * Updates glide movement with a `gap` settings.
  *
- * @param  {Glide} Glide
- * @param  {Array} Components
+ * @param  {Object} Glide
+ * @param  {Object} Components
  * @return {Object}
  */
 var Gap = function (Glide, Components) {
@@ -2122,8 +2124,8 @@ var Gap = function (Glide, Components) {
 /**
  * Updates glide movement with width of additional clones width.
  *
- * @param  {Glide} Glide
- * @param  {Array} Components
+ * @param  {Object} Glide
+ * @param  {Object} Components
  * @return {Object}
  */
 var Grow = function (Glide, Components) {
@@ -2143,8 +2145,8 @@ var Grow = function (Glide, Components) {
 /**
  * Updates glide movement with a `peek` settings.
  *
- * @param  {Glide} Glide
- * @param  {Array} Components
+ * @param  {Object} Glide
+ * @param  {Object} Components
  * @return {Object}
  */
 var Peeking = function (Glide, Components) {
@@ -2174,8 +2176,8 @@ var Peeking = function (Glide, Components) {
 /**
  * Updates glide movement with a `focusAt` settings.
  *
- * @param  {Glide} Glide
- * @param  {Array} Components
+ * @param  {Object} Glide
+ * @param  {Object} Components
  * @return {Object}
  */
 var Focusing = function (Glide, Components) {
@@ -2215,8 +2217,8 @@ Rtl];
 /**
  * Applies diffrent transformers on translate value.
  *
- * @param  {Glide} Glide
- * @param  {Components} Components
+ * @param  {Object} Glide
+ * @param  {Object} Components
  * @return {Object}
  */
 var transformer = function (Glide, Components) {
@@ -2333,9 +2335,7 @@ var Transition = function (Glide, Components, Events) {
      * @param {String} property
      * @return {String}
      */
-    compose: function compose() {
-      var property = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'transform';
-
+    compose: function compose(property) {
       var settings = Glide.settings;
 
       if (!disabled) {
@@ -2349,10 +2349,12 @@ var Transition = function (Glide, Components, Events) {
     /**
      * Sets value of transition on HTML element.
      *
-     * @param {String} property
+     * @param {String=} property
      * @return {Void}
      */
-    set: function set(property) {
+    set: function set() {
+      var property = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'transform';
+
       Components.Html.wrapper.style.transition = this.compose(property);
     },
 
@@ -2370,8 +2372,8 @@ var Transition = function (Glide, Components, Events) {
     /**
      * Runs callback after animation.
      *
-     * @param  {Closure} callback
-     * @return {Integer}
+     * @param  {Function} callback
+     * @return {Void}
      */
     after: function after(callback) {
       setTimeout(function () {
@@ -2383,24 +2385,24 @@ var Transition = function (Glide, Components, Events) {
     /**
      * Enable transition.
      *
-     * @return {self}
+     * @return {Void}
      */
     enable: function enable() {
       disabled = false;
 
-      return this.set();
+      this.set();
     },
 
 
     /**
      * Disable transition.
      *
-     * @return {self}
+     * @return {Void}
      */
     disable: function disable() {
       disabled = true;
 
-      return this.set();
+      this.set();
     }
   };
 
@@ -2982,7 +2984,8 @@ var anchors = function (Glide, Components, Events) {
    * - on destroying, to bring anchors to its initial state
    */
   Events.on('destroy', function () {
-    Anchors.attach().unbind();
+    Anchors.attach();
+    Anchors.unbind();
     Binder.destroy();
   });
 
@@ -3303,7 +3306,7 @@ var autoplay = function (Glide, Components, Events) {
     /**
      * Stops autorunning of the glide.
      *
-     * @return {self}
+     * @return {Void}
      */
     stop: function stop() {
       this._i = clearInterval(this._i);

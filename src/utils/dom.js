@@ -1,7 +1,7 @@
 /**
  * Finds siblings nodes of the passed node.
  *
- * @param  {HTMLElement} node
+ * @param  {Element} node
  * @return {Array}
  */
 export function siblings (node) {
@@ -20,7 +20,7 @@ export function siblings (node) {
 /**
  * Checks if passed node exist and is a valid element.
  *
- * @param  {HTMLElement} node
+ * @param  {Element} node
  * @return {Boolean}
  */
 export function exist (node) {

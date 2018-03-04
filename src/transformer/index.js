@@ -23,8 +23,8 @@ const MUTATORS = [
 /**
  * Applies diffrent transformers on translate value.
  *
- * @param  {Glide} Glide
- * @param  {Components} Components
+ * @param  {Object} Glide
+ * @param  {Object} Components
  * @return {Object}
  */
 export default function (Glide, Components) {

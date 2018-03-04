@@ -159,7 +159,8 @@ export default function (Glide, Components, Events) {
    * - on destroying, to bring anchors to its initial state
    */
   Events.on('destroy', () => {
-    Anchors.attach().unbind()
+    Anchors.attach()
+    Anchors.unbind()
     Binder.destroy()
   })
 

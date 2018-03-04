@@ -2,7 +2,7 @@
  * Converts value entered as number
  * or string to integer value.
  *
- * @param {Number|String} value
+ * @param {String} value
  * @returns {Number}
  */
 export function toInt (value) {
@@ -12,7 +12,7 @@ export function toInt (value) {
 /**
  * Indicates whether the specified value is a string.
  *
- * @param  {Mixed}   value
+ * @param  {*}   value
  * @return {Boolean}
  */
 export function isString (value) {
@@ -22,7 +22,7 @@ export function isString (value) {
 /**
  * Indicates whether the specified value is an object.
  *
- * @param  {Mixed}   value
+ * @param  {*} value
  * @return {Boolean}
  *
  * @see https://github.com/jashkenas/underscore
@@ -36,7 +36,7 @@ export function isObject (value) {
 /**
  * Indicates whether the specified value is a number.
  *
- * @param  {Mixed}   value
+ * @param  {*} value
  * @return {Boolean}
  */
 export function isNumber (value) {
@@ -46,7 +46,7 @@ export function isNumber (value) {
 /**
  * Indicates whether the specified value is a function.
  *
- * @param  {Mixed}   value
+ * @param  {*} value
  * @return {Boolean}
  */
 export function isFunction (value) {
@@ -56,7 +56,7 @@ export function isFunction (value) {
 /**
  * Indicates whether the specified value is undefined.
  *
- * @param  {Mixed}   value
+ * @param  {*} value
  * @return {Boolean}
  */
 export function isUndefined (value) {
@@ -66,7 +66,7 @@ export function isUndefined (value) {
 /**
  * Indicates whether the specified value is an array.
  *
- * @param  {Mixed}   value
+ * @param  {*} value
  * @return {Boolean}
  */
 export function isArray (value) {

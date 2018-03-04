@@ -48,7 +48,7 @@ export default function (Glide, Components, Events) {
     /**
      * Stops autorunning of the glide.
      *
-     * @return {self}
+     * @return {Void}
      */
     stop () {
       this._i = clearInterval(this._i)

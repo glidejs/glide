@@ -16,7 +16,7 @@ export default function (Glide, Components, Events) {
      * @param {String} property
      * @return {String}
      */
-    compose (property = 'transform') {
+    compose (property) {
       let settings = Glide.settings
 
       if (!disabled) {
@@ -29,10 +29,10 @@ export default function (Glide, Components, Events) {
     /**
      * Sets value of transition on HTML element.
      *
-     * @param {String} property
+     * @param {String=} property
      * @return {Void}
      */
-    set (property) {
+    set (property = 'transform') {
       Components.Html.wrapper.style.transition = this.compose(property)
     },
 
@@ -48,8 +48,8 @@ export default function (Glide, Components, Events) {
     /**
      * Runs callback after animation.
      *
-     * @param  {Closure} callback
-     * @return {Integer}
+     * @param  {Function} callback
+     * @return {Void}
      */
     after (callback) {
       setTimeout(() => {
@@ -60,23 +60,23 @@ export default function (Glide, Components, Events) {
     /**
      * Enable transition.
      *
-     * @return {self}
+     * @return {Void}
      */
     enable () {
       disabled = false
 
-      return this.set()
+      this.set()
     },
 
     /**
      * Disable transition.
      *
-     * @return {self}
+     * @return {Void}
      */
     disable () {
       disabled = true
 
-      return this.set()
+      this.set()
     }
   }
 

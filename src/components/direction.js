@@ -77,7 +77,7 @@ export default function (Glide, Components, Events) {
     /**
      * Sets value of the direction.
      *
-     * @param {Number|String} value
+     * @param {String} value
      * @return {Void}
      */
     set (value) {

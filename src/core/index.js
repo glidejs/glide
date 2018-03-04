@@ -5,7 +5,7 @@ import { isFunction } from '../utils/unit'
  * Creates and initializes specified collection of extensions.
  * Each extension receives access to instance of glide and rest of components.
  *
- * @param {Glide} glide
+ * @param {Object} glide
  * @param {Object} extensions
  *
  * @returns {Object}

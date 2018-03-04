@@ -26,7 +26,7 @@ export default class Glide {
    * Initializes glide.
    *
    * @param {Object} extensions Collection of extensions to initialize.
-   * @return {Self}
+   * @return {Glide}
    */
   mount (extensions = {}) {
     this._e.emit('mount.before')
@@ -46,7 +46,7 @@ export default class Glide {
    * Updates glide with specified settings.
    *
    * @param {Object} settings
-   * @return {Self}
+   * @return {Glide}
    */
   update (settings = {}) {
     this.settings = Object.assign({}, this.settings, settings)
@@ -69,7 +69,7 @@ export default class Glide {
    * `<<` - Rewinds to start (first slide)
    *
    * @param {String} pattern
-   * @return {Self}
+   * @return {Glide}
    */
   go (pattern) {
     this._c.Run.make(pattern)
@@ -81,7 +81,7 @@ export default class Glide {
    * Move track by specified distance.
    *
    * @param {String} distance
-   * @return {Self}
+   * @return {Glide}
    */
   move (distance) {
     this._c.Transition.disable()
@@ -93,7 +93,7 @@ export default class Glide {
   /**
    * Destroy instance and revert all changes done by this._c.
    *
-   * @return {Self}
+   * @return {Glide}
    */
   destroy () {
     this._e.emit('destroy')
@@ -104,8 +104,8 @@ export default class Glide {
   /**
    * Start instance autoplaying.
    *
-   * @param {Number} interval Run autoplaying with passed interval regardless of `autoplay` settings
-   * @return {Self}
+   * @param {Boolean|Number} interval Run autoplaying with passed interval regardless of `autoplay` settings
+   * @return {Glide}
    */
   play (interval = false) {
     if (interval) {
@@ -120,7 +120,7 @@ export default class Glide {
   /**
    * Stop instance autoplaying.
    *
-   * @return {Self}
+   * @return {Glide}
    */
   pause () {
     this._e.emit('pause')
@@ -131,7 +131,7 @@ export default class Glide {
   /**
    * Sets glide into a idle status.
    *
-   * @return {Void}
+   * @return {Glide}
    */
   disable () {
     this.disabled = true
@@ -142,7 +142,7 @@ export default class Glide {
   /**
    * Sets glide into a active status.
    *
-   * @return {Void}
+   * @return {Glide}
    */
   enable () {
     this.disabled = false
@@ -155,7 +155,7 @@ export default class Glide {
    *
    * @param  {String|Array} event
    * @param  {Function} handler
-   * @return {Void}
+   * @return {Glide}
    */
   on (event, handler) {
     this._e.on(event, handler)

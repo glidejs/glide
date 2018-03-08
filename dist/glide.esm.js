@@ -1693,23 +1693,14 @@ var Build = function (Glide, Components, Events) {
 };
 
 var Clones = function (Glide, Components, Events) {
-  /**
-   * Holds cloning order pattern under whose cloned slides are appended.
-   *
-   * @type {Array}
-   */
-  var pattern = [];
-
   var Clones = {
     /**
      * Create pattern map and collect slides to be cloned.
      */
     mount: function mount() {
-      this.items = [];
-
       if (Glide.isType('carousel')) {
-        this.map();
-        this.collect();
+        this.pattern = this.map();
+        this.items = this.collect();
       }
     },
 
@@ -1720,6 +1711,8 @@ var Clones = function (Glide, Components, Events) {
      * @return {Void}
      */
     map: function map() {
+      var pattern = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
       var perView = Glide.settings.perView;
       var length = Components.Html.slides.length;
 
@@ -1736,6 +1729,8 @@ var Clones = function (Glide, Components, Events) {
           pattern.unshift('-' + _i);
         }
       }
+
+      return pattern;
     },
 
 
@@ -1745,13 +1740,19 @@ var Clones = function (Glide, Components, Events) {
      * @return {Void}
      */
     collect: function collect() {
+      var items = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+      var pattern = this.pattern;
+
+
       for (var i = 0; i < pattern.length; i++) {
         var clone = Components.Html.slides[Math.abs(pattern[i])].cloneNode(true);
 
         clone.classList.add(Glide.settings.classes.cloneSlide);
 
-        this.items.push(clone);
+        items.push(clone);
       }
+
+      return items;
     },
 
 
@@ -1761,8 +1762,12 @@ var Clones = function (Glide, Components, Events) {
      * @return {Void}
      */
     append: function append() {
-      for (var i = 0; i < this.items.length; i++) {
-        var item = this.items[i];
+      var items = this.items,
+          pattern = this.pattern;
+
+
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i];
 
         item.style.width = Components.Sizes.slideWidth + 'px';
 
@@ -1783,8 +1788,11 @@ var Clones = function (Glide, Components, Events) {
      * @return {Void}
      */
     remove: function remove() {
-      for (var i = 0; i < this.items.length; i++) {
-        this.items[i].remove();
+      var items = this.items;
+
+
+      for (var i = 0; i < items.length; i++) {
+        items[i].remove();
       }
     }
   };

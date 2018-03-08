@@ -1,13 +1,6 @@
 import { define } from '../utils/object'
 
 export default function (Glide, Components, Events) {
-  /**
-   * Holds cloning order pattern under whose cloned slides are appended.
-   *
-   * @type {Array}
-   */
-  let pattern = []
-
   const Clones = {
     /**
      * Create pattern map and collect slides to be cloned.
@@ -16,8 +9,8 @@ export default function (Glide, Components, Events) {
       this.items = []
 
       if (Glide.isType('carousel')) {
-        this.map()
-        this.collect()
+        this.pattern = this.map()
+        this.items = this.collect()
       }
     },
 
@@ -26,7 +19,7 @@ export default function (Glide, Components, Events) {
      *
      * @return {Void}
      */
-    map () {
+    map (pattern = []) {
       let perView = Glide.settings.perView
       let length = Components.Html.slides.length
 
@@ -43,6 +36,8 @@ export default function (Glide, Components, Events) {
           pattern.unshift(`-${i}`)
         }
       }
+
+      return pattern
     },
 
     /**
@@ -50,14 +45,18 @@ export default function (Glide, Components, Events) {
      *
      * @return {Void}
      */
-    collect () {
+    collect (items = []) {
+      let { pattern } = this
+
       for (let i = 0; i < pattern.length; i++) {
         let clone = Components.Html.slides[Math.abs(pattern[i])].cloneNode(true)
 
         clone.classList.add(Glide.settings.classes.cloneSlide)
 
-        this.items.push(clone)
+        items.push(clone)
       }
+
+      return items
     },
 
     /**
@@ -66,8 +65,10 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     append () {
-      for (let i = 0; i < this.items.length; i++) {
-        let item = this.items[i]
+      let { items, pattern } = this
+
+      for (let i = 0; i < items.length; i++) {
+        let item = items[i]
 
         item.style.width = `${Components.Sizes.slideWidth}px`
 
@@ -87,8 +88,10 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     remove () {
-      for (let i = 0; i < this.items.length; i++) {
-        this.items[i].remove()
+      let { items } = this
+
+      for (let i = 0; i < items.length; i++) {
+        items[i].remove()
       }
     }
   }

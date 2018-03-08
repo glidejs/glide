@@ -1,4 +1,5 @@
 import { siblings } from '../utils/dom'
+import { define } from '../utils/object'
 
 import EventsBinder from '../core/event/events-binder'
 
@@ -35,7 +36,7 @@ export default function (Glide, Components, Events) {
        * @private
        * @type {HTMLCollection}
        */
-      this._c = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR)
+      this._i = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR)
 
       this.addBindings()
     },
@@ -95,8 +96,8 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     addBindings () {
-      for (let i = 0; i < this._c.length; i++) {
-        this.bind(this._c[i].children)
+      for (let i = 0; i < this._i.length; i++) {
+        this.bind(this._i[i].children)
       }
     },
 
@@ -106,32 +107,32 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     removeBindings () {
-      for (let i = 0; i < this._c.length; i++) {
-        this.unbind(this._c[i].children)
+      for (let i = 0; i < this._i.length; i++) {
+        this.unbind(this._i[i].children)
       }
     },
 
     /**
      * Binds events to arrows HTML elements.
      *
-     * @param {HTMLCollection} children
+     * @param {HTMLCollection} elements
      * @return {Void}
      */
-    bind (children) {
-      for (let i = 0; i < children.length; i++) {
-        Binder.on(['click', 'touchstart'], children[i], this.click)
+    bind (elements) {
+      for (let i = 0; i < elements.length; i++) {
+        Binder.on(['click', 'touchstart'], elements[i], this.click)
       }
     },
 
     /**
      * Unbinds events binded to the arrows HTML elements.
      *
-     * @param {HTMLCollection} children
+     * @param {HTMLCollection} elements
      * @return {Void}
      */
-    unbind (children) {
-      for (let i = 0; i < children.length; i++) {
-        Binder.off(['click', 'touchstart'], children[i])
+    unbind (elements) {
+      for (let i = 0; i < elements.length; i++) {
+        Binder.off(['click', 'touchstart'], elements[i])
       }
     },
 
@@ -149,6 +150,17 @@ export default function (Glide, Components, Events) {
       Components.Run.make(Components.Direction.resolve(event.currentTarget.dataset.glideDir))
     }
   }
+
+  define(Controls, 'items', {
+    /**
+     * Gets collection of the controls HTML elements.
+     *
+     * @return {HTMLElement[]}
+     */
+    get () {
+      return Controls._i
+    }
+  })
 
   /**
    * Swap active class of current navigation item:

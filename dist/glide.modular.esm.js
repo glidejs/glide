@@ -1698,6 +1698,8 @@ var Clones = function (Glide, Components, Events) {
      * Create pattern map and collect slides to be cloned.
      */
     mount: function mount() {
+      this.items = [];
+
       if (Glide.isType('carousel')) {
         this.pattern = this.map();
         this.items = this.collect();
@@ -3033,7 +3035,7 @@ var controls = function (Glide, Components, Events) {
        * @private
        * @type {HTMLCollection}
        */
-      this._c = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR);
+      this._i = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR);
 
       this.addBindings();
     },
@@ -3098,8 +3100,8 @@ var controls = function (Glide, Components, Events) {
      * @return {Void}
      */
     addBindings: function addBindings() {
-      for (var i = 0; i < this._c.length; i++) {
-        this.bind(this._c[i].children);
+      for (var i = 0; i < this._i.length; i++) {
+        this.bind(this._i[i].children);
       }
     },
 
@@ -3110,8 +3112,8 @@ var controls = function (Glide, Components, Events) {
      * @return {Void}
      */
     removeBindings: function removeBindings() {
-      for (var i = 0; i < this._c.length; i++) {
-        this.unbind(this._c[i].children);
+      for (var i = 0; i < this._i.length; i++) {
+        this.unbind(this._i[i].children);
       }
     },
 
@@ -3119,12 +3121,12 @@ var controls = function (Glide, Components, Events) {
     /**
      * Binds events to arrows HTML elements.
      *
-     * @param {HTMLCollection} children
+     * @param {HTMLCollection} elements
      * @return {Void}
      */
-    bind: function bind(children) {
-      for (var i = 0; i < children.length; i++) {
-        Binder.on(['click', 'touchstart'], children[i], this.click);
+    bind: function bind(elements) {
+      for (var i = 0; i < elements.length; i++) {
+        Binder.on(['click', 'touchstart'], elements[i], this.click);
       }
     },
 
@@ -3132,12 +3134,12 @@ var controls = function (Glide, Components, Events) {
     /**
      * Unbinds events binded to the arrows HTML elements.
      *
-     * @param {HTMLCollection} children
+     * @param {HTMLCollection} elements
      * @return {Void}
      */
-    unbind: function unbind(children) {
-      for (var i = 0; i < children.length; i++) {
-        Binder.off(['click', 'touchstart'], children[i]);
+    unbind: function unbind(elements) {
+      for (var i = 0; i < elements.length; i++) {
+        Binder.off(['click', 'touchstart'], elements[i]);
       }
     },
 
@@ -3156,6 +3158,17 @@ var controls = function (Glide, Components, Events) {
       Components.Run.make(Components.Direction.resolve(event.currentTarget.dataset.glideDir));
     }
   };
+
+  define(Controls, 'items', {
+    /**
+     * Gets collection of the controls HTML elements.
+     *
+     * @return {HTMLElement[]}
+     */
+    get: function get() {
+      return Controls._i;
+    }
+  });
 
   /**
    * Swap active class of current navigation item:

@@ -22,13 +22,12 @@ export default function (Glide, Components, Events) {
      * Applies gaps between slides. First and last
      * slides do not receive it's edge margins.
      *
+     * @param {HTMLCollection} slides
      * @return {Void}
      */
-    apply () {
-      let items = Components.Html.wrapper.children
-
-      for (let i = 0, len = items.length; i < len; i++) {
-        let style = items[i].style
+    apply (slides) {
+      for (let i = 0, len = slides.length; i < len; i++) {
+        let style = slides[i].style
         let direction = Components.Direction.value
 
         if (i !== 0) {
@@ -37,7 +36,7 @@ export default function (Glide, Components, Events) {
           style[MARGIN_TYPE[direction][0]] = ''
         }
 
-        if (i !== items.length - 1) {
+        if (i !== slides.length - 1) {
           style[MARGIN_TYPE[direction][1]] = `${this.value / 2}px`
         } else {
           style[MARGIN_TYPE[direction][1]] = ''
@@ -48,13 +47,12 @@ export default function (Glide, Components, Events) {
     /**
      * Removes gaps from the slides.
      *
+     * @param {HTMLCollection} slides
      * @returns {Void}
     */
-    remove () {
-      let items = Components.Html.wrapper.children
-
-      for (let i = 0, len = items.length; i < len; i++) {
-        let style = items[i].style
+    remove (slides) {
+      for (let i = 0, len = slides.length; i < len; i++) {
+        let style = slides[i].style
 
         style.marginLeft = ''
         style.marginRight = ''
@@ -123,7 +121,7 @@ export default function (Glide, Components, Events) {
    * - on updating via API, to recalculate gaps with new options
    */
   Events.on(['build.after', 'update'], throttle(() => {
-    Gaps.apply()
+    Gaps.apply(Components.Html.wrapper.children)
   }, 30))
 
   /**
@@ -131,7 +129,7 @@ export default function (Glide, Components, Events) {
    * - on destroying to bring markup to its inital state
    */
   Events.on('destroy', () => {
-    Gaps.remove()
+    Gaps.remove(Components.Html.wrapper.children)
   })
 
   return Gaps

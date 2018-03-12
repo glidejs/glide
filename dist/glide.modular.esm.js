@@ -1089,13 +1089,12 @@ var Gaps = function (Glide, Components, Events) {
      * Applies gaps between slides. First and last
      * slides do not receive it's edge margins.
      *
+     * @param {HTMLCollection} slides
      * @return {Void}
      */
-    apply: function apply() {
-      var items = Components.Html.wrapper.children;
-
-      for (var i = 0, len = items.length; i < len; i++) {
-        var style = items[i].style;
+    apply: function apply(slides) {
+      for (var i = 0, len = slides.length; i < len; i++) {
+        var style = slides[i].style;
         var direction = Components.Direction.value;
 
         if (i !== 0) {
@@ -1104,7 +1103,7 @@ var Gaps = function (Glide, Components, Events) {
           style[MARGIN_TYPE[direction][0]] = '';
         }
 
-        if (i !== items.length - 1) {
+        if (i !== slides.length - 1) {
           style[MARGIN_TYPE[direction][1]] = this.value / 2 + 'px';
         } else {
           style[MARGIN_TYPE[direction][1]] = '';
@@ -1116,13 +1115,12 @@ var Gaps = function (Glide, Components, Events) {
     /**
      * Removes gaps from the slides.
      *
+     * @param {HTMLCollection} slides
      * @returns {Void}
     */
-    remove: function remove() {
-      var items = Components.Html.wrapper.children;
-
-      for (var i = 0, len = items.length; i < len; i++) {
-        var style = items[i].style;
+    remove: function remove(slides) {
+      for (var i = 0, len = slides.length; i < len; i++) {
+        var style = slides[i].style;
 
         style.marginLeft = '';
         style.marginRight = '';
@@ -1192,7 +1190,7 @@ var Gaps = function (Glide, Components, Events) {
    * - on updating via API, to recalculate gaps with new options
    */
   Events.on(['build.after', 'update'], throttle(function () {
-    Gaps.apply();
+    Gaps.apply(Components.Html.wrapper.children);
   }, 30));
 
   /**
@@ -1200,7 +1198,7 @@ var Gaps = function (Glide, Components, Events) {
    * - on destroying to bring markup to its inital state
    */
   Events.on('destroy', function () {
-    Gaps.remove();
+    Gaps.remove(Components.Html.wrapper.children);
   });
 
   return Gaps;

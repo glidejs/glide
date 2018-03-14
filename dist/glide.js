@@ -1402,7 +1402,7 @@ var Peek = function (Glide, Components, Events) {
 var Move = function (Glide, Components, Events) {
   var Move = {
     /**
-     * Constructs animation component.
+     * Constructs move component.
      *
      * @returns {Void}
      */
@@ -1412,7 +1412,7 @@ var Move = function (Glide, Components, Events) {
 
 
     /**
-     * Makes configured animation type on slider.
+     * Calculates a movement value based on passed offset and currently active index.
      *
      * @param  {Number} offset
      * @return {Void}
@@ -1438,7 +1438,7 @@ var Move = function (Glide, Components, Events) {
 
   define(Move, 'offset', {
     /**
-     * Gets node of the glide track with slides.
+     * Gets an offset value used to modify current translate.
      *
      * @return {Object}
      */
@@ -1448,7 +1448,7 @@ var Move = function (Glide, Components, Events) {
 
 
     /**
-     * Sets node of the glide track with slides.
+     * Sets an offset value used to modify current translate.
      *
      * @return {Object}
      */
@@ -1459,7 +1459,7 @@ var Move = function (Glide, Components, Events) {
 
   define(Move, 'translate', {
     /**
-     * Gets translate value based on configured glide type.
+     * Gets a raw movement value.
      *
      * @return {Number}
      */
@@ -1470,7 +1470,7 @@ var Move = function (Glide, Components, Events) {
 
   define(Move, 'value', {
     /**
-     * Gets translate value based on configured glide type.
+     * Gets an actual movement value corrected by offset.
      *
      * @return {Number}
      */

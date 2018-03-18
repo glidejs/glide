@@ -16,9 +16,8 @@ export default function (Glide, Components, Events) {
      * Makes glides running based on the passed moving schema.
      *
      * @param {String} move
-     * @param {Function} callback
      */
-    make (move, callback) {
+    make (move) {
       if (!Glide.disabled) {
         Glide.disable()
 
@@ -45,7 +44,7 @@ export default function (Glide, Components, Events) {
     },
 
     /**
-     * Calculates current index based on passed move.
+     * Calculates current index based on defined move.
      *
      * @return {Void}
      */
@@ -113,8 +112,9 @@ export default function (Glide, Components, Events) {
     },
 
     /**
-     * Checks if we are making offset run.
+     * Checks if we are making a offset run.
      *
+     * @param {String} direction
      * @return {Boolean}
      */
     isOffset (direction) {

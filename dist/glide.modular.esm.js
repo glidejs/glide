@@ -839,9 +839,8 @@ var Run = function (Glide, Components, Events) {
      * Makes glides running based on the passed moving schema.
      *
      * @param {String} move
-     * @param {Function} callback
      */
-    make: function make(move, callback) {
+    make: function make(move) {
       var _this = this;
 
       if (!Glide.disabled) {
@@ -871,7 +870,7 @@ var Run = function (Glide, Components, Events) {
 
 
     /**
-     * Calculates current index based on passed move.
+     * Calculates current index based on defined move.
      *
      * @return {Void}
      */
@@ -945,8 +944,9 @@ var Run = function (Glide, Components, Events) {
 
 
     /**
-     * Checks if we are making offset run.
+     * Checks if we are making a offset run.
      *
+     * @param {String} direction
      * @return {Boolean}
      */
     isOffset: function isOffset(direction) {
@@ -2499,8 +2499,7 @@ var swipe = function (Glide, Components, Events) {
 
 
     /**
-     * Handler for `swipestart` event.
-     * Calculates entry points of the user's tap.
+     * Handler for `swipestart` event. Calculates entry points of the user's tap.
      *
      * @param {Object} event
      * @return {Void}
@@ -2524,8 +2523,7 @@ var swipe = function (Glide, Components, Events) {
 
 
     /**
-     * Handler for `swipemove` event.
-     * Calculates user's tap angle and distance.
+     * Handler for `swipemove` event. Calculates user's tap angle and distance.
      *
      * @param {Object} event
      */
@@ -2563,8 +2561,7 @@ var swipe = function (Glide, Components, Events) {
 
 
     /**
-     * Handler for `swipeend` event. Finitializes
-     * user's tap and decides about glide move.
+     * Handler for `swipeend` event. Finitializes user's tap and decides about glide move.
      *
      * @param {Object} event
      * @return {Void}
@@ -2620,10 +2617,10 @@ var swipe = function (Glide, Components, Events) {
 
 
     /**
-    * Binds swipe's starting event.
-    *
-    * @return {Void}
-    */
+     * Binds swipe's starting event.
+     *
+     * @return {Void}
+     */
     bindSwipeStart: function bindSwipeStart() {
       var settings = Glide.settings;
 

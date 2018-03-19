@@ -32,8 +32,7 @@ export default function (Glide, Components, Events) {
     },
 
     /**
-     * Handler for `swipestart` event.
-     * Calculates entry points of the user's tap.
+     * Handler for `swipestart` event. Calculates entry points of the user's tap.
      *
      * @param {Object} event
      * @return {Void}
@@ -56,8 +55,7 @@ export default function (Glide, Components, Events) {
     },
 
     /**
-     * Handler for `swipemove` event.
-     * Calculates user's tap angle and distance.
+     * Handler for `swipemove` event. Calculates user's tap angle and distance.
      *
      * @param {Object} event
      */
@@ -94,8 +92,7 @@ export default function (Glide, Components, Events) {
     },
 
     /**
-     * Handler for `swipeend` event. Finitializes
-     * user's tap and decides about glide move.
+     * Handler for `swipeend` event. Finitializes user's tap and decides about glide move.
      *
      * @param {Object} event
      * @return {Void}
@@ -153,10 +150,10 @@ export default function (Glide, Components, Events) {
     },
 
     /**
-   * Binds swipe's starting event.
-   *
-   * @return {Void}
-   */
+     * Binds swipe's starting event.
+     *
+     * @return {Void}
+     */
     bindSwipeStart () {
       let settings = Glide.settings
 
@@ -229,8 +226,7 @@ export default function (Glide, Components, Events) {
     },
 
     /**
-     * Gets value of minimum swipe distance.
-     * Returns value based on event type.
+     * Gets value of minimum swipe distance settings based on event type.
      *
      * @return {Number}
      */

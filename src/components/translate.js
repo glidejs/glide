@@ -3,16 +3,6 @@ import transformer from '../transformer/index'
 export default function (Glide, Components, Events) {
   const Translate = {
     /**
-     * Gets value of translate.
-     *
-     * @param  {Number} value
-     * @return {String}
-     */
-    get (value) {
-      return `translate3d(${-1 * value}px, 0px, 0px)`
-    },
-
-    /**
      * Sets value of translate on HTML element.
      *
      * @param {Number} value
@@ -21,7 +11,7 @@ export default function (Glide, Components, Events) {
     set (value) {
       let transform = transformer(Glide, Components).mutate(value)
 
-      Components.Html.wrapper.style.transform = this.get(transform)
+      Components.Html.wrapper.style.transform = `translate3d(${-1 * transform}px, 0px, 0px)`
     },
 
     /**

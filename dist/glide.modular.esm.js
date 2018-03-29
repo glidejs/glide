@@ -2250,17 +2250,6 @@ var transformer = function (Glide, Components) {
 var Translate = function (Glide, Components, Events) {
   var Translate = {
     /**
-     * Gets value of translate.
-     *
-     * @param  {Number} value
-     * @return {String}
-     */
-    get: function get(value) {
-      return 'translate3d(' + -1 * value + 'px, 0px, 0px)';
-    },
-
-
-    /**
      * Sets value of translate on HTML element.
      *
      * @param {Number} value
@@ -2269,7 +2258,7 @@ var Translate = function (Glide, Components, Events) {
     set: function set(value) {
       var transform = transformer(Glide, Components).mutate(value);
 
-      Components.Html.wrapper.style.transform = this.get(transform);
+      Components.Html.wrapper.style.transform = 'translate3d(' + -1 * transform + 'px, 0px, 0px)';
     },
 
 
@@ -2700,8 +2689,7 @@ var swipe = function (Glide, Components, Events) {
 
 
     /**
-     * Gets value of minimum swipe distance.
-     * Returns value based on event type.
+     * Gets value of minimum swipe distance settings based on event type.
      *
      * @return {Number}
      */
@@ -3443,6 +3431,13 @@ function sortBreakpoints(points) {
 
 var breakpoints = function (Glide, Components, Events) {
   /**
+   * Instance of the binder for DOM Events.
+   *
+   * @type {EventsBinder}
+   */
+  var Binder = new EventsBinder();
+
+  /**
    * Holds reference to settings.
    *
    * @type {Object}
@@ -3501,9 +3496,9 @@ var breakpoints = function (Glide, Components, Events) {
    * Update glide with settings of matched brekpoint:
    * - window resize to update slider
    */
-  Events.on('resize', function () {
+  Binder.on('resize', window, throttle(function () {
     settings = _extends(settings, Breakpoints.match(points));
-  });
+  }, Glide.settings.throttle));
 
   /**
    * Resort and update default settings:
@@ -3513,6 +3508,14 @@ var breakpoints = function (Glide, Components, Events) {
     points = sortBreakpoints(points);
 
     defaults = _extends({}, settings);
+  });
+
+  /**
+   * Unbind resize listener:
+   * - on destroying, to bring markup to its initial state
+   */
+  Events.on('destroy', function () {
+    Binder.off('resize', window);
   });
 
   return Breakpoints;

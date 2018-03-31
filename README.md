@@ -1,5 +1,7 @@
 [![glide.js](//glidejs.com/images/glidejs-logotype-dark.png)](//glidejs.com)
 
+[![Build Status](//api.travis-ci.org/glidejs/glide.svg?branch=3.0.0)](//travis-ci.org/glidejs/glide)
+
 [Glide.js](//glidejs.com) is a dependency-free JavaScript ES6 slider and carousel. It’s lightweight, flexible and fast. Designed to slide. No less, no more
 
 What can convince you:
@@ -8,8 +10,6 @@ What can convince you:
 - **Modular**. Remove unused modules and drop script weight even more.
 - **Extendable**. Plug-in your own modules with additional functionalities.
 - **Bundlers ready**. Using Rollup or Webpack? We have your back.
-
-[![Build Status](//api.travis-ci.org/glidejs/glide.svg?branch=3.0.0)](//travis-ci.org/glidejs/glide)
 
 ## Documentation
 

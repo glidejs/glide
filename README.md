@@ -1,6 +1,6 @@
-[![glide.js](//glide.jedrzejchalubek.com/images/glide-logotype.png)](//glide.jedrzejchalubek.com)
+[![glide.js](//glidejs.com/images/glidejs-logotype-dark.png)](//glidejs.com)
 
-[Glide.js](//glide.jedrzejchalubek.com) is a dependency-free JavaScript ES6 slider and carousel. It’s lightweight, flexible and fast. Designed to slide. No less, no more
+[Glide.js](//glidejs.com) is a dependency-free JavaScript ES6 slider and carousel. It’s lightweight, flexible and fast. Designed to slide. No less, no more
 
 What can convince you:
 - **Dependency-free**. Everything included, ready for action.
@@ -9,11 +9,13 @@ What can convince you:
 - **Extendable**. Plug-in your own modules with additional functionalities.
 - **Bundlers ready**. Using Rollup or Webpack? We have your back.
 
-[![Build Status](//api.travis-ci.org/jedrzejchalubek/glidejs.svg?branch=3.0.0)](//travis-ci.org/jedrzejchalubek/glidejs)
+[![Build Status](//api.travis-ci.org/glidejs/glide.svg?branch=3.0.0)](//travis-ci.org/glidejs/glide)
 
 ## Documentation
 
-Available at: http://glide.jedrzejchalubek.com/docs
+Visit [glidejs.com](https://glidejs.com/docs) for documentation.
+
+> Looking for old documentation? [Wiki](https://github.com/glidejs/glide/wiki) contains archived documentation of Glide.js in version `^2.0.0`.
 
 ## Getting started
 
@@ -75,6 +77,10 @@ Build using NPM scripts. The following scripts are available:
 - `build` - Comprehensively builds the entire library.
 - `test` - Runs complete test suite.
 - `lint` - Lints library JavaScript files.
+
+## Maintainers
+
+- [Jędrzej Chałubek](//github.com/jedrzejchalubek) - creator
 
 ## License
 

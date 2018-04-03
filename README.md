@@ -29,10 +29,10 @@ npm install @glidejs/glide
 
 ```html
 <!-- Required Core stylesheet -->
-<link rel="stylesheet" href="node_modules/glidejs/dist/css/glide.core.min.css">
+<link rel="stylesheet" href="node_modules/@glidejs/glide/dist/css/glide.core.min.css">
 
 <!-- Optional Theme stylesheet -->
-<link rel="stylesheet" href="node_modules/glidejs/dist/css/glide.theme.min.css">
+<link rel="stylesheet" href="node_modules/@glidejs/glide/dist/css/glide.theme.min.css">
 ```
 
 ... then, prepare a little bit of necessary markup ...
@@ -52,7 +52,7 @@ npm install @glidejs/glide
 ... and finally, initialize and mount a Glide.
 
 ```js
-import Glide from 'glidejs'
+import Glide from '@glidejs/glide'
 
 new Glide('.glide').mount()
 ```
@@ -60,7 +60,7 @@ new Glide('.glide').mount()
 Need a few selected modules? Import and mount only what you need.
 
 ```js
-import { Glide, Controls, Breakpoints } from 'glidejs/dist/glide.modular.esm'
+import { Glide, Controls, Breakpoints } from '@glidejs/glide/dist/glide.modular.esm'
 
 new Glide('.glide').mount({ Controls, Breakpoints })
 ```

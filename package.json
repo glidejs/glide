@@ -40,25 +40,25 @@
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
-    "babel-jest": "^22.0.6",
+    "babel-jest": "^22.4.3",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-object-assign": "^6.22.0",
     "babel-preset-env": "^1.6.1",
-    "eslint": "^4.15.0",
+    "eslint": "^4.19.1",
     "eslint-config-standard": "^10.2.1",
-    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-import": "^2.10.0",
     "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-promise": ">=3.5.0",
+    "eslint-plugin-promise": "^3.7.0",
     "eslint-plugin-standard": ">=3.0.0",
-    "jest": "^22.0.6",
-    "node-sass": "^4.7.2",
+    "jest": "^22.4.3",
+    "node-sass": "^4.8.3",
     "npm-watch": "^0.2.0",
     "rollup": "^0.48.2",
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-uglify": "^2.0.1",
     "stylelint": "^8.4.0",
     "stylelint-config-standard": "^17.0.0",
-    "stylelint-scss": "^2.2.0"
+    "stylelint-scss": "^2.5.0"
   },
   "bugs": {
     "url": "https://github.com/jedrzejchalubek/glidejs/issues"

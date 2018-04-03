@@ -22,7 +22,7 @@ Visit [glidejs.com](https://glidejs.com/docs) for documentation.
 Pull-in a latest version with NPM ...
 
 ```bash
-npm install glidejs
+npm install @glidejs/glide
 ```
 
 ... provide `<link>` to the required core stylesheet. You can also optionally add an included theme stylesheet ...

@@ -1,8 +1,8 @@
-[![glide.js](//glidejs.com/images/glidejs-logotype-dark.png)](//glidejs.com)
+[![glide.js](https://glidejs.com/images/glidejs-logotype-dark.png)](https://glidejs.com)
 
-[![Build Status](//api.travis-ci.org/glidejs/glide.svg?branch=3.0.0)](//travis-ci.org/glidejs/glide)
+[![Build Status](https://api.travis-ci.org/glidejs/glide.svg?branch=master)](https://travis-ci.org/glidejs/glide)
 
-[Glide.js](//glidejs.com) is a dependency-free JavaScript ES6 slider and carousel. It’s lightweight, flexible and fast. Designed to slide. No less, no more
+[Glide.js](https://glidejs.com) is a dependency-free JavaScript ES6 slider and carousel. It’s lightweight, flexible and fast. Designed to slide. No less, no more
 
 What can convince you:
 - **Dependency-free**. Everything included, ready for action.
@@ -67,7 +67,7 @@ new Glide('.glide').mount({ Controls, Breakpoints })
 
 ## Contributing
 
-The issue channel is especially for improvement proposals and bug reporting. If you have implementing problems, please write on StackOverflow with [glidejs](//stackoverflow.com/questions/tagged/glidejs) tag.
+The issue channel is especially for improvement proposals and bug reporting. If you have implementing problems, please write on StackOverflow with [glidejs](https://stackoverflow.com/questions/tagged/glidejs) tag.
 
 ## Building
 
@@ -80,8 +80,8 @@ Build using NPM scripts. The following scripts are available:
 
 ## Maintainers
 
-- [Jędrzej Chałubek](//github.com/jedrzejchalubek) - creator
+- [Jędrzej Chałubek](https://github.com/jedrzejchalubek) - creator
 
 ## License
 
-Copyright (c) 2014-present, [Jędrzej Chałubek](//jedrzejchalubek.com). Licensed under the terms of the [MIT License](//opensource.org/licenses/MIT).
+Copyright (c) 2014-present, [Jędrzej Chałubek](https://jedrzejchalubek.com). Licensed under the terms of the [MIT License](https://opensource.org/licenses/MIT).

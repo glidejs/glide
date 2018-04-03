@@ -9,7 +9,7 @@
   "unpkg": "dist/glide.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jedrzejchalubek/glidejs.git"
+    "url": "git+https://github.com/jedrzejchalubek/glidejs.git"
   },
   "license": "MIT",
   "keywords": [
@@ -59,5 +59,12 @@
     "stylelint": "^8.4.0",
     "stylelint-config-standard": "^17.0.0",
     "stylelint-scss": "^2.2.0"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/jedrzejchalubek/glidejs/issues"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {}
 }

@@ -1,13 +1,13 @@
 import defaults from './defaults'
 import { warn } from './utils/log'
 import { mount } from './core/index'
+import { merge } from './utils/object'
 import { toInt, isObject } from './utils/unit'
 
 import EventsBus from './core/event/events-bus'
 
 export default class Glide {
-  /**
-   * Construct glide.
+  /**   * Construct glide.
    *
    * @param  {String} selector
    * @param  {Object} options
@@ -17,8 +17,9 @@ export default class Glide {
     this._e = new EventsBus()
 
     this.disabled = false
+
     this.selector = selector
-    this.settings = Object.assign({}, defaults, options)
+    this.settings = merge(defaults, options)
     this.index = this.settings.startAt
   }
 

@@ -6,7 +6,7 @@ import {
   isNumber,
   isFunction,
   isUndefined
-} from '../../../src/utils/unit'
+} from '../../src/utils/unit'
 
 describe('Function', () => {
   test('`toInt` should covert entered value in various formats to actual width number', () => {

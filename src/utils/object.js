@@ -1,3 +1,5 @@
+import { isObject } from './unit'
+
 /**
  * Defines getter and setter property on the specified object.
  *
@@ -22,4 +24,26 @@ export function sortKeys (obj) {
 
     return (r[k], r)
   }, {})
+}
+
+/**
+ * Deeply merges two objects.
+ *
+ * @param  {Object} target
+ * @param  {Object} source
+ * @return {Object}
+ */
+export function merge (target, source) {
+  if (isObject(target) && isObject(source)) {
+    Object.keys(source).forEach(key => {
+      if (isObject(source[key])) {
+        if (!target[key]) Object.assign(target, { [key]: {} })
+        merge(target[key], source[key])
+      } else {
+        Object.assign(target, { [key]: source[key] })
+      }
+    })
+  }
+
+  return target
 }

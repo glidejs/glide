@@ -1,5 +1,5 @@
 /*!
- * Glide.js v3.0.0
+ * Glide.js v3.0.1
  * (c) 2013-2018 Jędrzej Chałubek <jedrzej.chalubek@gmail.com> (http://jedrzejchalubek.com/)
  * Released under the MIT License.
  */
@@ -244,7 +244,20 @@ var createClass = function () {
 
 
 
+var defineProperty = function (obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
 
+  return obj;
+};
 
 var _extends = Object.assign || function (target) {
   for (var i = 1; i < arguments.length; i++) {
@@ -423,6 +436,54 @@ function mount(glide, extensions, events) {
   return components;
 }
 
+/**
+ * Defines getter and setter property on the specified object.
+ *
+ * @param  {Object} obj         Object where property has to be defined.
+ * @param  {String} prop        Name of the defined property.
+ * @param  {Object} definition  Get and set definitions for the property.
+ * @return {Void}
+ */
+function define(obj, prop, definition) {
+  Object.defineProperty(obj, prop, definition);
+}
+
+/**
+ * Sorts aphabetically object keys.
+ *
+ * @param  {Object} obj
+ * @return {Object}
+ */
+function sortKeys(obj) {
+  return Object.keys(obj).sort().reduce(function (r, k) {
+    r[k] = obj[k];
+
+    return r[k], r;
+  }, {});
+}
+
+/**
+ * Deeply merges two objects.
+ *
+ * @param  {Object} target
+ * @param  {Object} source
+ * @return {Object}
+ */
+function merge(target, source) {
+  if (isObject(target) && isObject(source)) {
+    Object.keys(source).forEach(function (key) {
+      if (isObject(source[key])) {
+        if (!target[key]) _extends(target, defineProperty({}, key, {}));
+        merge(target[key], source[key]);
+      } else {
+        _extends(target, defineProperty({}, key, source[key]));
+      }
+    });
+  }
+
+  return _extends({}, target);
+}
+
 var EventsBus = function () {
   /**
    * Construct a EventBus instance.
@@ -501,8 +562,7 @@ var EventsBus = function () {
 }();
 
 var Glide$2 = function () {
-  /**
-   * Construct glide.
+  /**   * Construct glide.
    *
    * @param  {String} selector
    * @param  {Object} options
@@ -515,8 +575,9 @@ var Glide$2 = function () {
     this._e = new EventsBus();
 
     this.disabled = false;
+
     this.selector = selector;
-    this.settings = _extends({}, defaults, options);
+    this.settings = merge(defaults, options);
     this.index = this.settings.startAt;
   }
 
@@ -796,32 +857,6 @@ var Glide$2 = function () {
   }]);
   return Glide;
 }();
-
-/**
- * Defines getter and setter property on the specified object.
- *
- * @param  {Object} obj         Object where property has to be defined.
- * @param  {String} prop        Name of the defined property.
- * @param  {Object} definition  Get and set definitions for the property.
- * @return {Void}
- */
-function define(obj, prop, definition) {
-  Object.defineProperty(obj, prop, definition);
-}
-
-/**
- * Sorts aphabetically object keys.
- *
- * @param  {Object} obj
- * @return {Object}
- */
-function sortKeys(obj) {
-  return Object.keys(obj).sort().reduce(function (r, k) {
-    r[k] = obj[k];
-
-    return r[k], r;
-  }, {});
-}
 
 var Run = function (Glide, Components, Events) {
   var Run = {

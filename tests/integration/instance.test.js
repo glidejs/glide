@@ -1,6 +1,8 @@
 import html from '../fixtures/html'
 import defaults from '../../src/defaults'
 
+import { merge } from '../../src/utils/object'
+
 import Glide from '../../entry/entry-complete'
 
 describe('Glide', () => {
@@ -27,9 +29,25 @@ describe('Glide', () => {
   })
 
   test('modified settings should return defaults extended by options', () => {
-    let glide = new Glide('#glide', { startAt: 2 }).mount()
+    let glide = new Glide('#glide', {
+      startAt: 2,
+      classes: {
+        direction: {
+          ltr: 'one',
+          rtl: 'two'
+        }
+      }
+    }).mount()
 
-    expect(glide.settings).toEqual(Object.assign(defaults, { startAt: 2 }))
+    expect(glide.settings).toEqual(merge(defaults, {
+      startAt: 2,
+      classes: {
+        direction: {
+          ltr: 'one',
+          rtl: 'two'
+        }
+      }
+    }))
   })
 
   test('should not be disabled at start', () => {

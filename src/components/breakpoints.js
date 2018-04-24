@@ -1,7 +1,7 @@
 import { warn } from '../utils/log'
 import { throttle } from '../utils/wait'
 import { isObject } from '../utils/unit'
-import { sortKeys, mergeOptions } from '../utils/object'
+import { sortKeys } from '../utils/object'
 
 import EventsBinder from '../core/event/events-binder'
 

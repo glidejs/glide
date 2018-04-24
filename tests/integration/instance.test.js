@@ -27,9 +27,25 @@ describe('Glide', () => {
   })
 
   test('modified settings should return defaults extended by options', () => {
-    let glide = new Glide('#glide', { startAt: 2 }).mount()
+    let glide = new Glide('#glide', {
+      startAt: 2,
+      classes: {
+        direction: {
+          ltr: 'one',
+          rtl: 'two'
+        }
+      }
+    }).mount()
 
-    expect(glide.settings).toEqual(Object.assign(defaults, { startAt: 2 }))
+    expect(glide.settings).toEqual(Object.assign(defaults, {
+      startAt: 2,
+      classes: {
+        direction: {
+          ltr: 'one',
+          rtl: 'two'
+        }
+      }
+    }))
   })
 
   test('should not be disabled at start', () => {

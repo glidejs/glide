@@ -1,4 +1,4 @@
-import { warn } from '../../../src/utils/log'
+import { warn } from '../../src/utils/log'
 
 describe('Warn should', () => {
   test('log an error to the console with suffix', () => {

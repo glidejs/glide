@@ -1,4 +1,4 @@
-import { exist, siblings } from '../../src/utils/dom'
+import { exist, siblings } from '../../../src/utils/dom'
 
 describe('Function', () => {
   beforeEach(() => {

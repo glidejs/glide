@@ -1,5 +1,6 @@
 import html from '../fixtures/html'
 import defaults from '../../src/defaults'
+import { mergeOptions } from '../../src/utils/object'
 
 import Glide from '../../entry/entry-complete'
 
@@ -37,7 +38,7 @@ describe('Glide', () => {
       }
     }).mount()
 
-    expect(glide.settings).toEqual(Object.assign(defaults, {
+    expect(glide.settings).toEqual(mergeOptions(defaults, {
       startAt: 2,
       classes: {
         direction: {

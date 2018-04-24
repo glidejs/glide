@@ -1,4 +1,4 @@
-import { define, options } from '../../src/utils/object'
+import { define, mergeOptions } from '../../src/utils/object'
 
 describe('Function', () => {
   test('`define` should create object getters and setters', () => {
@@ -22,7 +22,7 @@ describe('Function', () => {
   })
 
   test('`merge` should deep merge defaults and options object', () => {
-    let obj = options(
+    let obj = mergeOptions(
       {
         a: 1,
         b: 2,

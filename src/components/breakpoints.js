@@ -1,7 +1,7 @@
 import { warn } from '../utils/log'
 import { throttle } from '../utils/wait'
 import { isObject } from '../utils/unit'
-import { sortKeys } from '../utils/object'
+import { sortKeys, mergeOptions } from '../utils/object'
 
 import EventsBinder from '../core/event/events-binder'
 
@@ -82,14 +82,14 @@ export default function (Glide, Components, Events) {
    * Overwrite instance settings with currently matching breakpoint settings.
    * This happens right after component initialization.
    */
-  settings = Object.assign(settings, Breakpoints.match(points))
+  Object.assign(settings, Breakpoints.match(points))
 
   /**
    * Update glide with settings of matched brekpoint:
    * - window resize to update slider
    */
   Binder.on('resize', window, throttle(() => {
-    settings = Object.assign(settings, Breakpoints.match(points))
+    Object.assign(settings, Breakpoints.match(points))
   }, Glide.settings.throttle))
 
   /**

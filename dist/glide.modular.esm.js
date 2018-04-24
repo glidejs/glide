@@ -244,20 +244,7 @@ var createClass = function () {
 
 
 
-var defineProperty = function (obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
 
-  return obj;
-};
 
 var _extends = Object.assign || function (target) {
   for (var i = 1; i < arguments.length; i++) {
@@ -463,25 +450,29 @@ function sortKeys(obj) {
 }
 
 /**
- * Deeply merges two objects.
+ * Merges passed settings object with default options.
  *
- * @param  {Object} target
- * @param  {Object} source
+ * @param  {Object} defaults
+ * @param  {Object} settings
  * @return {Object}
  */
-function merge(target, source) {
-  if (isObject(target) && isObject(source)) {
-    Object.keys(source).forEach(function (key) {
-      if (isObject(source[key])) {
-        if (!target[key]) _extends(target, defineProperty({}, key, {}));
-        merge(target[key], source[key]);
-      } else {
-        _extends(target, defineProperty({}, key, source[key]));
-      }
-    });
+function mergeOptions(defaults, settings) {
+  var options = _extends({}, defaults, settings);
+
+  // `Object.assign` do not deeply merge objects, so we
+  // have to do it manually for every nested object
+  // in options. Although it does not look smart,
+  // it's smaller and faster than some fancy
+  // merging deep-merge algorithm script.
+  if (settings.hasOwnProperty('classes')) {
+    options.classes = _extends({}, defaults.classes, settings.classes);
+
+    if (settings.classes.hasOwnProperty('direction')) {
+      options.classes.direction = _extends({}, defaults.classes.direction, settings.classes.direction);
+    }
   }
 
-  return _extends({}, target);
+  return options;
 }
 
 var EventsBus = function () {
@@ -562,7 +553,8 @@ var EventsBus = function () {
 }();
 
 var Glide$2 = function () {
-  /**   * Construct glide.
+  /**
+   * Construct glide.
    *
    * @param  {String} selector
    * @param  {Object} options
@@ -575,9 +567,8 @@ var Glide$2 = function () {
     this._e = new EventsBus();
 
     this.disabled = false;
-
     this.selector = selector;
-    this.settings = merge(defaults, options);
+    this.settings = mergeOptions(defaults, options);
     this.index = this.settings.startAt;
   }
 
@@ -3525,14 +3516,14 @@ var breakpoints = function (Glide, Components, Events) {
    * Overwrite instance settings with currently matching breakpoint settings.
    * This happens right after component initialization.
    */
-  settings = _extends(settings, Breakpoints.match(points));
+  _extends(settings, Breakpoints.match(points));
 
   /**
    * Update glide with settings of matched brekpoint:
    * - window resize to update slider
    */
   Binder.on('resize', window, throttle(function () {
-    settings = _extends(settings, Breakpoints.match(points));
+    _extends(settings, Breakpoints.match(points));
   }, Glide.settings.throttle));
 
   /**

@@ -29,7 +29,7 @@
     "build:umd": "rollup --config build/umd.js && rollup --config build/umd.min.js",
     "build:js": "npm run build:esm && npm run build:umd",
     "build": "npm run build:css && npm run build:js",
-    "test": "jest tests/**/*.test.js --coverage",
+    "test": "jest tests/**/*.test.js",
     "lint": "eslint {src,tests}/**/*.js",
     "watch": "npm-watch"
   },

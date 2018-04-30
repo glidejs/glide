@@ -1275,7 +1275,7 @@ var Html = function (Glide, Components) {
     mount: function mount() {
       this.root = Glide.selector;
       this.track = this.root.querySelector(TRACK_SELECTOR);
-      this.slides = Array.from(this.wrapper.children).filter(function (slide) {
+      this.slides = Array.prototype.slice.call(this.wrapper.children).filter(function (slide) {
         return !slide.classList.contains(Glide.settings.classes.cloneSlide);
       });
     }

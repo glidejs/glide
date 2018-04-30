@@ -36,13 +36,13 @@ export default function (Glide, Components) {
      *
      * @return {Object}
      */
-    set (root) {
-      if (isString(root)) {
-        root = document.querySelector(root)
+    set (r) {
+      if (isString(r)) {
+        r = document.querySelector(r)
       }
 
-      if (exist(root)) {
-        Html._r = root
+      if (exist(r)) {
+        Html._r = r
       } else {
         warn('Root element must be a existing Html node')
       }
@@ -64,9 +64,9 @@ export default function (Glide, Components) {
      *
      * @return {Object}
      */
-    set (tr) {
-      if (exist(tr)) {
-        Html._t = tr
+    set (t) {
+      if (exist(t)) {
+        Html._t = t
       } else {
         warn(`Could not find track element. Please use ${TRACK_SELECTOR} attribute.`)
       }

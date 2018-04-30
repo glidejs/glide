@@ -1303,13 +1303,13 @@ var Html = function (Glide, Components) {
      *
      * @return {Object}
      */
-    set: function set(root) {
-      if (isString(root)) {
-        root = document.querySelector(root);
+    set: function set(r) {
+      if (isString(r)) {
+        r = document.querySelector(r);
       }
 
-      if (exist(root)) {
-        Html._r = root;
+      if (exist(r)) {
+        Html._r = r;
       } else {
         warn('Root element must be a existing Html node');
       }
@@ -1332,9 +1332,9 @@ var Html = function (Glide, Components) {
      *
      * @return {Object}
      */
-    set: function set(tr) {
-      if (exist(tr)) {
-        Html._t = tr;
+    set: function set(t) {
+      if (exist(t)) {
+        Html._t = t;
       } else {
         warn('Could not find track element. Please use ' + TRACK_SELECTOR + ' attribute.');
       }

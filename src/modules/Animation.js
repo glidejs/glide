@@ -51,7 +51,9 @@ var Animation = function(Glide, Core) {
      */
     Animation.prototype.after = function(callback) {
         return setTimeout(function() {
-            callback();
+            if (!Glide.destroyed) {
+                callback();
+            }
         }, Glide.options.animationDuration + 20);
     };
 

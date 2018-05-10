@@ -3,6 +3,7 @@
 ### [Glide.js](https://glidejs.com) is a dependency-free JavaScript ES6 slider and carousel. It’s lightweight, flexible and fast. Designed to slide. No less, no more
 
 [![Build Status](https://api.travis-ci.org/glidejs/glide.svg?branch=master)](https://travis-ci.org/glidejs/glide)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fglidejs%2Fglide.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fglidejs%2Fglide?ref=badge_shield)
 
 What can convince you:
 - **Dependency-free**. Everything included, ready for action.
@@ -85,3 +86,6 @@ Build using NPM scripts. The following scripts are available:
 ## License
 
 Copyright (c) 2014-present, [Jędrzej Chałubek](https://jedrzejchalubek.com). Licensed under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fglidejs%2Fglide.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fglidejs%2Fglide?ref=badge_large)

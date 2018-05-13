@@ -147,7 +147,7 @@ export default function (Glide, Components, Events) {
     click (event) {
       event.preventDefault()
 
-      Components.Run.make(Components.Direction.resolve(event.currentTarget.dataset.glideDir))
+      Components.Run.make(Components.Direction.resolve(event.currentTarget.getAttribute('data-glide-dir')))
     }
   }
 

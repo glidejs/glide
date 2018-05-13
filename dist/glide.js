@@ -2939,7 +2939,7 @@ var Anchors = function (Glide, Components, Events) {
         for (var i = 0; i < this.items.length; i++) {
           this.items[i].draggable = false;
 
-          this.items[i].dataset.href = this.items[i].getAttribute('href');
+          this.items[i].setAttribute('data-href', this.items[i].getAttribute('href'));
 
           this.items[i].removeAttribute('href');
         }
@@ -2963,9 +2963,9 @@ var Anchors = function (Glide, Components, Events) {
         for (var i = 0; i < this.items.length; i++) {
           this.items[i].draggable = true;
 
-          this.items[i].setAttribute('href', this.items[i].dataset.href);
+          this.items[i].setAttribute('href', this.items[i].getAttribute('data-href'));
 
-          delete this.items[i].dataset.href;
+          this.items[i].setAttribute('data-href', undefined);
         }
 
         detached = false;
@@ -3170,7 +3170,7 @@ var Controls = function (Glide, Components, Events) {
     click: function click(event) {
       event.preventDefault();
 
-      Components.Run.make(Components.Direction.resolve(event.currentTarget.dataset.glideDir));
+      Components.Run.make(Components.Direction.resolve(event.currentTarget.getAttribute('data-glide-dir')));
     }
   };
 

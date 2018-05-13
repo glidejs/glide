@@ -2072,7 +2072,7 @@ var Direction = function (Glide, Components, Events) {
      * @return {Void}
      */
     set: function set(value) {
-      if (VALID_DIRECTIONS.includes(value)) {
+      if (VALID_DIRECTIONS.indexOf(value) > -1) {
         Direction._v = value;
       } else {
         warn('Direction value must be `ltr` or `rtl`');
@@ -2706,7 +2706,7 @@ var swipe = function (Glide, Components, Events) {
      * @param {Object} event
      */
     touches: function touches(event) {
-      if (MOUSE_EVENTS.includes(event.type)) {
+      if (MOUSE_EVENTS.indexOf(event.type) > -1) {
         return event;
       }
 
@@ -2722,7 +2722,7 @@ var swipe = function (Glide, Components, Events) {
     threshold: function threshold(event) {
       var settings = Glide.settings;
 
-      if (MOUSE_EVENTS.includes(event.type)) {
+      if (MOUSE_EVENTS.indexOf(event.type) > -1) {
         return settings.dragThreshold;
       }
 

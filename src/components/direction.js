@@ -81,7 +81,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     set (value) {
-      if (VALID_DIRECTIONS.includes(value)) {
+      if (VALID_DIRECTIONS.indexOf(value) > -1) {
         Direction._v = value
       } else {
         warn('Direction value must be `ltr` or `rtl`')

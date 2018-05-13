@@ -218,7 +218,7 @@ export default function (Glide, Components, Events) {
      * @param {Object} event
      */
     touches (event) {
-      if (MOUSE_EVENTS.includes(event.type)) {
+      if (MOUSE_EVENTS.indexOf(event.type) > -1) {
         return event
       }
 
@@ -233,7 +233,7 @@ export default function (Glide, Components, Events) {
     threshold (event) {
       let settings = Glide.settings
 
-      if (MOUSE_EVENTS.includes(event.type)) {
+      if (MOUSE_EVENTS.indexOf(event.type) > -1) {
         return settings.dragThreshold
       }
 

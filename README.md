@@ -69,6 +69,15 @@ new Glide('.glide').mount({ Controls, Breakpoints })
 
 The issue channel is especially for improvement proposals and bug reporting. If you have implementing problems, please write on StackOverflow with [glidejs](https://stackoverflow.com/questions/tagged/glidejs) tag.
 
+## Browser Support
+
+ - IE 11+
+ - Edge
+ - Chrome 10+
+ - Firefox 10+
+ - Opera 15+
+ - Safari 5.1+
+
 ## Building
 
 Build using NPM scripts. The following scripts are available:

@@ -3101,6 +3101,7 @@ var Controls = function (Glide, Components, Events) {
     addClass: function addClass(controls) {
       var settings = Glide.settings;
       var item = controls[Glide.index];
+
       item.classList.add(settings.classes.activeNav);
 
       siblings(item).forEach(function (sibling) {

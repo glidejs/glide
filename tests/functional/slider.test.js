@@ -45,4 +45,34 @@ describe('Glide initialized as `slider`', () => {
       done()
     })
   })
+
+  test('should NOT move to the last slide when we are on the first slide and loop set to false', (done) => {
+    let { slides } = query(document)
+
+    let glide = new Glide('#glide', { startAt: 0, loop: false  }).mount()
+
+    glide.go('<')
+
+    afterTransition(() => {
+      expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[slides.length - 1].classList.contains(defaults.classes.activeSlide)).toBe(false)
+
+      done()
+    })
+  })
+
+  test('should NOT move to the first slide when we are on the last slide and loop set to false', (done) => {
+    let { slides } = query(document)
+
+    let glide = new Glide('#glide', { startAt: slides.length - 1, loop: false }).mount()
+
+    glide.go('>')
+
+    afterTransition(() => {
+      expect(slides[slides.length - 1].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(false)
+
+      done()
+    })
+  })
 })

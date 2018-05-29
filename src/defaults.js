@@ -163,6 +163,13 @@ export default {
   breakpoints: {},
 
   /**
+   * Allows looping the slides.
+   *
+   * @type {Boolean}
+   */
+  loop: true,
+
+  /**
    * Collection of internally used HTML classes.
    *
    * @todo Refactor `slider` and `carousel` properties to single `type: { slider: '', carousel: '' }` object

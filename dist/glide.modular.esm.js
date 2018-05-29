@@ -169,6 +169,13 @@ var defaults = {
   breakpoints: {},
 
   /**
+   * Allows looping the slides.
+   *
+   * @type {Boolean}
+   */
+  loop: true,
+
+  /**
    * Collection of internally used HTML classes.
    *
    * @todo Refactor `slider` and `carousel` properties to single `type: { slider: '', carousel: '' }` object
@@ -914,6 +921,9 @@ var Run = function (Glide, Components, Events) {
           if (steps === '>') {
             Glide.index = length;
           } else if (this.isEnd()) {
+            if (Glide.isType('slider') && !Glide.settings.loop) {
+              break;
+            }
             this._o = true;
 
             Glide.index = 0;
@@ -930,6 +940,9 @@ var Run = function (Glide, Components, Events) {
           if (steps === '<') {
             Glide.index = 0;
           } else if (this.isStart()) {
+            if (Glide.isType('slider') && !Glide.settings.loop) {
+              break;
+            }
             this._o = true;
 
             Glide.index = length;
@@ -3056,8 +3069,13 @@ var controls = function (Glide, Components, Events) {
      * @return {Void}
      */
     setActive: function setActive() {
+      // sets class for navigation
       for (var i = 0; i < this._n.length; i++) {
         this.addClass(this._n[i].children);
+      }
+      // sets class for controls
+      for (var _i = 0; _i < this._i.length; _i++) {
+        this.addControlsClass(this._i[_i].children);
       }
     },
 
@@ -3083,12 +3101,34 @@ var controls = function (Glide, Components, Events) {
     addClass: function addClass(controls) {
       var settings = Glide.settings;
       var item = controls[Glide.index];
-
       item.classList.add(settings.classes.activeNav);
 
       siblings(item).forEach(function (sibling) {
         sibling.classList.remove(settings.classes.activeNav);
       });
+    },
+
+
+    /**
+     * Toggles active class on items inside controls.
+     *
+     * @param  {HTMLElement} controls
+     * @return {Void}
+     */
+    addControlsClass: function addControlsClass(controls) {
+      var settings = Glide.settings;
+
+      if (Glide.isType('slider') && !settings.loop) {
+        for (var i = 0; i < controls.length; i++) {
+          controls[i].classList.remove(settings.classes.disabledArrow);
+        }
+
+        if (Glide._c.Run.isStart()) {
+          controls[0].classList.add(settings.classes.disabledArrow);
+        } else if (Glide._c.Run.isEnd()) {
+          controls[1].classList.add(settings.classes.disabledArrow);
+        }
+      }
     },
 
 

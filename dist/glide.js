@@ -3132,7 +3132,8 @@ var Controls = function (Glide, Components, Events) {
 
         if (Glide._c.Run.isStart()) {
           controls[0].classList.add(settings.classes.disabledArrow);
-        } else if (Glide._c.Run.isEnd()) {
+        }
+        if (Glide._c.Run.isEnd()) {
           controls[1].classList.add(settings.classes.disabledArrow);
         }
       }

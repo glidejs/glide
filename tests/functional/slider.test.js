@@ -49,7 +49,7 @@ describe('Glide initialized as `slider`', () => {
   test('should NOT move to the last slide when we are on the first slide and loop set to false', (done) => {
     let { slides } = query(document)
 
-    let glide = new Glide('#glide', { startAt: 0, loop: false  }).mount()
+    let glide = new Glide('#glide', { startAt: 0, loop: false }).mount()
 
     glide.go('<')
 

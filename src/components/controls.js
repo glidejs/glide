@@ -98,11 +98,10 @@ export default function (Glide, Components, Events) {
         for (let i = 0; i < controls.length; i++) {
           controls[i].classList.remove(settings.classes.disabledArrow)
         }
-
-        if (Glide._c.Run.isStart()) {
+        if (Components.Run.isStart()) {
           controls[0].classList.add(settings.classes.disabledArrow)
         }
-        if (Glide._c.Run.isEnd()) {
+        if (Components.Run.isEnd()) {
           controls[1].classList.add(settings.classes.disabledArrow)
         }
       }

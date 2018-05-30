@@ -59,13 +59,11 @@ export default function (Glide, Components, Events) {
           if (steps === '>') {
             Glide.index = length
           } else if (this.isEnd()) {
-            if (Glide.isType('slider') && !Glide.settings.loop) {
-              break
+            if (!(Glide.isType('slider') && !Glide.settings.loop)) {
+              this._o = true
+
+              Glide.index = 0
             }
-            this._o = true
-
-            Glide.index = 0
-
             Events.emit('run.end', move)
           } else if (countableSteps) {
             Glide.index += Math.min(length - Glide.index, -toInt(steps))
@@ -78,13 +76,11 @@ export default function (Glide, Components, Events) {
           if (steps === '<') {
             Glide.index = 0
           } else if (this.isStart()) {
-            if (Glide.isType('slider') && !Glide.settings.loop) {
-              break
+            if (!(Glide.isType('slider') && !Glide.settings.loop)) {
+              this._o = true
+
+              Glide.index = length
             }
-            this._o = true
-
-            Glide.index = length
-
             Events.emit('run.start', move)
           } else if (countableSteps) {
             Glide.index -= Math.min(Glide.index, toInt(steps))

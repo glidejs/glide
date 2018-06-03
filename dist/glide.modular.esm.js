@@ -2958,8 +2958,6 @@ var anchors = function (Glide, Components, Events) {
           this.items[i].draggable = true;
 
           this.items[i].setAttribute('href', this.items[i].getAttribute('data-href'));
-
-          this.items[i].setAttribute('data-href', undefined);
         }
 
         detached = false;

@@ -1824,7 +1824,7 @@ var Clones = function (Glide, Components, Events) {
 
 
       for (var i = 0; i < items.length; i++) {
-        items[i].remove();
+        Components.Html.wrapper.removeChild(items[i]);
       }
     }
   };

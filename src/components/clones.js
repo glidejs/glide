@@ -23,8 +23,9 @@ export default function (Glide, Components, Events) {
       let perView = Glide.settings.perView
       let length = Components.Html.slides.length
 
-      if (length === 0)
-      	return pattern;
+      if (length === 0) {
+        return pattern;
+      }
 
       // Repeat creating pattern based on the ratio calculated
       // by number in `perView` per actual number of slides.

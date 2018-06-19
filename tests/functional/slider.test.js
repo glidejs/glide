@@ -46,10 +46,10 @@ describe('Glide initialized as `slider`', () => {
     })
   })
 
-  test('should NOT move to the last slide when we are on the first slide and loop set to false', (done) => {
+  test('should NOT move to the last slide when we are on the first slide and rewind set to false', (done) => {
     let { slides } = query(document)
 
-    let glide = new Glide('#glide', { startAt: 0, loop: false }).mount()
+    let glide = new Glide('#glide', { startAt: 0, rewind: false }).mount()
 
     glide.go('<')
 
@@ -61,10 +61,10 @@ describe('Glide initialized as `slider`', () => {
     })
   })
 
-  test('should NOT move to the first slide when we are on the last slide and loop set to false', (done) => {
+  test('should NOT move to the first slide when we are on the last slide and rewind set to false', (done) => {
     let { slides } = query(document)
 
-    let glide = new Glide('#glide', { startAt: slides.length - 1, loop: false }).mount()
+    let glide = new Glide('#glide', { startAt: slides.length - 1, rewind: false }).mount()
 
     glide.go('>')
 

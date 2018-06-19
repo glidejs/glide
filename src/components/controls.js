@@ -36,7 +36,7 @@ export default function (Glide, Components, Events) {
        * @private
        * @type {HTMLCollection}
        */
-      this._i = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR)
+      this._c = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR)
 
       this.addBindings()
     },
@@ -96,8 +96,8 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     addBindings () {
-      for (let i = 0; i < this._i.length; i++) {
-        this.bind(this._i[i].children)
+      for (let i = 0; i < this._c.length; i++) {
+        this.bind(this._c[i].children)
       }
     },
 
@@ -107,8 +107,8 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     removeBindings () {
-      for (let i = 0; i < this._i.length; i++) {
-        this.unbind(this._i[i].children)
+      for (let i = 0; i < this._c.length; i++) {
+        this.unbind(this._c[i].children)
       }
     },
 
@@ -158,7 +158,7 @@ export default function (Glide, Components, Events) {
      * @return {HTMLElement[]}
      */
     get () {
-      return Controls._i
+      return Controls._c
     }
   })
 

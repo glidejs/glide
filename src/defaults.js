@@ -106,6 +106,13 @@ export default {
   animationDuration: 400,
 
   /**
+   * Allows looping the `slider` type. Slider will rewind to the first/last slide when it's at the start/end.
+   *
+   * @type {Boolean}
+   */
+  rewind: true,
+
+  /**
    * Duration of the rewinding animation of the `slider` type in milliseconds.
    *
    * @type {Number}

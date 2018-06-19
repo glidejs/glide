@@ -59,9 +59,11 @@ export default function (Glide, Components, Events) {
           if (steps === '>') {
             Glide.index = length
           } else if (this.isEnd()) {
-            this._o = true
+            if (!(Glide.isType('slider') && !Glide.settings.rewind)) {
+              this._o = true
 
-            Glide.index = 0
+              Glide.index = 0
+            }
 
             Events.emit('run.end', move)
           } else if (countableSteps) {
@@ -75,9 +77,11 @@ export default function (Glide, Components, Events) {
           if (steps === '<') {
             Glide.index = 0
           } else if (this.isStart()) {
-            this._o = true
+            if (!(Glide.isType('slider') && !Glide.settings.rewind)) {
+              this._o = true
 
-            Glide.index = length
+              Glide.index = length
+            }
 
             Events.emit('run.start', move)
           } else if (countableSteps) {

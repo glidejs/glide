@@ -118,6 +118,13 @@ var defaults = {
   animationDuration: 400,
 
   /**
+   * Allows looping the `slider` type. Slider will rewind to the first/last slide when it's at the start/end.
+   *
+   * @type {Boolean}
+   */
+  rewind: true,
+
+  /**
    * Duration of the rewinding animation of the `slider` type in milliseconds.
    *
    * @type {Number}
@@ -920,9 +927,11 @@ var Run = function (Glide, Components, Events) {
           if (steps === '>') {
             Glide.index = length;
           } else if (this.isEnd()) {
-            this._o = true;
+            if (!(Glide.isType('slider') && !Glide.settings.rewind)) {
+              this._o = true;
 
-            Glide.index = 0;
+              Glide.index = 0;
+            }
 
             Events.emit('run.end', move);
           } else if (countableSteps) {
@@ -936,9 +945,11 @@ var Run = function (Glide, Components, Events) {
           if (steps === '<') {
             Glide.index = 0;
           } else if (this.isStart()) {
-            this._o = true;
+            if (!(Glide.isType('slider') && !Glide.settings.rewind)) {
+              this._o = true;
 
-            Glide.index = length;
+              Glide.index = length;
+            }
 
             Events.emit('run.start', move);
           } else if (countableSteps) {
@@ -3048,7 +3059,7 @@ var Controls = function (Glide, Components, Events) {
        * @private
        * @type {HTMLCollection}
        */
-      this._i = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR);
+      this._c = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR);
 
       this.addBindings();
     },
@@ -3113,8 +3124,8 @@ var Controls = function (Glide, Components, Events) {
      * @return {Void}
      */
     addBindings: function addBindings() {
-      for (var i = 0; i < this._i.length; i++) {
-        this.bind(this._i[i].children);
+      for (var i = 0; i < this._c.length; i++) {
+        this.bind(this._c[i].children);
       }
     },
 
@@ -3125,8 +3136,8 @@ var Controls = function (Glide, Components, Events) {
      * @return {Void}
      */
     removeBindings: function removeBindings() {
-      for (var i = 0; i < this._i.length; i++) {
-        this.unbind(this._i[i].children);
+      for (var i = 0; i < this._c.length; i++) {
+        this.unbind(this._c[i].children);
       }
     },
 
@@ -3179,7 +3190,7 @@ var Controls = function (Glide, Components, Events) {
      * @return {HTMLElement[]}
      */
     get: function get() {
-      return Controls._i;
+      return Controls._c;
     }
   });
 

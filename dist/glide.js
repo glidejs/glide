@@ -118,6 +118,13 @@ var defaults = {
   animationDuration: 400,
 
   /**
+   * Allows looping the `slider` type. Slider will rewind to the first/last slide when it's at the start/end.
+   *
+   * @type {Boolean}
+   */
+  rewind: true,
+
+  /**
    * Duration of the rewinding animation of the `slider` type in milliseconds.
    *
    * @type {Number}
@@ -173,13 +180,6 @@ var defaults = {
    * }`
    */
   breakpoints: {},
-
-  /**
-   * Allows looping the slides.
-   *
-   * @type {Boolean}
-   */
-  loop: true,
 
   /**
    * Collection of internally used HTML classes.
@@ -927,11 +927,12 @@ var Run = function (Glide, Components, Events) {
           if (steps === '>') {
             Glide.index = length;
           } else if (this.isEnd()) {
-            if (!(Glide.isType('slider') && !Glide.settings.loop)) {
+            if (!(Glide.isType('slider') && !Glide.settings.rewind)) {
               this._o = true;
 
               Glide.index = 0;
             }
+
             Events.emit('run.end', move);
           } else if (countableSteps) {
             Glide.index += Math.min(length - Glide.index, -toInt(steps));
@@ -944,11 +945,12 @@ var Run = function (Glide, Components, Events) {
           if (steps === '<') {
             Glide.index = 0;
           } else if (this.isStart()) {
-            if (!(Glide.isType('slider') && !Glide.settings.loop)) {
+            if (!(Glide.isType('slider') && !Glide.settings.rewind)) {
               this._o = true;
 
               Glide.index = length;
             }
+
             Events.emit('run.start', move);
           } else if (countableSteps) {
             Glide.index -= Math.min(Glide.index, toInt(steps));
@@ -3057,7 +3059,7 @@ var Controls = function (Glide, Components, Events) {
        * @private
        * @type {HTMLCollection}
        */
-      this._i = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR);
+      this._c = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR);
 
       this.addBindings();
     },
@@ -3069,13 +3071,8 @@ var Controls = function (Glide, Components, Events) {
      * @return {Void}
      */
     setActive: function setActive() {
-      // sets class for navigation
       for (var i = 0; i < this._n.length; i++) {
         this.addClass(this._n[i].children);
-      }
-      // sets class for controls
-      for (var _i = 0; _i < this._i.length; _i++) {
-        this.addControlsClass(this._i[_i].children);
       }
     },
 
@@ -3111,29 +3108,6 @@ var Controls = function (Glide, Components, Events) {
 
 
     /**
-     * Toggles active class on items inside controls.
-     *
-     * @param  {HTMLElement} controls
-     * @return {Void}
-     */
-    addControlsClass: function addControlsClass(controls) {
-      var settings = Glide.settings;
-
-      if (Glide.isType('slider') && !settings.loop) {
-        for (var i = 0; i < controls.length; i++) {
-          controls[i].classList.remove(settings.classes.disabledArrow);
-        }
-        if (Components.Run.isStart()) {
-          controls[0].classList.add(settings.classes.disabledArrow);
-        }
-        if (Components.Run.isEnd()) {
-          controls[1].classList.add(settings.classes.disabledArrow);
-        }
-      }
-    },
-
-
-    /**
      * Removes active class from active control.
      *
      * @param  {HTMLElement} controls
@@ -3150,8 +3124,8 @@ var Controls = function (Glide, Components, Events) {
      * @return {Void}
      */
     addBindings: function addBindings() {
-      for (var i = 0; i < this._i.length; i++) {
-        this.bind(this._i[i].children);
+      for (var i = 0; i < this._c.length; i++) {
+        this.bind(this._c[i].children);
       }
     },
 
@@ -3162,8 +3136,8 @@ var Controls = function (Glide, Components, Events) {
      * @return {Void}
      */
     removeBindings: function removeBindings() {
-      for (var i = 0; i < this._i.length; i++) {
-        this.unbind(this._i[i].children);
+      for (var i = 0; i < this._c.length; i++) {
+        this.unbind(this._c[i].children);
       }
     },
 
@@ -3216,7 +3190,7 @@ var Controls = function (Glide, Components, Events) {
      * @return {HTMLElement[]}
      */
     get: function get() {
-      return Controls._i;
+      return Controls._c;
     }
   });
 

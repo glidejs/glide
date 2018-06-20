@@ -23,21 +23,19 @@ export default function (Glide, Components, Events) {
       let perView = Glide.settings.perView
       let length = Components.Html.slides.length
 
-      if (length === 0) {
-        return pattern;
-      }
+      if (length !== 0) {
+        // Repeat creating pattern based on the ratio calculated
+        // by number in `perView` per actual number of slides.
+        for (let r = 0; r < Math.max(1, Math.floor(perView / length)); r++) {
+          // Fill pattern with indexes of slides at the beginning of track.
+          for (let i = 0; i <= length - 1; i++) {
+            pattern.push(`${i}`)
+          }
 
-      // Repeat creating pattern based on the ratio calculated
-      // by number in `perView` per actual number of slides.
-      for (let r = 0; r < Math.max(1, Math.floor(perView / length)); r++) {
-        // Fill pattern with indexes of slides at the beginning of track.
-        for (let i = 0; i <= length - 1; i++) {
-          pattern.push(`${i}`)
-        }
-
-        // Fill pattern with indexes of slides from the end of track.
-        for (let i = length - 1; i >= 0; i--) {
-          pattern.unshift(`-${i}`)
+          // Fill pattern with indexes of slides from the end of track.
+          for (let i = length - 1; i >= 0; i--) {
+            pattern.unshift(`-${i}`)
+          }
         }
       }
 

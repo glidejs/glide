@@ -1,5 +1,5 @@
 /*!
- * Glide.js v3.0.4
+ * Glide.js v3.1.0
  * (c) 2013-2018 Jędrzej Chałubek <jedrzej.chalubek@gmail.com> (http://jedrzejchalubek.com/)
  * Released under the MIT License.
  */
@@ -1753,17 +1753,19 @@ var Clones = function (Glide, Components, Events) {
       var perView = Glide.settings.perView;
       var length = Components.Html.slides.length;
 
-      // Repeat creating pattern based on the ratio calculated
-      // by number in `perView` per actual number of slides.
-      for (var r = 0; r < Math.max(1, Math.floor(perView / length)); r++) {
-        // Fill pattern with indexes of slides at the beginning of track.
-        for (var i = 0; i <= length - 1; i++) {
-          pattern.push('' + i);
-        }
+      if (length !== 0) {
+        // Repeat creating pattern based on the ratio calculated
+        // by number in `perView` per actual number of slides.
+        for (var r = 0; r < Math.max(1, Math.floor(perView / length)); r++) {
+          // Fill pattern with indexes of slides at the beginning of track.
+          for (var i = 0; i <= length - 1; i++) {
+            pattern.push('' + i);
+          }
 
-        // Fill pattern with indexes of slides from the end of track.
-        for (var _i = length - 1; _i >= 0; _i--) {
-          pattern.unshift('-' + _i);
+          // Fill pattern with indexes of slides from the end of track.
+          for (var _i = length - 1; _i >= 0; _i--) {
+            pattern.unshift('-' + _i);
+          }
         }
       }
 

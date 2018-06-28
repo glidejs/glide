@@ -75,4 +75,20 @@ describe('Glide initialized as `slider`', () => {
       done()
     })
   })
+
+  test('should STOP move at `perView` number of slides from the end when `bound` option is `true`', (done) => {
+    let { slides } = query(document)
+
+    let perView = 3
+
+    let glide = new Glide('#glide', { perView: perView, bound: true }).mount()
+
+    glide.go('>>')
+
+    afterTransition(() => {
+      expect(slides[slides.length - perView].classList.contains(defaults.classes.activeSlide)).toBe(true)
+
+      done()
+    })
+  })
 })

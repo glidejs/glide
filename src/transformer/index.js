@@ -9,15 +9,11 @@ import Focusing from './mutators/focusing'
  *
  * @type {Array}
  */
-const MUTATORS = [
+let MUTATORS = [
   Gap,
   Grow,
   Peeking,
   Focusing,
-  // It's important that the Rtl component
-  // be last on the list, so it reflects
-  // all previous transformations.
-  Rtl
 ]
 
 /**
@@ -28,6 +24,15 @@ const MUTATORS = [
  * @return {Object}
  */
 export default function (Glide, Components) {
+  MUTATORS = MUTATORS.concat(Glide._m)
+
+  // It's important that the Rtl component
+  // be last on the list, so it reflects
+  // all previous transformations.
+  MUTATORS = MUTATORS.concat([
+    Rtl
+  ])
+
   return {
     /**
      * Piplines translate value with registered transformers.

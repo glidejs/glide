@@ -3,13 +3,13 @@
   "version": "3.1.0",
   "description": "Glide.js is a dependency-free JavaScript ES6 slider and carousel. It’s lightweight, flexible and fast. Designed to slide. No less, no more",
   "author": "Jędrzej Chałubek <jedrzej.chalubek@gmail.com> (http://jedrzejchalubek.com/)",
-  "homepage": "https://glide.jedrzejchalubek.com",
+  "homepage": "https://glidejs.com",
   "main": "dist/glide.js",
   "module": "dist/glide.esm.js",
   "unpkg": "dist/glide.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jedrzejchalubek/glidejs.git"
+    "url": "git+https://github.com/glidejs/glide.git"
   },
   "license": "MIT",
   "keywords": [
@@ -61,7 +61,7 @@
     "stylelint-scss": "^2.5.0"
   },
   "bugs": {
-    "url": "https://github.com/jedrzejchalubek/glidejs/issues"
+    "url": "https://github.com/glidejs/glide/issues"
   },
   "directories": {
     "test": "tests"

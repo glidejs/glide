@@ -157,11 +157,14 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      if (Glide.isType('slider') && Glide.settings.bound) {
-        return (Components.Html.slides.length - 1) - (toInt(Glide.settings.perView) - 1) + toInt(Glide.settings.focusAt)
+      let { settings } = Glide
+      let length = Components.Html.slides.length
+
+      if (Glide.isType('slider') && settings.bound) {
+        return (length - 1) - (toInt(settings.perView) - 1) + toInt(settings.focusAt)
       }
 
-      return Components.Html.slides.length - 1
+      return length - 1
     }
   })
 

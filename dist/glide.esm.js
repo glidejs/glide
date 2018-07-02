@@ -70,6 +70,13 @@ var defaults = {
   keyboard: true,
 
   /**
+   * Keep items aligned to the end edge.
+   *
+   * @type {Boolean}
+   */
+  bound: false,
+
+  /**
    * Minimal swipe distance needed to change the slide. Use `false` for turning off a swiping.
    *
    * @type {Number|Boolean}
@@ -912,8 +919,12 @@ var Run = function (Glide, Components, Events) {
           length = this.length;
       var steps = move.steps,
           direction = move.direction;
+      var _Glide$settings = Glide.settings,
+          rewind = _Glide$settings.rewind,
+          perRun = _Glide$settings.perRun;
 
 
+      var runableSteps = toInt(perRun);
       var countableSteps = isNumber(toInt(steps)) && toInt(steps) !== 0;
 
       switch (direction) {
@@ -921,13 +932,15 @@ var Run = function (Glide, Components, Events) {
           if (steps === '>') {
             Glide.index = length;
           } else if (this.isEnd()) {
-            if (!(Glide.isType('slider') && !Glide.settings.rewind)) {
+            if (!(Glide.isType('slider') && !rewind)) {
               this._o = true;
 
               Glide.index = 0;
             }
 
             Events.emit('run.end', move);
+          } else if (runableSteps > 1) {
+            Glide.index = Math.min(length, Glide.index + runableSteps);
           } else if (countableSteps) {
             Glide.index += Math.min(length - Glide.index, -toInt(steps));
           } else {
@@ -939,13 +952,15 @@ var Run = function (Glide, Components, Events) {
           if (steps === '<') {
             Glide.index = 0;
           } else if (this.isStart()) {
-            if (!(Glide.isType('slider') && !Glide.settings.rewind)) {
+            if (!(Glide.isType('slider') && !rewind)) {
               this._o = true;
 
               Glide.index = length;
             }
 
             Events.emit('run.start', move);
+          } else if (runableSteps > 1) {
+            Glide.index = Math.max(0, Glide.index - runableSteps);
           } else if (countableSteps) {
             Glide.index -= Math.min(Glide.index, toInt(steps));
           } else {
@@ -1023,7 +1038,15 @@ var Run = function (Glide, Components, Events) {
      * @return {Number}
      */
     get: function get() {
-      return Components.Html.slides.length - 1;
+      var settings = Glide.settings;
+
+      var length = Components.Html.slides.length;
+
+      if (Glide.isType('slider') && settings.bound) {
+        return length - 1 - (toInt(settings.perView) - 1) + toInt(settings.focusAt);
+      }
+
+      return length - 1;
     }
   });
 
@@ -1736,40 +1759,8 @@ var Clones = function (Glide, Components, Events) {
       this.items = [];
 
       if (Glide.isType('carousel')) {
-        this.pattern = this.map();
         this.items = this.collect();
       }
-    },
-
-
-    /**
-     * Generate pattern of the cloning.
-     *
-     * @return {Void}
-     */
-    map: function map() {
-      var pattern = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-
-      var perView = Glide.settings.perView;
-      var length = Components.Html.slides.length;
-
-      if (length !== 0) {
-        // Repeat creating pattern based on the ratio calculated
-        // by number in `perView` per actual number of slides.
-        for (var r = 0; r < Math.max(1, Math.floor(perView / length)); r++) {
-          // Fill pattern with indexes of slides at the beginning of track.
-          for (var i = 0; i <= length - 1; i++) {
-            pattern.push('' + i);
-          }
-
-          // Fill pattern with indexes of slides from the end of track.
-          for (var _i = length - 1; _i >= 0; _i--) {
-            pattern.unshift('-' + _i);
-          }
-        }
-      }
-
-      return pattern;
     },
 
 
@@ -1780,15 +1771,26 @@ var Clones = function (Glide, Components, Events) {
      */
     collect: function collect() {
       var items = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-      var pattern = this.pattern;
+      var settings = Glide.settings;
 
+      var slides = Components.Html.slides;
+      var start = slides.slice(0, settings.perView);
+      var end = slides.slice(-settings.perView);
 
-      for (var i = 0; i < pattern.length; i++) {
-        var clone = Components.Html.slides[Math.abs(pattern[i])].cloneNode(true);
+      for (var i = 0; i < start.length; i++) {
+        var clone = start[i].cloneNode(true);
 
-        clone.classList.add(Glide.settings.classes.cloneSlide);
+        clone.classList.add(settings.classes.cloneSlide);
 
         items.push(clone);
+      }
+
+      for (var _i = 0; _i < end.length; _i++) {
+        var _clone = end[_i].cloneNode(true);
+
+        _clone.classList.add(settings.classes.cloneSlide);
+
+        items.unshift(_clone);
       }
 
       return items;
@@ -1801,22 +1803,22 @@ var Clones = function (Glide, Components, Events) {
      * @return {Void}
      */
     append: function append() {
-      var items = this.items,
-          pattern = this.pattern;
+      var items = this.items;
 
+      var half = Math.floor(items.length / 2);
+      var prepend = items.slice(0, half).reverse();
+      var append = items.slice(half, items.length);
 
-      for (var i = 0; i < items.length; i++) {
-        var item = items[i];
+      for (var i = 0; i < append.length; i++) {
+        Components.Html.wrapper.appendChild(append[i]);
+      }
 
-        item.style.width = Components.Sizes.slideWidth + 'px';
+      for (var _i2 = 0; _i2 < prepend.length; _i2++) {
+        Components.Html.wrapper.insertBefore(prepend[_i2], Components.Html.slides[0]);
+      }
 
-        // Append clone if pattern position is positive.
-        // Prepend clone if pattern position is negative.
-        if (pattern[i][0] === '-') {
-          Components.Html.wrapper.insertBefore(item, Components.Html.slides[0]);
-        } else {
-          Components.Html.wrapper.appendChild(item);
-        }
+      for (var _i3 = 0; _i3 < items.length; _i3++) {
+        items[_i3].style.width = Components.Sizes.slideWidth + 'px';
       }
     },
 

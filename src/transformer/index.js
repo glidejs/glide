@@ -24,6 +24,7 @@ let MUTATORS = [
  * @return {Object}
  */
 export default function (Glide, Components) {
+  // Add instance defined mutators to default ones.
   MUTATORS = MUTATORS.concat(Glide._m)
 
   // It's important that the Rtl component

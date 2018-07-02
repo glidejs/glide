@@ -44,6 +44,12 @@ export default class Glide {
     return this
   }
 
+  /**
+   * Collects instance translate mutators.
+   *
+   * @param  {Array} mutators Collection of mutators.
+   * @return {Void}
+   */
   mutate (mutators = []) {
     if (isArray(mutators)) {
       this._m = mutators

@@ -158,7 +158,7 @@ export default function (Glide, Components, Events) {
      */
     get () {
       if (Glide.isType('slider') && Glide.settings.bound) {
-        return (Components.Html.slides.length - 1) - (parseInt(Glide.settings.perView) - 1) + parseInt(Glide.settings.focusAt)
+        return (Components.Html.slides.length - 1) - (toInt(Glide.settings.perView) - 1) + toInt(Glide.settings.focusAt)
       }
 
       return Components.Html.slides.length - 1

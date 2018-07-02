@@ -70,6 +70,13 @@ var defaults = {
   keyboard: true,
 
   /**
+   * Keep items aligned to the end edge.
+   *
+   * @type {Boolean}
+   */
+  bound: false,
+
+  /**
    * Minimal swipe distance needed to change the slide. Use `false` for turning off a swiping.
    *
    * @type {Number|Boolean}
@@ -1023,7 +1030,15 @@ var Run = function (Glide, Components, Events) {
      * @return {Number}
      */
     get: function get() {
-      return Components.Html.slides.length - 1;
+      var settings = Glide.settings;
+
+      var length = Components.Html.slides.length;
+
+      if (Glide.isType('slider') && settings.bound) {
+        return length - 1 - (toInt(settings.perView) - 1) + toInt(settings.focusAt);
+      }
+
+      return length - 1;
     }
   });
 

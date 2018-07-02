@@ -19,25 +19,28 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     collect (items = []) {
-      let { settings } = Glide
+      let { perView, classes } = Glide
+
       let slides = Components.Html.slides
-      let start = slides.slice(0, settings.perView);
-      let end = slides.slice(-settings.perView);
+      let start = slides.slice(0, perView);
+      let end = slides.slice(-perView);
 
-      for (let i = 0; i < start.length; i++) {
-        let clone = start[i].cloneNode(true);
+      for (let r = 0; r < Math.max(1, Math.floor(perView / slides.length)); r++) {
+        for (let i = 0; i < start.length; i++) {
+          let clone = start[i].cloneNode(true);
 
-        clone.classList.add(settings.classes.cloneSlide);
+          clone.classList.add(classes.cloneSlide);
 
-        items.push(clone);
-      }
+          items.push(clone);
+        }
 
-      for (let i = 0; i < end.length; i++) {
-        let clone = end[i].cloneNode(true);
+        for (let i = 0; i < end.length; i++) {
+          let clone = end[i].cloneNode(true);
 
-        clone.classList.add(settings.classes.cloneSlide);
+          clone.classList.add(classes.cloneSlide);
 
-        items.unshift(clone);
+          items.unshift(clone);
+        }
       }
 
       return items

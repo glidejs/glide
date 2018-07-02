@@ -11,6 +11,9 @@ export default `
     <button data-glide-dir="=0">1</button>
     <button data-glide-dir="=1">2</button>
     <button data-glide-dir="=2">3</button>
+    <button data-glide-dir="=0">4</button>
+    <button data-glide-dir="=1">5</button>
+    <button data-glide-dir="=2">6</button>
   </div>
 
   <div data-glide-el="track" class="glide__track">
@@ -18,6 +21,9 @@ export default `
       <li class="glide__slide">1</li>
       <li class="glide__slide">2</li>
       <li class="glide__slide">3</li>
+      <li class="glide__slide">4</li>
+      <li class="glide__slide">5</li>
+      <li class="glide__slide">6</li>
     </ul>
   </div>
 </div>

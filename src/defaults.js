@@ -64,6 +64,13 @@ export default {
   keyboard: true,
 
   /**
+   * Keep items aligned to the end edge.
+   *
+   * @type {Boolean}
+   */
+  bound: false,
+
+  /**
    * Minimal swipe distance needed to change the slide. Use `false` for turning off a swiping.
    *
    * @type {Number|Boolean}

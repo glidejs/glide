@@ -77,6 +77,7 @@ The issue channel is especially for improvement proposals and bug reporting. If 
  - Firefox 10+
  - Opera 15+
  - Safari 5.1+
+ - Safari iOS 9+
 
 ## Building
 

@@ -22,24 +22,24 @@ export default function (Glide, Components, Events) {
       let { slides } = Components.Html
       let { perView, classes } = Glide.settings
 
-      let start = slides.slice(0, perView);
-      let end = slides.slice(-perView);
+      let start = slides.slice(0, perView)
+      let end = slides.slice(-perView)
 
       for (let r = 0; r < Math.max(1, Math.floor(perView / slides.length)); r++) {
         for (let i = 0; i < start.length; i++) {
-          let clone = start[i].cloneNode(true);
+          let clone = start[i].cloneNode(true)
 
-          clone.classList.add(classes.cloneSlide);
+          clone.classList.add(classes.cloneSlide)
 
-          items.push(clone);
+          items.push(clone)
         }
 
         for (let i = 0; i < end.length; i++) {
-          let clone = end[i].cloneNode(true);
+          let clone = end[i].cloneNode(true)
 
-          clone.classList.add(classes.cloneSlide);
+          clone.classList.add(classes.cloneSlide)
 
-          items.unshift(clone);
+          items.unshift(clone)
         }
       }
 

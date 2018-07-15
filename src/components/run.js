@@ -51,9 +51,7 @@ export default function (Glide, Components, Events) {
     calculate () {
       let { move, length } = this
       let { steps, direction } = move
-      let { rewind, perRun } = Glide.settings
 
-      let runableSteps = toInt(perRun)
       let countableSteps = (isNumber(toInt(steps))) && (toInt(steps) !== 0)
 
       switch (direction) {
@@ -61,15 +59,13 @@ export default function (Glide, Components, Events) {
           if (steps === '>') {
             Glide.index = length
           } else if (this.isEnd()) {
-            if (!(Glide.isType('slider') && !rewind)) {
+            if (!(Glide.isType('slider') && !Glide.settings.rewind)) {
               this._o = true
 
               Glide.index = 0
             }
 
             Events.emit('run.end', move)
-          } else if (runableSteps > 1) {
-            Glide.index = Math.min(length, Glide.index + runableSteps)
           } else if (countableSteps) {
             Glide.index += Math.min(length - Glide.index, -toInt(steps))
           } else {
@@ -81,15 +77,13 @@ export default function (Glide, Components, Events) {
           if (steps === '<') {
             Glide.index = 0
           } else if (this.isStart()) {
-            if (!(Glide.isType('slider') && !rewind)) {
+            if (!(Glide.isType('slider') && !Glide.settings.rewind)) {
               this._o = true
 
               Glide.index = length
             }
 
             Events.emit('run.start', move)
-          } else if (runableSteps > 1) {
-            Glide.index = Math.max(0, Glide.index - runableSteps)
           } else if (countableSteps) {
             Glide.index -= Math.min(Glide.index, toInt(steps))
           } else {

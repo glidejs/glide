@@ -19,9 +19,9 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     collect (items = []) {
-      let { perView, classes } = Glide
+      let { slides } = Components.Html
+      let { perView, classes } = Glide.settings
 
-      let slides = Components.Html.slides
       let start = slides.slice(0, perView);
       let end = slides.slice(-perView);
 
@@ -53,20 +53,22 @@ export default function (Glide, Components, Events) {
      */
     append () {
       let { items } = this
+      let { wrapper, slides } = Components.Html
+
       let half = Math.floor(items.length / 2)
       let prepend = items.slice(0, half).reverse()
       let append = items.slice(half, items.length)
 
       for (let i = 0; i < append.length; i++) {
-        Components.Html.wrapper.appendChild(append[i])
+        wrapper.appendChild(append[i])
       }
 
       for (let i = 0; i < prepend.length; i++) {
-        Components.Html.wrapper.insertBefore(prepend[i], Components.Html.slides[0])
+        wrapper.insertBefore(prepend[i], slides[0])
       }
 
       for (let i = 0; i < items.length; i++) {
-        items[i].style.width = Components.Sizes.slideWidth + 'px'
+        items[i].style.width = `${Components.Sizes.slideWidth}px`
       }
     },
 

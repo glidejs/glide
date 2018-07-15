@@ -1773,11 +1773,12 @@
        */
       collect: function collect() {
         var items = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-        var perView = Glide.perView,
-            classes = Glide.classes;
-
-
         var slides = Components.Html.slides;
+        var _Glide$settings = Glide.settings,
+            perView = _Glide$settings.perView,
+            classes = _Glide$settings.classes;
+
+
         var start = slides.slice(0, perView);
         var end = slides.slice(-perView);
 
@@ -1810,17 +1811,21 @@
        */
       append: function append() {
         var items = this.items;
+        var _Components$Html = Components.Html,
+            wrapper = _Components$Html.wrapper,
+            slides = _Components$Html.slides;
+
 
         var half = Math.floor(items.length / 2);
         var prepend = items.slice(0, half).reverse();
         var append = items.slice(half, items.length);
 
         for (var i = 0; i < append.length; i++) {
-          Components.Html.wrapper.appendChild(append[i]);
+          wrapper.appendChild(append[i]);
         }
 
         for (var _i2 = 0; _i2 < prepend.length; _i2++) {
-          Components.Html.wrapper.insertBefore(prepend[_i2], Components.Html.slides[0]);
+          wrapper.insertBefore(prepend[_i2], slides[0]);
         }
 
         for (var _i3 = 0; _i3 < items.length; _i3++) {

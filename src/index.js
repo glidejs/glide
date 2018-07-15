@@ -56,6 +56,8 @@ export default class Glide {
     } else {
       warn('You need to provide a array on `mutate()`')
     }
+
+    return this
   }
 
   /**

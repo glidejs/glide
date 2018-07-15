@@ -5,34 +5,26 @@ import Peeking from './mutators/peeking'
 import Focusing from './mutators/focusing'
 
 /**
- * Collection of transformers.
- *
- * @type {Array}
- */
-let MUTATORS = [
-  Gap,
-  Grow,
-  Peeking,
-  Focusing,
-]
-
-/**
  * Applies diffrent transformers on translate value.
  *
  * @param  {Object} Glide
  * @param  {Object} Components
  * @return {Object}
  */
-export default function (Glide, Components) {
-  // Add instance defined mutators to default ones.
-  MUTATORS = MUTATORS.concat(Glide._m)
-
-  // It's important that the Rtl component
-  // be last on the list, so it reflects
-  // all previous transformations.
-  MUTATORS = MUTATORS.concat([
-    Rtl
-  ])
+export default function (Glide, Components, Events) {
+  /**
+   * Merge instance mutators with collection of default transformers.
+   * It's important that the Rtl component be last on the list,
+   * so it reflects all previous transformations.
+   *
+   * @type {Array}
+   */
+  let MUTATORS = [
+    Gap,
+    Grow,
+    Peeking,
+    Focusing,
+  ].concat(Glide._m, [Rtl])
 
   return {
     /**
@@ -43,7 +35,7 @@ export default function (Glide, Components) {
      */
     mutate (translate) {
       for (var i = 0; i < MUTATORS.length; i++) {
-        translate = MUTATORS[i](Glide, Components).modify(translate)
+        translate = MUTATORS[i](Glide, Components, Events).modify(translate)
       }
 
       return translate

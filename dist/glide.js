@@ -584,6 +584,7 @@ var Glide$2 = function () {
     classCallCheck(this, Glide);
 
     this._c = {};
+    this._m = [];
     this._e = new EventsBus();
 
     this.disabled = false;
@@ -614,6 +615,27 @@ var Glide$2 = function () {
       }
 
       this._e.emit('mount.after');
+
+      return this;
+    }
+
+    /**
+     * Collects instance translate mutators.
+     *
+     * @param  {Array} mutators Collection of mutators.
+     * @return {Void}
+     */
+
+  }, {
+    key: 'mutate',
+    value: function mutate() {
+      var mutators = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+      if (isArray(mutators)) {
+        this._m = mutators;
+      } else {
+        warn('You need to provide a array on `mutate()`');
+      }
 
       return this;
     }
@@ -2272,24 +2294,22 @@ var Focusing = function (Glide, Components) {
 };
 
 /**
- * Collection of transformers.
- *
- * @type {Array}
- */
-var MUTATORS = [Gap, Grow, Peeking, Focusing,
-// It's important that the Rtl component
-// be last on the list, so it reflects
-// all previous transformations.
-Rtl];
-
-/**
  * Applies diffrent transformers on translate value.
  *
  * @param  {Object} Glide
  * @param  {Object} Components
  * @return {Object}
  */
-var transformer = function (Glide, Components) {
+var transformer = function (Glide, Components, Events) {
+  /**
+   * Merge instance mutators with collection of default transformers.
+   * It's important that the Rtl component be last on the list,
+   * so it reflects all previous transformations.
+   *
+   * @type {Array}
+   */
+  var MUTATORS = [Gap, Grow, Peeking, Focusing].concat(Glide._m, [Rtl]);
+
   return {
     /**
      * Piplines translate value with registered transformers.
@@ -2299,7 +2319,7 @@ var transformer = function (Glide, Components) {
      */
     mutate: function mutate(translate) {
       for (var i = 0; i < MUTATORS.length; i++) {
-        translate = MUTATORS[i](Glide, Components).modify(translate);
+        translate = MUTATORS[i](Glide, Components, Events).modify(translate);
       }
 
       return translate;

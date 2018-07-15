@@ -2,7 +2,7 @@ import defaults from './defaults'
 import { warn } from './utils/log'
 import { mount } from './core/index'
 import { mergeOptions } from './utils/object'
-import { toInt, isObject } from './utils/unit'
+import { toInt, isObject, isArray } from './utils/unit'
 
 import EventsBus from './core/event/events-bus'
 
@@ -15,6 +15,7 @@ export default class Glide {
    */
   constructor (selector, options = {}) {
     this._c = {}
+    this._m = []
     this._e = new EventsBus()
 
     this.disabled = false
@@ -39,6 +40,22 @@ export default class Glide {
     }
 
     this._e.emit('mount.after')
+
+    return this
+  }
+
+  /**
+   * Collects instance translate mutators.
+   *
+   * @param  {Array} mutators Collection of mutators.
+   * @return {Void}
+   */
+  mutate (mutators = []) {
+    if (isArray(mutators)) {
+      this._m = mutators
+    } else {
+      warn('You need to provide a array on `mutate()`')
+    }
 
     return this
   }

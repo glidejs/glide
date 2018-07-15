@@ -220,16 +220,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
 };
 
-
-
-
-
-
-
-
-
-
-
 var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -253,12 +243,6 @@ var createClass = function () {
     return Constructor;
   };
 }();
-
-
-
-
-
-
 
 var _extends = Object.assign || function (target) {
   for (var i = 1; i < arguments.length; i++) {
@@ -314,16 +298,6 @@ var inherits = function (subClass, superClass) {
   });
   if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 };
-
-
-
-
-
-
-
-
-
-
 
 var possibleConstructorReturn = function (self, call) {
   if (!self) {
@@ -566,7 +540,7 @@ var EventsBus = function () {
   return EventsBus;
 }();
 
-var Glide$2 = function () {
+var Glide = function () {
   /**
    * Construct glide.
    *
@@ -578,6 +552,7 @@ var Glide$2 = function () {
     classCallCheck(this, Glide);
 
     this._c = {};
+    this._m = [];
     this._e = new EventsBus();
 
     this.disabled = false;
@@ -608,6 +583,27 @@ var Glide$2 = function () {
       }
 
       this._e.emit('mount.after');
+
+      return this;
+    }
+
+    /**
+     * Collects instance translate mutators.
+     *
+     * @param  {Array} mutators Collection of mutators.
+     * @return {Void}
+     */
+
+  }, {
+    key: 'mutate',
+    value: function mutate() {
+      var mutators = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+      if (isArray(mutators)) {
+        this._m = mutators;
+      } else {
+        warn('You need to provide a array on `mutate()`');
+      }
 
       return this;
     }
@@ -863,7 +859,7 @@ var Glide$2 = function () {
   return Glide;
 }();
 
-var Run = function (Glide, Components, Events) {
+function Run (Glide, Components, Events) {
   var Run = {
     /**
      * Initializes autorunning of the glide.
@@ -1062,7 +1058,7 @@ var Run = function (Glide, Components, Events) {
   });
 
   return Run;
-};
+}
 
 /**
  * Returns a current time.
@@ -1133,7 +1129,7 @@ var MARGIN_TYPE = {
   rtl: ['marginRight', 'marginLeft']
 };
 
-var Gaps = function (Glide, Components, Events) {
+function Gaps (Glide, Components, Events) {
   var Gaps = {
     /**
      * Setups gap value based on settings.
@@ -1262,7 +1258,7 @@ var Gaps = function (Glide, Components, Events) {
   });
 
   return Gaps;
-};
+}
 
 /**
  * Finds siblings nodes of the passed node.
@@ -1299,7 +1295,7 @@ function exist(node) {
 
 var TRACK_SELECTOR = '[data-glide-el="track"]';
 
-var Html = function (Glide, Components) {
+function Html (Glide, Components) {
   var Html = {
     /**
      * Setup slider HTML nodes.
@@ -1381,9 +1377,9 @@ var Html = function (Glide, Components) {
   });
 
   return Html;
-};
+}
 
-var Peek = function (Glide, Components, Events) {
+function Peek (Glide, Components, Events) {
   var Peek = {
     /**
      * Setups how much to peek based on settings.
@@ -1451,9 +1447,9 @@ var Peek = function (Glide, Components, Events) {
   });
 
   return Peek;
-};
+}
 
-var Move = function (Glide, Components, Events) {
+function Move (Glide, Components, Events) {
   var Move = {
     /**
      * Constructs move component.
@@ -1550,9 +1546,9 @@ var Move = function (Glide, Components, Events) {
   });
 
   return Move;
-};
+}
 
-var Sizes = function (Glide, Components, Events) {
+function Sizes (Glide, Components, Events) {
   var Sizes = {
     /**
      * Setups dimentions of slides.
@@ -1658,9 +1654,9 @@ var Sizes = function (Glide, Components, Events) {
   });
 
   return Sizes;
-};
+}
 
-var Build = function (Glide, Components, Events) {
+function Build (Glide, Components, Events) {
   var Build = {
     /**
      * Init glide building. Adds classes, sets
@@ -1748,9 +1744,9 @@ var Build = function (Glide, Components, Events) {
   });
 
   return Build;
-};
+}
 
-var Clones = function (Glide, Components, Events) {
+function Clones (Glide, Components, Events) {
   var Clones = {
     /**
      * Create pattern map and collect slides to be cloned.
@@ -1771,26 +1767,30 @@ var Clones = function (Glide, Components, Events) {
      */
     collect: function collect() {
       var items = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-      var settings = Glide.settings;
+      var perView = Glide.perView,
+          classes = Glide.classes;
+
 
       var slides = Components.Html.slides;
-      var start = slides.slice(0, settings.perView);
-      var end = slides.slice(-settings.perView);
+      var start = slides.slice(0, perView);
+      var end = slides.slice(-perView);
 
-      for (var i = 0; i < start.length; i++) {
-        var clone = start[i].cloneNode(true);
+      for (var r = 0; r < Math.max(1, Math.floor(perView / slides.length)); r++) {
+        for (var i = 0; i < start.length; i++) {
+          var clone = start[i].cloneNode(true);
 
-        clone.classList.add(settings.classes.cloneSlide);
+          clone.classList.add(classes.cloneSlide);
 
-        items.push(clone);
-      }
+          items.push(clone);
+        }
 
-      for (var _i = 0; _i < end.length; _i++) {
-        var _clone = end[_i].cloneNode(true);
+        for (var _i = 0; _i < end.length; _i++) {
+          var _clone = end[_i].cloneNode(true);
 
-        _clone.classList.add(settings.classes.cloneSlide);
+          _clone.classList.add(classes.cloneSlide);
 
-        items.unshift(_clone);
+          items.unshift(_clone);
+        }
       }
 
       return items;
@@ -1878,7 +1878,7 @@ var Clones = function (Glide, Components, Events) {
   });
 
   return Clones;
-};
+}
 
 var EventsBinder = function () {
   /**
@@ -1950,7 +1950,7 @@ var EventsBinder = function () {
   return EventsBinder;
 }();
 
-var Resize = function (Glide, Components, Events) {
+function Resize (Glide, Components, Events) {
   /**
    * Instance of the binder for DOM Events.
    *
@@ -2000,7 +2000,7 @@ var Resize = function (Glide, Components, Events) {
   });
 
   return Resize;
-};
+}
 
 var VALID_DIRECTIONS = ['ltr', 'rtl'];
 var FLIPED_MOVEMENTS = {
@@ -2009,7 +2009,7 @@ var FLIPED_MOVEMENTS = {
   '=': '='
 };
 
-var Direction = function (Glide, Components, Events) {
+function Direction (Glide, Components, Events) {
   var Direction = {
     /**
      * Setups gap value based on settings.
@@ -2122,7 +2122,7 @@ var Direction = function (Glide, Components, Events) {
   });
 
   return Direction;
-};
+}
 
 /**
  * Reflects value of glide movement.
@@ -2131,7 +2131,7 @@ var Direction = function (Glide, Components, Events) {
  * @param  {Object} Components
  * @return {Object}
  */
-var Rtl = function (Glide, Components) {
+function Rtl (Glide, Components) {
   return {
     /**
      * Negates the passed translate if glide is in RTL option.
@@ -2147,7 +2147,7 @@ var Rtl = function (Glide, Components) {
       return translate;
     }
   };
-};
+}
 
 /**
  * Updates glide movement with a `gap` settings.
@@ -2156,7 +2156,7 @@ var Rtl = function (Glide, Components) {
  * @param  {Object} Components
  * @return {Object}
  */
-var Gap = function (Glide, Components) {
+function Gap (Glide, Components) {
   return {
     /**
      * Modifies passed translate value with number in the `gap` settings.
@@ -2168,7 +2168,7 @@ var Gap = function (Glide, Components) {
       return translate + Components.Gaps.value * Glide.index;
     }
   };
-};
+}
 
 /**
  * Updates glide movement with width of additional clones width.
@@ -2177,7 +2177,7 @@ var Gap = function (Glide, Components) {
  * @param  {Object} Components
  * @return {Object}
  */
-var Grow = function (Glide, Components) {
+function Grow (Glide, Components) {
   return {
     /**
      * Adds to the passed translate width of the half of clones.
@@ -2189,7 +2189,7 @@ var Grow = function (Glide, Components) {
       return translate + Components.Clones.grow / 2;
     }
   };
-};
+}
 
 /**
  * Updates glide movement with a `peek` settings.
@@ -2198,7 +2198,7 @@ var Grow = function (Glide, Components) {
  * @param  {Object} Components
  * @return {Object}
  */
-var Peeking = function (Glide, Components) {
+function Peeking (Glide, Components) {
   return {
     /**
      * Modifies passed translate value with a `peek` setting.
@@ -2220,7 +2220,7 @@ var Peeking = function (Glide, Components) {
       return translate;
     }
   };
-};
+}
 
 /**
  * Updates glide movement with a `focusAt` settings.
@@ -2229,7 +2229,7 @@ var Peeking = function (Glide, Components) {
  * @param  {Object} Components
  * @return {Object}
  */
-var Focusing = function (Glide, Components) {
+function Focusing (Glide, Components) {
   return {
     /**
      * Modifies passed translate value with index in the `focusAt` setting.
@@ -2250,18 +2250,7 @@ var Focusing = function (Glide, Components) {
       return translate - slideWidth * focusAt - gap * focusAt;
     }
   };
-};
-
-/**
- * Collection of transformers.
- *
- * @type {Array}
- */
-var MUTATORS = [Gap, Grow, Peeking, Focusing,
-// It's important that the Rtl component
-// be last on the list, so it reflects
-// all previous transformations.
-Rtl];
+}
 
 /**
  * Applies diffrent transformers on translate value.
@@ -2270,7 +2259,16 @@ Rtl];
  * @param  {Object} Components
  * @return {Object}
  */
-var transformer = function (Glide, Components) {
+function transformer (Glide, Components, Events) {
+  /**
+   * Merge instance mutators with collection of default transformers.
+   * It's important that the Rtl component be last on the list,
+   * so it reflects all previous transformations.
+   *
+   * @type {Array}
+   */
+  var MUTATORS = [Gap, Grow, Peeking, Focusing].concat(Glide._m, [Rtl]);
+
   return {
     /**
      * Piplines translate value with registered transformers.
@@ -2280,15 +2278,15 @@ var transformer = function (Glide, Components) {
      */
     mutate: function mutate(translate) {
       for (var i = 0; i < MUTATORS.length; i++) {
-        translate = MUTATORS[i](Glide, Components).modify(translate);
+        translate = MUTATORS[i](Glide, Components, Events).modify(translate);
       }
 
       return translate;
     }
   };
-};
+}
 
-var Translate = function (Glide, Components, Events) {
+function Translate (Glide, Components, Events) {
   var Translate = {
     /**
      * Sets value of translate on HTML element.
@@ -2355,9 +2353,9 @@ var Translate = function (Glide, Components, Events) {
   });
 
   return Translate;
-};
+}
 
-var Transition = function (Glide, Components, Events) {
+function Transition (Glide, Components, Events) {
   /**
    * Holds inactivity status of transition.
    * When true transition is not applied.
@@ -2497,14 +2495,14 @@ var Transition = function (Glide, Components, Events) {
   });
 
   return Transition;
-};
+}
 
 var START_EVENTS = ['touchstart', 'mousedown'];
 var MOVE_EVENTS = ['touchmove', 'mousemove'];
 var END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave'];
 var MOUSE_EVENTS = ['mousedown', 'mousemove', 'mouseup', 'mouseleave'];
 
-var swipe = function (Glide, Components, Events) {
+function swipe (Glide, Components, Events) {
   /**
    * Instance of the binder for DOM Events.
    *
@@ -2793,9 +2791,9 @@ var swipe = function (Glide, Components, Events) {
   });
 
   return Swipe;
-};
+}
 
-var images = function (Glide, Components, Events) {
+function images (Glide, Components, Events) {
   /**
    * Instance of the binder for DOM Events.
    *
@@ -2854,9 +2852,9 @@ var images = function (Glide, Components, Events) {
   });
 
   return Images;
-};
+}
 
-var anchors = function (Glide, Components, Events) {
+function anchors (Glide, Components, Events) {
   /**
    * Instance of the binder for DOM Events.
    *
@@ -3022,12 +3020,12 @@ var anchors = function (Glide, Components, Events) {
   });
 
   return Anchors;
-};
+}
 
 var NAV_SELECTOR = '[data-glide-el="controls[nav]"]';
 var CONTROLS_SELECTOR = '[data-glide-el^="controls"]';
 
-var controls = function (Glide, Components, Events) {
+function controls (Glide, Components, Events) {
   /**
    * Instance of the binder for DOM Events.
    *
@@ -3212,9 +3210,9 @@ var controls = function (Glide, Components, Events) {
   });
 
   return Controls;
-};
+}
 
-var keyboard = function (Glide, Components, Events) {
+function keyboard (Glide, Components, Events) {
   /**
    * Instance of the binder for DOM Events.
    *
@@ -3298,9 +3296,9 @@ var keyboard = function (Glide, Components, Events) {
   });
 
   return Keyboard;
-};
+}
 
-var autoplay = function (Glide, Components, Events) {
+function autoplay (Glide, Components, Events) {
   /**
    * Instance of the binder for DOM Events.
    *
@@ -3450,7 +3448,7 @@ var autoplay = function (Glide, Components, Events) {
   });
 
   return Autoplay;
-};
+}
 
 /**
  * Sorts keys of breakpoint object so they will be ordered from lower to bigger.
@@ -3468,7 +3466,7 @@ function sortBreakpoints(points) {
   return {};
 }
 
-var breakpoints = function (Glide, Components, Events) {
+function breakpoints (Glide, Components, Events) {
   /**
    * Instance of the binder for DOM Events.
    *
@@ -3558,7 +3556,7 @@ var breakpoints = function (Glide, Components, Events) {
   });
 
   return Breakpoints;
-};
+}
 
 var COMPONENTS = {
   Html: Html,
@@ -3575,24 +3573,24 @@ var COMPONENTS = {
   Run: Run
 };
 
-var Glide = function (_Core) {
-  inherits(Glide, _Core);
+var Glide$1 = function (_Core) {
+  inherits(Glide$$1, _Core);
 
-  function Glide() {
-    classCallCheck(this, Glide);
-    return possibleConstructorReturn(this, (Glide.__proto__ || Object.getPrototypeOf(Glide)).apply(this, arguments));
+  function Glide$$1() {
+    classCallCheck(this, Glide$$1);
+    return possibleConstructorReturn(this, (Glide$$1.__proto__ || Object.getPrototypeOf(Glide$$1)).apply(this, arguments));
   }
 
-  createClass(Glide, [{
+  createClass(Glide$$1, [{
     key: 'mount',
     value: function mount() {
       var extensions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-      return get(Glide.prototype.__proto__ || Object.getPrototypeOf(Glide.prototype), 'mount', this).call(this, _extends({}, COMPONENTS, extensions));
+      return get(Glide$$1.prototype.__proto__ || Object.getPrototypeOf(Glide$$1.prototype), 'mount', this).call(this, _extends({}, COMPONENTS, extensions));
     }
   }]);
-  return Glide;
-}(Glide$2);
+  return Glide$$1;
+}(Glide);
 
+export default Glide$1;
 export { swipe as Swipe, images as Images, anchors as Anchors, controls as Controls, keyboard as Keyboard, autoplay as Autoplay, breakpoints as Breakpoints };
-export default Glide;

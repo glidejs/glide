@@ -6,7 +6,7 @@
 
 What can convince you:
 - **Dependency-free**. Everything included, ready for action.
-- Lightweight. Only **~22kb (~7kb gzipped)** with every functionality on board.
+- Lightweight. Only **~23kb (~7kb gzipped)** with every functionality on board.
 - **Modular**. Remove unused modules and drop script weight even more.
 - **Extendable**. Plug-in your own modules with additional functionalities.
 - **Bundlers ready**. Using Rollup or Webpack? We have your back.
@@ -77,6 +77,7 @@ The issue channel is especially for improvement proposals and bug reporting. If 
  - Firefox 10+
  - Opera 15+
  - Safari 5.1+
+ - Safari iOS 9+
 
 ## Building
 

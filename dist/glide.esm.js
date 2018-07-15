@@ -915,12 +915,8 @@ function Run (Glide, Components, Events) {
           length = this.length;
       var steps = move.steps,
           direction = move.direction;
-      var _Glide$settings = Glide.settings,
-          rewind = _Glide$settings.rewind,
-          perRun = _Glide$settings.perRun;
 
 
-      var runableSteps = toInt(perRun);
       var countableSteps = isNumber(toInt(steps)) && toInt(steps) !== 0;
 
       switch (direction) {
@@ -928,15 +924,13 @@ function Run (Glide, Components, Events) {
           if (steps === '>') {
             Glide.index = length;
           } else if (this.isEnd()) {
-            if (!(Glide.isType('slider') && !rewind)) {
+            if (!(Glide.isType('slider') && !Glide.settings.rewind)) {
               this._o = true;
 
               Glide.index = 0;
             }
 
             Events.emit('run.end', move);
-          } else if (runableSteps > 1) {
-            Glide.index = Math.min(length, Glide.index + runableSteps);
           } else if (countableSteps) {
             Glide.index += Math.min(length - Glide.index, -toInt(steps));
           } else {
@@ -948,15 +942,13 @@ function Run (Glide, Components, Events) {
           if (steps === '<') {
             Glide.index = 0;
           } else if (this.isStart()) {
-            if (!(Glide.isType('slider') && !rewind)) {
+            if (!(Glide.isType('slider') && !Glide.settings.rewind)) {
               this._o = true;
 
               Glide.index = length;
             }
 
             Events.emit('run.start', move);
-          } else if (runableSteps > 1) {
-            Glide.index = Math.max(0, Glide.index - runableSteps);
           } else if (countableSteps) {
             Glide.index -= Math.min(Glide.index, toInt(steps));
           } else {

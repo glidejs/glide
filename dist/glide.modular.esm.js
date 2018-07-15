@@ -1040,7 +1040,7 @@ function Run (Glide, Components, Events) {
       // If the `bound` option is acitve, a maximum running distance should be
       // reduced by `perView` and `focusAt` settings. Running distance
       // should end before creating an empty space after instance.
-      if (Glide.isType('slider') && settings.bound) {
+      if (Glide.isType('slider') && settings.focusAt !== 'center' && settings.bound) {
         return length - 1 - (toInt(settings.perView) - 1) + toInt(settings.focusAt);
       }
 

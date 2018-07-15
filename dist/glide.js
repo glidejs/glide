@@ -1763,40 +1763,8 @@
         this.items = [];
 
         if (Glide.isType('carousel')) {
-          this.pattern = this.map();
           this.items = this.collect();
         }
-      },
-
-
-      /**
-       * Generate pattern of the cloning.
-       *
-       * @return {Void}
-       */
-      map: function map() {
-        var pattern = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-
-        var perView = Glide.settings.perView;
-        var length = Components.Html.slides.length;
-
-        if (length !== 0) {
-          // Repeat creating pattern based on the ratio calculated
-          // by number in `perView` per actual number of slides.
-          for (var r = 0; r < Math.max(1, Math.floor(perView / length)); r++) {
-            // Fill pattern with indexes of slides at the beginning of track.
-            for (var i = 0; i <= length - 1; i++) {
-              pattern.push('' + i);
-            }
-
-            // Fill pattern with indexes of slides from the end of track.
-            for (var _i = length - 1; _i >= 0; _i--) {
-              pattern.unshift('-' + _i);
-            }
-          }
-        }
-
-        return pattern;
       },
 
 
@@ -1807,15 +1775,31 @@
        */
       collect: function collect() {
         var items = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-        var pattern = this.pattern;
+        var slides = Components.Html.slides;
+        var _Glide$settings = Glide.settings,
+            perView = _Glide$settings.perView,
+            classes = _Glide$settings.classes;
 
 
-        for (var i = 0; i < pattern.length; i++) {
-          var clone = Components.Html.slides[Math.abs(pattern[i])].cloneNode(true);
+        var start = slides.slice(0, perView);
+        var end = slides.slice(-perView);
 
-          clone.classList.add(Glide.settings.classes.cloneSlide);
+        for (var r = 0; r < Math.max(1, Math.floor(perView / slides.length)); r++) {
+          for (var i = 0; i < start.length; i++) {
+            var clone = start[i].cloneNode(true);
 
-          items.push(clone);
+            clone.classList.add(classes.cloneSlide);
+
+            items.push(clone);
+          }
+
+          for (var _i = 0; _i < end.length; _i++) {
+            var _clone = end[_i].cloneNode(true);
+
+            _clone.classList.add(classes.cloneSlide);
+
+            items.unshift(_clone);
+          }
         }
 
         return items;
@@ -1828,22 +1812,26 @@
        * @return {Void}
        */
       append: function append() {
-        var items = this.items,
-            pattern = this.pattern;
+        var items = this.items;
+        var _Components$Html = Components.Html,
+            wrapper = _Components$Html.wrapper,
+            slides = _Components$Html.slides;
 
 
-        for (var i = 0; i < items.length; i++) {
-          var item = items[i];
+        var half = Math.floor(items.length / 2);
+        var prepend = items.slice(0, half).reverse();
+        var append = items.slice(half, items.length);
 
-          item.style.width = Components.Sizes.slideWidth + 'px';
+        for (var i = 0; i < append.length; i++) {
+          wrapper.appendChild(append[i]);
+        }
 
-          // Append clone if pattern position is positive.
-          // Prepend clone if pattern position is negative.
-          if (pattern[i][0] === '-') {
-            Components.Html.wrapper.insertBefore(item, Components.Html.slides[0]);
-          } else {
-            Components.Html.wrapper.appendChild(item);
-          }
+        for (var _i2 = 0; _i2 < prepend.length; _i2++) {
+          wrapper.insertBefore(prepend[_i2], slides[0]);
+        }
+
+        for (var _i3 = 0; _i3 < items.length; _i3++) {
+          items[_i3].style.width = Components.Sizes.slideWidth + 'px';
         }
       },
 

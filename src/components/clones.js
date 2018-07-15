@@ -9,37 +9,8 @@ export default function (Glide, Components, Events) {
       this.items = []
 
       if (Glide.isType('carousel')) {
-        this.pattern = this.map()
         this.items = this.collect()
       }
-    },
-
-    /**
-     * Generate pattern of the cloning.
-     *
-     * @return {Void}
-     */
-    map (pattern = []) {
-      let perView = Glide.settings.perView
-      let length = Components.Html.slides.length
-
-      if (length !== 0) {
-        // Repeat creating pattern based on the ratio calculated
-        // by number in `perView` per actual number of slides.
-        for (let r = 0; r < Math.max(1, Math.floor(perView / length)); r++) {
-          // Fill pattern with indexes of slides at the beginning of track.
-          for (let i = 0; i <= length - 1; i++) {
-            pattern.push(`${i}`)
-          }
-
-          // Fill pattern with indexes of slides from the end of track.
-          for (let i = length - 1; i >= 0; i--) {
-            pattern.unshift(`-${i}`)
-          }
-        }
-      }
-
-      return pattern
     },
 
     /**
@@ -48,14 +19,28 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     collect (items = []) {
-      let { pattern } = this
+      let { slides } = Components.Html
+      let { perView, classes } = Glide.settings
 
-      for (let i = 0; i < pattern.length; i++) {
-        let clone = Components.Html.slides[Math.abs(pattern[i])].cloneNode(true)
+      let start = slides.slice(0, perView)
+      let end = slides.slice(-perView)
 
-        clone.classList.add(Glide.settings.classes.cloneSlide)
+      for (let r = 0; r < Math.max(1, Math.floor(perView / slides.length)); r++) {
+        for (let i = 0; i < start.length; i++) {
+          let clone = start[i].cloneNode(true)
 
-        items.push(clone)
+          clone.classList.add(classes.cloneSlide)
+
+          items.push(clone)
+        }
+
+        for (let i = 0; i < end.length; i++) {
+          let clone = end[i].cloneNode(true)
+
+          clone.classList.add(classes.cloneSlide)
+
+          items.unshift(clone)
+        }
       }
 
       return items
@@ -67,20 +52,23 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     append () {
-      let { items, pattern } = this
+      let { items } = this
+      let { wrapper, slides } = Components.Html
+
+      let half = Math.floor(items.length / 2)
+      let prepend = items.slice(0, half).reverse()
+      let append = items.slice(half, items.length)
+
+      for (let i = 0; i < append.length; i++) {
+        wrapper.appendChild(append[i])
+      }
+
+      for (let i = 0; i < prepend.length; i++) {
+        wrapper.insertBefore(prepend[i], slides[0])
+      }
 
       for (let i = 0; i < items.length; i++) {
-        let item = items[i]
-
-        item.style.width = `${Components.Sizes.slideWidth}px`
-
-        // Append clone if pattern position is positive.
-        // Prepend clone if pattern position is negative.
-        if (pattern[i][0] === '-') {
-          Components.Html.wrapper.insertBefore(item, Components.Html.slides[0])
-        } else {
-          Components.Html.wrapper.appendChild(item)
-        }
+        items[i].style.width = `${Components.Sizes.slideWidth}px`
       }
     },
 

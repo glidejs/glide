@@ -23,7 +23,7 @@ export default function (Glide, Components, Events) {
     Gap,
     Grow,
     Peeking,
-    Focusing,
+    Focusing
   ].concat(Glide._m, [Rtl])
 
   return {

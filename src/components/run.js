@@ -164,8 +164,18 @@ export default function (Glide, Components, Events) {
      */
     get () {
       let { settings } = Glide
-      let length = Components.Html.slides.length
+      let { length } = Components.Html.slides
 
+      // While number of slides inside instance is smaller
+      // that `perView` settings we should't run at all.
+      // Running distance has to be zero.
+      if (settings.perView > length) {
+        return 0
+      }
+
+      // If the `bound` option is acitve, a maximum running distance should be
+      // reduced by `perView` and `focusAt` settings. Running distance
+      // should end before creating an empty space after instance.
       if (Glide.isType('slider') && settings.bound) {
         return (length - 1) - (toInt(settings.perView) - 1) + toInt(settings.focusAt)
       }

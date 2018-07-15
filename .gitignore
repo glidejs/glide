@@ -2,9 +2,7 @@ node_modules/
 coverage/
 
 .idea
-
 .vscode
-
 .DS_Store
 
 package-lock.json

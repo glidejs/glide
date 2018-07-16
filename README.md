@@ -88,9 +88,10 @@ Build using NPM scripts. The following scripts are available:
 - `test` - Runs complete test suite.
 - `lint` - Lints library JavaScript files.
 
-## Maintainers
+## Credits
 
-- [Jędrzej Chałubek](https://github.com/jedrzejchalubek) - creator
+- [Jędrzej Chałubek](https://github.com/jedrzejchalubek) - Creator
+- [Contributors](../../contributors)
 
 ## License
 

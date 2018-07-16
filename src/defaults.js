@@ -64,7 +64,10 @@ export default {
   keyboard: true,
 
   /**
-   * Keep items aligned to the end edge.
+   * Stop running `perView` number of slides from the end. Use this
+   * option if you don't want to have an empty space after
+   * a slider. Works only with `slider` type and a
+   * non-centered `focusAt` setting.
    *
    * @type {Boolean}
    */

@@ -76,7 +76,10 @@
     keyboard: true,
 
     /**
-     * Keep items aligned to the end edge.
+     * Stop running `perView` number of slides from the end. Use this
+     * option if you don't want to have an empty space after
+     * a slider. Works only with `slider` type and a
+     * non-centered `focusAt` setting.
      *
      * @type {Boolean}
      */
@@ -322,6 +325,17 @@
    */
   function toInt(value) {
     return parseInt(value);
+  }
+
+  /**
+   * Converts value entered as number
+   * or string to flat value.
+   *
+   * @param {String} value
+   * @returns {Number}
+   */
+  function toFloat(value) {
+    return parseFloat(value);
   }
 
   /**
@@ -1917,6 +1931,8 @@
     createClass(EventsBinder, [{
       key: 'on',
       value: function on(events, el, closure) {
+        var capture = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+
         if (isString(events)) {
           events = [events];
         }
@@ -1924,7 +1940,7 @@
         for (var i = 0; i < events.length; i++) {
           this.listeners[events[i]] = closure;
 
-          el.addEventListener(events[i], this.listeners[events[i]], false);
+          el.addEventListener(events[i], this.listeners[events[i]], capture);
         }
       }
 
@@ -2570,7 +2586,11 @@
        */
       move: function move(event) {
         if (!Glide.disabled) {
-          var settings = Glide.settings;
+          var _Glide$settings = Glide.settings,
+              touchAngle = _Glide$settings.touchAngle,
+              touchRatio = _Glide$settings.touchRatio,
+              classes = _Glide$settings.classes;
+
 
           var swipe = this.touches(event);
 
@@ -2578,20 +2598,17 @@
           var subEySy = toInt(swipe.pageY) - swipeStartY;
           var powEX = Math.abs(subExSx << 2);
           var powEY = Math.abs(subEySy << 2);
-          var swipeHypotenuse = Math.sqrt(powEX + powEY);
-          var swipeCathetus = Math.sqrt(powEY);
+          var swipeHypotenuse = (powEX + powEY) * (powEX + powEY);
+          var swipeCathetus = powEY * powEY;
 
           swipeSin = Math.asin(swipeCathetus / swipeHypotenuse);
 
-          if (swipeSin * 180 / Math.PI < settings.touchAngle) {
-            Components.Move.make(subExSx * parseFloat(settings.touchRatio));
-          }
+          Components.Move.make(subExSx * toFloat(touchRatio));
 
-          if (swipeSin * 180 / Math.PI < settings.touchAngle) {
+          if (swipeSin * 180 / Math.PI < touchAngle) {
             event.stopPropagation();
-            event.preventDefault();
 
-            Components.Html.root.classList.add(settings.classes.dragging);
+            Components.Html.root.classList.add(classes.dragging);
 
             Events.emit('swipe.move');
           } else {
@@ -2663,14 +2680,20 @@
        * @return {Void}
        */
       bindSwipeStart: function bindSwipeStart() {
+        var _this = this;
+
         var settings = Glide.settings;
 
         if (settings.swipeThreshold) {
-          Binder.on(START_EVENTS[0], Components.Html.wrapper, this.start.bind(this));
+          Binder.on(START_EVENTS[0], Components.Html.wrapper, function (event) {
+            return _this.start(event);
+          }, { passive: true });
         }
 
         if (settings.dragThreshold) {
-          Binder.on(START_EVENTS[1], Components.Html.wrapper, this.start.bind(this));
+          Binder.on(START_EVENTS[1], Components.Html.wrapper, function (event) {
+            return _this.start(event);
+          });
         }
       },
 
@@ -2692,7 +2715,11 @@
        * @return {Void}
        */
       bindSwipeMove: function bindSwipeMove() {
-        Binder.on(MOVE_EVENTS, Components.Html.wrapper, throttle(this.move.bind(this), Glide.settings.throttle));
+        var _this2 = this;
+
+        Binder.on(MOVE_EVENTS, Components.Html.wrapper, throttle(function (event) {
+          return _this2.move(event);
+        }, Glide.settings.throttle), { passive: true });
       },
 
 
@@ -2712,7 +2739,11 @@
        * @return {Void}
        */
       bindSwipeEnd: function bindSwipeEnd() {
-        Binder.on(END_EVENTS, Components.Html.wrapper, this.end.bind(this));
+        var _this3 = this;
+
+        Binder.on(END_EVENTS, Components.Html.wrapper, function (event) {
+          return _this3.end(event);
+        });
       },
 
 

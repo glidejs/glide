@@ -10,6 +10,17 @@ export function toInt (value) {
 }
 
 /**
+ * Converts value entered as number
+ * or string to flat value.
+ *
+ * @param {String} value
+ * @returns {Number}
+ */
+export function toFloat (value) {
+  return parseFloat(value)
+}
+
+/**
  * Indicates whether the specified value is a string.
  *
  * @param  {*}   value

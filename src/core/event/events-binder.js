@@ -16,7 +16,7 @@ export default class EventsBinder {
    * @param  {Function} closure
    * @return {Void}
    */
-  on (events, el, closure) {
+  on (events, el, closure, capture = false) {
     if (isString(events)) {
       events = [events]
     }
@@ -24,7 +24,7 @@ export default class EventsBinder {
     for (let i = 0; i < events.length; i++) {
       this.listeners[events[i]] = closure
 
-      el.addEventListener(events[i], this.listeners[events[i]], false)
+      el.addEventListener(events[i], this.listeners[events[i]], capture)
     }
   }
 

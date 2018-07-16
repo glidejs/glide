@@ -1,5 +1,5 @@
-import { toInt } from '../utils/unit'
 import { throttle } from '../utils/wait'
+import { toInt, toFloat } from '../utils/unit'
 
 import EventsBinder from '../core/event/events-binder'
 
@@ -61,7 +61,7 @@ export default function (Glide, Components, Events) {
      */
     move (event) {
       if (!Glide.disabled) {
-        let settings = Glide.settings
+        let { touchAngle, touchRatio, classes } = Glide.settings
 
         let swipe = this.touches(event)
 
@@ -69,20 +69,17 @@ export default function (Glide, Components, Events) {
         let subEySy = toInt(swipe.pageY) - swipeStartY
         let powEX = Math.abs(subExSx << 2)
         let powEY = Math.abs(subEySy << 2)
-        let swipeHypotenuse = Math.sqrt(powEX + powEY)
-        let swipeCathetus = Math.sqrt(powEY)
+        let swipeHypotenuse = (powEX + powEY) * (powEX + powEY)
+        let swipeCathetus = powEY * powEY
 
         swipeSin = Math.asin(swipeCathetus / swipeHypotenuse)
 
-        if (swipeSin * 180 / Math.PI < settings.touchAngle) {
-          Components.Move.make(subExSx * parseFloat(settings.touchRatio))
-        }
+        Components.Move.make(subExSx * toFloat(touchRatio))
 
-        if (swipeSin * 180 / Math.PI < settings.touchAngle) {
+        if (swipeSin * 180 / Math.PI < touchAngle) {
           event.stopPropagation()
-          event.preventDefault()
 
-          Components.Html.root.classList.add(settings.classes.dragging)
+          Components.Html.root.classList.add(classes.dragging)
 
           Events.emit('swipe.move')
         } else {
@@ -158,11 +155,20 @@ export default function (Glide, Components, Events) {
       let settings = Glide.settings
 
       if (settings.swipeThreshold) {
-        Binder.on(START_EVENTS[0], Components.Html.wrapper, this.start.bind(this))
+        Binder.on(
+          START_EVENTS[0],
+          Components.Html.wrapper,
+          (event) => this.start(event),
+          { passive: true }
+        )
       }
 
       if (settings.dragThreshold) {
-        Binder.on(START_EVENTS[1], Components.Html.wrapper, this.start.bind(this))
+        Binder.on(
+          START_EVENTS[1],
+          Components.Html.wrapper,
+          (event) => this.start(event)
+        )
       }
     },
 
@@ -182,7 +188,12 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     bindSwipeMove () {
-      Binder.on(MOVE_EVENTS, Components.Html.wrapper, throttle(this.move.bind(this), Glide.settings.throttle))
+      Binder.on(
+        MOVE_EVENTS,
+        Components.Html.wrapper,
+        throttle((event) => this.move(event), Glide.settings.throttle),
+        { passive: true }
+      )
     },
 
     /**
@@ -200,7 +211,11 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     bindSwipeEnd () {
-      Binder.on(END_EVENTS, Components.Html.wrapper, this.end.bind(this))
+      Binder.on(
+        END_EVENTS,
+        Components.Html.wrapper,
+        (event) => this.end(event)
+      )
     },
 
     /**

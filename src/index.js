@@ -15,7 +15,7 @@ export default class Glide {
    */
   constructor (selector, options = {}) {
     this._c = {}
-    this._m = []
+    this._t = []
     this._e = new EventsBus()
 
     this.disabled = false
@@ -45,14 +45,14 @@ export default class Glide {
   }
 
   /**
-   * Collects instance translate mutators.
+   * Collects an instance `translate` transformers.
    *
-   * @param  {Array} mutators Collection of mutators.
+   * @param  {Array} transformers Collection of transformers.
    * @return {Void}
    */
-  mutate (mutators = []) {
-    if (isArray(mutators)) {
-      this._m = mutators
+  mutate (transformers = []) {
+    if (isArray(transformers)) {
+      this._t = transformers
     } else {
       warn('You need to provide a array on `mutate()`')
     }

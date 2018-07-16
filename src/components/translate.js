@@ -1,4 +1,4 @@
-import transformer from '../transformer/index'
+import mutator from '../mutator/index'
 
 export default function (Glide, Components, Events) {
   const Translate = {
@@ -9,7 +9,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     set (value) {
-      let transform = transformer(Glide, Components).mutate(value)
+      let transform = mutator(Glide, Components).mutate(value)
 
       Components.Html.wrapper.style.transform = `translate3d(${-1 * transform}px, 0px, 0px)`
     },

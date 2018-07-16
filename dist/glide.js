@@ -1,5 +1,5 @@
 /*!
- * Glide.js v3.1.0
+ * Glide.js v3.2.0
  * (c) 2013-2018 Jędrzej Chałubek <jedrzej.chalubek@gmail.com> (http://jedrzejchalubek.com/)
  * Released under the MIT License.
  */
@@ -572,7 +572,7 @@
       classCallCheck(this, Glide);
 
       this._c = {};
-      this._m = [];
+      this._t = [];
       this._e = new EventsBus();
 
       this.disabled = false;
@@ -608,19 +608,19 @@
       }
 
       /**
-       * Collects instance translate mutators.
+       * Collects an instance `translate` transformers.
        *
-       * @param  {Array} mutators Collection of mutators.
+       * @param  {Array} transformers Collection of transformers.
        * @return {Void}
        */
 
     }, {
       key: 'mutate',
       value: function mutate() {
-        var mutators = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+        var transformers = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
-        if (isArray(mutators)) {
-          this._m = mutators;
+        if (isArray(transformers)) {
+          this._t = transformers;
         } else {
           warn('You need to provide a array on `mutate()`');
         }
@@ -2288,15 +2288,15 @@
    * @param  {Object} Components
    * @return {Object}
    */
-  function transformer (Glide, Components, Events) {
+  function mutator (Glide, Components, Events) {
     /**
-     * Merge instance mutators with collection of default transformers.
+     * Merge instance transformers with collection of default transformers.
      * It's important that the Rtl component be last on the list,
      * so it reflects all previous transformations.
      *
      * @type {Array}
      */
-    var MUTATORS = [Gap, Grow, Peeking, Focusing].concat(Glide._m, [Rtl]);
+    var TRANSFORMERS = [Gap, Grow, Peeking, Focusing].concat(Glide._t, [Rtl]);
 
     return {
       /**
@@ -2306,8 +2306,14 @@
        * @return {Number}
        */
       mutate: function mutate(translate) {
-        for (var i = 0; i < MUTATORS.length; i++) {
-          translate = MUTATORS[i](Glide, Components, Events).modify(translate);
+        for (var i = 0; i < TRANSFORMERS.length; i++) {
+          var transformer = TRANSFORMERS[i];
+
+          if (isFunction(transformer) && isFunction(transformer().modify)) {
+            translate = transformer(Glide, Components, Events).modify(translate);
+          } else {
+            warn('Transformer should be a function that returns an object with `modify()` method');
+          }
         }
 
         return translate;
@@ -2324,7 +2330,7 @@
        * @return {Void}
        */
       set: function set(value) {
-        var transform = transformer(Glide, Components).mutate(value);
+        var transform = mutator(Glide, Components).mutate(value);
 
         Components.Html.wrapper.style.transform = 'translate3d(' + -1 * transform + 'px, 0px, 0px)';
       },

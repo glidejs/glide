@@ -5,7 +5,13 @@
  * @return {Array}
  */
 export function siblings (node) {
-  let n = node.parentNode.firstChild
+  let parentNode = node.parentNode;
+
+  if (!parentNode) {
+    return [];
+  }
+
+  let n = parentNode.firstChild
   let matched = []
 
   for (; n; n = n.nextSibling) {

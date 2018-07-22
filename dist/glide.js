@@ -1289,8 +1289,18 @@
    * @return {Array}
    */
   function siblings(node) {
-    var n = node.parentNode.firstChild;
+    var parentNode = node.parentNode;
+
+    if (!parentNode) {
+      return [];
+    }
+
+    var n = parentNode.firstChild;
     var matched = [];
+
+    if (!node.parentNode) {
+      return matched;
+    }
 
     for (; n; n = n.nextSibling) {
       if (n.nodeType === 1 && n !== node) {

@@ -2696,13 +2696,13 @@
 
         if (settings.swipeThreshold) {
           Binder.on(START_EVENTS[0], Components.Html.wrapper, function (event) {
-            return _this.start(event);
+            _this.start(event);
           }, { passive: true });
         }
 
         if (settings.dragThreshold) {
           Binder.on(START_EVENTS[1], Components.Html.wrapper, function (event) {
-            return _this.start(event);
+            _this.start(event);
           });
         }
       },
@@ -2728,7 +2728,7 @@
         var _this2 = this;
 
         Binder.on(MOVE_EVENTS, Components.Html.wrapper, throttle(function (event) {
-          return _this2.move(event);
+          _this2.move(event);
         }, Glide.settings.throttle), { passive: true });
       },
 
@@ -2752,7 +2752,7 @@
         var _this3 = this;
 
         Binder.on(END_EVENTS, Components.Html.wrapper, function (event) {
-          return _this3.end(event);
+          _this3.end(event);
         });
       },
 

@@ -67,7 +67,7 @@ export default class Glide {
    * @return {Glide}
    */
   update (settings = {}) {
-    this.settings = Object.assign({}, this.settings, settings)
+    this.settings = mergeOptions(this.settings, settings)
 
     if (settings.hasOwnProperty('startAt')) {
       this.index = settings.startAt

@@ -47,5 +47,9 @@ export function mergeOptions (defaults, settings) {
     }
   }
 
+  if (settings.hasOwnProperty('breakpoints')) {
+    options.breakpoints = Object.assign({}, defaults.breakpoints, settings.breakpoints)
+  }
+
   return options
 }

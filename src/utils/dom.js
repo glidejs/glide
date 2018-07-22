@@ -5,10 +5,14 @@
  * @return {Array}
  */
 export function siblings (node) {
-  let parentNode = node.parentNode;
+  if (!node) {
+    return []
+  }
+
+  let parentNode = node.parentNode
 
   if (!parentNode) {
-    return [];
+    return []
   }
 
   let n = parentNode.firstChild

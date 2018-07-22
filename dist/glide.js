@@ -1289,6 +1289,10 @@
    * @return {Array}
    */
   function siblings(node) {
+    if (!node) {
+      return [];
+    }
+
     var parentNode = node.parentNode;
 
     if (!parentNode) {
@@ -1297,10 +1301,6 @@
 
     var n = parentNode.firstChild;
     var matched = [];
-
-    if (!node.parentNode) {
-      return matched;
-    }
 
     for (; n; n = n.nextSibling) {
       if (n.nodeType === 1 && n !== node) {
@@ -1725,11 +1725,13 @@
         var classes = Glide.settings.classes;
         var slide = Components.Html.slides[Glide.index];
 
-        slide.classList.add(classes.activeSlide);
+        if (slide) {
+          slide.classList.add(classes.activeSlide);
 
-        siblings(slide).forEach(function (sibling) {
-          sibling.classList.remove(classes.activeSlide);
-        });
+          siblings(slide).forEach(function (sibling) {
+            sibling.classList.remove(classes.activeSlide);
+          });
+        }
       },
 
 

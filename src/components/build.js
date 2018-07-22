@@ -35,11 +35,13 @@ export default function (Glide, Components, Events) {
       let classes = Glide.settings.classes
       let slide = Components.Html.slides[Glide.index]
 
-      slide.classList.add(classes.activeSlide)
+      if (slide) {
+        slide.classList.add(classes.activeSlide)
 
-      siblings(slide).forEach((sibling) => {
-        sibling.classList.remove(classes.activeSlide)
-      })
+        siblings(slide).forEach((sibling) => {
+          sibling.classList.remove(classes.activeSlide)
+        })
+      }
     },
 
     /**

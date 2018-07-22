@@ -5,26 +5,20 @@
  * @return {Array}
  */
 export function siblings (node) {
-  if (!node) {
-    return []
-  }
+  if (node && node.parentNode) {
+    let n = node.parentNode.firstChild
+    let matched = []
 
-  let parentNode = node.parentNode
-
-  if (!parentNode) {
-    return []
-  }
-
-  let n = parentNode.firstChild
-  let matched = []
-
-  for (; n; n = n.nextSibling) {
-    if (n.nodeType === 1 && n !== node) {
-      matched.push(n)
+    for (; n; n = n.nextSibling) {
+      if (n.nodeType === 1 && n !== node) {
+        matched.push(n)
+      }
     }
+
+    return matched
   }
 
-  return matched
+  return []
 }
 
 /**

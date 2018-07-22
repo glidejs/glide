@@ -1293,26 +1293,20 @@
    * @return {Array}
    */
   function siblings(node) {
-    if (!node) {
-      return [];
-    }
+    if (node && node.parentNode) {
+      var n = node.parentNode.firstChild;
+      var matched = [];
 
-    var parentNode = node.parentNode;
-
-    if (!parentNode) {
-      return [];
-    }
-
-    var n = parentNode.firstChild;
-    var matched = [];
-
-    for (; n; n = n.nextSibling) {
-      if (n.nodeType === 1 && n !== node) {
-        matched.push(n);
+      for (; n; n = n.nextSibling) {
+        if (n.nodeType === 1 && n !== node) {
+          matched.push(n);
+        }
       }
+
+      return matched;
     }
 
-    return matched;
+    return [];
   }
 
   /**

@@ -158,7 +158,9 @@ export default function (Glide, Components, Events) {
         Binder.on(
           START_EVENTS[0],
           Components.Html.wrapper,
-          (event) => this.start(event),
+          (event) => {
+            this.start(event)
+          },
           { passive: true }
         )
       }
@@ -167,7 +169,9 @@ export default function (Glide, Components, Events) {
         Binder.on(
           START_EVENTS[1],
           Components.Html.wrapper,
-          (event) => this.start(event)
+          (event) => {
+            this.start(event)
+          }
         )
       }
     },
@@ -191,7 +195,9 @@ export default function (Glide, Components, Events) {
       Binder.on(
         MOVE_EVENTS,
         Components.Html.wrapper,
-        throttle((event) => this.move(event), Glide.settings.throttle),
+        throttle((event) => {
+          this.move(event)
+        }, Glide.settings.throttle),
         { passive: true }
       )
     },
@@ -214,7 +220,9 @@ export default function (Glide, Components, Events) {
       Binder.on(
         END_EVENTS,
         Components.Html.wrapper,
-        (event) => this.end(event)
+        (event) => {
+          this.end(event)
+        }
       )
     },
 

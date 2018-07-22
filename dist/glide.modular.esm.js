@@ -1,5 +1,5 @@
 /*!
- * Glide.js v3.2.0
+ * Glide.js v3.2.1
  * (c) 2013-2018 Jędrzej Chałubek <jedrzej.chalubek@gmail.com> (http://jedrzejchalubek.com/)
  * Released under the MIT License.
  */
@@ -474,6 +474,10 @@ function mergeOptions(defaults, settings) {
     }
   }
 
+  if (settings.hasOwnProperty('breakpoints')) {
+    options.breakpoints = _extends({}, defaults.breakpoints, settings.breakpoints);
+  }
+
   return options;
 }
 
@@ -634,7 +638,7 @@ var Glide = function () {
     value: function update() {
       var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-      this.settings = _extends({}, this.settings, settings);
+      this.settings = mergeOptions(this.settings, settings);
 
       if (settings.hasOwnProperty('startAt')) {
         this.index = settings.startAt;
@@ -2698,13 +2702,13 @@ function swipe (Glide, Components, Events) {
 
       if (settings.swipeThreshold) {
         Binder.on(START_EVENTS[0], Components.Html.wrapper, function (event) {
-          return _this.start(event);
+          _this.start(event);
         }, { passive: true });
       }
 
       if (settings.dragThreshold) {
         Binder.on(START_EVENTS[1], Components.Html.wrapper, function (event) {
-          return _this.start(event);
+          _this.start(event);
         });
       }
     },
@@ -2730,7 +2734,7 @@ function swipe (Glide, Components, Events) {
       var _this2 = this;
 
       Binder.on(MOVE_EVENTS, Components.Html.wrapper, throttle(function (event) {
-        return _this2.move(event);
+        _this2.move(event);
       }, Glide.settings.throttle), { passive: true });
     },
 
@@ -2754,7 +2758,7 @@ function swipe (Glide, Components, Events) {
       var _this3 = this;
 
       Binder.on(END_EVENTS, Components.Html.wrapper, function (event) {
-        return _this3.end(event);
+        _this3.end(event);
       });
     },
 
@@ -3538,17 +3542,13 @@ function breakpoints (Glide, Components, Events) {
   var settings = Glide.settings;
 
   /**
-   * Holds reference to breakpoints object in settings
+   * Holds reference to breakpoints object in settings. Sorts breakpoints
+   * from smaller to larger. It is required in order to proper
+   * matching currently active breakpoint settings.
    *
    * @type {Object}
    */
-  var points = settings.breakpoints;
-
-  /**
-   * Sort breakpoints from smaller to larger. It is required in order
-   * to proper matching currently active breakpoint settings.
-   */
-  points = sortBreakpoints(points);
+  var points = sortBreakpoints(settings.breakpoints);
 
   /**
    * Cache initial settings before overwritting.
@@ -3590,7 +3590,7 @@ function breakpoints (Glide, Components, Events) {
    * - window resize to update slider
    */
   Binder.on('resize', window, throttle(function () {
-    _extends(settings, Breakpoints.match(points));
+    Glide.settings = mergeOptions(settings, Breakpoints.match(points));
   }, Glide.settings.throttle));
 
   /**

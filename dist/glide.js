@@ -1293,16 +1293,20 @@
    * @return {Array}
    */
   function siblings(node) {
-    var n = node.parentNode.firstChild;
-    var matched = [];
+    if (node && node.parentNode) {
+      var n = node.parentNode.firstChild;
+      var matched = [];
 
-    for (; n; n = n.nextSibling) {
-      if (n.nodeType === 1 && n !== node) {
-        matched.push(n);
+      for (; n; n = n.nextSibling) {
+        if (n.nodeType === 1 && n !== node) {
+          matched.push(n);
+        }
       }
+
+      return matched;
     }
 
-    return matched;
+    return [];
   }
 
   /**
@@ -1719,11 +1723,13 @@
         var classes = Glide.settings.classes;
         var slide = Components.Html.slides[Glide.index];
 
-        slide.classList.add(classes.activeSlide);
+        if (slide) {
+          slide.classList.add(classes.activeSlide);
 
-        siblings(slide).forEach(function (sibling) {
-          sibling.classList.remove(classes.activeSlide);
-        });
+          siblings(slide).forEach(function (sibling) {
+            sibling.classList.remove(classes.activeSlide);
+          });
+        }
       },
 
 

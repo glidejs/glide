@@ -155,24 +155,15 @@ export default function (Glide, Components, Events) {
       let settings = Glide.settings
 
       if (settings.swipeThreshold) {
-        Binder.on(
-          START_EVENTS[0],
-          Components.Html.wrapper,
-          (event) => {
-            this.start(event)
-          },
-          { passive: true }
-        )
+        Binder.on(START_EVENTS[0], Components.Html.wrapper, (event) => {
+          this.start(event)
+        })
       }
 
       if (settings.dragThreshold) {
-        Binder.on(
-          START_EVENTS[1],
-          Components.Html.wrapper,
-          (event) => {
-            this.start(event)
-          }
-        )
+        Binder.on(START_EVENTS[1], Components.Html.wrapper, (event) => {
+          this.start(event)
+        })
       }
     },
 
@@ -192,14 +183,9 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     bindSwipeMove () {
-      Binder.on(
-        MOVE_EVENTS,
-        Components.Html.wrapper,
-        throttle((event) => {
-          this.move(event)
-        }, Glide.settings.throttle),
-        { passive: true }
-      )
+      Binder.on(MOVE_EVENTS, Components.Html.wrapper, throttle((event) => {
+        this.move(event)
+      }, Glide.settings.throttle))
     },
 
     /**
@@ -217,13 +203,9 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     bindSwipeEnd () {
-      Binder.on(
-        END_EVENTS,
-        Components.Html.wrapper,
-        (event) => {
-          this.end(event)
-        }
-      )
+      Binder.on(END_EVENTS, Components.Html.wrapper, (event) => {
+        this.end(event)
+      })
     },
 
     /**

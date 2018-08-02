@@ -10,15 +10,6 @@ const MARGIN_TYPE = {
 export default function (Glide, Components, Events) {
   const Gaps = {
     /**
-     * Setups gap value based on settings.
-     *
-     * @return {Void}
-     */
-    mount () {
-      this.value = Glide.settings.gap
-    },
-
-    /**
      * Applies gaps between slides. First and last
      * slides do not receive it's edge margins.
      *
@@ -67,17 +58,7 @@ export default function (Glide, Components, Events) {
      * @returns {Number}
      */
     get () {
-      return Gaps._v
-    },
-
-    /**
-     * Sets value of the gap.
-     *
-     * @param {String} value
-     * @return {Void}
-     */
-    set (value) {
-      Gaps._v = toInt(value)
+      return toInt(Glide.settings.gap)
     }
   })
 
@@ -105,14 +86,6 @@ export default function (Glide, Components, Events) {
 
       return (Gaps.value * (perView - 1)) / perView
     }
-  })
-
-  /**
-   * Remount component:
-   * - on updating via API, to update gap value
-   */
-  Events.on('update', () => {
-    Gaps.mount()
   })
 
   /**

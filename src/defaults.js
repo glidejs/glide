@@ -134,7 +134,7 @@ export default {
    *
    * @type {String}
    */
-  animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
+  animationTimingFunc: 'cubic-bezier(.165, .840, .440, 1)',
 
   /**
    * Throttle costly events at most once per every wait milliseconds.

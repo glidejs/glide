@@ -146,7 +146,7 @@
      *
      * @type {String}
      */
-    animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
+    animationTimingFunc: 'cubic-bezier(.165, .840, .440, 1)',
 
     /**
      * Throttle costly events at most once per every wait milliseconds.
@@ -1913,6 +1913,7 @@
       key: 'on',
       value: function on(events, el, closure) {
         var capture = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+        var passive = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
 
         if (isString(events)) {
           events = [events];
@@ -1921,7 +1922,10 @@
         for (var i = 0; i < events.length; i++) {
           this.listeners[events[i]] = closure;
 
-          el.addEventListener(events[i], this.listeners[events[i]], capture);
+          el.addEventListener(events[i], this.listeners[events[i]], {
+            capture: capture,
+            passive: passive
+          });
         }
       }
 

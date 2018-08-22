@@ -22,7 +22,7 @@ describe('EventsBinder should', () => {
     element.removeEventListener = rmFn
 
     events.on('click', element, callback)
-    expect(addFn).toHaveBeenCalledWith('click', callback, expect.any(Object))
+    expect(addFn).toHaveBeenCalledWith('click', callback, expect.any(Boolean))
 
     events.off('click', element)
     expect(rmFn).toHaveBeenCalledWith('click', callback, expect.any(Boolean))

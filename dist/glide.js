@@ -1919,13 +1919,36 @@
           events = [events];
         }
 
+        var passiveSupport = false;
+        var options = {};
+
+        try {
+          var opts = Object.defineProperty({}, 'passive', {
+            get: function get$$1() {
+              passiveSupport = true;
+            }
+          });
+
+          var noop = function noop() {};
+          window.addEventListener('testPassiveEventSupport', noop, opts);
+          window.removeEventListener('testPassiveEventSupport', noop, opts);
+        } catch (err) {
+          passiveSupport = false;
+        }
+
+        if (passiveSupport === false) {
+          options = capture;
+        } else {
+          options = {
+            capture: capture,
+            passive: passive
+          };
+        }
+
         for (var i = 0; i < events.length; i++) {
           this.listeners[events[i]] = closure;
 
-          el.addEventListener(events[i], this.listeners[events[i]], {
-            capture: capture,
-            passive: passive
-          });
+          el.addEventListener(events[i], this.listeners[events[i]], options);
         }
       }
 

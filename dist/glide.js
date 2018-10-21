@@ -1774,10 +1774,11 @@
         var _Glide$settings = Glide.settings,
             perView = _Glide$settings.perView,
             classes = _Glide$settings.classes;
+        
+        var peekChecker = _Glide$settings.peek > 0 ? slides.length : _Glide$settings.perView;
 
-
-        var start = slides.slice(0, slides.length);
-        var end = slides.slice(-slides.length);
+        var start = slides.slice(0, peekChecker);
+        var end = slides.slice(-peekChecker);
 
         for (var r = 0; r < Math.max(1, Math.floor(perView / slides.length)); r++) {
           for (var i = 0; i < start.length; i++) {

@@ -1776,8 +1776,8 @@
             classes = _Glide$settings.classes;
 
 
-        var start = slides.slice(0, perView);
-        var end = slides.slice(-perView);
+        var start = slides.slice(0, slides.length);
+        var end = slides.slice(-slides.length);
 
         for (var r = 0; r < Math.max(1, Math.floor(perView / slides.length)); r++) {
           for (var i = 0; i < start.length; i++) {

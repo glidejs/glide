@@ -42,3 +42,5 @@
     user-select: none; }
   .glide--rtl {
     direction: rtl; }
+  .glide__swipe__overflow {
+    overflow: hidden; }

@@ -2561,6 +2561,9 @@
 
           this.bindSwipeMove();
           this.bindSwipeEnd();
+          
+          // Sets a class to <html> to prevent scrolling while swiping
+          document.getElementsByTagName( 'html' )[0].setAttribute( 'class', 'glide__swipe__overflow' );
 
           Events.emit('swipe.start');
         }
@@ -2656,6 +2659,9 @@
 
           this.unbindSwipeMove();
           this.unbindSwipeEnd();
+          
+          // Removes a class from <html> that prevents scrolling while swiping
+          document.getElementsByTagName( 'html' )[0].removeAttribute( 'class', 'glide__swipe__overflow' );
 
           Events.emit('swipe.end');
         }

@@ -163,7 +163,7 @@ export default function (Glide, Components, Events) {
       // While number of slides inside instance is smaller
       // that `perView` settings we should't run at all.
       // Running distance has to be zero.
-      if (settings.perView > length) {
+      if (settings.focusAt !== 'center' && settings.perView > length) {
         return 0
       }
 

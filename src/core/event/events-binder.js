@@ -14,6 +14,7 @@ export default class EventsBinder {
    * @param  {String|Array} events
    * @param  {Element|Window|Document} el
    * @param  {Function} closure
+   * @param  {Boolean|Object} capture
    * @return {Void}
    */
   on (events, el, closure, capture = false) {

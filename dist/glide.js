@@ -1900,6 +1900,7 @@
      * @param  {String|Array} events
      * @param  {Element|Window|Document} el
      * @param  {Function} closure
+     * @param  {Boolean|Object} capture
      * @return {Void}
      */
 
@@ -2508,6 +2509,28 @@
     return Transition;
   }
 
+  /**
+   * Test via a getter in the options object to see
+   * if the passive property is accessed.
+   *
+   * @see https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md#feature-detection
+   */
+
+  var supportsPassive = false;
+
+  try {
+    var opts = Object.defineProperty({}, 'passive', {
+      get: function get() {
+        supportsPassive = true;
+      }
+    });
+
+    window.addEventListener('testPassive', null, opts);
+    window.removeEventListener('testPassive', null, opts);
+  } catch (e) {}
+
+  var supportsPassive$1 = supportsPassive;
+
   var START_EVENTS = ['touchstart', 'mousedown'];
   var MOVE_EVENTS = ['touchmove', 'mousemove'];
   var END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave'];
@@ -2526,6 +2549,7 @@
     var swipeStartY = 0;
     var disabled = false;
     var moveable = true;
+    var capture = supportsPassive$1 ? { passive: true } : false;
 
     var Swipe = {
       /**
@@ -2675,13 +2699,13 @@
         if (settings.swipeThreshold) {
           Binder.on(START_EVENTS[0], Components.Html.wrapper, function (event) {
             _this.start(event);
-          });
+          }, capture);
         }
 
         if (settings.dragThreshold) {
           Binder.on(START_EVENTS[1], Components.Html.wrapper, function (event) {
             _this.start(event);
-          });
+          }, capture);
         }
       },
 
@@ -2707,7 +2731,7 @@
 
         Binder.on(MOVE_EVENTS, Components.Html.wrapper, throttle(function (event) {
           _this2.move(event);
-        }, Glide.settings.throttle));
+        }, Glide.settings.throttle), capture);
       },
 
 

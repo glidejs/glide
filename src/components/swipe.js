@@ -1,5 +1,6 @@
 import { throttle } from '../utils/wait'
 import { toInt, toFloat } from '../utils/unit'
+import supportsPassive from '../utils/detect-passive-event'
 
 import EventsBinder from '../core/event/events-binder'
 
@@ -21,6 +22,7 @@ export default function (Glide, Components, Events) {
   let swipeStartY = 0
   let disabled = false
   let moveable = true
+  let capture = (supportsPassive) ? { passive: true } : false
 
   const Swipe = {
     /**
@@ -163,13 +165,13 @@ export default function (Glide, Components, Events) {
       if (settings.swipeThreshold) {
         Binder.on(START_EVENTS[0], Components.Html.wrapper, (event) => {
           this.start(event)
-        })
+        }, capture)
       }
 
       if (settings.dragThreshold) {
         Binder.on(START_EVENTS[1], Components.Html.wrapper, (event) => {
           this.start(event)
-        })
+        }, capture)
       }
     },
 
@@ -191,7 +193,7 @@ export default function (Glide, Components, Events) {
     bindSwipeMove () {
       Binder.on(MOVE_EVENTS, Components.Html.wrapper, throttle((event) => {
         this.move(event)
-      }, Glide.settings.throttle))
+      }, Glide.settings.throttle), capture)
     },
 
     /**

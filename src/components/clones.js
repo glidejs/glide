@@ -22,8 +22,10 @@ export default function (Glide, Components, Events) {
       let { slides } = Components.Html
       let { perView, classes } = Glide.settings
 
-      let start = slides.slice(0, perView)
-      let end = slides.slice(-perView)
+      let peekIncrementer = +!!Glide.settings.peek
+      let part = perView + peekIncrementer
+      let start = slides.slice(0, part)
+      let end = slides.slice(-part)
 
       for (let r = 0; r < Math.max(1, Math.floor(perView / slides.length)); r++) {
         for (let i = 0; i < start.length; i++) {

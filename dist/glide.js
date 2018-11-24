@@ -146,7 +146,7 @@
      *
      * @type {String}
      */
-    animationTimingFunc: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
+    animationTimingFunc: 'cubic-bezier(.165, .840, .440, 1)',
 
     /**
      * Throttle costly events at most once per every wait milliseconds.
@@ -1053,17 +1053,10 @@
         var settings = Glide.settings;
         var length = Components.Html.slides.length;
 
-        // While number of slides inside instance is smaller
-        // that `perView` settings we should't run at all.
-        // Running distance has to be zero.
-
-        if (settings.perView > length) {
-          return 0;
-        }
-
         // If the `bound` option is acitve, a maximum running distance should be
         // reduced by `perView` and `focusAt` settings. Running distance
         // should end before creating an empty space after instance.
+
         if (Glide.isType('slider') && settings.focusAt !== 'center' && settings.bound) {
           return length - 1 - (toInt(settings.perView) - 1) + toInt(settings.focusAt);
         }
@@ -1776,8 +1769,10 @@
             classes = _Glide$settings.classes;
 
 
-        var start = slides.slice(0, perView);
-        var end = slides.slice(-perView);
+        var peekIncrementer = +!!Glide.settings.peek;
+        var part = perView + peekIncrementer;
+        var start = slides.slice(0, part);
+        var end = slides.slice(-part);
 
         for (var r = 0; r < Math.max(1, Math.floor(perView / slides.length)); r++) {
           for (var i = 0; i < start.length; i++) {

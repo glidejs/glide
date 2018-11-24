@@ -1,5 +1,5 @@
 /*!
- * Glide.js v3.2.3
+ * Glide.js v3.2.4
  * (c) 2013-2018 Jędrzej Chałubek <jedrzej.chalubek@gmail.com> (http://jedrzejchalubek.com/)
  * Released under the MIT License.
  */

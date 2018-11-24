@@ -1047,17 +1047,10 @@ function Run (Glide, Components, Events) {
       var settings = Glide.settings;
       var length = Components.Html.slides.length;
 
-      // While number of slides inside instance is smaller
-      // that `perView` settings we should't run at all.
-      // Running distance has to be zero.
-
-      if (settings.perView > length) {
-        return 0;
-      }
-
       // If the `bound` option is acitve, a maximum running distance should be
       // reduced by `perView` and `focusAt` settings. Running distance
       // should end before creating an empty space after instance.
+
       if (Glide.isType('slider') && settings.focusAt !== 'center' && settings.bound) {
         return length - 1 - (toInt(settings.perView) - 1) + toInt(settings.focusAt);
       }
@@ -1770,8 +1763,10 @@ function Clones (Glide, Components, Events) {
           classes = _Glide$settings.classes;
 
 
-      var start = slides.slice(0, perView);
-      var end = slides.slice(-perView);
+      var peekIncrementer = +!!Glide.settings.peek;
+      var part = perView + peekIncrementer;
+      var start = slides.slice(0, part);
+      var end = slides.slice(-part);
 
       for (var r = 0; r < Math.max(1, Math.floor(perView / slides.length)); r++) {
         for (var i = 0; i < start.length; i++) {
@@ -1899,6 +1894,7 @@ var EventsBinder = function () {
    * @param  {String|Array} events
    * @param  {Element|Window|Document} el
    * @param  {Function} closure
+   * @param  {Boolean|Object} capture
    * @return {Void}
    */
 
@@ -1907,42 +1903,15 @@ var EventsBinder = function () {
     key: 'on',
     value: function on(events, el, closure) {
       var capture = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-      var passive = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
 
       if (isString(events)) {
         events = [events];
       }
 
-      var passiveSupport = false;
-      var options = {};
-
-      try {
-        var opts = Object.defineProperty({}, 'passive', {
-          get: function get$$1() {
-            passiveSupport = true;
-          }
-        });
-
-        var noop = function noop() {};
-        window.addEventListener('testPassiveEventSupport', noop, opts);
-        window.removeEventListener('testPassiveEventSupport', noop, opts);
-      } catch (err) {
-        passiveSupport = false;
-      }
-
-      if (passiveSupport === false) {
-        options = capture;
-      } else {
-        options = {
-          capture: capture,
-          passive: passive
-        };
-      }
-
       for (var i = 0; i < events.length; i++) {
         this.listeners[events[i]] = closure;
 
-        el.addEventListener(events[i], this.listeners[events[i]], options);
+        el.addEventListener(events[i], this.listeners[events[i]], capture);
       }
     }
 
@@ -2534,6 +2503,28 @@ function Transition (Glide, Components, Events) {
   return Transition;
 }
 
+/**
+ * Test via a getter in the options object to see
+ * if the passive property is accessed.
+ *
+ * @see https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md#feature-detection
+ */
+
+var supportsPassive = false;
+
+try {
+  var opts = Object.defineProperty({}, 'passive', {
+    get: function get() {
+      supportsPassive = true;
+    }
+  });
+
+  window.addEventListener('testPassive', null, opts);
+  window.removeEventListener('testPassive', null, opts);
+} catch (e) {}
+
+var supportsPassive$1 = supportsPassive;
+
 var START_EVENTS = ['touchstart', 'mousedown'];
 var MOVE_EVENTS = ['touchmove', 'mousemove'];
 var END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave'];
@@ -2551,6 +2542,8 @@ function swipe (Glide, Components, Events) {
   var swipeStartX = 0;
   var swipeStartY = 0;
   var disabled = false;
+  var moveable = true;
+  var capture = supportsPassive$1 ? { passive: true } : false;
 
   var Swipe = {
     /**
@@ -2575,6 +2568,7 @@ function swipe (Glide, Components, Events) {
 
         var swipe = this.touches(event);
 
+        moveable = true;
         swipeSin = null;
         swipeStartX = toInt(swipe.pageX);
         swipeStartY = toInt(swipe.pageY);
@@ -2606,20 +2600,22 @@ function swipe (Glide, Components, Events) {
         var subEySy = toInt(swipe.pageY) - swipeStartY;
         var powEX = Math.abs(subExSx << 2);
         var powEY = Math.abs(subEySy << 2);
-        var swipeHypotenuse = (powEX + powEY) * (powEX + powEY);
-        var swipeCathetus = powEY * powEY;
+        var swipeHypotenuse = Math.sqrt(powEX + powEY);
+        var swipeCathetus = Math.sqrt(powEY);
 
         swipeSin = Math.asin(swipeCathetus / swipeHypotenuse);
 
-        Components.Move.make(subExSx * toFloat(touchRatio));
-
-        if (swipeSin * 180 / Math.PI < touchAngle) {
+        if (moveable && swipeSin * 180 / Math.PI < touchAngle) {
           event.stopPropagation();
+
+          Components.Move.make(subExSx * toFloat(touchRatio));
 
           Components.Html.root.classList.add(classes.dragging);
 
           Events.emit('swipe.move');
         } else {
+          moveable = false;
+
           return false;
         }
       }
@@ -2645,31 +2641,33 @@ function swipe (Glide, Components, Events) {
 
         this.enable();
 
-        if (swipeDistance > threshold && swipeDeg < settings.touchAngle) {
-          // While swipe is positive and greater than threshold move backward.
-          if (settings.perTouch) {
-            steps = Math.min(steps, toInt(settings.perTouch));
-          }
+        if (moveable) {
+          if (swipeDistance > threshold && swipeDeg < settings.touchAngle) {
+            // While swipe is positive and greater than threshold move backward.
+            if (settings.perTouch) {
+              steps = Math.min(steps, toInt(settings.perTouch));
+            }
 
-          if (Components.Direction.is('rtl')) {
-            steps = -steps;
-          }
+            if (Components.Direction.is('rtl')) {
+              steps = -steps;
+            }
 
-          Components.Run.make(Components.Direction.resolve('<' + steps));
-        } else if (swipeDistance < -threshold && swipeDeg < settings.touchAngle) {
-          // While swipe is negative and lower than negative threshold move forward.
-          if (settings.perTouch) {
-            steps = Math.max(steps, -toInt(settings.perTouch));
-          }
+            Components.Run.make(Components.Direction.resolve('<' + steps));
+          } else if (swipeDistance < -threshold && swipeDeg < settings.touchAngle) {
+            // While swipe is negative and lower than negative threshold move forward.
+            if (settings.perTouch) {
+              steps = Math.max(steps, -toInt(settings.perTouch));
+            }
 
-          if (Components.Direction.is('rtl')) {
-            steps = -steps;
-          }
+            if (Components.Direction.is('rtl')) {
+              steps = -steps;
+            }
 
-          Components.Run.make(Components.Direction.resolve('>' + steps));
-        } else {
-          // While swipe don't reach distance apply previous transform.
-          Components.Move.make();
+            Components.Run.make(Components.Direction.resolve('>' + steps));
+          } else {
+            // While swipe don't reach distance apply previous transform.
+            Components.Move.make();
+          }
         }
 
         Components.Html.root.classList.remove(settings.classes.dragging);
@@ -2695,13 +2693,13 @@ function swipe (Glide, Components, Events) {
       if (settings.swipeThreshold) {
         Binder.on(START_EVENTS[0], Components.Html.wrapper, function (event) {
           _this.start(event);
-        });
+        }, capture);
       }
 
       if (settings.dragThreshold) {
         Binder.on(START_EVENTS[1], Components.Html.wrapper, function (event) {
           _this.start(event);
-        });
+        }, capture);
       }
     },
 
@@ -2727,7 +2725,7 @@ function swipe (Glide, Components, Events) {
 
       Binder.on(MOVE_EVENTS, Components.Html.wrapper, throttle(function (event) {
         _this2.move(event);
-      }, Glide.settings.throttle));
+      }, Glide.settings.throttle), capture);
     },
 
 

@@ -1,5 +1,6 @@
 import { throttle } from '../utils/wait'
 import { toInt, toFloat } from '../utils/unit'
+import supportsPassive from '../utils/detect-passive-event'
 
 import EventsBinder from '../core/event/events-binder'
 
@@ -20,6 +21,8 @@ export default function (Glide, Components, Events) {
   let swipeStartX = 0
   let swipeStartY = 0
   let disabled = false
+  let moveable = true
+  let capture = (supportsPassive) ? { passive: true } : false
 
   const Swipe = {
     /**
@@ -43,6 +46,7 @@ export default function (Glide, Components, Events) {
 
         let swipe = this.touches(event)
 
+        moveable = true
         swipeSin = null
         swipeStartX = toInt(swipe.pageX)
         swipeStartY = toInt(swipe.pageY)
@@ -69,20 +73,22 @@ export default function (Glide, Components, Events) {
         let subEySy = toInt(swipe.pageY) - swipeStartY
         let powEX = Math.abs(subExSx << 2)
         let powEY = Math.abs(subEySy << 2)
-        let swipeHypotenuse = (powEX + powEY) * (powEX + powEY)
-        let swipeCathetus = powEY * powEY
+        let swipeHypotenuse = Math.sqrt(powEX + powEY)
+        let swipeCathetus = Math.sqrt(powEY)
 
         swipeSin = Math.asin(swipeCathetus / swipeHypotenuse)
 
-        Components.Move.make(subExSx * toFloat(touchRatio))
-
-        if (swipeSin * 180 / Math.PI < touchAngle) {
+        if (moveable && swipeSin * 180 / Math.PI < touchAngle) {
           event.stopPropagation()
+
+          Components.Move.make(subExSx * toFloat(touchRatio))
 
           Components.Html.root.classList.add(classes.dragging)
 
           Events.emit('swipe.move')
         } else {
+          moveable = false
+
           return false
         }
       }
@@ -107,34 +113,36 @@ export default function (Glide, Components, Events) {
 
         this.enable()
 
-        if (swipeDistance > threshold && swipeDeg < settings.touchAngle) {
-          // While swipe is positive and greater than threshold move backward.
-          if (settings.perTouch) {
-            steps = Math.min(steps, toInt(settings.perTouch))
-          }
+        if (moveable) {
+          if (swipeDistance > threshold && swipeDeg < settings.touchAngle) {
+            // While swipe is positive and greater than threshold move backward.
+            if (settings.perTouch) {
+              steps = Math.min(steps, toInt(settings.perTouch))
+            }
 
-          if (Components.Direction.is('rtl')) {
-            steps = -steps
-          }
+            if (Components.Direction.is('rtl')) {
+              steps = -steps
+            }
 
-          Components.Run.make(Components.Direction.resolve(`<${steps}`))
-        } else if (
-          swipeDistance < -threshold &&
-          swipeDeg < settings.touchAngle
-        ) {
-          // While swipe is negative and lower than negative threshold move forward.
-          if (settings.perTouch) {
-            steps = Math.max(steps, -toInt(settings.perTouch))
-          }
+            Components.Run.make(Components.Direction.resolve(`<${steps}`))
+          } else if (
+            swipeDistance < -threshold &&
+            swipeDeg < settings.touchAngle
+          ) {
+            // While swipe is negative and lower than negative threshold move forward.
+            if (settings.perTouch) {
+              steps = Math.max(steps, -toInt(settings.perTouch))
+            }
 
-          if (Components.Direction.is('rtl')) {
-            steps = -steps
-          }
+            if (Components.Direction.is('rtl')) {
+              steps = -steps
+            }
 
-          Components.Run.make(Components.Direction.resolve(`>${steps}`))
-        } else {
-          // While swipe don't reach distance apply previous transform.
-          Components.Move.make()
+            Components.Run.make(Components.Direction.resolve(`>${steps}`))
+          } else {
+            // While swipe don't reach distance apply previous transform.
+            Components.Move.make()
+          }
         }
 
         Components.Html.root.classList.remove(settings.classes.dragging)
@@ -157,13 +165,13 @@ export default function (Glide, Components, Events) {
       if (settings.swipeThreshold) {
         Binder.on(START_EVENTS[0], Components.Html.wrapper, (event) => {
           this.start(event)
-        })
+        }, capture)
       }
 
       if (settings.dragThreshold) {
         Binder.on(START_EVENTS[1], Components.Html.wrapper, (event) => {
           this.start(event)
-        })
+        }, capture)
       }
     },
 

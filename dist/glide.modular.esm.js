@@ -2519,6 +2519,7 @@ function swipe (Glide, Components, Events) {
   var swipeStartX = 0;
   var swipeStartY = 0;
   var disabled = false;
+  var moveable = true;
 
   var Swipe = {
     /**
@@ -2543,6 +2544,7 @@ function swipe (Glide, Components, Events) {
 
         var swipe = this.touches(event);
 
+        moveable = true;
         swipeSin = null;
         swipeStartX = toInt(swipe.pageX);
         swipeStartY = toInt(swipe.pageY);
@@ -2574,20 +2576,22 @@ function swipe (Glide, Components, Events) {
         var subEySy = toInt(swipe.pageY) - swipeStartY;
         var powEX = Math.abs(subExSx << 2);
         var powEY = Math.abs(subEySy << 2);
-        var swipeHypotenuse = (powEX + powEY) * (powEX + powEY);
-        var swipeCathetus = powEY * powEY;
+        var swipeHypotenuse = Math.sqrt(powEX + powEY);
+        var swipeCathetus = Math.sqrt(powEY);
 
         swipeSin = Math.asin(swipeCathetus / swipeHypotenuse);
 
-        Components.Move.make(subExSx * toFloat(touchRatio));
-
-        if (swipeSin * 180 / Math.PI < touchAngle) {
+        if (moveable && swipeSin * 180 / Math.PI < touchAngle) {
           event.stopPropagation();
+
+          Components.Move.make(subExSx * toFloat(touchRatio));
 
           Components.Html.root.classList.add(classes.dragging);
 
           Events.emit('swipe.move');
         } else {
+          moveable = false;
+
           return false;
         }
       }
@@ -2613,31 +2617,33 @@ function swipe (Glide, Components, Events) {
 
         this.enable();
 
-        if (swipeDistance > threshold && swipeDeg < settings.touchAngle) {
-          // While swipe is positive and greater than threshold move backward.
-          if (settings.perTouch) {
-            steps = Math.min(steps, toInt(settings.perTouch));
-          }
+        if (moveable) {
+          if (swipeDistance > threshold && swipeDeg < settings.touchAngle) {
+            // While swipe is positive and greater than threshold move backward.
+            if (settings.perTouch) {
+              steps = Math.min(steps, toInt(settings.perTouch));
+            }
 
-          if (Components.Direction.is('rtl')) {
-            steps = -steps;
-          }
+            if (Components.Direction.is('rtl')) {
+              steps = -steps;
+            }
 
-          Components.Run.make(Components.Direction.resolve('<' + steps));
-        } else if (swipeDistance < -threshold && swipeDeg < settings.touchAngle) {
-          // While swipe is negative and lower than negative threshold move forward.
-          if (settings.perTouch) {
-            steps = Math.max(steps, -toInt(settings.perTouch));
-          }
+            Components.Run.make(Components.Direction.resolve('<' + steps));
+          } else if (swipeDistance < -threshold && swipeDeg < settings.touchAngle) {
+            // While swipe is negative and lower than negative threshold move forward.
+            if (settings.perTouch) {
+              steps = Math.max(steps, -toInt(settings.perTouch));
+            }
 
-          if (Components.Direction.is('rtl')) {
-            steps = -steps;
-          }
+            if (Components.Direction.is('rtl')) {
+              steps = -steps;
+            }
 
-          Components.Run.make(Components.Direction.resolve('>' + steps));
-        } else {
-          // While swipe don't reach distance apply previous transform.
-          Components.Move.make();
+            Components.Run.make(Components.Direction.resolve('>' + steps));
+          } else {
+            // While swipe don't reach distance apply previous transform.
+            Components.Move.make();
+          }
         }
 
         Components.Html.root.classList.remove(settings.classes.dragging);

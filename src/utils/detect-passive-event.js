@@ -5,7 +5,7 @@
  * @see https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md#feature-detection
  */
 
-let supportsPassive = false;
+let supportsPassive = false
 
 try {
   let opts = Object.defineProperty({}, 'passive', {

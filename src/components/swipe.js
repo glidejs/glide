@@ -185,7 +185,7 @@ export default function (Glide, Components, Events) {
     bindSwipeMove () {
       Binder.on(MOVE_EVENTS, Components.Html.wrapper, throttle((event) => {
         this.move(event)
-      }, Glide.settings.throttle))
+      }, Glide.settings.throttle), capture)
     },
 
     /**

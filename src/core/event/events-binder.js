@@ -14,43 +14,18 @@ export default class EventsBinder {
    * @param  {String|Array} events
    * @param  {Element|Window|Document} el
    * @param  {Function} closure
+   * @param  {Boolean|Object} capture
    * @return {Void}
    */
-  on (events, el, closure, capture = false, passive = false) {
+  on (events, el, closure, capture = false) {
     if (isString(events)) {
       events = [events]
-    }
-
-    let passiveSupport = false
-    let options = {}
-
-    try {
-      const opts = Object.defineProperty({}, 'passive', {
-        get () {
-          passiveSupport = true
-        }
-      })
-
-      const noop = () => { }
-      window.addEventListener('testPassiveEventSupport', noop, opts)
-      window.removeEventListener('testPassiveEventSupport', noop, opts)
-    } catch (err) {
-      passiveSupport = false
-    }
-
-    if (passiveSupport === false) {
-      options = capture
-    } else {
-      options = {
-        capture: capture,
-        passive: passive
-      }
     }
 
     for (let i = 0; i < events.length; i++) {
       this.listeners[events[i]] = closure
 
-      el.addEventListener(events[i], this.listeners[events[i]], options)
+      el.addEventListener(events[i], this.listeners[events[i]], capture)
     }
   }
 

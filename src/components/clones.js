@@ -60,6 +60,7 @@ export default function (Glide, Components, Events) {
       let half = Math.floor(items.length / 2)
       let prepend = items.slice(0, half).reverse()
       let append = items.slice(half, items.length)
+      let width = `${Components.Sizes.slideWidth}px`
 
       for (let i = 0; i < append.length; i++) {
         wrapper.appendChild(append[i])
@@ -70,7 +71,7 @@ export default function (Glide, Components, Events) {
       }
 
       for (let i = 0; i < items.length; i++) {
-        items[i].style.width = `${Components.Sizes.slideWidth}px`
+        items[i].style.width = width
       }
     },
 

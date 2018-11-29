@@ -1550,10 +1550,11 @@
        * @return {Void}
        */
       setupSlides: function setupSlides() {
+        var width = this.slideWidth + 'px';
         var slides = Components.Html.slides;
 
         for (var i = 0; i < slides.length; i++) {
-          slides[i].style.width = this.slideWidth + 'px';
+          slides[i].style.width = width;
         }
       },
 
@@ -1811,6 +1812,7 @@
         var half = Math.floor(items.length / 2);
         var prepend = items.slice(0, half).reverse();
         var append = items.slice(half, items.length);
+        var width = Components.Sizes.slideWidth + 'px';
 
         for (var i = 0; i < append.length; i++) {
           wrapper.appendChild(append[i]);
@@ -1821,7 +1823,7 @@
         }
 
         for (var _i3 = 0; _i3 < items.length; _i3++) {
-          items[_i3].style.width = Components.Sizes.slideWidth + 'px';
+          items[_i3].style.width = width;
         }
       },
 

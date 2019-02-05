@@ -1,6 +1,6 @@
 /*!
  * Glide.js v3.2.4
- * (c) 2013-2018 Jędrzej Chałubek <jedrzej.chalubek@gmail.com> (http://jedrzejchalubek.com/)
+ * (c) 2013-2019 Jędrzej Chałubek <jedrzej.chalubek@gmail.com> (http://jedrzejchalubek.com/)
  * Released under the MIT License.
  */
 
@@ -2978,9 +2978,8 @@ function Anchors (Glide, Components, Events) {
      * @return {Void}
      */
     click: function click(event) {
-      event.stopPropagation();
-
       if (prevented) {
+        event.stopPropagation();
         event.preventDefault();
       }
     },

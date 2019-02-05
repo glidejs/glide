@@ -71,9 +71,8 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     click (event) {
-      event.stopPropagation()
-
       if (prevented) {
+        event.stopPropagation()
         event.preventDefault()
       }
     },
@@ -90,7 +89,10 @@ export default function (Glide, Components, Events) {
         for (var i = 0; i < this.items.length; i++) {
           this.items[i].draggable = false
 
-          this.items[i].setAttribute('data-href', this.items[i].getAttribute('href'))
+          this.items[i].setAttribute(
+            'data-href',
+            this.items[i].getAttribute('href')
+          )
 
           this.items[i].removeAttribute('href')
         }
@@ -113,7 +115,10 @@ export default function (Glide, Components, Events) {
         for (var i = 0; i < this.items.length; i++) {
           this.items[i].draggable = true
 
-          this.items[i].setAttribute('href', this.items[i].getAttribute('data-href'))
+          this.items[i].setAttribute(
+            'href',
+            this.items[i].getAttribute('data-href')
+          )
         }
 
         detached = false

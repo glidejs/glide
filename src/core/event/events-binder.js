@@ -34,15 +34,16 @@ export default class EventsBinder {
    *
    * @param  {String|Array} events
    * @param  {Element|Window|Document} el
+   * @param  {Boolean|Object} capture
    * @return {Void}
    */
-  off (events, el) {
+  off (events, el, capture = false) {
     if (isString(events)) {
       events = [events]
     }
 
     for (let i = 0; i < events.length; i++) {
-      el.removeEventListener(events[i], this.listeners[events[i]], false)
+      el.removeEventListener(events[i], this.listeners[events[i]], capture)
     }
   }
 

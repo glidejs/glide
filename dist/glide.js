@@ -1928,18 +1928,21 @@
        *
        * @param  {String|Array} events
        * @param  {Element|Window|Document} el
+       * @param  {Boolean|Object} capture
        * @return {Void}
        */
 
     }, {
       key: 'off',
       value: function off(events, el) {
+        var capture = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
         if (isString(events)) {
           events = [events];
         }
 
         for (var i = 0; i < events.length; i++) {
-          el.removeEventListener(events[i], this.listeners[events[i]], false);
+          el.removeEventListener(events[i], this.listeners[events[i]], capture);
         }
       }
 
@@ -2718,8 +2721,8 @@
        * @return {Void}
        */
       unbindSwipeStart: function unbindSwipeStart() {
-        Binder.off(START_EVENTS[0], Components.Html.wrapper);
-        Binder.off(START_EVENTS[1], Components.Html.wrapper);
+        Binder.off(START_EVENTS[0], Components.Html.wrapper, capture);
+        Binder.off(START_EVENTS[1], Components.Html.wrapper, capture);
       },
 
 
@@ -2743,7 +2746,7 @@
        * @return {Void}
        */
       unbindSwipeMove: function unbindSwipeMove() {
-        Binder.off(MOVE_EVENTS, Components.Html.wrapper);
+        Binder.off(MOVE_EVENTS, Components.Html.wrapper, capture);
       },
 
 

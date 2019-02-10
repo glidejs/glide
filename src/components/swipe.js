@@ -181,8 +181,8 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     unbindSwipeStart () {
-      Binder.off(START_EVENTS[0], Components.Html.wrapper)
-      Binder.off(START_EVENTS[1], Components.Html.wrapper)
+      Binder.off(START_EVENTS[0], Components.Html.wrapper, capture)
+      Binder.off(START_EVENTS[1], Components.Html.wrapper, capture)
     },
 
     /**
@@ -202,7 +202,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     unbindSwipeMove () {
-      Binder.off(MOVE_EVENTS, Components.Html.wrapper)
+      Binder.off(MOVE_EVENTS, Components.Html.wrapper, capture)
     },
 
     /**

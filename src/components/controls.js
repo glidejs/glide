@@ -1,5 +1,6 @@
 import { siblings } from '../utils/dom'
 import { define } from '../utils/object'
+import supportsPassive from '../utils/detect-passive-event'
 
 import EventsBinder from '../core/event/events-binder'
 

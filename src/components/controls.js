@@ -123,7 +123,8 @@ export default function (Glide, Components, Events) {
      */
     bind (elements) {
       for (let i = 0; i < elements.length; i++) {
-        Binder.on(['click', 'touchstart'], elements[i], this.click)
+        Binder.on('click', elements[i], this.click)
+        Binder.on('touchstart', elements[i], this.click, capture)
       }
     },
 

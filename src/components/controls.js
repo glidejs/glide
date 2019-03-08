@@ -15,6 +15,8 @@ export default function (Glide, Components, Events) {
    */
   const Binder = new EventsBinder()
 
+  let capture = (supportsPassive) ? { passive: true } : false
+
   const Controls = {
     /**
      * Inits arrows. Binds events listeners

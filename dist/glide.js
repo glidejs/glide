@@ -3170,7 +3170,9 @@
        * @return {Void}
        */
       removeClass: function removeClass(controls) {
-        controls[Glide.index].classList.remove(Glide.settings.classes.activeNav);
+        if (controls[Glide.index]) {
+          controls[Glide.index].classList.remove(Glide.settings.classes.activeNav);
+        }
       },
 
 

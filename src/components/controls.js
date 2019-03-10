@@ -87,7 +87,9 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     removeClass (controls) {
-      controls[Glide.index].classList.remove(Glide.settings.classes.activeNav)
+      if (controls[Glide.index]) {
+        controls[Glide.index].classList.remove(Glide.settings.classes.activeNav)
+      }
     },
 
     /**

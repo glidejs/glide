@@ -1,5 +1,6 @@
 import { siblings } from '../utils/dom'
 import { define } from '../utils/object'
+import supportsPassive from '../utils/detect-passive-event'
 
 import EventsBinder from '../core/event/events-binder'
 
@@ -13,6 +14,8 @@ export default function (Glide, Components, Events) {
    * @type {EventsBinder}
    */
   const Binder = new EventsBinder()
+
+  let capture = (supportsPassive) ? { passive: true } : false
 
   const Controls = {
     /**
@@ -122,7 +125,8 @@ export default function (Glide, Components, Events) {
      */
     bind (elements) {
       for (let i = 0; i < elements.length; i++) {
-        Binder.on(['click', 'touchstart'], elements[i], this.click)
+        Binder.on('click', elements[i], this.click)
+        Binder.on('touchstart', elements[i], this.click, capture)
       }
     },
 

@@ -18,6 +18,10 @@ export default `
       <li class="glide__slide">1</li>
       <li class="glide__slide">2</li>
       <li class="glide__slide">3</li>
+      <li class="glide__slide">4</li>
+      <li class="glide__slide">5</li>
+      <li class="glide__slide">6</li>
+      <li class="glide__slide">7</li>
     </ul>
   </div>
 </div>

@@ -19,7 +19,7 @@ export default function (Glide, Components, Events) {
      */
     make (move) {
       if (!Glide.disabled) {
-        Glide.disable()
+        !Glide.settings.waitForTransition || Glide.disable()
 
         this.move = move
 
@@ -55,6 +55,27 @@ export default function (Glide, Components, Events) {
       let countableSteps = (isNumber(toInt(steps))) && (toInt(steps) !== 0)
 
       switch (direction) {
+        case '|':
+          const pageSize = Glide.settings.perView || 1
+
+          if (steps === '>') {
+            const nextIndex = Glide.index + pageSize
+            // when rewind is enabled and the next index is above the amount if slides, rewind to the first slide
+            // when rewind is disabled and next index is above the amount of slides, stop at the last slide
+            const allowedMin = (Glide.settings.rewind && nextIndex > length) ? 0 : length
+
+            Glide.index = Math.min(allowedMin, nextIndex)
+          } else {
+            const page = Math.ceil(Glide.index / pageSize)
+            const prevIndex = (page - 1) * pageSize
+
+            // when rewind is enabled and the previous index is below zero, rewind to the last slide
+            // when rewind is disabled and previous index is below zero, stop at the fist slide
+            const allowedMax = (Glide.settings.rewind && prevIndex < 0) ? length : 0
+
+            Glide.index = Math.max(allowedMax, prevIndex)
+          }
+          break
         case '>':
           if (steps === '>') {
             Glide.index = length

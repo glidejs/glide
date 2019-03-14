@@ -57,21 +57,31 @@ export default function (Glide, Components, Events) {
       switch (direction) {
         case '|':
           const pageSize = Glide.settings.perView || 1
+          // bound does funny things with the length, therefor fallback to the default length
+          // when bound is deactivated calculate the last index that is meaningful to provide a pleasant pagination
+          const lastMeaningfulIndex = this.isBound() ? length : Math.floor(length / pageSize) * pageSize
 
           if (steps === '>') {
             const nextIndex = Glide.index + pageSize
-            // when rewind is enabled and the next index is above the amount if slides, rewind to the first slide
-            // when rewind is disabled and next index is above the amount of slides, stop at the last slide
-            const allowedMin = (Glide.settings.rewind && nextIndex > length) ? 0 : length
+
+            // do not go further than the last index that is meaningful
+            let allowedMin = lastMeaningfulIndex
+
+            // when rewind is enabled and the next index is above the amount of slides, rewind to the first slide
+            if (Glide.settings.rewind && nextIndex > length) {
+              // bound does funny things with the length, therefor we have to be certain
+              // that we reached the last possible length value before we rewind
+              allowedMin = !this.isBoundEnd() ? length : 0
+            }
 
             Glide.index = Math.min(allowedMin, nextIndex)
           } else {
             const page = Math.ceil(Glide.index / pageSize)
             const prevIndex = (page - 1) * pageSize
 
-            // when rewind is enabled and the previous index is below zero, rewind to the last slide
+            // when rewind is enabled and the previous index is below zero, rewind to the last index that is meaningful
             // when rewind is disabled and previous index is below zero, stop at the fist slide
-            const allowedMax = (Glide.settings.rewind && prevIndex < 0) ? length : 0
+            const allowedMax = (Glide.settings.rewind && prevIndex < 0) ? lastMeaningfulIndex : 0
 
             Glide.index = Math.max(allowedMax, prevIndex)
           }
@@ -133,7 +143,7 @@ export default function (Glide, Components, Events) {
      * @return {Boolean}
      */
     isEnd () {
-      return Glide.index === this.length
+      return Glide.index >= this.length
     },
 
     /**
@@ -144,6 +154,28 @@ export default function (Glide, Components, Events) {
      */
     isOffset (direction) {
       return this._o && this.move.direction === direction
+    },
+
+    /**
+     * Checks if bound mode is active
+     *
+     * @return {Boolean}
+     */
+    isBound () {
+      return Glide.isType('slider') && Glide.settings.focusAt !== 'center' && Glide.settings.bound
+    },
+
+    /**
+     * Checks if slides should be rewinded
+     *
+     * @return {Boolean}
+     */
+    isBoundEnd () {
+      if (this.isBound() && this.isEnd()) {
+        return true
+      }
+
+      return !this.isBound()
     }
   }
 
@@ -181,10 +213,10 @@ export default function (Glide, Components, Events) {
       let { settings } = Glide
       let { length } = Components.Html.slides
 
-      // If the `bound` option is acitve, a maximum running distance should be
+      // If the `bound` option is active, a maximum running distance should be
       // reduced by `perView` and `focusAt` settings. Running distance
       // should end before creating an empty space after instance.
-      if (Glide.isType('slider') && settings.focusAt !== 'center' && settings.bound) {
+      if (this.isBound()) {
         return (length - 1) - (toInt(settings.perView) - 1) + toInt(settings.focusAt)
       }
 

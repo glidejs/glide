@@ -76,6 +76,10 @@ export default function (Glide, Components, Events) {
       let settings = Glide.settings
       let item = controls[Glide.index]
 
+      if (!item) {
+        return
+      }
+
       item.classList.add(settings.classes.activeNav)
 
       siblings(item).forEach(sibling => {

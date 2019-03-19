@@ -7,8 +7,8 @@ export default `
     <button class="glide__arrow glide__arrow--end" data-glide-dir=">>">end</button>
   </div>
 
-  <div data-glide-el="controls" class="glide__bullets">
-    <button data-glide-dir="=0">1</button>
+  <div class="glide__bullets">
+    <button class="glide__bullet" data-glide-dir="=0">1</button>
     <button data-glide-dir="=1">2</button>
     <button data-glide-dir="=2">3</button>
   </div>

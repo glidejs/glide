@@ -1,5 +1,5 @@
 /*!
- * Glide.js v3.2.6
+ * Glide.js v3.2.7
  * (c) 2013-2019 Jędrzej Chałubek <jedrzej.chalubek@gmail.com> (http://jedrzejchalubek.com/)
  * Released under the MIT License.
  */
@@ -2547,7 +2547,6 @@ function swipe (Glide, Components, Events) {
   var swipeStartX = 0;
   var swipeStartY = 0;
   var disabled = false;
-  var moveable = true;
   var capture = supportsPassive$1 ? { passive: true } : false;
 
   var Swipe = {
@@ -2573,7 +2572,6 @@ function swipe (Glide, Components, Events) {
 
         var swipe = this.touches(event);
 
-        moveable = true;
         swipeSin = null;
         swipeStartX = toInt(swipe.pageX);
         swipeStartY = toInt(swipe.pageY);
@@ -2610,7 +2608,7 @@ function swipe (Glide, Components, Events) {
 
         swipeSin = Math.asin(swipeCathetus / swipeHypotenuse);
 
-        if (moveable && swipeSin * 180 / Math.PI < touchAngle) {
+        if (swipeSin * 180 / Math.PI < touchAngle) {
           event.stopPropagation();
 
           Components.Move.make(subExSx * toFloat(touchRatio));
@@ -2619,8 +2617,6 @@ function swipe (Glide, Components, Events) {
 
           Events.emit('swipe.move');
         } else {
-          moveable = false;
-
           return false;
         }
       }
@@ -2646,33 +2642,31 @@ function swipe (Glide, Components, Events) {
 
         this.enable();
 
-        if (moveable) {
-          if (swipeDistance > threshold && swipeDeg < settings.touchAngle) {
-            // While swipe is positive and greater than threshold move backward.
-            if (settings.perTouch) {
-              steps = Math.min(steps, toInt(settings.perTouch));
-            }
-
-            if (Components.Direction.is('rtl')) {
-              steps = -steps;
-            }
-
-            Components.Run.make(Components.Direction.resolve('<' + steps));
-          } else if (swipeDistance < -threshold && swipeDeg < settings.touchAngle) {
-            // While swipe is negative and lower than negative threshold move forward.
-            if (settings.perTouch) {
-              steps = Math.max(steps, -toInt(settings.perTouch));
-            }
-
-            if (Components.Direction.is('rtl')) {
-              steps = -steps;
-            }
-
-            Components.Run.make(Components.Direction.resolve('>' + steps));
-          } else {
-            // While swipe don't reach distance apply previous transform.
-            Components.Move.make();
+        if (swipeDistance > threshold && swipeDeg < settings.touchAngle) {
+          // While swipe is positive and greater than threshold move backward.
+          if (settings.perTouch) {
+            steps = Math.min(steps, toInt(settings.perTouch));
           }
+
+          if (Components.Direction.is('rtl')) {
+            steps = -steps;
+          }
+
+          Components.Run.make(Components.Direction.resolve('<' + steps));
+        } else if (swipeDistance < -threshold && swipeDeg < settings.touchAngle) {
+          // While swipe is negative and lower than negative threshold move forward.
+          if (settings.perTouch) {
+            steps = Math.max(steps, -toInt(settings.perTouch));
+          }
+
+          if (Components.Direction.is('rtl')) {
+            steps = -steps;
+          }
+
+          Components.Run.make(Components.Direction.resolve('>' + steps));
+        } else {
+          // While swipe don't reach distance apply previous transform.
+          Components.Move.make();
         }
 
         Components.Html.root.classList.remove(settings.classes.dragging);
@@ -3087,6 +3081,8 @@ function controls (Glide, Components, Events) {
    */
   var Binder = new EventsBinder();
 
+  var capture = supportsPassive$1 ? { passive: true } : false;
+
   var Controls = {
     /**
      * Inits arrows. Binds events listeners
@@ -3202,7 +3198,8 @@ function controls (Glide, Components, Events) {
      */
     bind: function bind(elements) {
       for (var i = 0; i < elements.length; i++) {
-        Binder.on(['click', 'touchstart'], elements[i], this.click);
+        Binder.on('click', elements[i], this.click);
+        Binder.on('touchstart', elements[i], this.click, capture);
       }
     },
 

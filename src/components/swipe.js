@@ -21,7 +21,6 @@ export default function (Glide, Components, Events) {
   let swipeStartX = 0
   let swipeStartY = 0
   let disabled = false
-  let moveable = true
   let capture = (supportsPassive) ? { passive: true } : false
 
   const Swipe = {
@@ -46,7 +45,6 @@ export default function (Glide, Components, Events) {
 
         let swipe = this.touches(event)
 
-        moveable = true
         swipeSin = null
         swipeStartX = toInt(swipe.pageX)
         swipeStartY = toInt(swipe.pageY)
@@ -78,7 +76,7 @@ export default function (Glide, Components, Events) {
 
         swipeSin = Math.asin(swipeCathetus / swipeHypotenuse)
 
-        if (moveable && swipeSin * 180 / Math.PI < touchAngle) {
+        if (swipeSin * 180 / Math.PI < touchAngle) {
           event.stopPropagation()
 
           Components.Move.make(subExSx * toFloat(touchRatio))
@@ -87,8 +85,6 @@ export default function (Glide, Components, Events) {
 
           Events.emit('swipe.move')
         } else {
-          moveable = false
-
           return false
         }
       }
@@ -113,36 +109,34 @@ export default function (Glide, Components, Events) {
 
         this.enable()
 
-        if (moveable) {
-          if (swipeDistance > threshold && swipeDeg < settings.touchAngle) {
-            // While swipe is positive and greater than threshold move backward.
-            if (settings.perTouch) {
-              steps = Math.min(steps, toInt(settings.perTouch))
-            }
-
-            if (Components.Direction.is('rtl')) {
-              steps = -steps
-            }
-
-            Components.Run.make(Components.Direction.resolve(`<${steps}`))
-          } else if (
-            swipeDistance < -threshold &&
-            swipeDeg < settings.touchAngle
-          ) {
-            // While swipe is negative and lower than negative threshold move forward.
-            if (settings.perTouch) {
-              steps = Math.max(steps, -toInt(settings.perTouch))
-            }
-
-            if (Components.Direction.is('rtl')) {
-              steps = -steps
-            }
-
-            Components.Run.make(Components.Direction.resolve(`>${steps}`))
-          } else {
-            // While swipe don't reach distance apply previous transform.
-            Components.Move.make()
+        if (swipeDistance > threshold && swipeDeg < settings.touchAngle) {
+          // While swipe is positive and greater than threshold move backward.
+          if (settings.perTouch) {
+            steps = Math.min(steps, toInt(settings.perTouch))
           }
+
+          if (Components.Direction.is('rtl')) {
+            steps = -steps
+          }
+
+          Components.Run.make(Components.Direction.resolve(`<${steps}`))
+        } else if (
+          swipeDistance < -threshold &&
+          swipeDeg < settings.touchAngle
+        ) {
+          // While swipe is negative and lower than negative threshold move forward.
+          if (settings.perTouch) {
+            steps = Math.max(steps, -toInt(settings.perTouch))
+          }
+
+          if (Components.Direction.is('rtl')) {
+            steps = -steps
+          }
+
+          Components.Run.make(Components.Direction.resolve(`>${steps}`))
+        } else {
+          // While swipe don't reach distance apply previous transform.
+          Components.Move.make()
         }
 
         Components.Html.root.classList.remove(settings.classes.dragging)

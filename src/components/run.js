@@ -108,7 +108,6 @@ export default function (Glide, Components, Events) {
 
         if (index > length) {
           this._o = true
-          Events.emit('run.end', move)
         }
 
         Glide.index = this.normalizeForwardIndex(index, length, pageSize)
@@ -120,7 +119,6 @@ export default function (Glide, Components, Events) {
 
       if (index < 0) {
         this._o = true
-        Events.emit('run.end', move)
       }
 
       Glide.index = this.normalizeBackwardIndex(index, length, pageSize)

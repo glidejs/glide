@@ -1,3 +1,4 @@
+import { warn } from '../utils/log'
 import { define } from '../utils/object'
 import { toInt, isNumber } from '../utils/unit'
 
@@ -30,6 +31,14 @@ export default function (Glide, Components, Events) {
         Events.emit('run', this.move)
 
         Components.Transition.after(() => {
+          if (this.isStart()) {
+            Events.emit('run.start', this.move)
+          }
+
+          if (this.isEnd()) {
+            Events.emit('run.end', this.move)
+          }
+
           if (this.isOffset()) {
             this._o = false
 

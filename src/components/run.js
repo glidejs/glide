@@ -94,6 +94,10 @@ export default function (Glide, Components, Events) {
         case '=':
           Glide.index = steps
           break
+
+        default:
+          warn(`Invalid direction pattern [${direction}${steps}] has been used`)
+          break
       }
     },
 

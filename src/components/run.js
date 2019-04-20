@@ -115,13 +115,20 @@ export default function (Glide, Components, Events) {
         return
       }
 
-      const index = this.calculateBackwardIndex(pageSize)
+      // we are moving backward
+      if (direction === '<' || (direction === '|' && steps === '<')) {
+        const index = this.calculateBackwardIndex(pageSize)
 
-      if (index < 0) {
-        this._o = true
+        if (index < 0) {
+          this._o = true
+        }
+
+        Glide.index = this.normalizeBackwardIndex(index, length, pageSize)
+
+        return
       }
 
-      Glide.index = this.normalizeBackwardIndex(index, length, pageSize)
+      warn(`Invalid direction pattern [${direction}${steps}] has been used`)
     },
 
     /**

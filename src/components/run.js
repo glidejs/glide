@@ -1,3 +1,4 @@
+import { warn } from '../utils/log'
 import { define } from '../utils/object'
 import { toInt, isNumber } from '../utils/unit'
 

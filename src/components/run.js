@@ -1,3 +1,4 @@
+import { warn } from '../utils/log'
 import { define } from '../utils/object'
 import { toInt, isNumber } from '../utils/unit'
 
@@ -93,6 +94,10 @@ export default function (Glide, Components, Events) {
 
         case '=':
           Glide.index = steps
+          break
+
+        default:
+          warn(`Invalid direction pattern [${direction}${steps}] has been used`)
           break
       }
     },

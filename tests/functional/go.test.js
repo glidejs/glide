@@ -10,6 +10,21 @@ describe('Calling `go()` method with', () => {
     document.body.innerHTML = html
   })
 
+  test('invalid direction pattern should result in `warn()` message', (done) => {
+    let glide = new Glide('#glide')
+    let fn = jest.fn()
+
+    global.console = { error: fn }
+
+    glide.mount().go('??')
+
+    afterTransition(() => {
+      expect(fn).toHaveBeenCalled()
+
+      done()
+    })
+  })
+
   test('`>` should move one slide forward', (done) => {
     let { slides } = query(document)
 

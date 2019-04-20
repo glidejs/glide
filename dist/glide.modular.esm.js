@@ -1,5 +1,5 @@
 /*!
- * Glide.js v3.2.7
+ * Glide.js v3.3.0
  * (c) 2013-2019 Jędrzej Chałubek <jedrzej.chalubek@gmail.com> (http://jedrzejchalubek.com/)
  * Released under the MIT License.
  */
@@ -909,6 +909,14 @@ function Run (Glide, Components, Events) {
         Events.emit('run', this.move);
 
         Components.Transition.after(function () {
+          if (_this.isStart()) {
+            Events.emit('run.start', _this.move);
+          }
+
+          if (_this.isEnd()) {
+            Events.emit('run.end', _this.move);
+          }
+
           if (_this.isOffset('<') || _this.isOffset('>')) {
             _this._o = false;
 
@@ -947,8 +955,6 @@ function Run (Glide, Components, Events) {
 
               Glide.index = 0;
             }
-
-            Events.emit('run.end', move);
           } else if (countableSteps) {
             Glide.index += Math.min(length - Glide.index, -toInt(steps));
           } else {
@@ -965,8 +971,6 @@ function Run (Glide, Components, Events) {
 
               Glide.index = length;
             }
-
-            Events.emit('run.start', move);
           } else if (countableSteps) {
             Glide.index -= Math.min(Glide.index, toInt(steps));
           } else {
@@ -976,6 +980,10 @@ function Run (Glide, Components, Events) {
 
         case '=':
           Glide.index = steps;
+          break;
+
+        default:
+          warn('Invalid direction pattern [' + direction + steps + '] has been used');
           break;
       }
     },
@@ -1029,9 +1037,11 @@ function Run (Glide, Components, Events) {
      * @returns {Object}
      */
     set: function set(value) {
+      var step = value.substr(1);
+
       this._m = {
         direction: value.substr(0, 1),
-        steps: value.substr(1) ? value.substr(1) : 0
+        steps: step ? toInt(step) ? toInt(step) : step : 0
       };
     }
   });
@@ -3145,11 +3155,13 @@ function controls (Glide, Components, Events) {
       var settings = Glide.settings;
       var item = controls[Glide.index];
 
-      item.classList.add(settings.classes.activeNav);
+      if (item) {
+        item.classList.add(settings.classes.activeNav);
 
-      siblings(item).forEach(function (sibling) {
-        sibling.classList.remove(settings.classes.activeNav);
-      });
+        siblings(item).forEach(function (sibling) {
+          sibling.classList.remove(settings.classes.activeNav);
+        });
+      }
     },
 
 
@@ -3160,8 +3172,10 @@ function controls (Glide, Components, Events) {
      * @return {Void}
      */
     removeClass: function removeClass(controls) {
-      if (controls[Glide.index]) {
-        controls[Glide.index].classList.remove(Glide.settings.classes.activeNav);
+      var item = controls[Glide.index];
+
+      if (item) {
+        item.classList.remove(Glide.settings.classes.activeNav);
       }
     },
 

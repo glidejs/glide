@@ -30,6 +30,14 @@ export default function (Glide, Components, Events) {
         Events.emit('run', this.move)
 
         Components.Transition.after(() => {
+          if (this.isStart()) {
+            Events.emit('run.start', this.move)
+          }
+
+          if (this.isEnd()) {
+            Events.emit('run.end', this.move)
+          }
+
           if (this.isOffset('<') || this.isOffset('>')) {
             this._o = false
 
@@ -64,8 +72,6 @@ export default function (Glide, Components, Events) {
 
               Glide.index = 0
             }
-
-            Events.emit('run.end', move)
           } else if (countableSteps) {
             Glide.index += Math.min(length - Glide.index, -toInt(steps))
           } else {
@@ -82,8 +88,6 @@ export default function (Glide, Components, Events) {
 
               Glide.index = length
             }
-
-            Events.emit('run.start', move)
           } else if (countableSteps) {
             Glide.index -= Math.min(Glide.index, toInt(steps))
           } else {
@@ -142,9 +146,11 @@ export default function (Glide, Components, Events) {
      * @returns {Object}
      */
     set (value) {
+      let step = value.substr(1)
+
       this._m = {
         direction: value.substr(0, 1),
-        steps: value.substr(1) ? value.substr(1) : 0
+        steps: step ? (toInt(step) ? toInt(step) : step) : 0
       }
     }
   })

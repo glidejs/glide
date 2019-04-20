@@ -280,9 +280,11 @@ export default function (Glide, Components, Events) {
      * @returns {Object}
      */
     set (value) {
+      let step = value.substr(1)
+
       this._m = {
         direction: value.substr(0, 1),
-        steps: value.substr(1) ? value.substr(1) : 0
+        steps: step ? (toInt(step) ? toInt(step) : step) : 0
       }
     }
   })

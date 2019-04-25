@@ -16,7 +16,7 @@ describe('Glide initialized as `carousel`', () => {
     expect(glide.isType('carousel')).toBe(true)
   })
 
-  test('should go to the last slide when we are on the first slide and moving backward', (done) => {
+  test('should not go to the last slide when we are on the first slide and moving backward', (done) => {
     let { slides } = query(document)
 
     let glide = new Glide('#glide', {
@@ -27,14 +27,14 @@ describe('Glide initialized as `carousel`', () => {
     glide.go('<')
 
     afterTransition(() => {
-      expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(false)
-      expect(slides[slides.length - 1].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[slides.length - 1].classList.contains(defaults.classes.activeSlide)).toBe(false)
 
       done()
     })
   })
 
-  test('should go to the first slide when we are on the last slide and moving forward', (done) => {
+  test('should not go to the first slide when we are on the last slide and moving forward', (done) => {
     let { slides } = query(document)
 
     let glide = new Glide('#glide', {
@@ -45,8 +45,8 @@ describe('Glide initialized as `carousel`', () => {
     glide.go('>')
 
     afterTransition(() => {
-      expect(slides[slides.length - 1].classList.contains(defaults.classes.activeSlide)).toBe(false)
-      expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[slides.length - 1].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(false)
 
       done()
     })

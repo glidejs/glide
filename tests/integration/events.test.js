@@ -192,7 +192,7 @@ describe("Event's callbacks on", () => {
     })
   })
 
-  test('`translate.jump` should be called when making a loop change', (done) => {
+  test('`translate.jump` should not be called when making a loop change', (done) => {
     const glide = new Glide('#glide', { type: 'carousel' })
 
     let jumpCallback = jest.fn()
@@ -203,13 +203,13 @@ describe("Event's callbacks on", () => {
 
     expect(jumpCallback).not.toBeCalled()
     afterTransition(() => {
-      expect(jumpCallback).toBeCalled()
+      expect(jumpCallback).not.toBeCalled()
 
       done()
     })
   })
 
-  test('`translate.jump` should be called when making a loop change', (done) => {
+  test('`translate.jump` should not be called when making a loop change', (done) => {
     const { slides } = query(document)
     const glide = new Glide('#glide', { type: 'carousel', startAt: slides.length - 1 })
 
@@ -221,7 +221,7 @@ describe("Event's callbacks on", () => {
 
     expect(jumpCallback).not.toBeCalled()
     afterTransition(() => {
-      expect(jumpCallback).toBeCalled()
+      expect(jumpCallback).not.toBeCalled()
 
       done()
     })

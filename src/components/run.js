@@ -68,7 +68,7 @@ export default function (Glide, Components, Events) {
           if (steps === '>') {
             Glide.index = length
           } else if (this.isEnd()) {
-            if (!(Glide.isType('slider') && !Glide.settings.rewind)) {
+            if (Glide.isType('slider') && Glide.settings.rewind) {
               this._o = true
 
               Glide.index = 0
@@ -84,7 +84,7 @@ export default function (Glide, Components, Events) {
           if (steps === '<') {
             Glide.index = 0
           } else if (this.isStart()) {
-            if (!(Glide.isType('slider') && !Glide.settings.rewind)) {
+            if (Glide.isType('slider') && Glide.settings.rewind) {
               this._o = true
 
               Glide.index = length

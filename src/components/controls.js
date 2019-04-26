@@ -1,4 +1,3 @@
-import { siblings } from '../utils/dom'
 import { define } from '../utils/object'
 import supportsPassive from '../utils/detect-passive-event'
 
@@ -51,7 +50,7 @@ export default function (Glide, Components, Events) {
      */
     setActive () {
       for (let i = 0; i < this._n.length; i++) {
-        this.addClass(this._n[i].children)
+        this.addClass(this._n[i].querySelectorAll('button'))
       }
     },
 
@@ -62,7 +61,7 @@ export default function (Glide, Components, Events) {
      */
     removeActive () {
       for (let i = 0; i < this._n.length; i++) {
-        this.removeClass(this._n[i].children)
+        this.removeClass(this._n[i].querySelectorAll('button'))
       }
     },
 
@@ -78,9 +77,13 @@ export default function (Glide, Components, Events) {
 
       if (item) {
         item.classList.add(settings.classes.activeNav)
+        item.setAttribute('aria-current', 'step')
 
-        siblings(item).forEach(sibling => {
-          sibling.classList.remove(settings.classes.activeNav)
+        controls.forEach((sibling, index) => {
+          if (Glide.index !== index) {
+            sibling.classList.remove(settings.classes.activeNav)
+            sibling.removeAttribute('aria-current')
+          }
         })
       }
     },
@@ -96,6 +99,7 @@ export default function (Glide, Components, Events) {
 
       if (item) {
         item.classList.remove(Glide.settings.classes.activeNav)
+        item.removeAttribute('aria-current')
       }
     },
 
@@ -106,7 +110,7 @@ export default function (Glide, Components, Events) {
      */
     addBindings () {
       for (let i = 0; i < this._c.length; i++) {
-        this.bind(this._c[i].children)
+        this.bind(this._c[i].querySelectorAll('button'))
       }
     },
 
@@ -117,7 +121,7 @@ export default function (Glide, Components, Events) {
      */
     removeBindings () {
       for (let i = 0; i < this._c.length; i++) {
-        this.unbind(this._c[i].children)
+        this.unbind(this._c[i].querySelectorAll('button'))
       }
     },
 

@@ -65,7 +65,7 @@ export default function (Glide, Components, Events) {
     enable () {
       disabled = false
 
-      if (!Glide.isType('fade')) {
+      if (!Glide.isType('slideshow')) {
         this.set()
       }
     },
@@ -78,7 +78,7 @@ export default function (Glide, Components, Events) {
     disable () {
       disabled = true
 
-      if (!Glide.isType('fade')) {
+      if (!Glide.isType('slideshow')) {
         this.set()
       }
     }
@@ -107,7 +107,7 @@ export default function (Glide, Components, Events) {
    * - on each moving, because it may be cleared by offset move
    */
   Events.on('move', () => {
-    if (!Glide.isType('fade')) {
+    if (!Glide.isType('slideshow')) {
       Transition.set()
     }
   })

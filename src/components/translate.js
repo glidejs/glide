@@ -60,7 +60,7 @@ export default function (Glide, Components, Events) {
    * - on updating via API to reflect possible changes in options
    */
   Events.on('move', (context) => {
-    if (Glide.isType('fade')) {
+    if (Glide.isType('slideshow')) {
       return
     }
 

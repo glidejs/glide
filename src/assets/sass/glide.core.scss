@@ -41,7 +41,7 @@
       will-change: transform;
     }
 
-    .#{$glide-class}#{$sm}fade & {
+    .#{$glide-class}#{$sm}slideshow & {
       height: 100%;
       will-change: opacity;
     }
@@ -63,7 +63,7 @@
       -ms-user-select: none;
     }
 
-    .#{$glide-class}#{$sm}fade & {
+    .#{$glide-class}#{$sm}slideshow & {
       position: absolute;
       top: 0;
       left: 0;
@@ -78,7 +78,7 @@
     }
 
     &#{$sm}active {
-      .#{$glide-class}#{$sm}fade & {
+      .#{$glide-class}#{$sm}slideshow & {
         z-index: 1;
         position: relative;
         opacity: 1;

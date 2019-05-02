@@ -155,7 +155,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     click (event) {
-      if (!supportsPassive && 'touchstart' === event.type) {
+      if (!supportsPassive && event.type === 'touchstart') {
         event.preventDefault()
       }
 

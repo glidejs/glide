@@ -155,7 +155,9 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     click (event) {
-      event.preventDefault()
+      if (!supportsPassive && 'touchstart' === event.type) {
+        event.preventDefault()
+      }
 
       Components.Run.make(Components.Direction.resolve(event.currentTarget.getAttribute('data-glide-dir')))
     }

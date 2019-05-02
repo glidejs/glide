@@ -5,6 +5,7 @@ export default {
    * Available types:
    * `slider` - Rewinds slider to the start/end when it reaches the first or last slide.
    * `carousel` - Changes slides without starting over when it reaches the first or last slide.
+   * `fade` - Changes slides with a fade effect.
    *
    * @type {String}
    */
@@ -211,6 +212,7 @@ export default {
       rtl: 'glide--rtl'
     },
     type: {
+      fade: 'glide--fade',
       slider: 'glide--slider',
       carousel: 'glide--carousel'
     },

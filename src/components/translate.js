@@ -60,6 +60,10 @@ export default function (Glide, Components, Events) {
    * - on updating via API to reflect possible changes in options
    */
   Events.on('move', (context) => {
+    if (Glide.isType('fade')) {
+      return
+    }
+
     if (!Glide.isType('carousel') || !Components.Run.isOffset()) {
       return Translate.set(context.movement)
     }

@@ -28,13 +28,22 @@
     overflow: hidden;
     margin: 0;
     padding: 0;
-    white-space: nowrap;
-    display: flex;
-    flex-wrap: nowrap;
-    will-change: transform;
 
     &#{$glide-modifier-separator}dragging {
       user-select: none;
+    }
+
+    .#{$glide-class}#{$sm}slider &,
+    .#{$glide-class}#{$sm}carousel & {
+      white-space: nowrap;
+      display: flex;
+      flex-wrap: nowrap;
+      will-change: transform;
+    }
+
+    .#{$glide-class}#{$sm}fade & {
+      height: 100%;
+      will-change: opacity;
     }
   }
 
@@ -52,6 +61,28 @@
       -webkit-user-drag: none;
       -moz-user-select: none;
       -ms-user-select: none;
+    }
+
+    .#{$glide-class}#{$sm}fade & {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      z-index: -1;
+      opacity: 0;
+      -webkit-transition: opacity 400ms cubic-bezier(0.165, 0.840, 0.440, 1.000);
+      transition: opacity 400ms cubic-bezier(0.165, 0.840, 0.440, 1.000);
+      // Flashing issue fix
+      -webkit-transform-style: preserve-3d;
+      -webkit-transform: translate3d(0px, 0px, 0px);
+    }
+
+    &#{$sm}active {
+      .#{$glide-class}#{$sm}fade & {
+        z-index: 1;
+        position: relative;
+        opacity: 1;
+      }
     }
   }
 

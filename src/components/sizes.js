@@ -92,8 +92,10 @@ export default function (Glide, Components, Events) {
    * - on updating via API, to calculate dimensions based on new options
    */
   Events.on(['build.before', 'resize', 'update'], () => {
-    Sizes.setupSlides()
-    Sizes.setupWrapper()
+    if (!Glide.isType('fade')) {
+      Sizes.setupSlides()
+      Sizes.setupWrapper()
+    }
   })
 
   /**

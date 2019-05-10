@@ -27,21 +27,23 @@ export default function (Glide, Components, Events) {
       let start = slides.slice(0, part)
       let end = slides.slice(-part)
 
-      for (let r = 0; r < Math.max(1, Math.floor(perView / slides.length)); r++) {
-        for (let i = 0; i < start.length; i++) {
-          let clone = start[i].cloneNode(true)
+      if (slides.length !== 0) {
+        for (let r = 0; r < Math.max(1, Math.floor(perView / slides.length)); r++) {
+          for (let i = 0; i < start.length; i++) {
+            let clone = start[i].cloneNode(true)
 
-          clone.classList.add(classes.cloneSlide)
+            clone.classList.add(classes.cloneSlide)
 
-          items.push(clone)
-        }
+            items.push(clone)
+          }
 
-        for (let i = 0; i < end.length; i++) {
-          let clone = end[i].cloneNode(true)
+          for (let i = 0; i < end.length; i++) {
+            let clone = end[i].cloneNode(true)
 
-          clone.classList.add(classes.cloneSlide)
+            clone.classList.add(classes.cloneSlide)
 
-          items.unshift(clone)
+            items.unshift(clone)
+          }
         }
       }
 

@@ -138,7 +138,11 @@ export default function (Glide, Components, Events) {
      * @returns {Number}
      */
     calculateForwardIndex (pageSize) {
-      return Glide.index + pageSize
+      if (Glide.isType('carousel')) {
+        return Glide.index + pageSize
+      }
+
+      return Glide.index + (pageSize - (Glide.index % pageSize))
     },
 
     /**

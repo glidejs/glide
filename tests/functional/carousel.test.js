@@ -52,7 +52,7 @@ describe('Glide initialized as `carousel`', () => {
     })
   })
 
-  test('should clone doubled perView number of slides on each side', (done) => {
+  test('cloning should create sufficient buffer', (done) => {
     let glide = new Glide('#glide', {
       type: 'carousel',
       perView: 3
@@ -61,7 +61,7 @@ describe('Glide initialized as `carousel`', () => {
     glide.on('build.after', () => {
       let { clones } = query(document)
 
-      expect(clones.length).toBe(12)
+      expect(clones.length).toBe(8)
 
       done()
     })

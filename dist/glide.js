@@ -1613,7 +1613,7 @@
        * @return {Number}
        */
       get: function get() {
-        return Components.Html.root.offsetWidth;
+        return Components.Html.root.getBoundingClientRect().width;
       }
     });
 

@@ -68,7 +68,7 @@ describe('Glide initialized as `carousel`', () => {
 
     glide.mount()
   })
-  
+
   test('with even number of `perView` slides should create sufficient cloning buffer', (done) => {
     let glide = new Glide('#glide', {
       type: 'carousel',

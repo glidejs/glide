@@ -23,7 +23,7 @@ export default function (Glide, Components, Events) {
       let { perView, classes } = Glide.settings
 
       const peekIncrementer = +!!Glide.settings.peek
-      const cloneCount = perView + peekIncrementer + Math.floor(perView / 2)
+      const cloneCount = perView + peekIncrementer + Math.round(perView / 2)
       const append = slides.slice(0, cloneCount).reverse()
       const prepend = slides.slice(cloneCount * -1)
 

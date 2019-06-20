@@ -52,7 +52,7 @@ describe('Glide initialized as `carousel`', () => {
     })
   })
 
-  test('cloning should create sufficient buffer', (done) => {
+  test('with odd number of `perView` slides should create sufficient cloning buffer', (done) => {
     let glide = new Glide('#glide', {
       type: 'carousel',
       perView: 3
@@ -61,7 +61,24 @@ describe('Glide initialized as `carousel`', () => {
     glide.on('build.after', () => {
       let { clones } = query(document)
 
-      expect(clones.length).toBe(8)
+      expect(clones.length).toBe(10)
+
+      done()
+    })
+
+    glide.mount()
+  })
+  
+  test('with even number of `perView` slides should create sufficient cloning buffer', (done) => {
+    let glide = new Glide('#glide', {
+      type: 'carousel',
+      perView: 2
+    })
+
+    glide.on('build.after', () => {
+      let { clones } = query(document)
+
+      expect(clones.length).toBe(6)
 
       done()
     })

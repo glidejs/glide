@@ -6,8 +6,8 @@
 
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
-  (global.Glide = factory());
+      typeof define === 'function' && define.amd ? define(factory) :
+          (global.Glide = factory());
 }(this, (function () { 'use strict';
 
   var defaults = {
@@ -1192,7 +1192,7 @@
        *
        * @param {HTMLCollection} slides
        * @returns {Void}
-      */
+       */
       remove: function remove(slides) {
         for (var i = 0, len = slides.length; i < len; i++) {
           var style = slides[i].style;

@@ -21,7 +21,7 @@ export default function (Glide, Components, Events) {
      *
      * @return {Void}
      */
-    setupWrapper (dimention) {
+    setupWrapper () {
       Components.Html.wrapper.style.width = `${this.wrapperSize}px`
     },
 
@@ -54,7 +54,7 @@ export default function (Glide, Components, Events) {
 
   define(Sizes, 'width', {
     /**
-     * Gets width value of the glide.
+     * Gets width value of the slider (visible area).
      *
      * @return {Number}
      */
@@ -70,13 +70,13 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      return (Sizes.slideWidth * Sizes.length) + Components.Gaps.grow + Components.Clones.grow
+      return Sizes.slideWidth * Sizes.length + Components.Gaps.grow + Components.Clones.grow
     }
   })
 
   define(Sizes, 'slideWidth', {
     /**
-     * Gets width value of the single slide.
+     * Gets width value of a single slide.
      *
      * @return {Number}
      */

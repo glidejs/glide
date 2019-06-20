@@ -1186,7 +1186,7 @@ function Gaps (Glide, Components, Events) {
      *
      * @param {HTMLCollection} slides
      * @returns {Void}
-    */
+     */
     remove: function remove(slides) {
       for (var i = 0, len = slides.length; i < len; i++) {
         var style = slides[i].style;

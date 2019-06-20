@@ -137,6 +137,13 @@ export default {
   animationTimingFunc: 'cubic-bezier(.165, .840, .440, 1)',
 
   /**
+   * Wait for the animation to finish until the next user input can be processed
+   *
+   * @type {boolean}
+   */
+  waitForTransition: true,
+
+  /**
    * Throttle costly events at most once per every wait milliseconds.
    *
    * @type {Number}

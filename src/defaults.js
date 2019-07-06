@@ -88,11 +88,15 @@ export default {
   dragThreshold: 120,
 
   /**
-   * A maximum number of slides to which movement will be made on swiping or dragging. Use `false` for unlimited.
+   * A number of slides moved on single swipe.
    *
-   * @type {Number|Boolean}
+   * Available types:
+   * `` - Moves slider by one slide per swipe
+   * `|` - Moves slider between views per swipe (number of slides defined in `perView` options)
+   *
+   * @type {String}
    */
-  perTouch: false,
+  perSwipe: '|',
 
   /**
    * Moving distance ratio of the slides on a swiping and dragging.

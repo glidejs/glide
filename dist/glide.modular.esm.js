@@ -98,7 +98,7 @@ var defaults = {
    *
    * @type {Number|Boolean}
    */
-  perTouch: false,
+  perRun: '|',
 
   /**
    * Moving distance ratio of the slides on a swiping and dragging.
@@ -361,16 +361,6 @@ function isObject(value) {
   var type = typeof value === 'undefined' ? 'undefined' : _typeof(value);
 
   return type === 'function' || type === 'object' && !!value; // eslint-disable-line no-mixed-operators
-}
-
-/**
- * Indicates whether the specified value is a number.
- *
- * @param  {*} value
- * @return {Boolean}
- */
-function isNumber(value) {
-  return typeof value === 'number';
 }
 
 /**
@@ -952,36 +942,29 @@ function Run (Glide, Components, Events) {
       // By default assume that size of view is equal to one slide
 
       var viewSize = 1;
-      // Determine if steps are numeric value
-      var countableSteps = isNumber(toInt(steps)) && toInt(steps) !== 0;
 
       // While direction is `=` we want jump to
       // a specified index described in steps.
       if (direction === '=') {
-        return Glide.index = steps;
+        Glide.index = steps;
+
+        return;
       }
 
       // When pattern is equal to `>>` we want
       // fast forward to the last slide.
       if (direction === '>' && steps === '>') {
-        return Glide.index = length;
+        Glide.index = length;
+
+        return;
       }
 
       // When pattern is equal to `<<` we want
       // fast forward to the first slide.
       if (direction === '<' && steps === '<') {
-        return Glide.index = 0;
-      }
+        Glide.index = 0;
 
-      // While steps is a numeric value and we
-      // move forward by the number of steps.
-      if (direction === '>' && countableSteps) {
-        viewSize = toInt(steps) * -1;
-      }
-
-      // $steps< (drag) movement
-      if (direction === '<' && countableSteps) {
-        viewSize = toInt(steps);
+        return;
       }
 
       // pagination movement
@@ -997,7 +980,9 @@ function Run (Glide, Components, Events) {
           this._o = true;
         }
 
-        return Glide.index = normalizeForwardIndex(index, viewSize);
+        Glide.index = normalizeForwardIndex(index, viewSize);
+
+        return;
       }
 
       // we are moving backward
@@ -1008,7 +993,9 @@ function Run (Glide, Components, Events) {
           this._o = true;
         }
 
-        return Glide.index = normalizeBackwardIndex(_index, viewSize);
+        Glide.index = normalizeBackwardIndex(_index, viewSize);
+
+        return;
       }
 
       warn('Invalid direction pattern [' + direction + steps + '] has been used');
@@ -2825,7 +2812,11 @@ function swipe (Glide, Components, Events) {
      */
     end: function end(event) {
       if (!Glide.disabled) {
-        var settings = Glide.settings;
+        var _Glide$settings2 = Glide.settings,
+            perRun = _Glide$settings2.perRun,
+            touchAngle = _Glide$settings2.touchAngle,
+            classes = _Glide$settings2.classes;
+
 
         var swipe = this.touches(event);
         var threshold = this.threshold(event);
@@ -2836,34 +2827,24 @@ function swipe (Glide, Components, Events) {
 
         this.enable();
 
-        if (swipeDistance > threshold && swipeDeg < settings.touchAngle) {
-          // While swipe is positive and greater than threshold move backward.
-          if (settings.perTouch) {
-            steps = Math.min(steps, toInt(settings.perTouch));
-          }
-
+        if (swipeDistance > threshold && swipeDeg < touchAngle) {
           if (Components.Direction.is('rtl')) {
             steps = -steps;
           }
 
-          Components.Run.make(Components.Direction.resolve('<' + steps));
-        } else if (swipeDistance < -threshold && swipeDeg < settings.touchAngle) {
-          // While swipe is negative and lower than negative threshold move forward.
-          if (settings.perTouch) {
-            steps = Math.max(steps, -toInt(settings.perTouch));
-          }
-
+          Components.Run.make(Components.Direction.resolve('<' + perRun));
+        } else if (swipeDistance < -threshold && swipeDeg < touchAngle) {
           if (Components.Direction.is('rtl')) {
             steps = -steps;
           }
 
-          Components.Run.make(Components.Direction.resolve('>' + steps));
+          Components.Run.make(Components.Direction.resolve('>' + perRun));
         } else {
           // While swipe don't reach distance apply previous transform.
           Components.Move.make();
         }
 
-        Components.Html.root.classList.remove(settings.classes.dragging);
+        Components.Html.root.classList.remove(classes.dragging);
 
         this.unbindSwipeMove();
         this.unbindSwipeEnd();
@@ -2881,15 +2862,18 @@ function swipe (Glide, Components, Events) {
     bindSwipeStart: function bindSwipeStart() {
       var _this = this;
 
-      var settings = Glide.settings;
+      var _Glide$settings3 = Glide.settings,
+          swipeThreshold = _Glide$settings3.swipeThreshold,
+          dragThreshold = _Glide$settings3.dragThreshold;
 
-      if (settings.swipeThreshold) {
+
+      if (swipeThreshold) {
         Binder.on(START_EVENTS[0], Components.Html.wrapper, function (event) {
           _this.start(event);
         }, capture);
       }
 
-      if (settings.dragThreshold) {
+      if (dragThreshold) {
         Binder.on(START_EVENTS[1], Components.Html.wrapper, function (event) {
           _this.start(event);
         }, capture);

@@ -63,8 +63,6 @@ export default function (Glide, Components, Events) {
 
       // By default assume that size of view is equal to one slide
       let viewSize = 1
-      // Determine if steps are numeric value
-      let countableSteps = isNumber(toInt(steps)) && toInt(steps) !== 0
 
       // While direction is `=` we want jump to
       // a specified index described in steps.
@@ -88,17 +86,6 @@ export default function (Glide, Components, Events) {
         Glide.index = 0
 
         return
-      }
-
-      // While steps is a numeric value and we
-      // move forward by the number of steps.
-      if (direction === '>' && countableSteps) {
-        viewSize = toInt(steps) * -1
-      }
-
-      // $steps< (drag) movement
-      if (direction === '<' && countableSteps) {
-        viewSize = toInt(steps)
       }
 
       // pagination movement

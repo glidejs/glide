@@ -197,17 +197,25 @@ export default {
    * @type {Object}
    */
   classes: {
+    swipeable: 'glide--swipeable',
+    dragging: 'glide--dragging',
     direction: {
       ltr: 'glide--ltr',
       rtl: 'glide--rtl'
     },
-    slider: 'glide--slider',
-    carousel: 'glide--carousel',
-    swipeable: 'glide--swipeable',
-    dragging: 'glide--dragging',
-    cloneSlide: 'glide__slide--clone',
-    activeNav: 'glide__bullet--active',
-    activeSlide: 'glide__slide--active',
-    disabledArrow: 'glide__arrow--disabled'
+    type: {
+      slider: 'glide--slider',
+      carousel: 'glide--carousel'
+    },
+    slide: {
+      clone: 'glide__slide--clone',
+      active: 'glide__slide--active'
+    },
+    arrow: {
+      disabled: 'glide__arrow--disabled'
+    },
+    nav: {
+      active: 'glide__bullet--active'
+    }
   }
 }

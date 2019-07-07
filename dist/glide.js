@@ -100,11 +100,15 @@
     dragThreshold: 120,
 
     /**
-     * A maximum number of slides to which movement will be made on swiping or dragging. Use `false` for unlimited.
+     * A number of slides moved on single swipe.
      *
-     * @type {Number|Boolean}
+     * Available types:
+     * `` - Moves slider by one slide per swipe
+     * `|` - Moves slider between views per swipe (number of slides defined in `perView` options)
+     *
+     * @type {String}
      */
-    perRun: '|',
+    perSwipe: '|',
 
     /**
      * Moving distance ratio of the slides on a swiping and dragging.
@@ -205,18 +209,26 @@
      * @type {Object}
      */
     classes: {
+      swipeable: 'glide--swipeable',
+      dragging: 'glide--dragging',
       direction: {
         ltr: 'glide--ltr',
         rtl: 'glide--rtl'
       },
-      slider: 'glide--slider',
-      carousel: 'glide--carousel',
-      swipeable: 'glide--swipeable',
-      dragging: 'glide--dragging',
-      cloneSlide: 'glide__slide--clone',
-      activeNav: 'glide__bullet--active',
-      activeSlide: 'glide__slide--active',
-      disabledArrow: 'glide__arrow--disabled'
+      type: {
+        slider: 'glide--slider',
+        carousel: 'glide--carousel'
+      },
+      slide: {
+        clone: 'glide__slide--clone',
+        active: 'glide__slide--active'
+      },
+      arrow: {
+        disabled: 'glide__arrow--disabled'
+      },
+      nav: {
+        active: 'glide__bullet--active'
+      }
     }
   };
 
@@ -474,6 +486,22 @@
 
       if (settings.classes.hasOwnProperty('direction')) {
         options.classes.direction = _extends({}, defaults.classes.direction, settings.classes.direction);
+      }
+
+      if (settings.classes.hasOwnProperty('type')) {
+        options.classes.type = _extends({}, defaults.classes.type, settings.classes.type);
+      }
+
+      if (settings.classes.hasOwnProperty('slide')) {
+        options.classes.slide = _extends({}, defaults.classes.slide, settings.classes.slide);
+      }
+
+      if (settings.classes.hasOwnProperty('arrow')) {
+        options.classes.arrow = _extends({}, defaults.classes.arrow, settings.classes.arrow);
+      }
+
+      if (settings.classes.hasOwnProperty('nav')) {
+        options.classes.nav = _extends({}, defaults.classes.nav, settings.classes.nav);
       }
     }
 
@@ -1461,7 +1489,7 @@
         this.root = Glide.selector;
         this.track = this.root.querySelector(TRACK_SELECTOR);
         this.slides = Array.prototype.slice.call(this.wrapper.children).filter(function (slide) {
-          return !slide.classList.contains(Glide.settings.classes.cloneSlide);
+          return !slide.classList.contains(Glide.settings.classes.slide.clone);
         });
       }
     };
@@ -1836,7 +1864,7 @@
        * @return {Void}
        */
       typeClass: function typeClass() {
-        Components.Html.root.classList.add(Glide.settings.classes[Glide.settings.type]);
+        Components.Html.root.classList.add(Glide.settings.classes.type[Glide.settings.type]);
       },
 
 
@@ -1850,10 +1878,10 @@
         var slide = Components.Html.slides[Glide.index];
 
         if (slide) {
-          slide.classList.add(classes.activeSlide);
+          slide.classList.add(classes.slide.active);
 
           siblings(slide).forEach(function (sibling) {
-            sibling.classList.remove(classes.activeSlide);
+            sibling.classList.remove(classes.slide.active);
           });
         }
       },
@@ -1865,12 +1893,15 @@
        * @return {Void}
        */
       removeClasses: function removeClasses() {
-        var classes = Glide.settings.classes;
+        var _Glide$settings$class = Glide.settings.classes,
+            type = _Glide$settings$class.type,
+            slide = _Glide$settings$class.slide;
 
-        Components.Html.root.classList.remove(classes[Glide.settings.type]);
+
+        Components.Html.root.classList.remove(type[Glide.settings.type]);
 
         Components.Html.slides.forEach(function (sibling) {
-          sibling.classList.remove(classes.activeSlide);
+          sibling.classList.remove(slide.active);
         });
       }
     };
@@ -1940,7 +1971,7 @@
           for (var i = 0; i < append.length; i++) {
             var clone = append[i].cloneNode(true);
 
-            clone.classList.add(classes.cloneSlide);
+            clone.classList.add(classes.slide.clone);
 
             items.push(clone);
           }
@@ -1948,7 +1979,7 @@
           for (var _i = 0; _i < prepend.length; _i++) {
             var _clone = prepend[_i].cloneNode(true);
 
-            _clone.classList.add(classes.cloneSlide);
+            _clone.classList.add(classes.slide.clone);
 
             items.unshift(_clone);
           }
@@ -2819,7 +2850,7 @@
       end: function end(event) {
         if (!Glide.disabled) {
           var _Glide$settings2 = Glide.settings,
-              perRun = _Glide$settings2.perRun,
+              perSwipe = _Glide$settings2.perSwipe,
               touchAngle = _Glide$settings2.touchAngle,
               classes = _Glide$settings2.classes;
 
@@ -2829,22 +2860,13 @@
 
           var swipeDistance = swipe.pageX - swipeStartX;
           var swipeDeg = swipeSin * 180 / Math.PI;
-          var steps = Math.round(swipeDistance / Components.Sizes.slideWidth);
 
           this.enable();
 
           if (swipeDistance > threshold && swipeDeg < touchAngle) {
-            if (Components.Direction.is('rtl')) {
-              steps = -steps;
-            }
-
-            Components.Run.make(Components.Direction.resolve('<' + perRun));
+            Components.Run.make(Components.Direction.resolve(perSwipe + '<'));
           } else if (swipeDistance < -threshold && swipeDeg < touchAngle) {
-            if (Components.Direction.is('rtl')) {
-              steps = -steps;
-            }
-
-            Components.Run.make(Components.Direction.resolve('>' + perRun));
+            Components.Run.make(Components.Direction.resolve(perSwipe + '>'));
           } else {
             // While swipe don't reach distance apply previous transform.
             Components.Move.make();
@@ -3330,10 +3352,10 @@
         var item = controls[Glide.index];
 
         if (item) {
-          item.classList.add(settings.classes.activeNav);
+          item.classList.add(settings.classes.nav.active);
 
           siblings(item).forEach(function (sibling) {
-            sibling.classList.remove(settings.classes.activeNav);
+            sibling.classList.remove(settings.classes.nav.active);
           });
         }
       },
@@ -3349,7 +3371,7 @@
         var item = controls[Glide.index];
 
         if (item) {
-          item.classList.remove(Glide.settings.classes.activeNav);
+          item.classList.remove(Glide.settings.classes.nav.active);
         }
       },
 

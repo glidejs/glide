@@ -1,6 +1,6 @@
 import { warn } from '../utils/log'
+import { toInt } from '../utils/unit'
 import { define } from '../utils/object'
-import { toInt, isNumber } from '../utils/unit'
 
 export default function (Glide, Components, Events) {
   const Run = {

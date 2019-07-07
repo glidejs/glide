@@ -31,7 +31,7 @@ export default function (Glide, Components, Events) {
         for (let i = 0; i < append.length; i++) {
           let clone = append[i].cloneNode(true)
 
-          clone.classList.add(classes.cloneSlide)
+          clone.classList.add(classes.slide.clone)
 
           items.push(clone)
         }
@@ -39,7 +39,7 @@ export default function (Glide, Components, Events) {
         for (let i = 0; i < prepend.length; i++) {
           let clone = prepend[i].cloneNode(true)
 
-          clone.classList.add(classes.cloneSlide)
+          clone.classList.add(classes.slide.clone)
 
           items.unshift(clone)
         }

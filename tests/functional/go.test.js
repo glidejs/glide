@@ -35,7 +35,7 @@ describe('Calling `go()` method with', () => {
     glide.go('>')
 
     afterTransition(() => {
-      expect(slides[1].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[1].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })
@@ -51,7 +51,7 @@ describe('Calling `go()` method with', () => {
     glide.go('>')
 
     afterTransition(() => {
-      expect(slides[3].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[3].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })
@@ -65,7 +65,7 @@ describe('Calling `go()` method with', () => {
     glide.go('>')
 
     afterTransition(() => {
-      expect(slides[1].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[1].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })
@@ -79,7 +79,7 @@ describe('Calling `go()` method with', () => {
     glide.go('<')
 
     afterTransition(() => {
-      expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[0].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })
@@ -93,7 +93,7 @@ describe('Calling `go()` method with', () => {
     glide.go('>>')
 
     afterTransition(() => {
-      expect(slides[slides.length - 1].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[slides.length - 1].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })
@@ -107,7 +107,7 @@ describe('Calling `go()` method with', () => {
     glide.go('<<')
 
     afterTransition(() => {
-      expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[0].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })
@@ -121,7 +121,7 @@ describe('Calling `go()` method with', () => {
     glide.go('=2')
 
     afterTransition(() => {
-      expect(slides[2].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[2].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })
@@ -135,7 +135,7 @@ describe('Calling `go()` method with', () => {
     glide.go('|>')
 
     afterTransition(() => {
-      expect(slides[3].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[3].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })
@@ -149,7 +149,7 @@ describe('Calling `go()` method with', () => {
     glide.go('|>')
 
     afterTransition(() => {
-      expect(slides[3].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[3].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })
@@ -163,7 +163,7 @@ describe('Calling `go()` method with', () => {
     glide.go('|<')
 
     afterTransition(() => {
-      expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[0].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })
@@ -177,7 +177,7 @@ describe('Calling `go()` method with', () => {
     glide.go('|<')
 
     afterTransition(() => {
-      expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[0].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })
@@ -195,7 +195,7 @@ describe('Calling `go()` method with', () => {
     glide.go('|>')
 
     afterTransition(() => {
-      expect(slides[slides.length - 1].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[slides.length - 1].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })
@@ -213,7 +213,7 @@ describe('Calling `go()` method with', () => {
     glide.go('|<')
 
     afterTransition(() => {
-      expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[0].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })
@@ -230,7 +230,7 @@ describe('Calling `go()` method with', () => {
     glide.go('|>')
 
     afterTransition(() => {
-      expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[0].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })
@@ -247,7 +247,7 @@ describe('Calling `go()` method with', () => {
     glide.go('|<')
 
     afterTransition(() => {
-      expect(slides[slides.length - 1].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[slides.length - 1].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })

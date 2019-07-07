@@ -23,7 +23,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     typeClass () {
-      Components.Html.root.classList.add(Glide.settings.classes[Glide.settings.type])
+      Components.Html.root.classList.add(Glide.settings.classes.type[Glide.settings.type])
     },
 
     /**
@@ -36,10 +36,10 @@ export default function (Glide, Components, Events) {
       let slide = Components.Html.slides[Glide.index]
 
       if (slide) {
-        slide.classList.add(classes.activeSlide)
+        slide.classList.add(classes.slide.active)
 
         siblings(slide).forEach((sibling) => {
-          sibling.classList.remove(classes.activeSlide)
+          sibling.classList.remove(classes.slide.active)
         })
       }
     },
@@ -50,12 +50,12 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     removeClasses () {
-      let classes = Glide.settings.classes
+      const { type, slide } = Glide.settings.classes
 
-      Components.Html.root.classList.remove(classes[Glide.settings.type])
+      Components.Html.root.classList.remove(type[Glide.settings.type])
 
       Components.Html.slides.forEach((sibling) => {
-        sibling.classList.remove(classes.activeSlide)
+        sibling.classList.remove(slide.active)
       })
     }
   }

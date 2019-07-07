@@ -62,12 +62,16 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     bind () {
-      Binder.on('mouseover', Components.Html.root, () => {
+      Binder.on('mouseenter', Components.Html.root, () => {
         this.stop()
+
+        Events.emit('autoplay.over')
       })
 
-      Binder.on('mouseout', Components.Html.root, () => {
+      Binder.on('mouseleave', Components.Html.root, () => {
         this.start()
+
+        Events.emit('autoplay.out')
       })
     },
 

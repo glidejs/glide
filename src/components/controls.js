@@ -148,7 +148,7 @@ export default function (Glide, Components, Events) {
 
       lists.forEach(function (list) {
         list.forEach(function (element) {
-          element.classList.remove(settings.classes.disabledArrow)
+          element.classList.remove(settings.classes.arrow.disabled)
         })
       })
     },
@@ -163,7 +163,7 @@ export default function (Glide, Components, Events) {
 
       lists.forEach(function (list) {
         list.forEach(function (element) {
-          element.classList.add(settings.classes.disabledArrow)
+          element.classList.add(settings.classes.arrow.disabled)
         })
       })
     },

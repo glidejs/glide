@@ -192,6 +192,23 @@ describe("Event's callbacks on", () => {
     })
   })
 
+  test('`autoplay` should be called on each autoplay slide change', (done) => {
+    const glide = new Glide('#glide', { autoplay: 50 })
+
+    let autoplayCallback = jest.fn()
+
+    glide.on('autoplay', autoplayCallback)
+
+    glide.mount()
+
+    expect(autoplayCallback).not.toBeCalled()
+    setTimeout(() => {
+      expect(autoplayCallback).toHaveBeenCalledTimes(2)
+
+      done()
+    }, 110)
+  })
+
   test('`translate.jump` should be called when making a loop change', (done) => {
     const glide = new Glide('#glide', { type: 'carousel' })
 

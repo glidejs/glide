@@ -21,30 +21,87 @@ describe('Function', () => {
     expect(obj.property).toBe('value')
   })
 
-  test('`merge` should deep merge defaults and options object', () => {
+  test('`mergeOptions` should merge defaults and options object', () => {
     let obj = mergeOptions(
       {
         a: 1,
-        b: 2,
-        classes: {
-          d: 3,
-          e: 4
-        }
+        b: 2
       },
       {
-        a: 5,
-        classes: {
-          d: 6
-        }
+        a: 5
       }
     )
 
     expect(obj).toEqual({
       a: 5,
-      b: 2,
+      b: 2
+    })
+  })
+
+  test('`mergeOptions` should deep merge classes options object', () => {
+    let obj = mergeOptions(
+      {
+        classes: {
+          direction: {
+            ltr: 'a',
+            rtl: 'a'
+          },
+          type: {
+            slider: 'a',
+            carousel: 'a'
+          },
+          slide: {
+            clone: 'a',
+            active: 'a'
+          },
+          arrow: {
+            disabled: 'a'
+          },
+          nav: {
+            active: 'a'
+          }
+        }
+      },
+      {
+        classes: {
+          type: {
+            slider: 'b',
+            carousel: 'b'
+          },
+          slide: {
+            clone: 'b',
+            active: 'b'
+          },
+          arrow: {
+            disabled: 'b'
+          },
+          nav: {
+            active: 'b'
+          }
+        }
+      }
+    )
+
+    expect(obj).toEqual({
       classes: {
-        d: 6,
-        e: 4
+        direction: {
+          ltr: 'a',
+          rtl: 'a'
+        },
+        type: {
+          slider: 'b',
+          carousel: 'b'
+        },
+        slide: {
+          clone: 'b',
+          active: 'b'
+        },
+        arrow: {
+          disabled: 'b'
+        },
+        nav: {
+          active: 'b'
+        }
       }
     })
   })

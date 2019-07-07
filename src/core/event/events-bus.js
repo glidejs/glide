@@ -22,6 +22,8 @@ export default class EventsBus {
       for (let i = 0; i < event.length; i++) {
         this.on(event[i], handler)
       }
+
+      return
     }
 
     // Create the event's object if not yet created
@@ -51,6 +53,8 @@ export default class EventsBus {
       for (let i = 0; i < event.length; i++) {
         this.emit(event[i], context)
       }
+
+      return
     }
 
     // If the event doesn't exist, or there's no handlers in queue, just leave

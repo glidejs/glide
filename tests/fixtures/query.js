@@ -16,12 +16,16 @@ export function query (document) {
   const slides = Array.from(wrapper.children).filter((slide) => {
     return !slide.classList.contains(CLONE_SELECTOR)
   })
+  const clones = Array.from(wrapper.children).filter((slide) => {
+    return slide.classList.contains(CLONE_SELECTOR)
+  })
 
   return {
     root,
     track,
     wrapper,
     slides,
+    clones,
     bullets,
     previousControls,
     nextControls

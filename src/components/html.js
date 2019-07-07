@@ -16,7 +16,7 @@ export default function (Glide, Components) {
       this.root = Glide.selector
       this.track = this.root.querySelector(TRACK_SELECTOR)
       this.slides = Array.prototype.slice.call(this.wrapper.children).filter((slide) => {
-        return !slide.classList.contains(Glide.settings.classes.cloneSlide)
+        return !slide.classList.contains(Glide.settings.classes.slide.clone)
       })
     }
   }

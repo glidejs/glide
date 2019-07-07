@@ -93,11 +93,13 @@ export default function (Glide, Components, Events) {
         return
       }
 
-      item.classList.add(settings.classes.activeNav)
+      if (item) {
+        item.classList.add(settings.classes.nav.active)
 
-      siblings(item).forEach(sibling => {
-        sibling.classList.remove(settings.classes.activeNav)
-      })
+        siblings(item).forEach(sibling => {
+          sibling.classList.remove(settings.classes.nav.active)
+        })
+      }
     },
 
     /**
@@ -107,8 +109,10 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     removeClass (controls) {
-      if (controls[Glide.index]) {
-        controls[Glide.index].classList.remove(Glide.settings.classes.activeNav)
+      let item = controls[Glide.index]
+
+      if (item) {
+        item.classList.remove(Glide.settings.classes.nav.active)
       }
     },
 

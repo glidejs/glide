@@ -10,39 +10,39 @@ describe('Class', () => {
     document.body.innerHTML = html
   })
 
-  test('`classes.slider` should be applied on the root element', () => {
+  test('`classes.type.slider` should be applied on the root element', () => {
     let { root } = query(document)
 
     new Glide('#glide').mount()
 
-    expect(root.classList.contains(defaults.classes.slider)).toBe(true)
+    expect(root.classList.contains(defaults.classes.type.slider)).toBe(true)
   })
 
-  test('`classes.carousel` should be applied on the root element', () => {
+  test('`classes.type.carousel` should be applied on the root element', () => {
     let { root } = query(document)
 
     new Glide('#glide', { type: 'carousel' }).mount()
 
-    expect(root.classList.contains(defaults.classes.carousel)).toBe(true)
+    expect(root.classList.contains(defaults.classes.type.carousel)).toBe(true)
   })
 
-  test('`classes.activeSlide` should be applied on the 0 indexed slide element by default', () => {
+  test('`classes.slide.active` should be applied on the 0 indexed slide element by default', () => {
     let { slides } = query(document)
 
     new Glide('#glide').mount()
 
-    expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(true)
+    expect(slides[0].classList.contains(defaults.classes.slide.active)).toBe(true)
   })
 
-  test('`classes.activeSlide` should be applied on the `startAt` indexed slide element', () => {
+  test('`classes.slide.active` should be applied on the `startAt` indexed slide element', () => {
     let { slides } = query(document)
 
     new Glide('#glide', { startAt: 2 }).mount()
 
-    expect(slides[2].classList.contains(defaults.classes.activeSlide)).toBe(true)
+    expect(slides[2].classList.contains(defaults.classes.slide.active)).toBe(true)
   })
 
-  test('`classes.activeSlide` should be applied to the new slide element after moving', (done) => {
+  test('`classes.slide.active` should be applied to the new slide element after moving', (done) => {
     let { slides } = query(document)
 
     let glide = new Glide('#glide', { startAt: 0 }).mount()
@@ -50,8 +50,8 @@ describe('Class', () => {
     glide.go('>')
 
     afterTransition(() => {
-      expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(false)
-      expect(slides[1].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[0].classList.contains(defaults.classes.slide.active)).toBe(false)
+      expect(slides[1].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })

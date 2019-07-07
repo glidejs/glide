@@ -3,19 +3,27 @@ workflow "Publish on release" {
   on = "release"
 }
 
-action "lint" {
+action "install" {
   uses = "actions/npm@master"
-  args = "lint"
+  args = "install"
+}
+
+action "lint" {
+  needs = "install"
+  uses = "actions/npm@master"
+  args = "run lint"
 }
 
 action "test" {
+  needs = "install"
   uses = "actions/npm@master"
-  args = "test"
+  args = "run test"
 }
 
 action "build" {
+  needs = "install"
   uses = "actions/npm@master"
-  args = "install"
+  args = "run build"
 }
 
 action "tag" {

@@ -65,13 +65,13 @@ export default function (Glide, Components, Events) {
       Binder.on('mouseenter', Components.Html.root, () => {
         this.stop()
 
-        Events.emit('autoplay.over')
+        Events.emit('autoplay.enter')
       })
 
       Binder.on('mouseleave', Components.Html.root, () => {
         this.start()
 
-        Events.emit('autoplay.out')
+        Events.emit('autoplay.leave')
       })
     },
 

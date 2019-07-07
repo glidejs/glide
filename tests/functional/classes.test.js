@@ -87,7 +87,7 @@ describe('Class', () => {
     new Glide('#glide', { rewind: false }).mount()
 
     previousControls.forEach(function (control) {
-      expect(control.classList).toContain(defaults.classes.disabledArrow)
+      expect(control.classList).toContain(defaults.classes.arrow.disabled)
     })
   })
 
@@ -99,7 +99,7 @@ describe('Class', () => {
     glide.go('>')
 
     previousControls.forEach(function (control) {
-      expect(control.classList).not.toContain(defaults.classes.disabledArrow)
+      expect(control.classList).not.toContain(defaults.classes.arrow.disabled)
     })
   })
 
@@ -111,7 +111,7 @@ describe('Class', () => {
     glide.go('<')
 
     previousControls.forEach(function (control) {
-      expect(control.classList).toContain(defaults.classes.disabledArrow)
+      expect(control.classList).toContain(defaults.classes.arrow.disabled)
     })
   })
 
@@ -122,7 +122,7 @@ describe('Class', () => {
     new Glide('#glide', { rewind: false, startAt: length }).mount()
 
     nextControls.forEach(function (control) {
-      expect(control.classList).toContain(defaults.classes.disabledArrow)
+      expect(control.classList).toContain(defaults.classes.arrow.disabled)
     })
   })
 
@@ -135,7 +135,7 @@ describe('Class', () => {
     glide.go('<')
 
     nextControls.forEach(function (control) {
-      expect(control.classList).not.toContain(defaults.classes.disabledArrow)
+      expect(control.classList).not.toContain(defaults.classes.arrow.disabled)
     })
   })
 
@@ -148,7 +148,7 @@ describe('Class', () => {
     glide.go('>')
 
     nextControls.forEach(function (control) {
-      expect(control.classList).toContain(defaults.classes.disabledArrow)
+      expect(control.classList).toContain(defaults.classes.arrow.disabled)
     })
   })
 })

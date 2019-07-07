@@ -9,6 +9,18 @@ describe("Event's callbacks on", () => {
     document.body.innerHTML = html
   })
 
+  test('passed as array should be called only once', () => {
+    const glide = new Glide('#glide')
+
+    let callback = jest.fn()
+
+    glide.on(['mount.before'], callback)
+
+    glide.mount()
+
+    expect(callback).toHaveBeenCalledTimes(1)
+  })
+
   test('`mount.*` should be called', () => {
     const glide = new Glide('#glide')
 

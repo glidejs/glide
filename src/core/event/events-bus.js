@@ -1,4 +1,5 @@
-import { isArray } from '../../utils/unit'
+import {invokeEach, isArray} from '../../utils/unit'
+import EventsBusSubscription from './events-bus-subscription'
 
 export default class EventsBus {
   /**
@@ -12,18 +13,15 @@ export default class EventsBus {
   }
 
   /**
-   * Adds listener to the specifed event.
+   * Adds listener to the specified event.
    *
    * @param {String|Array} event
    * @param {Function} handler
    */
   on (event, handler) {
     if (isArray(event)) {
-      for (let i = 0; i < event.length; i++) {
-        this.on(event[i], handler)
-      }
-
-      return
+      invokeEach(this, 'on', event, handler)
+      return EventsBusSubscription(this, event, handler)
     }
 
     // Create the event's object if not yet created
@@ -32,12 +30,31 @@ export default class EventsBus {
     }
 
     // Add the handler to queue
-    var index = this.events[event].push(handler) - 1
+    this.events[event].push(handler)
 
     // Provide handle back for removal of event
-    return {
-      remove () {
-        delete this.events[event][index]
+    return EventsBusSubscription(this, event, handler)
+  }
+
+  /**
+   * Removes listener to the specified event.
+   *
+   * @param {String|Array} event
+   * @param {Function} handler
+   */
+  off (event, handler) {
+    if (isArray(event)) {
+      invokeEach(this, 'off', event, handler)
+      return
+    }
+
+    const eventNamespace = this.events[event]
+
+    if (eventNamespace) {
+      let index
+
+      while ((index = eventNamespace.indexOf(handler)) !== -1) {
+        eventNamespace.splice(index, 1)
       }
     }
   }
@@ -50,10 +67,7 @@ export default class EventsBus {
    */
   emit (event, context) {
     if (isArray(event)) {
-      for (let i = 0; i < event.length; i++) {
-        this.emit(event[i], context)
-      }
-
+      invokeEach(this, 'emit', event, context)
       return
     }
 

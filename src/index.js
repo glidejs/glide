@@ -169,7 +169,7 @@ export default class Glide {
   }
 
   /**
-   * Adds cuutom event listener with handler.
+   * Adds custom event listener with handler.
    *
    * @param  {String|Array} event
    * @param  {Function} handler

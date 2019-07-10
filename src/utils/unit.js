@@ -83,3 +83,17 @@ export function isUndefined (value) {
 export function isArray (value) {
   return value.constructor === Array
 }
+
+/**
+ * Invokes method for each event
+ *
+ * @param {Object} context
+ * @param {string} method
+ * @param {string[]} events
+ * @param {Function|Object=} arg
+ */
+export function invokeEach (context, method, events, arg) {
+  for (let i = 0; i < events.length; i++) {
+    context[method](events[i], arg)
+  }
+}

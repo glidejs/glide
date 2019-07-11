@@ -67,6 +67,12 @@ export default function (Glide, Components, Events) {
       // While direction is `=` we want jump to
       // a specified index described in steps.
       if (direction === '=') {
+
+        if( Glide.settings.bound && toInt(steps) > length ) {
+          Glide.index = length
+          return
+        }
+
         Glide.index = steps
 
         return

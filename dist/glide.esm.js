@@ -535,6 +535,8 @@ var EventsBus = function () {
         for (var i = 0; i < event.length; i++) {
           this.on(event[i], handler);
         }
+
+        return;
       }
 
       // Create the event's object if not yet created
@@ -567,6 +569,8 @@ var EventsBus = function () {
         for (var i = 0; i < event.length; i++) {
           this.emit(event[i], context);
         }
+
+        return;
       }
 
       // If the event doesn't exist, or there's no handlers in queue, just leave
@@ -974,6 +978,12 @@ function Run (Glide, Components, Events) {
       // While direction is `=` we want jump to
       // a specified index described in steps.
       if (direction === '=') {
+
+        if (Glide.settings.bound && toInt(steps) > length) {
+          Glide.index = length;
+          return;
+        }
+
         Glide.index = steps;
 
         return;
@@ -3517,12 +3527,15 @@ function Keyboard (Glide, Components, Events) {
      * @return {Void}
      */
     press: function press(event) {
+      var perSwipe = Glide.settings.perSwipe;
+
+
       if (event.keyCode === 39) {
-        Components.Run.make(Components.Direction.resolve('>'));
+        Components.Run.make(Components.Direction.resolve(perSwipe + '>'));
       }
 
       if (event.keyCode === 37) {
-        Components.Run.make(Components.Direction.resolve('<'));
+        Components.Run.make(Components.Direction.resolve(perSwipe + '<'));
       }
     }
   };
@@ -3595,6 +3608,8 @@ function Autoplay (Glide, Components, Events) {
             Components.Run.make('>');
 
             _this.start();
+
+            Events.emit('autoplay');
           }, this.time);
         }
       }
@@ -3619,12 +3634,16 @@ function Autoplay (Glide, Components, Events) {
     bind: function bind() {
       var _this2 = this;
 
-      Binder.on('mouseover', Components.Html.root, function () {
+      Binder.on('mouseenter', Components.Html.root, function () {
         _this2.stop();
+
+        Events.emit('autoplay.enter');
       });
 
-      Binder.on('mouseout', Components.Html.root, function () {
+      Binder.on('mouseleave', Components.Html.root, function () {
         _this2.start();
+
+        Events.emit('autoplay.leave');
       });
     },
 

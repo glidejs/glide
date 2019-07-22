@@ -21,6 +21,36 @@ export default function (Glide, Components, Events) {
      */
     remove () {
       Components.Html.wrapper.style.transform = ''
+    },
+
+    /**
+     * @return {number}
+     */
+    getStartIndex () {
+      const length = Components.Sizes.length
+      const index = Glide.index
+      const perView = Glide.settings.perView
+
+      if (Components.Run.isOffset('>') || Components.Run.isOffset('|>')) {
+        return length + (index - perView)
+      }
+
+      // "modulo length" converts an index that equals length to zero
+      return (index + perView) % length
+    },
+
+    /**
+     * @return {number}
+     */
+    getTravelDistance () {
+      const travelDistance = Components.Sizes.slideWidth * Glide.settings.perView
+
+      if (Components.Run.isOffset('>') || Components.Run.isOffset('|>')) {
+        // reverse travel distance so that we don't have to change subtract operations
+        return travelDistance * -1
+      }
+
+      return travelDistance
     }
   }
 
@@ -30,31 +60,18 @@ export default function (Glide, Components, Events) {
    * - on updating via API to reflect possible changes in options
    */
   Events.on('move', (context) => {
-    let gap = Components.Gaps.value
-    let length = Components.Sizes.length
-    let width = Components.Sizes.slideWidth
-
-    if (Glide.isType('carousel') && Components.Run.isOffset('<')) {
-      Components.Transition.after(() => {
-        Events.emit('translate.jump')
-
-        Translate.set(width * (length - 1))
-      })
-
-      return Translate.set(-width - (gap * length))
+    if (!Glide.isType('carousel') || !Components.Run.isOffset()) {
+      return Translate.set(context.movement)
     }
 
-    if (Glide.isType('carousel') && Components.Run.isOffset('>')) {
-      Components.Transition.after(() => {
-        Events.emit('translate.jump')
+    Components.Transition.after(() => {
+      Events.emit('translate.jump')
 
-        Translate.set(0)
-      })
+      Translate.set(Components.Sizes.slideWidth * Glide.index)
+    })
 
-      return Translate.set((width * length) + (gap * length))
-    }
-
-    return Translate.set(context.movement)
+    const startWidth = Components.Sizes.slideWidth * Components.Translate.getStartIndex()
+    return Translate.set(startWidth - Components.Translate.getTravelDistance())
   })
 
   /**

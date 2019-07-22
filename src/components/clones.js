@@ -16,31 +16,31 @@ export default function (Glide, Components, Events) {
     /**
      * Collect clones with pattern.
      *
-     * @return {Void}
+     * @return {[]}
      */
     collect (items = []) {
       let { slides } = Components.Html
       let { perView, classes } = Glide.settings
 
-      let peekIncrementer = +!!Glide.settings.peek
-      let part = perView + peekIncrementer
-      let start = slides.slice(0, part)
-      let end = slides.slice(-part)
-
       if (slides.length !== 0) {
-        for (let r = 0; r < Math.max(1, Math.floor(perView / slides.length)); r++) {
-          for (let i = 0; i < start.length; i++) {
-            let clone = start[i].cloneNode(true)
+        const peekIncrementer = +!!Glide.settings.peek
+        const cloneCount = perView + peekIncrementer + Math.round(perView / 2)
+        const append = slides.slice(0, cloneCount).reverse()
+        const prepend = slides.slice(cloneCount * -1)
 
-            clone.classList.add(classes.cloneSlide)
+        for (let r = 0; r < Math.max(1, Math.floor(perView / slides.length)); r++) {
+          for (let i = 0; i < append.length; i++) {
+            let clone = append[i].cloneNode(true)
+
+            clone.classList.add(classes.slide.clone)
 
             items.push(clone)
           }
 
-          for (let i = 0; i < end.length; i++) {
-            let clone = end[i].cloneNode(true)
+          for (let i = 0; i < prepend.length; i++) {
+            let clone = prepend[i].cloneNode(true)
 
-            clone.classList.add(classes.cloneSlide)
+            clone.classList.add(classes.slide.clone)
 
             items.unshift(clone)
           }
@@ -59,10 +59,10 @@ export default function (Glide, Components, Events) {
       let { items } = this
       let { wrapper, slides } = Components.Html
 
-      let half = Math.floor(items.length / 2)
-      let prepend = items.slice(0, half).reverse()
-      let append = items.slice(half, items.length)
-      let width = `${Components.Sizes.slideWidth}px`
+      const half = Math.floor(items.length / 2)
+      const prepend = items.slice(0, half).reverse()
+      const append = items.slice(half * -1).reverse()
+      const width = `${Components.Sizes.slideWidth}px`
 
       for (let i = 0; i < append.length; i++) {
         wrapper.appendChild(append[i])

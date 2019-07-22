@@ -24,8 +24,8 @@ describe('Glide initialized as `slider`', () => {
     glide.go('<')
 
     afterTransition(() => {
-      expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(false)
-      expect(slides[slides.length - 1].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[0].classList.contains(defaults.classes.slide.active)).toBe(false)
+      expect(slides[slides.length - 1].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })
@@ -39,8 +39,8 @@ describe('Glide initialized as `slider`', () => {
     glide.go('>')
 
     afterTransition(() => {
-      expect(slides[slides.length - 1].classList.contains(defaults.classes.activeSlide)).toBe(false)
-      expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[slides.length - 1].classList.contains(defaults.classes.slide.active)).toBe(false)
+      expect(slides[0].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })
@@ -54,8 +54,8 @@ describe('Glide initialized as `slider`', () => {
     glide.go('<')
 
     afterTransition(() => {
-      expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(true)
-      expect(slides[slides.length - 1].classList.contains(defaults.classes.activeSlide)).toBe(false)
+      expect(slides[0].classList.contains(defaults.classes.slide.active)).toBe(true)
+      expect(slides[slides.length - 1].classList.contains(defaults.classes.slide.active)).toBe(false)
 
       done()
     })
@@ -69,8 +69,8 @@ describe('Glide initialized as `slider`', () => {
     glide.go('>')
 
     afterTransition(() => {
-      expect(slides[slides.length - 1].classList.contains(defaults.classes.activeSlide)).toBe(true)
-      expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(false)
+      expect(slides[slides.length - 1].classList.contains(defaults.classes.slide.active)).toBe(true)
+      expect(slides[0].classList.contains(defaults.classes.slide.active)).toBe(false)
 
       done()
     })
@@ -86,7 +86,7 @@ describe('Glide initialized as `slider`', () => {
     glide.go('>>')
 
     afterTransition(() => {
-      expect(slides[slides.length - perView].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[slides.length - perView].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })

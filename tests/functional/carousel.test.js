@@ -27,8 +27,8 @@ describe('Glide initialized as `carousel`', () => {
     glide.go('<')
 
     afterTransition(() => {
-      expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(false)
-      expect(slides[slides.length - 1].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[0].classList.contains(defaults.classes.slide.active)).toBe(false)
+      expect(slides[slides.length - 1].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })
@@ -45,10 +45,44 @@ describe('Glide initialized as `carousel`', () => {
     glide.go('>')
 
     afterTransition(() => {
-      expect(slides[slides.length - 1].classList.contains(defaults.classes.activeSlide)).toBe(false)
-      expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(true)
+      expect(slides[slides.length - 1].classList.contains(defaults.classes.slide.active)).toBe(false)
+      expect(slides[0].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })
+  })
+
+  test('with odd number of `perView` slides should create sufficient cloning buffer', (done) => {
+    let glide = new Glide('#glide', {
+      type: 'carousel',
+      perView: 3
+    })
+
+    glide.on('build.after', () => {
+      let { clones } = query(document)
+
+      expect(clones.length).toBe(10)
+
+      done()
+    })
+
+    glide.mount()
+  })
+
+  test('with even number of `perView` slides should create sufficient cloning buffer', (done) => {
+    let glide = new Glide('#glide', {
+      type: 'carousel',
+      perView: 2
+    })
+
+    glide.on('build.after', () => {
+      let { clones } = query(document)
+
+      expect(clones.length).toBe(6)
+
+      done()
+    })
+
+    glide.mount()
   })
 })

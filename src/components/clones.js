@@ -22,26 +22,28 @@ export default function (Glide, Components, Events) {
       let { slides } = Components.Html
       let { perView, classes } = Glide.settings
 
-      const peekIncrementer = +!!Glide.settings.peek
-      const cloneCount = perView + peekIncrementer + Math.round(perView / 2)
-      const append = slides.slice(0, cloneCount).reverse()
-      const prepend = slides.slice(cloneCount * -1)
+      if (slides.length !== 0) {
+        const peekIncrementer = +!!Glide.settings.peek
+        const cloneCount = perView + peekIncrementer + Math.round(perView / 2)
+        const append = slides.slice(0, cloneCount).reverse()
+        const prepend = slides.slice(cloneCount * -1)
 
-      for (let r = 0; r < Math.max(1, Math.floor(perView / slides.length)); r++) {
-        for (let i = 0; i < append.length; i++) {
-          let clone = append[i].cloneNode(true)
+        for (let r = 0; r < Math.max(1, Math.floor(perView / slides.length)); r++) {
+          for (let i = 0; i < append.length; i++) {
+            let clone = append[i].cloneNode(true)
 
-          clone.classList.add(classes.slide.clone)
+            clone.classList.add(classes.slide.clone)
 
-          items.push(clone)
-        }
+            items.push(clone)
+          }
 
-        for (let i = 0; i < prepend.length; i++) {
-          let clone = prepend[i].cloneNode(true)
+          for (let i = 0; i < prepend.length; i++) {
+            let clone = prepend[i].cloneNode(true)
 
-          clone.classList.add(classes.slide.clone)
+            clone.classList.add(classes.slide.clone)
 
-          items.unshift(clone)
+            items.unshift(clone)
+          }
         }
       }
 

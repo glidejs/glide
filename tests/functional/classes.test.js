@@ -80,4 +80,75 @@ describe('Class', () => {
 
     expect(root.classList.contains(defaults.classes.direction.rtl)).toBe(true)
   })
+
+  test('`classes.disabledArrow` should be applied to first element from start', () => {
+    const { previousControls } = query(document)
+
+    new Glide('#glide', { rewind: false }).mount()
+
+    previousControls.forEach(function (control) {
+      expect(control.classList).toContain(defaults.classes.arrow.disabled)
+    })
+  })
+
+  test('`classes.disabledArrow` should be removed from first element', () => {
+    const { previousControls } = query(document)
+
+    const glide = new Glide('#glide', { rewind: false }).mount()
+
+    glide.go('>')
+
+    previousControls.forEach(function (control) {
+      expect(control.classList).not.toContain(defaults.classes.arrow.disabled)
+    })
+  })
+
+  test('`classes.disabledArrow` should be applied to first element after navigating', () => {
+    const { previousControls } = query(document)
+
+    const glide = new Glide('#glide', { rewind: false, startAt: 1 }).mount()
+
+    glide.go('<')
+
+    previousControls.forEach(function (control) {
+      expect(control.classList).toContain(defaults.classes.arrow.disabled)
+    })
+  })
+
+  test('`classes.disabledArrow` should be applied to last element from start', () => {
+    const { nextControls, slides } = query(document)
+    const length = slides.length - 1
+
+    new Glide('#glide', { rewind: false, startAt: length }).mount()
+
+    nextControls.forEach(function (control) {
+      expect(control.classList).toContain(defaults.classes.arrow.disabled)
+    })
+  })
+
+  test('`classes.disabledArrow` should be removed from last element', () => {
+    const { nextControls, slides } = query(document)
+    const length = slides.length - 1
+
+    const glide = new Glide('#glide', { rewind: false, startAt: length }).mount()
+
+    glide.go('<')
+
+    nextControls.forEach(function (control) {
+      expect(control.classList).not.toContain(defaults.classes.arrow.disabled)
+    })
+  })
+
+  test('`classes.disabledArrow` should be applied to last element after navigating', () => {
+    const { nextControls, slides } = query(document)
+    const length = slides.length - 1
+
+    const glide = new Glide('#glide', { rewind: false, startAt: length - 1 }).mount()
+
+    glide.go('>')
+
+    nextControls.forEach(function (control) {
+      expect(control.classList).toContain(defaults.classes.arrow.disabled)
+    })
+  })
 })

@@ -10,13 +10,13 @@ export default `
   </div>
 
   <div data-glide-el="controls" class="glide__bullets">
-    <button data-glide-dir="=0">0</button>
-    <button data-glide-dir="=1">1</button>
-    <button data-glide-dir="=2">2</button>
-    <button data-glide-dir="=3">3</button>
-    <button data-glide-dir="=4">4</button>
-    <button data-glide-dir="=5">5</button>
-    <button data-glide-dir="=6">6</button>
+    <button class="glide__bullet" data-glide-dir="=0">0</button>
+    <button class="glide__bullet" data-glide-dir="=1">1</button>
+    <button class="glide__bullet" data-glide-dir="=2">2</button>
+    <button class="glide__bullet" data-glide-dir="=3">3</button>
+    <button class="glide__bullet" data-glide-dir="=4">4</button>
+    <button class="glide__bullet" data-glide-dir="=5">5</button>
+    <button class="glide__bullet" data-glide-dir="=6">6</button>
   </div>
 
   <div data-glide-el="track" class="glide__track">

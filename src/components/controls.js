@@ -224,7 +224,9 @@ export default function (Glide, Components, Events) {
      * @return {void}
      */
     click (event) {
-      event.preventDefault()
+      if (!supportsPassive && event.type === 'touchstart') {
+        event.preventDefault()
+      }
 
       const direction = event.currentTarget.getAttribute('data-glide-dir')
 

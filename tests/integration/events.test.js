@@ -1,6 +1,6 @@
 import html from '../fixtures/html'
 import { query } from '../fixtures/query'
-import { afterTransition, afterRewindTransition } from '../fixtures/transition'
+import { afterTransition } from '../fixtures/transition'
 
 import Glide from '../../entry/entry-complete'
 
@@ -132,7 +132,7 @@ describe("Event's callbacks on", () => {
   })
 
   test('`run.offset` should be called with `move` parameter when changing slide from first to the last one', (done) => {
-    const glide = new Glide('#glide', { startAt: 0 })
+    const glide = new Glide('#glide', { startAt: 0, loop: true })
 
     let move = { direction: '<', steps: 0 }
     let offsetCallback = jest.fn()
@@ -142,7 +142,7 @@ describe("Event's callbacks on", () => {
     glide.mount().go('<')
 
     expect(offsetCallback).not.toBeCalled()
-    afterRewindTransition(() => {
+    afterTransition(() => {
       expect(offsetCallback).toBeCalledWith(move)
 
       done()
@@ -151,7 +151,7 @@ describe("Event's callbacks on", () => {
 
   test('`run.offset` should be called with `move` parameter when changing slide from last to the first one', (done) => {
     const { slides } = query(document)
-    const glide = new Glide('#glide', { startAt: slides.length - 1 })
+    const glide = new Glide('#glide', { startAt: slides.length - 1, loop: true })
 
     let move = { direction: '>', steps: 0 }
     let offsetCallback = jest.fn()
@@ -161,7 +161,7 @@ describe("Event's callbacks on", () => {
     glide.mount().go('>')
 
     expect(offsetCallback).not.toBeCalled()
-    afterRewindTransition(() => {
+    afterTransition(() => {
       expect(offsetCallback).toBeCalledWith(move)
 
       done()
@@ -222,7 +222,7 @@ describe("Event's callbacks on", () => {
   })
 
   test('`translate.jump` should be called when making a loop change', (done) => {
-    const glide = new Glide('#glide', { type: 'carousel' })
+    const glide = new Glide('#glide', { startAt: 0, loop: true })
 
     let jumpCallback = jest.fn()
 
@@ -240,7 +240,7 @@ describe("Event's callbacks on", () => {
 
   test('`translate.jump` should be called when making a loop change', (done) => {
     const { slides } = query(document)
-    const glide = new Glide('#glide', { type: 'carousel', startAt: slides.length - 1 })
+    const glide = new Glide('#glide', { startAt: slides.length - 1, loop: true })
 
     let jumpCallback = jest.fn()
 

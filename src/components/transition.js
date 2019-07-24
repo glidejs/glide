@@ -90,7 +90,7 @@ export default function (Glide, Components, Events) {
     get () {
       let settings = Glide.settings
 
-      if (Glide.isType('slider') && Components.Run.offset) {
+      if (!settings.loop && Components.Run.offset) {
         return settings.rewindDuration
       }
 

@@ -1,16 +1,5 @@
 export default {
   /**
-   * Type of the movement.
-   *
-   * Available types:
-   * `slider` - Rewinds slider to the start/end when it reaches the first or last slide.
-   * `carousel` - Changes slides without starting over when it reaches the first or last slide.
-   *
-   * @type {String}
-   */
-  type: 'slider',
-
-  /**
    * Start at specific slide number defined with zero-based index.
    *
    * @type {Number}
@@ -23,6 +12,13 @@ export default {
    * @type {Number}
    */
   perView: 1,
+
+  /**
+   * A number of slides visible on the single viewport.
+   *
+   * @type {Number}
+   */
+  perMove: 1,
 
   /**
    * Focus currently active slide at a specified position in the track.
@@ -64,14 +60,29 @@ export default {
   keyboard: true,
 
   /**
+   * Type of the movement.
+   *
+   * @type {Boolean}
+   */
+  loop: false,
+
+  /**
    * Stop running `perView` number of slides from the end. Use this
    * option if you don't want to have an empty space after
-   * a slider. Works only with `slider` type and a
+   * a slider. Works only when not looping and a
    * non-centered `focusAt` setting.
    *
    * @type {Boolean}
    */
   bound: false,
+
+
+  /**
+   * Slider will rewind to the first/last slide when it's at the start/end. Has an effect only when not looping.
+   *
+   * @type {Boolean}
+   */
+  rewind: false,
 
   /**
    * Minimal swipe distance needed to change the slide. Use `false` for turning off a swiping.
@@ -91,12 +102,12 @@ export default {
    * A number of slides moved on single swipe.
    *
    * Available types:
-   * `` - Moves slider by one slide per swipe
-   * `|` - Moves slider between views per swipe (number of slides defined in `perView` options)
+   * `perView` - Moves slider by one slide per swipe
+   * `perMove` - Moves slider between views per swipe (number of slides defined in `perView` options)
    *
    * @type {String}
    */
-  perSwipe: '|',
+  perSwipe: 'perView',
 
   /**
    * Moving distance ratio of the slides on a swiping and dragging.
@@ -120,20 +131,6 @@ export default {
   animationDuration: 400,
 
   /**
-   * Allows looping the `slider` type. Slider will rewind to the first/last slide when it's at the start/end.
-   *
-   * @type {Boolean}
-   */
-  rewind: true,
-
-  /**
-   * Duration of the rewinding animation of the `slider` type in milliseconds.
-   *
-   * @type {Number}
-   */
-  rewindDuration: 800,
-
-  /**
    * Easing function for the animation.
    *
    * @type {String}
@@ -145,7 +142,7 @@ export default {
    *
    * @type {boolean}
    */
-  waitForTransition: true,
+  enqueue: false,
 
   /**
    * Throttle costly events at most once per every wait milliseconds.

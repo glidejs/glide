@@ -33,7 +33,7 @@
     "build:umd": "rollup --config build/umd.js && rollup --config build/umd.min.js",
     "build:js": "npm run build:esm && npm run build:umd",
     "build": "npm run build:css && npm run build:js",
-    "test": "jest tests/**/*.test.js",
+    "test": "jest tests/**/*.test.js --silent",
     "lint": "eslint {src,tests}/**/*.js"
   },
   "devDependencies": {

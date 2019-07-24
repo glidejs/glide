@@ -5,22 +5,16 @@ import { afterTransition } from '../fixtures/transition'
 import defaults from '../../src/defaults'
 import Glide from '../../entry/entry-complete'
 
-describe('Glide initialized as `carousel`', () => {
+describe('Glide initialized with `loop: true` option', () => {
   beforeEach(() => {
     document.body.innerHTML = html
-  })
-
-  test('should have a correct type', () => {
-    let glide = new Glide('#glide', { type: 'carousel' }).mount()
-
-    expect(glide.isType('carousel')).toBe(true)
   })
 
   test('should go to the last slide when we are on the first slide and moving backward', (done) => {
     let { slides } = query(document)
 
     let glide = new Glide('#glide', {
-      type: 'carousel',
+      loop: true,
       startAt: 0
     }).mount()
 
@@ -38,7 +32,7 @@ describe('Glide initialized as `carousel`', () => {
     let { slides } = query(document)
 
     let glide = new Glide('#glide', {
-      type: 'carousel',
+      loop: true,
       startAt: slides.length - 1
     }).mount()
 
@@ -52,37 +46,46 @@ describe('Glide initialized as `carousel`', () => {
     })
   })
 
-  test('with odd number of `perView` slides should create sufficient cloning buffer', (done) => {
+
+  test('should go to the perMove slide from the beginning when we are on the last slide and moving forward', (done) => {
+    let { slides } = query(document)
+
+    const view = 3
+
     let glide = new Glide('#glide', {
-      type: 'carousel',
-      perView: 3
-    })
+      loop: true,
+      startAt: slides.length - 1,
+      perView: view,
+      perMove: view,
+    }).mount()
 
-    glide.on('build.after', () => {
-      let { clones } = query(document)
+    glide.go('>|')
 
-      expect(clones.length).toBe(10)
+    afterTransition(() => {
+      expect(slides[view - 1].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })
-
-    glide.mount()
   })
 
-  test('with even number of `perView` slides should create sufficient cloning buffer', (done) => {
+  test('should go to the perMove slide from the ending when moving backward and we are on the first viewport', (done) => {
+    let { slides } = query(document)
+
+    const view = 3
+
     let glide = new Glide('#glide', {
-      type: 'carousel',
-      perView: 2
-    })
+      loop: true,
+      startAt: 0,
+      perView: view,
+      perMove: view,
+    }).mount()
 
-    glide.on('build.after', () => {
-      let { clones } = query(document)
+    glide.go('<|')
 
-      expect(clones.length).toBe(6)
+    afterTransition(() => {
+      expect(slides[slides.length - view].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })
-
-    glide.mount()
   })
 })

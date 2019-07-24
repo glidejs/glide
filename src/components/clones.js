@@ -8,7 +8,7 @@ export default function (Glide, Components, Events) {
     mount () {
       this.items = []
 
-      if (Glide.isType('carousel')) {
+      if (Glide.settings.loop) {
         this.items = this.collect()
       }
     },
@@ -115,7 +115,7 @@ export default function (Glide, Components, Events) {
    * - while glide's type is `carousel`
    */
   Events.on('build.before', () => {
-    if (Glide.isType('carousel')) {
+    if (Glide.settings.loop) {
       Clones.append()
     }
   })

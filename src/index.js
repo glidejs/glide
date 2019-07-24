@@ -182,16 +182,6 @@ export default class Glide {
   }
 
   /**
-   * Checks if glide is a precised type.
-   *
-   * @param  {String} name
-   * @return {Boolean}
-   */
-  isType (name) {
-    return this.settings.type === name
-  }
-
-  /**
    * Gets value of the core options.
    *
    * @return {Object}
@@ -230,15 +220,6 @@ export default class Glide {
    */
   set index (i) {
     this._i = toInt(i)
-  }
-
-  /**
-   * Gets type name of the slider.
-   *
-   * @return {String}
-   */
-  get type () {
-    return this.settings.type
   }
 
   /**

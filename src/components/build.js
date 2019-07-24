@@ -11,19 +11,9 @@ export default function (Glide, Components, Events) {
     mount () {
       Events.emit('build.before')
 
-      this.typeClass()
       this.activeClass()
 
       Events.emit('build.after')
-    },
-
-    /**
-     * Adds `type` class to the glide element.
-     *
-     * @return {Void}
-     */
-    typeClass () {
-      Components.Html.root.classList.add(Glide.settings.classes.type[Glide.settings.type])
     },
 
     /**
@@ -51,8 +41,6 @@ export default function (Glide, Components, Events) {
      */
     removeClasses () {
       const { type, slide } = Glide.settings.classes
-
-      Components.Html.root.classList.remove(type[Glide.settings.type])
 
       Components.Html.slides.forEach((sibling) => {
         sibling.classList.remove(slide.active)

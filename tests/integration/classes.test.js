@@ -10,22 +10,6 @@ describe('Class', () => {
     document.body.innerHTML = html
   })
 
-  test('`classes.type.slider` should be applied on the root element', () => {
-    let { root } = query(document)
-
-    new Glide('#glide').mount()
-
-    expect(root.classList.contains(defaults.classes.type.slider)).toBe(true)
-  })
-
-  test('`classes.type.carousel` should be applied on the root element', () => {
-    let { root } = query(document)
-
-    new Glide('#glide', { type: 'carousel' }).mount()
-
-    expect(root.classList.contains(defaults.classes.type.carousel)).toBe(true)
-  })
-
   test('`classes.slide.active` should be applied on the 0 indexed slide element by default', () => {
     let { slides } = query(document)
 

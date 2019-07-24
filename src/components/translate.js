@@ -21,36 +21,6 @@ export default function (Glide, Components, Events) {
      */
     remove () {
       Components.Html.wrapper.style.transform = ''
-    },
-
-    /**
-     * @return {number}
-     */
-    getStartIndex () {
-      const length = Components.Sizes.length
-      const index = Glide.index
-      const perView = Glide.settings.perView
-
-      if (Components.Run.isOffset('>') || Components.Run.isOffset('|>')) {
-        return length + (index - perView)
-      }
-
-      // "modulo length" converts an index that equals length to zero
-      return (index + perView) % length
-    },
-
-    /**
-     * @return {number}
-     */
-    getTravelDistance () {
-      const travelDistance = Components.Sizes.slideWidth * Glide.settings.perView
-
-      if (Components.Run.isOffset('>') || Components.Run.isOffset('|>')) {
-        // reverse travel distance so that we don't have to change subtract operations
-        return travelDistance * -1
-      }
-
-      return travelDistance
     }
   }
 
@@ -60,18 +30,31 @@ export default function (Glide, Components, Events) {
    * - on updating via API to reflect possible changes in options
    */
   Events.on('move', (context) => {
-    if (!Glide.isType('carousel') || !Components.Run.isOffset()) {
-      return Translate.set(context.movement)
+    let gap = Components.Gaps.value
+    let length = Components.Sizes.length
+    let width = Components.Sizes.slideWidth
+
+    if (Glide.settings.loop && Components.Run.isOffset('<')) {
+      Components.Transition.after(() => {
+        Events.emit('translate.jump')
+
+        Translate.set(width * Glide.index)
+      })
+
+      return Translate.set(-(width * (length - Glide.index)))
     }
 
-    Components.Transition.after(() => {
-      Events.emit('translate.jump')
+    if (Glide.settings.loop && Components.Run.isOffset('>')) {
+      Components.Transition.after(() => {
+        Events.emit('translate.jump')
 
-      Translate.set(Components.Sizes.slideWidth * Glide.index)
-    })
+        Translate.set(width * Glide.index)
+      })
 
-    const startWidth = Components.Sizes.slideWidth * Components.Translate.getStartIndex()
-    return Translate.set(startWidth - Components.Translate.getTravelDistance())
+      return Translate.set(width * (length + Glide.index))
+    }
+
+    return Translate.set(context.movement)
   })
 
   /**

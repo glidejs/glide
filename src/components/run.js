@@ -1,5 +1,5 @@
 import { warn } from '../utils/log'
-import { toInt } from '../utils/unit'
+import { toInt, isNumber } from '../utils/unit'
 import { define } from '../utils/object'
 
 export default function (Glide, Components, Events) {
@@ -20,7 +20,7 @@ export default function (Glide, Components, Events) {
      */
     make (move) {
       if (!Glide.disabled) {
-        !Glide.settings.waitForTransition || Glide.disable()
+        !Glide.settings.enqueue || Glide.disable()
 
         this.move = move
 
@@ -39,7 +39,7 @@ export default function (Glide, Components, Events) {
             Events.emit('run.end', this.move)
           }
 
-          if (this.isOffset()) {
+          if (this.isOffset('<') || this.isOffset('>')) {
             this._o = false
 
             Events.emit('run.offset', this.move)
@@ -60,9 +60,9 @@ export default function (Glide, Components, Events) {
     calculate () {
       const { move, length } = this
       const { steps, direction } = move
+      const { loop, perMove } = Glide.settings
 
-      // By default assume that size of view is equal to one slide
-      let viewSize = 1
+      let distance = (steps === '|') ? perMove : ((steps) ? steps : 1)
 
       // While direction is `=` we want jump to
       // a specified index described in steps.
@@ -88,33 +88,26 @@ export default function (Glide, Components, Events) {
         return
       }
 
-      // pagination movement
-      if (direction === '|') {
-        viewSize = Glide.settings.perView || 1
-      }
+      if (direction === '>') {
+        const index = calculateForwardIndex(distance)
 
-      // we are moving forward
-      if (direction === '>' || (direction === '|' && steps === '>')) {
-        const index = calculateForwardIndex(viewSize)
-
-        if (index > length) {
+        if (index > length && loop) {
           this._o = true
         }
 
-        Glide.index = normalizeForwardIndex(index, viewSize)
+        Glide.index = normalizeForwardIndex(index, distance)
 
         return
       }
 
-      // we are moving backward
-      if (direction === '<' || (direction === '|' && steps === '<')) {
-        const index = calculateBackwardIndex(viewSize)
+      if (direction === '<') {
+        const index = calculateBackwardIndex(distance)
 
-        if (index < 0) {
+        if (index < 0 && loop) {
           this._o = true
         }
 
-        Glide.index = normalizeBackwardIndex(index, viewSize)
+        Glide.index = normalizeBackwardIndex(index, distance)
 
         return
       }
@@ -146,26 +139,8 @@ export default function (Glide, Components, Events) {
      * @param {String} direction
      * @return {Boolean}
      */
-    isOffset (direction = undefined) {
-      if (!direction) {
-        return this._o
-      }
-
-      if (!this._o) {
-        return false
-      }
-
-      // did we view to the right?
-      if (direction === '|>') {
-        return this.move.direction === '|' && this.move.steps === '>'
-      }
-
-      // did we view to the left?
-      if (direction === '|<') {
-        return this.move.direction === '|' && this.move.steps === '<'
-      }
-
-      return this.move.direction === direction
+    isOffset (direction) {
+      return this._o && this.move.direction === direction
     },
 
     /**
@@ -174,24 +149,40 @@ export default function (Glide, Components, Events) {
      * @return {Boolean}
      */
     isBound () {
-      return Glide.isType('slider') && Glide.settings.focusAt !== 'center' && Glide.settings.bound
+      return !Glide.settings.loop && Glide.settings.focusAt !== 'center' && Glide.settings.bound
     }
   }
 
   /**
    * Returns index value to move forward/to the right
    *
-   * @param viewSize
+   * @param distance
    * @returns {Number}
    */
-  function calculateForwardIndex (viewSize) {
+  function calculateForwardIndex (distance) {
     const { index } = Glide
 
-    if (Glide.isType('carousel')) {
-      return index + viewSize
+    if (Glide.settings.loop) {
+      return index + distance
     }
 
-    return index + (viewSize - (index % viewSize))
+    return index + (distance - (index % distance))
+  }
+
+  /**
+   * Calculates index value to move backward/to the left
+   *
+   * @param distance
+   * @returns {Number}
+   */
+  function calculateBackwardIndex (distance) {
+    const { index } = Glide
+
+    if (Glide.settings.loop) {
+      return index - distance
+    }
+
+    return (Math.ceil(index / distance) - 1) * distance
   }
 
   /**
@@ -199,17 +190,17 @@ export default function (Glide, Components, Events) {
    *
    * @param index
    * @param length
-   * @param viewSize
+   * @param distance
    * @returns {Number}
    */
-  function normalizeForwardIndex (index, viewSize) {
+  function normalizeForwardIndex (index, distance) {
     const { length } = Run
 
     if (index <= length) {
       return index
     }
 
-    if (Glide.isType('carousel')) {
+    if (Glide.settings.loop) {
       return index - (length + 1)
     }
 
@@ -223,31 +214,7 @@ export default function (Glide, Components, Events) {
       return 0
     }
 
-    if (Run.isBound()) {
-      return length
-    }
-
-    return Math.floor(length / viewSize) * viewSize
-  }
-
-  /**
-   * Calculates index value to move backward/to the left
-   *
-   * @param viewSize
-   * @returns {Number}
-   */
-  function calculateBackwardIndex (viewSize) {
-    const { index } = Glide
-
-    if (Glide.isType('carousel')) {
-      return index - viewSize
-    }
-
-    // ensure our back navigation results in the same index as a forward navigation
-    // to experience a homogeneous paging
-    const view = Math.ceil(index / viewSize)
-
-    return (view - 1) * viewSize
+    return Math.floor(length / distance) * distance
   }
 
   /**
@@ -255,17 +222,17 @@ export default function (Glide, Components, Events) {
    *
    * @param index
    * @param length
-   * @param viewSize
+   * @param distance
    * @returns {*}
    */
-  function normalizeBackwardIndex (index, viewSize) {
+  function normalizeBackwardIndex (index, distance) {
     const { length } = Run
 
     if (index >= 0) {
       return index
     }
 
-    if (Glide.isType('carousel')) {
+    if (Glide.settings.loop) {
       return index + (length + 1)
     }
 
@@ -276,7 +243,7 @@ export default function (Glide, Components, Events) {
         return length
       }
 
-      return Math.floor(length / viewSize) * viewSize
+      return Math.floor(length / distance) * distance
     }
 
     return 0

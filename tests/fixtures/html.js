@@ -1,12 +1,12 @@
 export default `
 <div id="glide" class="glide">
   <div data-glide-el="controls" class="glide__arrows">
-    <button class="glide__arrow glide__arrow--start" data-glide-dir="<<">start</button>
-    <button class="glide__arrow glide__arrow--start" data-glide-dir="|<">prev viewport</button>
-    <button class="glide__arrow glide__arrow--prev" data-glide-dir="<">prev</button>
-    <button class="glide__arrow glide__arrow--next" data-glide-dir=">">next</button>
-    <button class="glide__arrow glide__arrow--start" data-glide-dir="|>">next viewport</button>
-    <button class="glide__arrow glide__arrow--end" data-glide-dir=">>">end</button>
+    <button class="glide__arrow glide__arrow--start" data-glide-dir="<<"></button>
+    <button class="glide__arrow glide__arrow--start" data-glide-dir="<|"></button>
+    <button class="glide__arrow glide__arrow--prev" data-glide-dir="<"></button>
+    <button class="glide__arrow glide__arrow--next" data-glide-dir=">"></button>
+    <button class="glide__arrow glide__arrow--start" data-glide-dir=">|"></button>
+    <button class="glide__arrow glide__arrow--end" data-glide-dir=">>"></button>
   </div>
 
   <div data-glide-el="controls" class="glide__bullets">
@@ -17,6 +17,9 @@ export default `
     <button data-glide-dir="=4">4</button>
     <button data-glide-dir="=5">5</button>
     <button data-glide-dir="=6">6</button>
+    <button data-glide-dir="=7">7</button>
+    <button data-glide-dir="=8">8</button>
+    <button data-glide-dir="=9">9</button>
   </div>
 
   <div data-glide-el="track" class="glide__track">
@@ -28,6 +31,9 @@ export default `
       <li class="glide__slide">4</li>
       <li class="glide__slide">5</li>
       <li class="glide__slide">6</li>
+      <li class="glide__slide">7</li>
+      <li class="glide__slide">8</li>
+      <li class="glide__slide">9</li>
     </ul>
   </div>
 </div>

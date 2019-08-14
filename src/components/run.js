@@ -322,7 +322,7 @@ export default function (Glide, Components, Events) {
       // reduced by `perView` and `focusAt` settings. Running distance
       // should end before creating an empty space after instance.
       if (this.isBound()) {
-        return (length - 1) - (toInt(settings.perView) - 1) + toInt(settings.focusAt)
+        return Math.max((length - 1) - (toInt(settings.perView) - 1) + toInt(settings.focusAt), 0)
       }
 
       return length - 1

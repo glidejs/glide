@@ -91,4 +91,20 @@ describe('Glide initialized as `slider`', () => {
       done()
     })
   })
+
+  test('should NOT move when `bound` option is `true` and number of slides is <= `perView` number of slides', (done) => {
+    let { slides } = query(document)
+
+    let perView = slides.length
+
+    let glide = new Glide('#glide', { perView: perView, bound: true }).mount()
+
+    glide.go('>')
+
+    afterTransition(() => {
+      expect(slides[0].classList.contains(defaults.classes.slide.active)).toBe(true)
+
+      done()
+    })
+  })
 })

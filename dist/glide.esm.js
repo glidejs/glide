@@ -535,6 +535,8 @@ var EventsBus = function () {
         for (var i = 0; i < event.length; i++) {
           this.on(event[i], handler);
         }
+
+        return;
       }
 
       // Create the event's object if not yet created
@@ -567,6 +569,8 @@ var EventsBus = function () {
         for (var i = 0; i < event.length; i++) {
           this.emit(event[i], context);
         }
+
+        return;
       }
 
       // If the event doesn't exist, or there's no handlers in queue, just leave
@@ -1241,7 +1245,7 @@ function Run (Glide, Components, Events) {
       // should end before creating an empty space after instance.
 
       if (this.isBound()) {
-        return length - 1 - (toInt(settings.perView) - 1) + toInt(settings.focusAt);
+        return Math.max(length - 1 - (toInt(settings.perView) - 1) + toInt(settings.focusAt), 0);
       }
 
       return length - 1;
@@ -1956,26 +1960,28 @@ function Clones (Glide, Components, Events) {
           classes = _Glide$settings.classes;
 
 
-      var peekIncrementer = +!!Glide.settings.peek;
-      var cloneCount = perView + peekIncrementer + Math.round(perView / 2);
-      var append = slides.slice(0, cloneCount).reverse();
-      var prepend = slides.slice(cloneCount * -1);
+      if (slides.length !== 0) {
+        var peekIncrementer = +!!Glide.settings.peek;
+        var cloneCount = perView + peekIncrementer + Math.round(perView / 2);
+        var append = slides.slice(0, cloneCount).reverse();
+        var prepend = slides.slice(cloneCount * -1);
 
-      for (var r = 0; r < Math.max(1, Math.floor(perView / slides.length)); r++) {
-        for (var i = 0; i < append.length; i++) {
-          var clone = append[i].cloneNode(true);
+        for (var r = 0; r < Math.max(1, Math.floor(perView / slides.length)); r++) {
+          for (var i = 0; i < append.length; i++) {
+            var clone = append[i].cloneNode(true);
 
-          clone.classList.add(classes.slide.clone);
+            clone.classList.add(classes.slide.clone);
 
-          items.push(clone);
-        }
+            items.push(clone);
+          }
 
-        for (var _i = 0; _i < prepend.length; _i++) {
-          var _clone = prepend[_i].cloneNode(true);
+          for (var _i = 0; _i < prepend.length; _i++) {
+            var _clone = prepend[_i].cloneNode(true);
 
-          _clone.classList.add(classes.slide.clone);
+            _clone.classList.add(classes.slide.clone);
 
-          items.unshift(_clone);
+            items.unshift(_clone);
+          }
         }
       }
 
@@ -3272,6 +3278,8 @@ function Anchors (Glide, Components, Events) {
 
 var NAV_SELECTOR = '[data-glide-el="controls[nav]"]';
 var CONTROLS_SELECTOR = '[data-glide-el^="controls"]';
+var PREVIOUS_CONTROLS_SELECTOR = CONTROLS_SELECTOR + ' [data-glide-dir*="<"]';
+var NEXT_CONTROLS_SELECTOR = CONTROLS_SELECTOR + ' [data-glide-dir*=">"]';
 
 function Controls (Glide, Components, Events) {
   /**
@@ -3306,6 +3314,17 @@ function Controls (Glide, Components, Events) {
        * @type {HTMLCollection}
        */
       this._c = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR);
+
+      /**
+       * Collection of arrow control HTML elements.
+       *
+       * @private
+       * @type {Object}
+       */
+      this._arrowControls = {
+        previous: Components.Html.root.querySelectorAll(PREVIOUS_CONTROLS_SELECTOR),
+        next: Components.Html.root.querySelectorAll(NEXT_CONTROLS_SELECTOR)
+      };
 
       this.addBindings();
     },
@@ -3345,6 +3364,10 @@ function Controls (Glide, Components, Events) {
       var settings = Glide.settings;
       var item = controls[Glide.index];
 
+      if (!item) {
+        return;
+      }
+
       if (item) {
         item.classList.add(settings.classes.nav.active);
 
@@ -3367,6 +3390,69 @@ function Controls (Glide, Components, Events) {
       if (item) {
         item.classList.remove(Glide.settings.classes.nav.active);
       }
+    },
+
+
+    /**
+     * Calculates, removes or adds `Glide.settings.classes.disabledArrow` class on the control arrows
+     */
+    setArrowState: function setArrowState() {
+      if (Glide.settings.rewind) {
+        return;
+      }
+
+      var next = Controls._arrowControls.next;
+      var previous = Controls._arrowControls.previous;
+
+      this.resetArrowState(next, previous);
+
+      if (Glide.index === 0) {
+        this.disableArrow(previous);
+      }
+
+      if (Glide.index === Components.Run.length) {
+        this.disableArrow(next);
+      }
+    },
+
+
+    /**
+     * Removes `Glide.settings.classes.disabledArrow` from given NodeList elements
+     *
+     * @param {NodeList[]} lists
+     */
+    resetArrowState: function resetArrowState() {
+      var settings = Glide.settings;
+
+      for (var _len = arguments.length, lists = Array(_len), _key = 0; _key < _len; _key++) {
+        lists[_key] = arguments[_key];
+      }
+
+      lists.forEach(function (list) {
+        list.forEach(function (element) {
+          element.classList.remove(settings.classes.arrow.disabled);
+        });
+      });
+    },
+
+
+    /**
+     * Adds `Glide.settings.classes.disabledArrow` to given NodeList elements
+     *
+     * @param {NodeList[]} lists
+     */
+    disableArrow: function disableArrow() {
+      var settings = Glide.settings;
+
+      for (var _len2 = arguments.length, lists = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        lists[_key2] = arguments[_key2];
+      }
+
+      lists.forEach(function (list) {
+        list.forEach(function (element) {
+          element.classList.add(settings.classes.arrow.disabled);
+        });
+      });
     },
 
 
@@ -3423,16 +3509,20 @@ function Controls (Glide, Components, Events) {
 
     /**
      * Handles `click` event on the arrows HTML elements.
-     * Moves slider in driection precised in
+     * Moves slider in direction given via the
      * `data-glide-dir` attribute.
      *
      * @param {Object} event
-     * @return {Void}
+     * @return {void}
      */
     click: function click(event) {
-      event.preventDefault();
+      if (!supportsPassive$1 && event.type === 'touchstart') {
+        event.preventDefault();
+      }
 
-      Components.Run.make(Components.Direction.resolve(event.currentTarget.getAttribute('data-glide-dir')));
+      var direction = event.currentTarget.getAttribute('data-glide-dir');
+
+      Components.Run.make(Components.Direction.resolve(direction));
     }
   };
 
@@ -3454,6 +3544,13 @@ function Controls (Glide, Components, Events) {
    */
   Events.on(['mount.after', 'move.after'], function () {
     Controls.setActive();
+  });
+
+  /**
+   * Add or remove disabled class of arrow elements
+   */
+  Events.on(['mount.after', 'run'], function () {
+    Controls.setArrowState();
   });
 
   /**
@@ -3517,12 +3614,15 @@ function Keyboard (Glide, Components, Events) {
      * @return {Void}
      */
     press: function press(event) {
+      var perSwipe = Glide.settings.perSwipe;
+
+
       if (event.keyCode === 39) {
-        Components.Run.make(Components.Direction.resolve('>'));
+        Components.Run.make(Components.Direction.resolve(perSwipe + '>'));
       }
 
       if (event.keyCode === 37) {
-        Components.Run.make(Components.Direction.resolve('<'));
+        Components.Run.make(Components.Direction.resolve(perSwipe + '<'));
       }
     }
   };
@@ -3595,6 +3695,8 @@ function Autoplay (Glide, Components, Events) {
             Components.Run.make('>');
 
             _this.start();
+
+            Events.emit('autoplay');
           }, this.time);
         }
       }
@@ -3619,12 +3721,16 @@ function Autoplay (Glide, Components, Events) {
     bind: function bind() {
       var _this2 = this;
 
-      Binder.on('mouseover', Components.Html.root, function () {
+      Binder.on('mouseenter', Components.Html.root, function () {
         _this2.stop();
+
+        Events.emit('autoplay.enter');
       });
 
-      Binder.on('mouseout', Components.Html.root, function () {
+      Binder.on('mouseleave', Components.Html.root, function () {
         _this2.start();
+
+        Events.emit('autoplay.leave');
       });
     },
 

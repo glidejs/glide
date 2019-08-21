@@ -21,6 +21,9 @@ import Keyboard from '../src/components/keyboard'
 import Autoplay from '../src/components/autoplay'
 import Breakpoints from '../src/components/breakpoints'
 
+// Utilities
+import { throttle } from '../src/utils/wait'
+
 const COMPONENTS = {
   Html,
   Translate,
@@ -43,7 +46,8 @@ export {
   Controls,
   Keyboard,
   Autoplay,
-  Breakpoints
+  Breakpoints,
+  throttle
 }
 
 export default class Glide extends Core {

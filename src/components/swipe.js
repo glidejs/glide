@@ -57,7 +57,16 @@ export default function (Glide, Components, Events) {
     },
 
     /**
-     * Handler for `swipemove` event. Calculates user's tap angle and distance.
+     * Handler for `swipemove` event. Prevents screen scroll during horizontal swipe.
+     *
+     * @return {Void}
+     */
+    preventDefaultMove (event) {
+      event.preventDefault()
+    },
+
+    /**
+     * Throttled handler for `swipemove` event. Calculates user's tap angle and distance.
      *
      * @param {Object} event
      */
@@ -163,6 +172,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     bindSwipeMove () {
+      Binder.on(MOVE_EVENTS, Components.Html.wrapper, this.preventDefaultMove, false)
       Binder.on(MOVE_EVENTS, Components.Html.wrapper, throttle((event) => {
         this.move(event)
       }, Glide.settings.throttle), capture)
@@ -174,6 +184,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     unbindSwipeMove () {
+      Binder.off(MOVE_EVENTS, Components.Html.wrapper, false)
       Binder.off(MOVE_EVENTS, Components.Html.wrapper, capture)
     },
 

@@ -22,6 +22,7 @@ export default function (Glide, Components, Events) {
   let swipeStartY = 0
   let disabled = false
   let capture = (supportsPassive) ? { passive: true } : false
+  let preventDefaultsOptions = { passive: false }
 
   const Swipe = {
     /**
@@ -62,7 +63,9 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     preventDefaultMove (event) {
-      event.preventDefault()
+      if (event.cancelable) {
+        event.preventDefault()
+      }
     },
 
     /**
@@ -144,6 +147,7 @@ export default function (Glide, Components, Events) {
       const { swipeThreshold, dragThreshold } = Glide.settings
 
       if (swipeThreshold) {
+        Binder.on(START_EVENTS[0], Components.Html.wrapper, this.preventDefaultMove, preventDefaultsOptions)
         Binder.on(START_EVENTS[0], Components.Html.wrapper, (event) => {
           this.start(event)
         }, capture)
@@ -162,8 +166,8 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     unbindSwipeStart () {
-      Binder.off(START_EVENTS[0], Components.Html.wrapper, capture)
-      Binder.off(START_EVENTS[1], Components.Html.wrapper, capture)
+      Binder.off(START_EVENTS[0], Components.Html.wrapper, preventDefaultsOptions)
+      Binder.off(START_EVENTS, Components.Html.wrapper, capture)
     },
 
     /**
@@ -172,7 +176,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     bindSwipeMove () {
-      Binder.on(MOVE_EVENTS, Components.Html.wrapper, this.preventDefaultMove, false)
+      Binder.on(MOVE_EVENTS[0], Components.Html.wrapper, this.preventDefaultMove, preventDefaultsOptions)
       Binder.on(MOVE_EVENTS, Components.Html.wrapper, throttle((event) => {
         this.move(event)
       }, Glide.settings.throttle), capture)
@@ -184,7 +188,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     unbindSwipeMove () {
-      Binder.off(MOVE_EVENTS, Components.Html.wrapper, false)
+      Binder.off(MOVE_EVENTS[0], Components.Html.wrapper, preventDefaultsOptions)
       Binder.off(MOVE_EVENTS, Components.Html.wrapper, capture)
     },
 
@@ -194,6 +198,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     bindSwipeEnd () {
+      Binder.on(END_EVENTS[0], Components.Html.wrapper, this.preventDefaultMove, preventDefaultsOptions)
       Binder.on(END_EVENTS, Components.Html.wrapper, (event) => {
         this.end(event)
       })
@@ -205,6 +210,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     unbindSwipeEnd () {
+      Binder.off(END_EVENTS[0], Components.Html.wrapper, preventDefaultsOptions)
       Binder.off(END_EVENTS, Components.Html.wrapper)
     },
 

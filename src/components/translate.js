@@ -9,7 +9,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     set (value) {
-      let transform = mutator(Glide, Components).mutate(value)
+      let transform = mutator(Glide, Components)(value)
 
       Components.Html.wrapper.style.transform = `translate3d(${-1 * transform}px, 0px, 0px)`
     },
@@ -30,8 +30,7 @@ export default function (Glide, Components, Events) {
    * - on updating via API to reflect possible changes in options
    */
   Events.on('move', (context) => {
-    let length = Components.Sizes.length
-    let width = Components.Sizes.slideWidth
+    let { width, length } = Components.Sizes
 
     if (Glide.settings.loop && Components.Run.isOffset('<')) {
       Components.Transition.after(() => {

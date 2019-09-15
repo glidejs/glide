@@ -29,25 +29,23 @@ export default function (Glide, Components, Events) {
     Focusing
   ].concat(Glide._t, [Rtl])
 
-  return {
-    /**
-     * Piplines translate value with registered transformers.
-     *
-     * @param  {Number} translate
-     * @return {Number}
-     */
-    mutate (translate) {
-      for (var i = 0; i < TRANSFORMERS.length; i++) {
-        let transformer = TRANSFORMERS[i]
+  /**
+   * Piplines translate value with registered transformers.
+   *
+   * @param  {Number} translate
+   * @return {Number}
+   */
+  return function (translate) {
+    for (var i = 0; i < TRANSFORMERS.length; i++) {
+      let transformer = TRANSFORMERS[i]
 
-        if (isFunction(transformer) && isFunction(transformer())) {
-          translate = transformer(Glide, Components, Events)(translate)
-        } else {
-          warn('Transformer should be a function that returns an object with `modify()` method')
-        }
+      if (isFunction(transformer) && isFunction(transformer())) {
+        translate = transformer(Glide, Components, Events)(translate)
+      } else {
+        warn('Transformer should be a function that returns an object with `modify()` method')
       }
-
-      return translate
     }
+
+    return translate
   }
 }

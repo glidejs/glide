@@ -8,25 +8,23 @@ import { isObject } from '../../utils/unit'
  * @return {Object}
  */
 export default function (Glide, Components) {
-  return {
-    /**
-     * Modifies passed translate value with a `peek` setting.
-     *
-     * @param  {Number} translate
-     * @return {Number}
-     */
-    modify (translate) {
-      if (Glide.settings.focusAt >= 0) {
-        let peek = Components.Peek.value
+  /**
+   * Modifies passed translate value with a `peek` setting.
+   *
+   * @param  {Number} translate
+   * @return {Number}
+   */
+  return function (translate) {
+    if (Glide.settings.focusAt >= 0) {
+      let peek = Components.Peek.value
 
-        if (isObject(peek)) {
-          return translate - peek.before
-        }
-
-        return translate - peek
+      if (isObject(peek)) {
+        return translate - peek.before
       }
 
-      return translate
+      return translate - peek
     }
+
+    return translate
   }
 }

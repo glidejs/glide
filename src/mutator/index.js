@@ -40,8 +40,8 @@ export default function (Glide, Components, Events) {
       for (var i = 0; i < TRANSFORMERS.length; i++) {
         let transformer = TRANSFORMERS[i]
 
-        if (isFunction(transformer) && isFunction(transformer().modify)) {
-          translate = transformer(Glide, Components, Events).modify(translate)
+        if (isFunction(transformer) && isFunction(transformer())) {
+          translate = transformer(Glide, Components, Events)(translate)
         } else {
           warn('Transformer should be a function that returns an object with `modify()` method')
         }

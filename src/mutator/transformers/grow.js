@@ -6,15 +6,13 @@
  * @return {Object}
  */
 export default function (Glide, Components) {
-  return {
-    /**
-     * Adds to the passed translate width of the half of clones.
-     *
-     * @param  {Number} translate
-     * @return {Number}
-     */
-    modify (translate) {
-      return translate + (Components.Clones.grow / 2)
-    }
+  /**
+   * Adds to the passed translate width of the half of clones.
+   *
+   * @param  {Number} translate
+   * @return {Number}
+   */
+  return function (translate) {
+    return translate + (Components.Clones.grow / 2)
   }
 }

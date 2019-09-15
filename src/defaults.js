@@ -76,7 +76,6 @@ export default {
    */
   bound: false,
 
-
   /**
    * Slider will rewind to the first/last slide when it's at the start/end. Has an effect only when not looping.
    *

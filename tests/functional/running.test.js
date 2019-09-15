@@ -101,7 +101,7 @@ describe('Running', () => {
     let glide = new Glide('#glide', {
       startAt: 0,
       perView: 3,
-      perMove: 3,
+      perMove: 3
     }).mount()
 
     glide.go('>|')
@@ -119,7 +119,7 @@ describe('Running', () => {
     let glide = new Glide('#glide', {
       startAt: 3,
       perView: 3,
-      perMove: 3,
+      perMove: 3
     }).mount()
 
     glide.go('<|')

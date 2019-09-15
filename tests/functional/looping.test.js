@@ -46,7 +46,6 @@ describe('Glide initialized with `loop: true` option', () => {
     })
   })
 
-
   test('should go to the perMove slide from the beginning when we are on the last slide and moving forward', (done) => {
     let { slides } = query(document)
 
@@ -56,7 +55,7 @@ describe('Glide initialized with `loop: true` option', () => {
       loop: true,
       startAt: slides.length - 1,
       perView: view,
-      perMove: view,
+      perMove: view
     }).mount()
 
     glide.go('>|')
@@ -77,7 +76,7 @@ describe('Glide initialized with `loop: true` option', () => {
       loop: true,
       startAt: 0,
       perView: view,
-      perMove: view,
+      perMove: view
     }).mount()
 
     glide.go('<|')

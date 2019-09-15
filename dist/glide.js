@@ -952,7 +952,7 @@
             perMove = _Glide$settings.perMove;
 
 
-        var distance = steps === '|' ? perMove : steps ? steps : 1;
+        var distance = steps === '|' ? perMove : steps || 1;
 
         // While direction is `=` we want jump to
         // a specified index described in steps.
@@ -1824,9 +1824,7 @@
        * @return {Void}
        */
       removeClasses: function removeClasses() {
-        var _Glide$settings$class = Glide.settings.classes,
-            type = _Glide$settings$class.type,
-            slide = _Glide$settings$class.slide;
+        var slide = Glide.settings.classes.slide;
 
 
         Components.Html.slides.forEach(function (sibling) {
@@ -2449,7 +2447,6 @@
      * - on updating via API to reflect possible changes in options
      */
     Events.on('move', function (context) {
-      var gap = Components.Gaps.value;
       var length = Components.Sizes.length;
       var width = Components.Sizes.slideWidth;
 

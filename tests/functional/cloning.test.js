@@ -1,8 +1,6 @@
 import html from '../fixtures/html'
 import { query } from '../fixtures/query'
-import { afterTransition } from '../fixtures/transition'
 
-import defaults from '../../src/defaults'
 import Glide from '../../entry/entry-complete'
 
 describe('Glide initialized with `loop: true` option', () => {

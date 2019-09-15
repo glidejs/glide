@@ -30,7 +30,6 @@ export default function (Glide, Components, Events) {
    * - on updating via API to reflect possible changes in options
    */
   Events.on('move', (context) => {
-    let gap = Components.Gaps.value
     let length = Components.Sizes.length
     let width = Components.Sizes.slideWidth
 

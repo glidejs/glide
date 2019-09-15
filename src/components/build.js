@@ -40,7 +40,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     removeClasses () {
-      const { type, slide } = Glide.settings.classes
+      const { slide } = Glide.settings.classes
 
       Components.Html.slides.forEach((sibling) => {
         sibling.classList.remove(slide.active)

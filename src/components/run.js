@@ -1,5 +1,5 @@
 import { warn } from '../utils/log'
-import { toInt, isNumber } from '../utils/unit'
+import { toInt } from '../utils/unit'
 import { define } from '../utils/object'
 
 export default function (Glide, Components, Events) {
@@ -62,7 +62,7 @@ export default function (Glide, Components, Events) {
       const { steps, direction } = move
       const { loop, perMove } = Glide.settings
 
-      let distance = (steps === '|') ? perMove : ((steps) ? steps : 1)
+      let distance = (steps === '|') ? perMove : ((steps) || 1)
 
       // While direction is `=` we want jump to
       // a specified index described in steps.

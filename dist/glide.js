@@ -1891,26 +1891,28 @@
             classes = _Glide$settings.classes;
 
 
-        var peekIncrementer = +!!Glide.settings.peek;
-        var cloneCount = perView + peekIncrementer + Math.round(perView / 2);
-        var append = slides.slice(0, cloneCount).reverse();
-        var prepend = slides.slice(cloneCount * -1);
+        if (slides.length !== 0) {
+          var peekIncrementer = +!!Glide.settings.peek;
+          var cloneCount = perView + peekIncrementer + Math.round(perView / 2);
+          var append = slides.slice(0, cloneCount).reverse();
+          var prepend = slides.slice(cloneCount * -1);
 
-        for (var r = 0; r < Math.max(1, Math.floor(perView / slides.length)); r++) {
-          for (var i = 0; i < append.length; i++) {
-            var clone = append[i].cloneNode(true);
+          for (var r = 0; r < Math.max(1, Math.floor(perView / slides.length)); r++) {
+            for (var i = 0; i < append.length; i++) {
+              var clone = append[i].cloneNode(true);
 
-            clone.classList.add(classes.slide.clone);
+              clone.classList.add(classes.slide.clone);
 
-            items.push(clone);
-          }
+              items.push(clone);
+            }
 
-          for (var _i = 0; _i < prepend.length; _i++) {
-            var _clone = prepend[_i].cloneNode(true);
+            for (var _i = 0; _i < prepend.length; _i++) {
+              var _clone = prepend[_i].cloneNode(true);
 
-            _clone.classList.add(classes.slide.clone);
+              _clone.classList.add(classes.slide.clone);
 
-            items.unshift(_clone);
+              items.unshift(_clone);
+            }
           }
         }
 
@@ -2264,20 +2266,18 @@
    * @return {Object}
    */
   function Rtl (Glide, Components) {
-    return {
-      /**
-       * Negates the passed translate if glide is in RTL option.
-       *
-       * @param  {Number} translate
-       * @return {Number}
-       */
-      modify: function modify(translate) {
-        if (Components.Direction.is('rtl')) {
-          return -translate;
-        }
-
-        return translate;
+    /**
+     * Negates the passed translate if glide is in RTL option.
+     *
+     * @param  {Number} translate
+     * @return {Number}
+     */
+    return function (translate) {
+      if (Components.Direction.is('rtl')) {
+        return -translate;
       }
+
+      return translate;
     };
   }
 
@@ -2289,17 +2289,16 @@
    * @return {Object}
    */
   function Gap (Glide, Components) {
-    return {
-      /**
-       * Modifies passed translate value with number in the `gap` settings.
-       *
-       * @param  {Number} translate
-       * @return {Number}
-       */
-      modify: function modify(translate) {
-        var multiplier = Math.floor(translate / Components.Sizes.slideWidth);
-        return translate + Components.Gaps.value * multiplier;
-      }
+    /**
+     * Modifies passed translate value with number in the `gap` settings.
+     *
+     * @param  {Number} translate
+     * @return {Number}
+     */
+    return function (translate) {
+      var multiplier = Math.floor(translate / Components.Sizes.slideWidth);
+
+      return translate + Components.Gaps.value * multiplier;
     };
   }
 
@@ -2311,16 +2310,14 @@
    * @return {Object}
    */
   function Grow (Glide, Components) {
-    return {
-      /**
-       * Adds to the passed translate width of the half of clones.
-       *
-       * @param  {Number} translate
-       * @return {Number}
-       */
-      modify: function modify(translate) {
-        return translate + Components.Clones.grow / 2;
-      }
+    /**
+     * Adds to the passed translate width of the half of clones.
+     *
+     * @param  {Number} translate
+     * @return {Number}
+     */
+    return function (translate) {
+      return translate + Components.Clones.grow / 2;
     };
   }
 
@@ -2332,26 +2329,24 @@
    * @return {Object}
    */
   function Peeking (Glide, Components) {
-    return {
-      /**
-       * Modifies passed translate value with a `peek` setting.
-       *
-       * @param  {Number} translate
-       * @return {Number}
-       */
-      modify: function modify(translate) {
-        if (Glide.settings.focusAt >= 0) {
-          var peek = Components.Peek.value;
+    /**
+     * Modifies passed translate value with a `peek` setting.
+     *
+     * @param  {Number} translate
+     * @return {Number}
+     */
+    return function (translate) {
+      if (Glide.settings.focusAt >= 0) {
+        var peek = Components.Peek.value;
 
-          if (isObject(peek)) {
-            return translate - peek.before;
-          }
-
-          return translate - peek;
+        if (isObject(peek)) {
+          return translate - peek.before;
         }
 
-        return translate;
+        return translate - peek;
       }
+
+      return translate;
     };
   }
 
@@ -2363,25 +2358,23 @@
    * @return {Object}
    */
   function Focusing (Glide, Components) {
-    return {
-      /**
-       * Modifies passed translate value with index in the `focusAt` setting.
-       *
-       * @param  {Number} translate
-       * @return {Number}
-       */
-      modify: function modify(translate) {
-        var gap = Components.Gaps.value;
-        var width = Components.Sizes.width;
-        var focusAt = Glide.settings.focusAt;
-        var slideWidth = Components.Sizes.slideWidth;
+    /**
+     * Modifies passed translate value with index in the `focusAt` setting.
+     *
+     * @param  {Number} translate
+     * @return {Number}
+     */
+    return function (translate) {
+      var gap = Components.Gaps.value;
+      var width = Components.Sizes.width;
+      var focusAt = Glide.settings.focusAt;
+      var slideWidth = Components.Sizes.slideWidth;
 
-        if (focusAt === 'center') {
-          return translate - (width / 2 - slideWidth / 2);
-        }
-
-        return translate - slideWidth * focusAt - gap * focusAt;
+      if (focusAt === 'center') {
+        return translate - (width / 2 - slideWidth / 2);
       }
+
+      return translate - slideWidth * focusAt - gap * focusAt;
     };
   }
 
@@ -2413,8 +2406,8 @@
         for (var i = 0; i < TRANSFORMERS.length; i++) {
           var transformer = TRANSFORMERS[i];
 
-          if (isFunction(transformer) && isFunction(transformer().modify)) {
-            translate = transformer(Glide, Components, Events).modify(translate);
+          if (isFunction(transformer) && isFunction(transformer())) {
+            translate = transformer(Glide, Components, Events)(translate);
           } else {
             warn('Transformer should be a function that returns an object with `modify()` method');
           }
@@ -3195,6 +3188,8 @@
 
   var NAV_SELECTOR = '[data-glide-el="controls[nav]"]';
   var CONTROLS_SELECTOR = '[data-glide-el^="controls"]';
+  var PREVIOUS_CONTROLS_SELECTOR = CONTROLS_SELECTOR + ' [data-glide-dir*="<"]';
+  var NEXT_CONTROLS_SELECTOR = CONTROLS_SELECTOR + ' [data-glide-dir*=">"]';
 
   function Controls (Glide, Components, Events) {
     /**
@@ -3229,6 +3224,17 @@
          * @type {HTMLCollection}
          */
         this._c = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR);
+
+        /**
+         * Collection of arrow control HTML elements.
+         *
+         * @private
+         * @type {Object}
+         */
+        this._arrowControls = {
+          previous: Components.Html.root.querySelectorAll(PREVIOUS_CONTROLS_SELECTOR),
+          next: Components.Html.root.querySelectorAll(NEXT_CONTROLS_SELECTOR)
+        };
 
         this.addBindings();
       },
@@ -3268,6 +3274,10 @@
         var settings = Glide.settings;
         var item = controls[Glide.index];
 
+        if (!item) {
+          return;
+        }
+
         if (item) {
           item.classList.add(settings.classes.nav.active);
 
@@ -3290,6 +3300,69 @@
         if (item) {
           item.classList.remove(Glide.settings.classes.nav.active);
         }
+      },
+
+
+      /**
+       * Calculates, removes or adds `Glide.settings.classes.disabledArrow` class on the control arrows
+       */
+      setArrowState: function setArrowState() {
+        if (Glide.settings.rewind) {
+          return;
+        }
+
+        var next = Controls._arrowControls.next;
+        var previous = Controls._arrowControls.previous;
+
+        this.resetArrowState(next, previous);
+
+        if (Glide.index === 0) {
+          this.disableArrow(previous);
+        }
+
+        if (Glide.index === Components.Run.length) {
+          this.disableArrow(next);
+        }
+      },
+
+
+      /**
+       * Removes `Glide.settings.classes.disabledArrow` from given NodeList elements
+       *
+       * @param {NodeList[]} lists
+       */
+      resetArrowState: function resetArrowState() {
+        var settings = Glide.settings;
+
+        for (var _len = arguments.length, lists = Array(_len), _key = 0; _key < _len; _key++) {
+          lists[_key] = arguments[_key];
+        }
+
+        lists.forEach(function (list) {
+          list.forEach(function (element) {
+            element.classList.remove(settings.classes.arrow.disabled);
+          });
+        });
+      },
+
+
+      /**
+       * Adds `Glide.settings.classes.disabledArrow` to given NodeList elements
+       *
+       * @param {NodeList[]} lists
+       */
+      disableArrow: function disableArrow() {
+        var settings = Glide.settings;
+
+        for (var _len2 = arguments.length, lists = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+          lists[_key2] = arguments[_key2];
+        }
+
+        lists.forEach(function (list) {
+          list.forEach(function (element) {
+            element.classList.add(settings.classes.arrow.disabled);
+          });
+        });
       },
 
 
@@ -3346,16 +3419,20 @@
 
       /**
        * Handles `click` event on the arrows HTML elements.
-       * Moves slider in driection precised in
+       * Moves slider in direction given via the
        * `data-glide-dir` attribute.
        *
        * @param {Object} event
-       * @return {Void}
+       * @return {void}
        */
       click: function click(event) {
-        event.preventDefault();
+        if (!supportsPassive$1 && event.type === 'touchstart') {
+          event.preventDefault();
+        }
 
-        Components.Run.make(Components.Direction.resolve(event.currentTarget.getAttribute('data-glide-dir')));
+        var direction = event.currentTarget.getAttribute('data-glide-dir');
+
+        Components.Run.make(Components.Direction.resolve(direction));
       }
     };
 
@@ -3377,6 +3454,13 @@
      */
     Events.on(['mount.after', 'move.after'], function () {
       Controls.setActive();
+    });
+
+    /**
+     * Add or remove disabled class of arrow elements
+     */
+    Events.on(['mount.after', 'run'], function () {
+      Controls.setArrowState();
     });
 
     /**

@@ -96,6 +96,17 @@
     rewind: false,
 
     /**
+     * A number of slides moved on single swipe.
+     *
+     * Available types:
+     * `perView` - Moves slider by one slide per swipe
+     * `perMove` - Moves slider between views per swipe (number of slides defined in `perView` options)
+     *
+     * @type {String}
+     */
+    perSwipe: 'perView',
+
+    /**
      * Minimal swipe distance needed to change the slide. Use `false` for turning off a swiping.
      *
      * @type {Number|Boolean}
@@ -108,17 +119,6 @@
      * @type {Number|Boolean}
      */
     dragThreshold: 120,
-
-    /**
-     * A number of slides moved on single swipe.
-     *
-     * Available types:
-     * `perView` - Moves slider by one slide per swipe
-     * `perMove` - Moves slider between views per swipe (number of slides defined in `perView` options)
-     *
-     * @type {String}
-     */
-    perSwipe: 'perView',
 
     /**
      * Moving distance ratio of the slides on a swiping and dragging.
@@ -147,13 +147,6 @@
      * @type {String}
      */
     animationTimingFunc: 'cubic-bezier(.165, .840, .440, 1)',
-
-    /**
-     * Wait for the animation to finish until the next user input can be processed
-     *
-     * @type {boolean}
-     */
-    enqueue: false,
 
     /**
      * Throttle costly events at most once per every wait milliseconds.
@@ -201,7 +194,6 @@
     /**
      * Collection of internally used HTML classes.
      *
-     * @todo Refactor `slider` and `carousel` properties to single `type: { slider: '', carousel: '' }` object
      * @type {Object}
      */
     classes: {
@@ -904,7 +896,7 @@
         var _this = this;
 
         if (!Glide.disabled) {
-          !Glide.settings.enqueue || Glide.disable();
+          Glide.disable();
 
           this.move = move;
 
@@ -1109,6 +1101,10 @@
         }
 
         return 0;
+      }
+
+      if (Run.isBound()) {
+        return length;
       }
 
       return Math.floor(length / distance) * distance;
@@ -2393,26 +2389,24 @@
      */
     var TRANSFORMERS = [Gap, Grow, Peeking, Focusing].concat(Glide._t, [Rtl]);
 
-    return {
-      /**
-       * Piplines translate value with registered transformers.
-       *
-       * @param  {Number} translate
-       * @return {Number}
-       */
-      mutate: function mutate(translate) {
-        for (var i = 0; i < TRANSFORMERS.length; i++) {
-          var transformer = TRANSFORMERS[i];
+    /**
+     * Piplines translate value with registered transformers.
+     *
+     * @param  {Number} translate
+     * @return {Number}
+     */
+    return function (translate) {
+      for (var i = 0; i < TRANSFORMERS.length; i++) {
+        var transformer = TRANSFORMERS[i];
 
-          if (isFunction(transformer) && isFunction(transformer())) {
-            translate = transformer(Glide, Components, Events)(translate);
-          } else {
-            warn('Transformer should be a function that returns an object with `modify()` method');
-          }
+        if (isFunction(transformer) && isFunction(transformer())) {
+          translate = transformer(Glide, Components, Events)(translate);
+        } else {
+          warn('Transformer should be a function that returns the function');
         }
-
-        return translate;
       }
+
+      return translate;
     };
   }
 
@@ -2425,7 +2419,7 @@
        * @return {Void}
        */
       set: function set(value) {
-        var transform = mutator(Glide, Components).mutate(value);
+        var transform = mutator(Glide, Components, Events)(value);
 
         Components.Html.wrapper.style.transform = 'translate3d(' + -1 * transform + 'px, 0px, 0px)';
       },

@@ -42,7 +42,7 @@ export default function (Glide, Components, Events) {
       if (isFunction(transformer) && isFunction(transformer())) {
         translate = transformer(Glide, Components, Events)(translate)
       } else {
-        warn('Transformer should be a function that returns an object with `modify()` method')
+        warn('Transformer should be a function that returns the function')
       }
     }
 

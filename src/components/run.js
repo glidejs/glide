@@ -20,7 +20,7 @@ export default function (Glide, Components, Events) {
      */
     make (move) {
       if (!Glide.disabled) {
-        !Glide.settings.enqueue || Glide.disable()
+        Glide.disable()
 
         this.move = move
 
@@ -212,6 +212,10 @@ export default function (Glide, Components, Events) {
       }
 
       return 0
+    }
+
+    if (Run.isBound()) {
+      return length
     }
 
     return Math.floor(length / distance) * distance

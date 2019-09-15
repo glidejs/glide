@@ -16,7 +16,7 @@ export default function (Glide, Components) {
    */
   return function (translate) {
     if (Glide.settings.focusAt >= 0) {
-      let peek = Components.Peek.value
+      const peek = Components.Peek.value
 
       if (isObject(peek)) {
         return translate - peek.before

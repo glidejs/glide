@@ -13,10 +13,10 @@ export default function (Glide, Components) {
    * @return {Number}
    */
   return function (translate) {
-    let gap = Components.Gaps.value
-    let width = Components.Sizes.width
-    let focusAt = Glide.settings.focusAt
-    let slideWidth = Components.Sizes.slideWidth
+    const gap = Components.Gaps.value
+    const width = Components.Sizes.width
+    const focusAt = Glide.settings.focusAt
+    const slideWidth = Components.Sizes.slideWidth
 
     if (focusAt === 'center') {
       return translate - (width / 2 - slideWidth / 2)

@@ -84,6 +84,17 @@ export default {
   rewind: false,
 
   /**
+   * A number of slides moved on single swipe.
+   *
+   * Available types:
+   * `perView` - Moves slider by one slide per swipe
+   * `perMove` - Moves slider between views per swipe (number of slides defined in `perView` options)
+   *
+   * @type {String}
+   */
+  perSwipe: 'perView',
+
+  /**
    * Minimal swipe distance needed to change the slide. Use `false` for turning off a swiping.
    *
    * @type {Number|Boolean}
@@ -96,17 +107,6 @@ export default {
    * @type {Number|Boolean}
    */
   dragThreshold: 120,
-
-  /**
-   * A number of slides moved on single swipe.
-   *
-   * Available types:
-   * `perView` - Moves slider by one slide per swipe
-   * `perMove` - Moves slider between views per swipe (number of slides defined in `perView` options)
-   *
-   * @type {String}
-   */
-  perSwipe: 'perView',
 
   /**
    * Moving distance ratio of the slides on a swiping and dragging.
@@ -135,13 +135,6 @@ export default {
    * @type {String}
    */
   animationTimingFunc: 'cubic-bezier(.165, .840, .440, 1)',
-
-  /**
-   * Wait for the animation to finish until the next user input can be processed
-   *
-   * @type {boolean}
-   */
-  enqueue: false,
 
   /**
    * Throttle costly events at most once per every wait milliseconds.

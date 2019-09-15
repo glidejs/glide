@@ -189,7 +189,6 @@ export default {
   /**
    * Collection of internally used HTML classes.
    *
-   * @todo Refactor `slider` and `carousel` properties to single `type: { slider: '', carousel: '' }` object
    * @type {Object}
    */
   classes: {

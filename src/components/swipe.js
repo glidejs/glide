@@ -105,30 +105,17 @@ export default function (Glide, Components, Events) {
 
         let swipeDistance = swipe.pageX - swipeStartX
         let swipeDeg = swipeSin * 180 / Math.PI
-        let steps = Math.round(swipeDistance / Components.Sizes.slideWidth)
+        let steps = toInt(settings[settings.perSwipe])
 
         this.enable()
 
         if (swipeDistance > threshold && swipeDeg < settings.touchAngle) {
-          steps = toInt(settings[settings.perSwipe])
-
-          if (Components.Direction.is('rtl')) {
-            steps = -steps
-          }
-
-          Components.Run.make(Components.Direction.resolve(`<${steps}`))
+          Components.Run.make(`${Components.Direction.resolve('<')}${steps}`)
         } else if (
           swipeDistance < -threshold &&
           swipeDeg < settings.touchAngle
         ) {
-          // While swipe is negative and lower than negative threshold move forward.
-          steps = toInt(settings[settings.perSwipe])
-
-          if (Components.Direction.is('rtl')) {
-            steps = -steps
-          }
-
-          Components.Run.make(Components.Direction.resolve(`>${steps}`))
+          Components.Run.make(`${Components.Direction.resolve('>')}${steps}`)
         } else {
           // While swipe don't reach distance apply previous transform.
           Components.Move.make()

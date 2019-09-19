@@ -180,6 +180,13 @@ export default {
   peek: 0,
 
   /**
+   * Defines how many clones of current viewport will be generated.
+   *
+   * @type {Number}
+   */
+  cloningRatio: 1,
+
+  /**
    * Collection of options applied at specified media breakpoints.
    * For example: display two slides per view under 800px.
    * `{

@@ -109,6 +109,13 @@ export default {
   dragThreshold: 120,
 
   /**
+   * Angle required to activate slides moving on swiping or dragging.
+   *
+   * @type {Number}
+   */
+  touchAngle: 45,
+
+  /**
    * Moving distance ratio of the slides on a swiping and dragging.
    *
    * @type {Number}
@@ -116,11 +123,11 @@ export default {
   touchRatio: 0.5,
 
   /**
-   * Angle required to activate slides moving on swiping or dragging.
+   * Definest how many clones will be created in looped mode.
    *
    * @type {Number}
    */
-  touchAngle: 45,
+  cloneRatio: 1,
 
   /**
    * Duration of the animation in milliseconds.

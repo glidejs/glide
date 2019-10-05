@@ -41,4 +41,22 @@ describe('Glide initialized with `loop: true` option', () => {
 
     glide.mount()
   })
+
+  test('with doubled `cloneRato` should create doubled cloning buffer', (done) => {
+    let glide = new Glide('#glide', {
+      loop: true,
+      perView: 2,
+      cloneRatio: 2
+    })
+
+    glide.on('build.after', () => {
+      let { clones } = query(document)
+
+      expect(clones.length).toBe(12)
+
+      done()
+    })
+
+    glide.mount()
+  })
 })

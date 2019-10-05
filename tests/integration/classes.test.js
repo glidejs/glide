@@ -10,6 +10,22 @@ describe('Class', () => {
     document.body.innerHTML = html
   })
 
+  test('can be changed via options', () => {
+    let { slides } = query(document)
+
+    let glide = new Glide('#glide', {
+      classes: {
+        slide: {
+          clone: 'glide__slide--c',
+          active: 'glide__slide--a'
+        }
+      }
+    }).mount()
+
+    expect(glide.settings.classes.slide.clone).toBe('glide__slide--c')
+    expect(glide.settings.classes.slide.active).toBe('glide__slide--a')
+  })
+
   test('`classes.slide.active` should be applied on the 0 indexed slide element by default', () => {
     let { slides } = query(document)
 

@@ -1,3 +1,5 @@
+import { isObject } from './unit'
+
 /**
  * Defines getter and setter property on the specified object.
  *
@@ -27,45 +29,25 @@ export function sortKeys (obj) {
 /**
  * Merges passed settings object with default options.
  *
- * @param  {Object} defaults
- * @param  {Object} settings
+ * @param  {Object} target
+ * @param  {Object} source
  * @return {Object}
  */
-export function mergeOptions (defaults, settings) {
-  let options = Object.assign({}, defaults, settings)
+export function mergeDeep (target, source) {
+  let output = Object.assign({}, target)
 
-  // `Object.assign` do not deeply merge objects, so we
-  // have to do it manually for every nested object
-  // in options. Although it does not look smart,
-  // it's smaller and faster than some fancy
-  // merging deep-merge algorithm script.
-  if (settings.hasOwnProperty('classes')) {
-    options.classes = Object.assign({}, defaults.classes, settings.classes)
-
-    if (settings.classes.hasOwnProperty('direction')) {
-      options.classes.direction = Object.assign({}, defaults.classes.direction, settings.classes.direction)
-    }
-
-    if (settings.classes.hasOwnProperty('type')) {
-      options.classes.type = Object.assign({}, defaults.classes.type, settings.classes.type)
-    }
-
-    if (settings.classes.hasOwnProperty('slide')) {
-      options.classes.slide = Object.assign({}, defaults.classes.slide, settings.classes.slide)
-    }
-
-    if (settings.classes.hasOwnProperty('arrow')) {
-      options.classes.arrow = Object.assign({}, defaults.classes.arrow, settings.classes.arrow)
-    }
-
-    if (settings.classes.hasOwnProperty('nav')) {
-      options.classes.nav = Object.assign({}, defaults.classes.nav, settings.classes.nav)
-    }
+  if (isObject(target) && isObject(source)) {
+    Object.keys(source).forEach(key => {
+      if (isObject(source[key])) {
+        if (!(key in target))
+          Object.assign(output, { [key]: source[key] })
+        else
+          output[key] = mergeDeep(target[key], source[key])
+      } else {
+        Object.assign(output, { [key]: source[key] })
+      }
+    })
   }
 
-  if (settings.hasOwnProperty('breakpoints')) {
-    options.breakpoints = Object.assign({}, defaults.breakpoints, settings.breakpoints)
-  }
-
-  return options
+  return output
 }

@@ -9,22 +9,6 @@ describe('After destroying an instance', () => {
     document.body.innerHTML = html
   })
 
-  test('`classes.type.slider` should not be applied on the root element', () => {
-    let { root } = query(document)
-
-    new Glide('#glide').mount().destroy()
-
-    expect(root.classList.contains(defaults.classes.type.slider)).toBe(false)
-  })
-
-  test('`classes.type.carousel` should not be applied on the root element', () => {
-    let { root } = query(document)
-
-    new Glide('#glide', { type: 'carousel' }).mount().destroy()
-
-    expect(root.classList.contains(defaults.classes.type.carousel)).toBe(false)
-  })
-
   test('`classes.direction.ltr` should not be applied on the root element', () => {
     let { root } = query(document)
 

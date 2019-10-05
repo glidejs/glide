@@ -198,10 +198,6 @@ export default {
       ltr: 'glide--ltr',
       rtl: 'glide--rtl'
     },
-    type: {
-      slider: 'glide--slider',
-      carousel: 'glide--carousel'
-    },
     slide: {
       clone: 'glide__slide--clone',
       active: 'glide__slide--active'

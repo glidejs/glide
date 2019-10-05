@@ -1,7 +1,7 @@
 import defaults from './defaults'
 import { warn } from './utils/log'
 import { mount } from './core/index'
-import { mergeOptions } from './utils/object'
+import { mergeDeep } from './utils/object'
 import { toInt, isObject, isArray } from './utils/unit'
 
 import EventsBus from './core/event/events-bus'
@@ -20,7 +20,7 @@ export default class Glide {
 
     this.disabled = false
     this.selector = selector
-    this.settings = mergeOptions(defaults, options)
+    this.settings = mergeDeep(defaults, options)
     this.index = this.settings.startAt
   }
 
@@ -67,7 +67,7 @@ export default class Glide {
    * @return {Glide}
    */
   update (settings = {}) {
-    this.settings = mergeOptions(this.settings, settings)
+    this.settings = mergeDeep(this.settings, settings)
 
     if (settings.hasOwnProperty('startAt')) {
       this.index = settings.startAt

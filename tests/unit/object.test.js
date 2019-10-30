@@ -1,4 +1,4 @@
-import { define, mergeOptions } from '../../src/utils/object'
+import { define, mergeDeep } from '../../src/utils/object'
 
 describe('Function', () => {
   test('`define` should create object getters and setters', () => {
@@ -21,8 +21,8 @@ describe('Function', () => {
     expect(obj.property).toBe('value')
   })
 
-  test('`mergeOptions` should merge defaults and options object', () => {
-    let obj = mergeOptions(
+  test('`mergeDeep` should merge defaults and options object', () => {
+    let obj = mergeDeep(
       {
         a: 1,
         b: 2
@@ -38,71 +38,26 @@ describe('Function', () => {
     })
   })
 
-  test('`mergeOptions` should deep merge classes options object', () => {
-    let obj = mergeOptions(
+  test('`mergeDeep` should deep merge object', () => {
+    let obj = mergeDeep(
       {
-        classes: {
-          direction: {
-            ltr: 'a',
-            rtl: 'a'
-          },
-          type: {
-            slider: 'a',
-            carousel: 'a'
-          },
-          slide: {
-            clone: 'a',
-            active: 'a'
-          },
-          arrow: {
-            disabled: 'a'
-          },
-          nav: {
-            active: 'a'
-          }
-        }
+        a: {
+          c: 1
+        },
+        b: 2
       },
       {
-        classes: {
-          type: {
-            slider: 'b',
-            carousel: 'b'
-          },
-          slide: {
-            clone: 'b',
-            active: 'b'
-          },
-          arrow: {
-            disabled: 'b'
-          },
-          nav: {
-            active: 'b'
-          }
+        a: {
+          c: 3
         }
       }
     )
 
     expect(obj).toEqual({
-      classes: {
-        direction: {
-          ltr: 'a',
-          rtl: 'a'
-        },
-        type: {
-          slider: 'b',
-          carousel: 'b'
-        },
-        slide: {
-          clone: 'b',
-          active: 'b'
-        },
-        arrow: {
-          disabled: 'b'
-        },
-        nav: {
-          active: 'b'
-        }
-      }
+      a: {
+        c: 3
+      },
+      b: 2
     })
   })
 })

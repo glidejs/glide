@@ -1,7 +1,7 @@
 import { warn } from '../utils/log'
 import { throttle } from '../utils/wait'
 import { isObject } from '../utils/unit'
-import { sortKeys, mergeOptions } from '../utils/object'
+import { sortKeys, mergeDeep } from '../utils/object'
 
 import EventsBinder from '../core/event/events-binder'
 
@@ -85,7 +85,7 @@ export default function (Glide, Components, Events) {
    * - window resize to update slider
    */
   Binder.on('resize', window, throttle(() => {
-    Glide.settings = mergeOptions(settings, Breakpoints.match(points))
+    Glide.settings = mergeDeep(settings, Breakpoints.match(points))
   }, Glide.settings.throttle))
 
   /**

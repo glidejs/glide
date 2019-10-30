@@ -5,21 +5,15 @@ import { afterTransition } from '../fixtures/transition'
 import defaults from '../../src/defaults'
 import Glide from '../../entry/entry-complete'
 
-describe('Glide initialized as `slider`', () => {
+describe('Glide initialized with `rewind: true`', () => {
   beforeEach(() => {
     document.body.innerHTML = html
-  })
-
-  test('should have a correct type', () => {
-    let glide = new Glide('#glide').mount()
-
-    expect(glide.isType('slider')).toBe(true)
   })
 
   test('should move to the last slide when we are on the first slide and moving backward', (done) => {
     let { slides } = query(document)
 
-    let glide = new Glide('#glide', { startAt: 0 }).mount()
+    let glide = new Glide('#glide', { startAt: 0, rewind: true }).mount()
 
     glide.go('<')
 
@@ -34,7 +28,7 @@ describe('Glide initialized as `slider`', () => {
   test('should move to the first slide when we are on the last slide and moving forward', (done) => {
     let { slides } = query(document)
 
-    let glide = new Glide('#glide', { startAt: slides.length - 1 }).mount()
+    let glide = new Glide('#glide', { startAt: slides.length - 1, rewind: true }).mount()
 
     glide.go('>')
 
@@ -76,17 +70,79 @@ describe('Glide initialized as `slider`', () => {
     })
   })
 
-  test('should STOP move at `perView` number of slides from the end when `bound` option is `true`', (done) => {
+  test('`>|` should rewind when moving forward with `rewind: true` option', (done) => {
     let { slides } = query(document)
 
-    let perView = 3
+    const view = 3
 
-    let glide = new Glide('#glide', { perView: perView, bound: true }).mount()
+    let glide = new Glide('#glide', {
+      startAt: slides.length - 1,
+      perView: view,
+      perMove: view,
+      rewind: true
+    }).mount()
 
-    glide.go('>>')
+    glide.go('>|')
 
     afterTransition(() => {
-      expect(slides[slides.length - perView].classList.contains(defaults.classes.slide.active)).toBe(true)
+      expect(slides[0].classList.contains(defaults.classes.slide.active)).toBe(true)
+
+      done()
+    })
+  })
+
+  test('`<|` should rewind when moving backward with `rewind: true` option', (done) => {
+    let { slides } = query(document)
+
+    const view = 3
+
+    let glide = new Glide('#glide', {
+      startAt: 0,
+      perView: view,
+      perMove: view,
+      rewind: true
+    }).mount()
+
+    glide.go('<|')
+
+    afterTransition(() => {
+      expect(slides[slides.length - 1].classList.contains(defaults.classes.slide.active)).toBe(true)
+
+      done()
+    })
+  })
+
+  test('`>|` should NOT rewind when moving forward with `rewind: true` option', (done) => {
+    let { slides } = query(document)
+
+    let glide = new Glide('#glide', {
+      startAt: slides.length - 1,
+      perView: 3,
+      rewind: false
+    }).mount()
+
+    glide.go('>|')
+
+    afterTransition(() => {
+      expect(slides[slides.length - 1].classList.contains(defaults.classes.slide.active)).toBe(true)
+
+      done()
+    })
+  })
+
+  test('`<|` should NOT rewind when moving backward with `rewind: true` option', (done) => {
+    let { slides } = query(document)
+
+    let glide = new Glide('#glide', {
+      startAt: 0,
+      perView: 3,
+      rewind: false
+    }).mount()
+
+    glide.go('<|')
+
+    afterTransition(() => {
+      expect(slides[0].classList.contains(defaults.classes.slide.active)).toBe(true)
 
       done()
     })

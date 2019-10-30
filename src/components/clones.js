@@ -8,7 +8,7 @@ export default function (Glide, Components, Events) {
     mount () {
       this.items = []
 
-      if (Glide.isType('carousel')) {
+      if (Glide.settings.loop) {
         this.items = this.collect()
       }
     },
@@ -20,7 +20,7 @@ export default function (Glide, Components, Events) {
      */
     collect (items = []) {
       let { slides } = Components.Html
-      let { perView, classes } = Glide.settings
+      let { perView, cloneRatio, classes } = Glide.settings
 
       if (slides.length !== 0) {
         const peekIncrementer = +!!Glide.settings.peek
@@ -28,7 +28,7 @@ export default function (Glide, Components, Events) {
         const append = slides.slice(0, cloneCount).reverse()
         const prepend = slides.slice(cloneCount * -1)
 
-        for (let r = 0; r < Math.max(1, Math.floor(perView / slides.length)); r++) {
+        for (let r = 0; r < Math.max(cloneRatio, Math.floor(perView / slides.length)); r++) {
           for (let i = 0; i < append.length; i++) {
             let clone = append[i].cloneNode(true)
 
@@ -117,7 +117,7 @@ export default function (Glide, Components, Events) {
    * - while glide's type is `carousel`
    */
   Events.on('build.before', () => {
-    if (Glide.isType('carousel')) {
+    if (Glide.settings.loop) {
       Clones.append()
     }
   })

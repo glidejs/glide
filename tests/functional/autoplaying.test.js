@@ -5,7 +5,7 @@ import { afterTransition } from '../fixtures/transition'
 import defaults from '../../src/defaults'
 import Glide from '../../entry/entry-complete'
 
-describe('Glide initialized with `autoplay`', () => {
+describe('Glide initialized with `autoplay` option', () => {
   beforeEach(() => {
     document.body.innerHTML = html
   })

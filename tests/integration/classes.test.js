@@ -10,20 +10,20 @@ describe('Class', () => {
     document.body.innerHTML = html
   })
 
-  test('`classes.type.slider` should be applied on the root element', () => {
-    let { root } = query(document)
+  test('can be changed via options', () => {
+    let { slides } = query(document)
 
-    new Glide('#glide').mount()
+    let glide = new Glide('#glide', {
+      classes: {
+        slide: {
+          clone: 'glide__slide--c',
+          active: 'glide__slide--a'
+        }
+      }
+    }).mount()
 
-    expect(root.classList.contains(defaults.classes.type.slider)).toBe(true)
-  })
-
-  test('`classes.type.carousel` should be applied on the root element', () => {
-    let { root } = query(document)
-
-    new Glide('#glide', { type: 'carousel' }).mount()
-
-    expect(root.classList.contains(defaults.classes.type.carousel)).toBe(true)
+    expect(glide.settings.classes.slide.clone).toBe('glide__slide--c')
+    expect(glide.settings.classes.slide.active).toBe('glide__slide--a')
   })
 
   test('`classes.slide.active` should be applied on the 0 indexed slide element by default', () => {

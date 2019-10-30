@@ -1,16 +1,5 @@
 export default {
   /**
-   * Type of the movement.
-   *
-   * Available types:
-   * `slider` - Rewinds slider to the start/end when it reaches the first or last slide.
-   * `carousel` - Changes slides without starting over when it reaches the first or last slide.
-   *
-   * @type {String}
-   */
-  type: 'slider',
-
-  /**
    * Start at specific slide number defined with zero-based index.
    *
    * @type {Number}
@@ -23,6 +12,13 @@ export default {
    * @type {Number}
    */
   perView: 1,
+
+  /**
+   * A number of slides visible on the single viewport.
+   *
+   * @type {Number}
+   */
+  perMove: 1,
 
   /**
    * Focus currently active slide at a specified position in the track.
@@ -64,14 +60,39 @@ export default {
   keyboard: true,
 
   /**
+   * Type of the movement.
+   *
+   * @type {Boolean}
+   */
+  loop: false,
+
+  /**
    * Stop running `perView` number of slides from the end. Use this
    * option if you don't want to have an empty space after
-   * a slider. Works only with `slider` type and a
+   * a slider. Works only when not looping and a
    * non-centered `focusAt` setting.
    *
    * @type {Boolean}
    */
   bound: false,
+
+  /**
+   * Slider will rewind to the first/last slide when it's at the start/end. Has an effect only when not looping.
+   *
+   * @type {Boolean}
+   */
+  rewind: false,
+
+  /**
+   * A number of slides moved on single swipe.
+   *
+   * Available types:
+   * `perView` - Moves slider by one slide per swipe
+   * `perMove` - Moves slider between views per swipe (number of slides defined in `perView` options)
+   *
+   * @type {String}
+   */
+  perSwipe: 'perView',
 
   /**
    * Minimal swipe distance needed to change the slide. Use `false` for turning off a swiping.
@@ -88,15 +109,11 @@ export default {
   dragThreshold: 120,
 
   /**
-   * A number of slides moved on single swipe.
+   * Angle required to activate slides moving on swiping or dragging.
    *
-   * Available types:
-   * `` - Moves slider by one slide per swipe
-   * `|` - Moves slider between views per swipe (number of slides defined in `perView` options)
-   *
-   * @type {String}
+   * @type {Number}
    */
-  perSwipe: '|',
+  touchAngle: 45,
 
   /**
    * Moving distance ratio of the slides on a swiping and dragging.
@@ -106,11 +123,11 @@ export default {
   touchRatio: 0.5,
 
   /**
-   * Angle required to activate slides moving on swiping or dragging.
+   * Definest how many clones will be created in looped mode.
    *
    * @type {Number}
    */
-  touchAngle: 45,
+  cloneRatio: 1,
 
   /**
    * Duration of the animation in milliseconds.
@@ -120,32 +137,11 @@ export default {
   animationDuration: 400,
 
   /**
-   * Allows looping the `slider` type. Slider will rewind to the first/last slide when it's at the start/end.
-   *
-   * @type {Boolean}
-   */
-  rewind: true,
-
-  /**
-   * Duration of the rewinding animation of the `slider` type in milliseconds.
-   *
-   * @type {Number}
-   */
-  rewindDuration: 800,
-
-  /**
    * Easing function for the animation.
    *
    * @type {String}
    */
   animationTimingFunc: 'cubic-bezier(.165, .840, .440, 1)',
-
-  /**
-   * Wait for the animation to finish until the next user input can be processed
-   *
-   * @type {boolean}
-   */
-  waitForTransition: true,
 
   /**
    * Throttle costly events at most once per every wait milliseconds.
@@ -193,7 +189,6 @@ export default {
   /**
    * Collection of internally used HTML classes.
    *
-   * @todo Refactor `slider` and `carousel` properties to single `type: { slider: '', carousel: '' }` object
    * @type {Object}
    */
   classes: {
@@ -202,10 +197,6 @@ export default {
     direction: {
       ltr: 'glide--ltr',
       rtl: 'glide--rtl'
-    },
-    type: {
-      slider: 'glide--slider',
-      carousel: 'glide--carousel'
     },
     slide: {
       clone: 'glide__slide--clone',

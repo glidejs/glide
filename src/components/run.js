@@ -67,7 +67,12 @@ export default function (Glide, Components, Events) {
       // While direction is `=` we want jump to
       // a specified index described in steps.
       if (direction === '=') {
-        Glide.index = steps
+        // Check if bound is true, as we want to avoid whitespaces
+        if (Glide.settings.bound && steps > length) {
+          Glide.index = length
+        } else {
+          Glide.index = steps
+        }
 
         return
       }

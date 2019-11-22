@@ -3846,4 +3846,4 @@ var Glide$1 = function (_Core) {
 }(Glide);
 
 export default Glide$1;
-export { swipe as Swipe, images as Images, anchors as Anchors, controls as Controls, keyboard as Keyboard, autoplay as Autoplay, breakpoints as Breakpoints, throttle };
+export { swipe as Swipe, images as Images, anchors as Anchors, controls as Controls, keyboard as Keyboard, autoplay as Autoplay, breakpoints as Breakpoints };

@@ -1,19 +1,18 @@
 import { siblings } from '../utils/dom'
 
 export default function (Glide, Components, Events) {
-  const Build = {
+  const Classes = {
     /**
-     * Init glide building. Adds classes, sets
-     * dimensions and setups initial state.
+     * Adds initial classes.
      *
      * @return {Void}
      */
     mount () {
-      Events.emit('build.before')
+      Events.emit('classes.before')
 
-      this.activeClass()
+      this.add()
 
-      Events.emit('build.after')
+      Events.emit('classes.after')
     },
 
     /**
@@ -21,7 +20,7 @@ export default function (Glide, Components, Events) {
      *
      * @return {Void}
      */
-    activeClass () {
+    add () {
       let classes = Glide.settings.classes
       let slide = Components.Html.slides[Glide.index]
 
@@ -39,7 +38,7 @@ export default function (Glide, Components, Events) {
      *
      * @return {Void}
      */
-    removeClasses () {
+    remove () {
       const { slide } = Glide.settings.classes
 
       Components.Html.slides.forEach((sibling) => {
@@ -54,7 +53,7 @@ export default function (Glide, Components, Events) {
    * - on updating to remove classes before remounting component
    */
   Events.on(['destroy', 'update'], () => {
-    Build.removeClasses()
+    Classes.remove()
   })
 
   /**
@@ -63,16 +62,16 @@ export default function (Glide, Components, Events) {
    * - on updating settings via API
    */
   Events.on(['resize', 'update'], () => {
-    Build.mount()
+    Classes.mount()
   })
 
   /**
    * Swap active class of current slide:
    * - after each move to the new index
    */
-  Events.on('move.after', () => {
-    Build.activeClass()
+  Events.on('run.after', () => {
+    Classes.add()
   })
 
-  return Build
+  return Classes
 }

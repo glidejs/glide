@@ -148,7 +148,7 @@ export default {
    *
    * @type {Number}
    */
-  throttle: 10,
+  throttle: 15,
 
   /**
    * Moving direction mode.

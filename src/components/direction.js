@@ -111,7 +111,7 @@ export default function (Glide, Components, Events) {
    * - before building to apply class for the first time
    * - on updating to reapply direction class that may changed
    */
-  Events.on(['build.before', 'update'], () => {
+  Events.on(['classes.before', 'update'], () => {
     Direction.addClass()
   })
 

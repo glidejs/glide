@@ -152,7 +152,7 @@ export default function (Glide, Components, Events) {
    * - after swiping and transitions ends, so they can redirect after click again
    */
   Events.on('swipe.end', () => {
-    Components.Transition.after(() => {
+    Components.Animation.after(() => {
       Anchors.attach()
     })
   })

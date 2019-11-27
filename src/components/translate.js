@@ -1,67 +1,78 @@
 import mutator from '../mutator/index'
+import { define } from '../utils/object'
+import { isNumber, toFloat } from '../utils/unit'
 
 export default function (Glide, Components, Events) {
-  const Translate = {
-    /**
-     * Sets value of translate on HTML element.
-     *
-     * @param {Number} value
-     * @return {Void}
-     */
-    set (value) {
-      let transform = mutator(Glide, Components, Events)(value)
+  const { Sizes, Html } = Components
 
-      Components.Html.wrapper.style.transform = `translate3d(${-1 * transform}px, 0px, 0px)`
+  /**
+   * Instance of the translate mutation function.
+   *
+   * @type {Function}
+   */
+  const mutate = mutator(Glide, Components, Events)
+
+  const calculate = (value, offset) => {
+    const { loop } = Glide.settings
+    const { wrapperWidth } = Sizes
+
+    let move = value - offset
+
+    if (loop) {
+      if (move < 0) {
+        let translate = wrapperWidth + (value - offset)
+
+        Events.emit('translate.jump', {
+          edge: '<',
+          value: translate
+        })
+
+        return translate
+      } else if (move > wrapperWidth) {
+        let translate = -1 * (offset + (wrapperWidth - value))
+
+        Events.emit('translate.jump', {
+          edge: '>',
+          value: translate
+        })
+
+        return translate
+      }
+    }
+
+    return move
+  }
+
+  const apply = (value) => {
+    Events.emit('translate.set', { value })
+
+    Html.wrapper.style.transform = `translate3d(${-1 * value}px, 0px, 0px)`
+  }
+
+  const Translate = {
+    mount () {
+      this._v = mutate(Sizes.slideWidth * Glide.index)
+
+      apply(this._v)
     },
 
-    /**
-     * Removes value of translate from HTML element.
-     *
-     * @return {Void}
-     */
-    remove () {
-      Components.Html.wrapper.style.transform = ''
+    set (offset) {
+      let value = calculate(this._v, offset)
+
+      apply(value)
+
+      return value
     }
   }
 
-  /**
-   * Set new translate value:
-   * - on move to reflect index change
-   * - on updating via API to reflect possible changes in options
-   */
-  Events.on('move', (context) => {
-    let length = Components.Sizes.length
-    let width = Components.Sizes.slideWidth
+  define(Translate, 'value', {
+    get () {
+      return Translate._v
+    },
 
-    if (Glide.settings.loop && Components.Run.isOffset('<')) {
-      Components.Transition.after(() => {
-        Events.emit('translate.jump')
-
-        Translate.set(width * Glide.index)
-      })
-
-      return Translate.set(-(width * (length - Glide.index)))
+    set (value) {
+      Translate._v = value
     }
-
-    if (Glide.settings.loop && Components.Run.isOffset('>')) {
-      Components.Transition.after(() => {
-        Events.emit('translate.jump')
-
-        Translate.set(width * Glide.index)
-      })
-
-      return Translate.set(width * (length + Glide.index))
-    }
-
-    return Translate.set(context.movement)
-  })
-
-  /**
-   * Remove translate:
-   * - on destroying to bring markup to its inital state
-   */
-  Events.on('destroy', () => {
-    Translate.remove()
   })
 
   return Translate

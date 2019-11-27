@@ -3,7 +3,6 @@ import { isFunction } from '../utils/unit'
 
 import Rtl from './transformers/rtl'
 import Gap from './transformers/gap'
-import Grow from './transformers/grow'
 import Peeking from './transformers/peeking'
 import Focusing from './transformers/focusing'
 
@@ -24,7 +23,6 @@ export default function (Glide, Components, Events) {
    */
   let TRANSFORMERS = [
     Gap,
-    Grow,
     Peeking,
     Focusing
   ].concat(Glide._t, [Rtl])

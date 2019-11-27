@@ -22,7 +22,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     setupWrapper () {
-      Components.Html.wrapper.style.width = `${this.wrapperSize}px`
+      Components.Html.wrapper.style.width = `${this.wrapperWidth}px`
     },
 
     /**
@@ -63,14 +63,14 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  define(Sizes, 'wrapperSize', {
+  define(Sizes, 'wrapperWidth', {
     /**
      * Gets size of the slides wrapper.
      *
      * @return {Number}
      */
     get () {
-      return Sizes.slideWidth * Sizes.length + Components.Gaps.grow + Components.Clones.grow
+      return Sizes.slideWidth * Sizes.length + Components.Gaps.grow
     }
   })
 
@@ -91,7 +91,7 @@ export default function (Glide, Components, Events) {
    * - when resizing window to recalculate sildes dimensions
    * - on updating via API, to calculate dimensions based on new options
    */
-  Events.on(['build.before', 'resize', 'update'], () => {
+  Events.on(['layout.before', 'resize', 'update'], () => {
     Sizes.setupSlides()
     Sizes.setupWrapper()
   })

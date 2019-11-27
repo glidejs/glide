@@ -30,7 +30,7 @@ export default function (Glide, Components, Events) {
 
         Events.emit('run', this.move)
 
-        Components.Transition.after(() => {
+        Components.Animation.after(() => {
           if (this.isStart()) {
             Events.emit('run.start', this.move)
           }
@@ -154,7 +154,9 @@ export default function (Glide, Components, Events) {
      * @return {Boolean}
      */
     isBound () {
-      return !Glide.settings.loop && Glide.settings.focusAt !== 'center' && Glide.settings.bound
+      let { loop, focusAt, bound } = Glide.settings
+
+      return !loop && focusAt !== 'center' && bound
     }
   }
 

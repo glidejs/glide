@@ -250,7 +250,7 @@ export default function (Glide, Components, Events) {
    * - after mounting to set it to initial index
    * - after each move to the new index
    */
-  Events.on(['mount.after', 'move.after'], () => {
+  Events.on(['mount.after', 'run.after'], () => {
     Controls.setActive()
   })
 

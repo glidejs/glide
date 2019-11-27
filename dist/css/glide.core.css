@@ -4,8 +4,6 @@
   box-sizing: border-box; }
   .glide * {
     box-sizing: inherit; }
-  .glide__track {
-    overflow: hidden; }
   .glide__slides {
     position: relative;
     width: 100%;
@@ -13,7 +11,6 @@
     backface-visibility: hidden;
     transform-style: preserve-3d;
     touch-action: pan-Y;
-    overflow: hidden;
     margin: 0;
     padding: 0;
     white-space: nowrap;

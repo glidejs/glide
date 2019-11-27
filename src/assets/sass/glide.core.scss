@@ -14,10 +14,6 @@
     box-sizing: inherit;
   }
 
-  &#{$se}track {
-    overflow: hidden;
-  }
-
   &#{$se}slides {
     position: relative;
     width: 100%;
@@ -25,7 +21,6 @@
     backface-visibility: hidden;
     transform-style: preserve-3d;
     touch-action: pan-Y;
-    overflow: hidden;
     margin: 0;
     padding: 0;
     white-space: nowrap;

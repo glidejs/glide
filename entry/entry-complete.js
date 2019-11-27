@@ -5,14 +5,14 @@ import Run from '../src/components/run'
 import Gaps from '../src/components/gaps'
 import Html from '../src/components/html'
 import Peek from '../src/components/peek'
-import Move from '../src/components/move'
+import Loop from '../src/components/loop'
 import Sizes from '../src/components/sizes'
-import Build from '../src/components/build'
-import Clones from '../src/components/clones'
 import Resize from '../src/components/resize'
+import Layout from '../src/components/layout'
+import Classes from '../src/components/classes'
 import Direction from '../src/components/direction'
 import Translate from '../src/components/translate'
-import Transition from '../src/components/transition'
+import Animation from '../src/components/animation'
 
 // Optional components
 import Swipe from '../src/components/swipe'
@@ -26,17 +26,17 @@ import Breakpoints from '../src/components/breakpoints'
 const COMPONENTS = {
   // Required
   Html,
-  Translate,
-  Transition,
-  Direction,
   Peek,
-  Sizes,
   Gaps,
-  Move,
-  Clones,
+  Sizes,
+  Translate,
+  Animation,
+  Direction,
   Resize,
-  Build,
+  Layout,
+  Classes,
   Run,
+  Loop,
 
   // Optional
   Swipe,

@@ -1,4 +1,4 @@
-import { siblings } from '../utils/dom'
+import { siblings } from '../utils/dom';
 
 export default function (Glide, Components, Events) {
   const Build = {
@@ -23,7 +23,9 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     typeClass () {
-      Components.Html.root.classList.add(Glide.settings.classes.type[Glide.settings.type])
+      Components.Html.root.classList.add(
+        Glide.settings.classes.type[Glide.settings.type]
+      )
     },
 
     /**
@@ -33,13 +35,31 @@ export default function (Glide, Components, Events) {
      */
     activeClass () {
       let classes = Glide.settings.classes
+      let last = Components.Html.slides[Glide.index - 1]
       let slide = Components.Html.slides[Glide.index]
+      let next = Components.Html.slides[Glide.index + 1]
+
+      if (last) {
+        last.classList.add(classes.slide.last)
+
+        siblings(last).forEach(sibling => {
+          sibling.classList.remove(classes.slide.last)
+        })
+      }
 
       if (slide) {
         slide.classList.add(classes.slide.active)
 
-        siblings(slide).forEach((sibling) => {
+        siblings(slide).forEach(sibling => {
           sibling.classList.remove(classes.slide.active)
+        })
+      }
+
+      if (next) {
+        next.classList.add(classes.slide.next)
+
+        siblings(next).forEach(sibling => {
+          sibling.classList.remove(classes.slide.next)
         })
       }
     },
@@ -54,7 +74,7 @@ export default function (Glide, Components, Events) {
 
       Components.Html.root.classList.remove(type[Glide.settings.type])
 
-      Components.Html.slides.forEach((sibling) => {
+      Components.Html.slides.forEach(sibling => {
         sibling.classList.remove(slide.active)
       })
     }

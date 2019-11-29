@@ -60,5 +60,8 @@
   },
   "directories": {
     "test": "tests"
+  },
+  "dependencies": {
+    "yarn": "^1.19.2"
   }
 }

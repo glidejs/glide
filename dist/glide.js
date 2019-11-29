@@ -1,5 +1,5 @@
 /*!
- * Glide.js v3.4.1
+ * Glide.js v3.4.2
  * (c) 2013-2019 Jędrzej Chałubek <jedrzej.chalubek@gmail.com> (http://jedrzejchalubek.com/)
  * Released under the MIT License.
  */
@@ -3386,6 +3386,7 @@
        * @return {Void}
        */
       mount: function mount() {
+        this.isEnabled = true;
         this.start();
 
         if (Glide.settings.hoverpause) {
@@ -3403,6 +3404,11 @@
       start: function start() {
         var _this = this;
 
+        if (!this.isEnabled) {
+          return;
+        }
+
+        this.isEnabled = true;
         if (Glide.settings.autoplay) {
           if (isUndefined(this._i)) {
             this._i = setInterval(function () {
@@ -3436,11 +3442,11 @@
         var _this2 = this;
 
         Binder.on('mouseover', Components.Html.root, function () {
-          _this2.stop();
+          if (_this2.isEnabled) _this2.stop();
         });
 
         Binder.on('mouseout', Components.Html.root, function () {
-          _this2.start();
+          if (_this2.isEnabled) _this2.start();
         });
       },
 
@@ -3490,7 +3496,12 @@
      * - while starting a swipe
      * - on updating via API to reset interval that may changed
      */
-    Events.on(['run.before', 'pause', 'destroy', 'swipe.start', 'update'], function () {
+    Events.on(['run.before', 'swipe.start', 'update'], function () {
+      Autoplay.stop();
+    });
+
+    Events.on(['pause', 'destroy'], function () {
+      Autoplay.isEnabled = false;
       Autoplay.stop();
     });
 
@@ -3500,7 +3511,18 @@
      * - on playing via API
      * - while ending a swipe
      */
-    Events.on(['run.after', 'play', 'swipe.end'], function () {
+    Events.on(['run.after', 'swipe.end'], function () {
+      Autoplay.start();
+    });
+
+    /**
+     * Start autoplaying:
+     * - after each run, to restart autoplaying
+     * - on playing via API
+     * - while ending a swipe
+     */
+    Events.on(['play'], function () {
+      Autoplay.isEnabled = true;
       Autoplay.start();
     });
 

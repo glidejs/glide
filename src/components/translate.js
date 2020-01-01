@@ -20,23 +20,9 @@ export default function (Glide, Components, Events) {
 
     if (loop) {
       if (move < 0) {
-        let translate = wrapperWidth + (value - offset)
-
-        Events.emit('translate.jump', {
-          edge: '<',
-          value: translate
-        })
-
-        return translate
+        return wrapperWidth + (value - offset)
       } else if (move > wrapperWidth) {
-        let translate = -1 * (offset + (wrapperWidth - value))
-
-        Events.emit('translate.jump', {
-          edge: '>',
-          value: translate
-        })
-
-        return translate
+        return -1 * (offset + (wrapperWidth - value))
       }
     }
 
@@ -61,6 +47,8 @@ export default function (Glide, Components, Events) {
 
       apply(value)
 
+      console.log(value)
+
       return value
     }
   }
@@ -71,7 +59,7 @@ export default function (Glide, Components, Events) {
     },
 
     set (value) {
-      Translate._v = value
+      Translate._v = toFloat(value)
     }
   })
 

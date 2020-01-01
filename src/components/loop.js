@@ -2,40 +2,46 @@ import { define } from '../utils/object'
 import { isNumber, isObject, toFloat } from '../utils/unit'
 
 export default function (Glide, Components, Events) {
+  const { Sizes, Gaps, Run, Html } = Components
+
   const Loop = {
-    mount(value = 0) {
-      Components.Layout.set(Components.Html.slides)
+    mount () {
+      this.set(Components.Translate.value)
+    },
 
-      let peek = 0
-      if (isObject(Glide.settings.peek)) {
-        peek = Math.max(Object.values(Glide.settings.peek))
+    set (translate) {
+      const { slides } = Loop
+      const { perView } = Glide.settings
+      const { slideWidth, wrapperWidth } = Sizes
+      const { value: gapValue } = Gaps
+
+      if (
+        (translate < wrapperWidth) &&
+        (translate > (wrapperWidth - (slideWidth * perView) - (gapValue * perView)))
+      ) {
+        Loop.layout()
       } else {
-        peek = toFloat(Glide.settings.peek)
-      }
-
-      if (value < (peek * 2)) {
-        Loop.setEndSlides()
-      } else if (value >= Components.Sizes.wrapperWidth - (Components.Sizes.slideWidth * Glide.settings.perView) - (Components.Gaps.value * Glide.settings.perView) - (peek * 2)) {
-        Loop.setStartSlides()
+        for (let i = 0; i < slides.length; i++) {
+          slides[i].style.left = `${(slideWidth * i) + (gapValue * i)}px`
+        }
       }
     },
 
-    setEndSlides() {
-      let { slideWidth } = Components.Sizes
+    layout () {
+      let { slides } = this
 
-      this.slidesEnd.forEach((slide, i) => {
-        slide.style.left = `-${(slideWidth * (i + 1)) + (Components.Gaps.value * (i + 1))}px`
-      })
-    },
-
-    setStartSlides() {
-      let { slideWidth } = Components.Sizes
-
-      this.slidesStart.forEach((slide, i) => {
-        slide.style.left = `${((slideWidth * (i + 1)) + (slideWidth * Components.Run.length)) + ((Components.Gaps.value * (i + 1)) + (Components.Run.length * Components.Gaps.value))}px`
-      })
+      for (let i = 0; i < slides.length; i++) {
+        let value = ((Sizes.slideWidth * (i + 1)) + (Sizes.slideWidth * Run.length)) + ((Gaps.value * (i + 1)) + (Run.length * Gaps.value))
+        slides[i].style.left = `${value}px`
+      }
     }
   }
+
+  define(Loop, 'slides', {
+    get () {
+      return Html.slides.slice(0, Loop.number)
+    }
+  })
 
   define(Loop, 'number', {
     get () {
@@ -53,48 +59,8 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  define(Loop, 'slidesEnd', {
-    get () {
-      return Components.Html.slides.slice(`-${Loop.number}`).reverse()
-    }
-  })
-
-  define(Loop, 'slidesStart', {
-    get () {
-      return Components.Html.slides.slice(0, Loop.number)
-    }
-  })
-
-  define(Loop, 'indexesEnd', {
-    get () {
-      let indexes = []
-
-      for (let i = 0; i < Loop.number; i++) {
-        indexes.push((Components.Html.slides.length - 1) - i)
-      }
-
-      return indexes
-    }
-  })
-
-  define(Loop, 'indexesStart', {
-    get () {
-      let indexes = []
-
-      for (let i = 0; i < Loop.number; i++) {
-        indexes.push(i)
-      }
-
-      return indexes
-    }
-  })
-
-  Events.on('translate.set', (context) => {
-    let { value } = context
-
-    setTimeout(() => {
-      Loop.mount(value)
-    }, 0)
+  Events.on('translate.set', (translate) => {
+    Loop.set(translate.value)
   })
 
   return Loop

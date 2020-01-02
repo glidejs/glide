@@ -13,7 +13,7 @@ export default function (Glide, Components) {
    * @return {Number}
    */
   return function (translate) {
-    const gap = Components.Gaps.value
+    const gap = Components.Gap.value
     const width = Components.Sizes.width
     const focusAt = Glide.settings.focusAt
     const slideWidth = Components.Sizes.slideWidth

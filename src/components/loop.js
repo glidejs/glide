@@ -2,37 +2,31 @@ import { define } from '../utils/object'
 import { isNumber, isObject, toFloat } from '../utils/unit'
 
 export default function (Glide, Components, Events) {
-  const { Sizes, Gaps, Run, Html } = Components
+  const { Sizes, Gap, Run, Html, Translate } = Components
 
   const Loop = {
     mount () {
-      this.set(Components.Translate.value)
+      this.set(Translate.value)
     },
 
     set (translate) {
-      const { slides } = Loop
+      const { slides } = this
+      const { length } = Run
+      const { value: gapValue } = Gap
       const { perView } = Glide.settings
       const { slideWidth, wrapperWidth } = Sizes
-      const { value: gapValue } = Gaps
 
       if (
-        (translate < wrapperWidth) &&
-        (translate > (wrapperWidth - (slideWidth * perView) - (gapValue * perView)))
+        (translate < wrapperWidth)
+        && (translate > (wrapperWidth - (slideWidth * perView) - (gapValue * perView)))
       ) {
-        Loop.layout()
+        for (let i = 0; i < slides.length; i++) {
+          slides[i].style.left = `${(slideWidth * i) + (gapValue * i) + wrapperWidth}px`
+        }
       } else {
         for (let i = 0; i < slides.length; i++) {
           slides[i].style.left = `${(slideWidth * i) + (gapValue * i)}px`
         }
-      }
-    },
-
-    layout () {
-      let { slides } = this
-
-      for (let i = 0; i < slides.length; i++) {
-        let value = ((Sizes.slideWidth * (i + 1)) + (Sizes.slideWidth * Run.length)) + ((Gaps.value * (i + 1)) + (Run.length * Gaps.value))
-        slides[i].style.left = `${value}px`
       }
     }
   }
@@ -55,7 +49,7 @@ export default function (Glide, Components, Events) {
         return perView + focusAt
       }
 
-      return perView + (perView - (focusAt + 1))
+      return perView + (perView - focusAt)
     }
   })
 

@@ -70,7 +70,7 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      return Sizes.slideWidth * Sizes.length + Components.Gaps.grow
+      return Sizes.slideWidth * Sizes.length + Components.Gap.grow
     }
   })
 
@@ -81,7 +81,7 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      return (Sizes.width / Glide.settings.perView) - Components.Peek.reductor - Components.Gaps.reductor
+      return (Sizes.width / Glide.settings.perView) - Components.Peek.reductor - Components.Gap.reductor
     }
   })
 

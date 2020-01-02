@@ -18,7 +18,7 @@ export default function (Glide, Components, Events) {
       for (let i = 0; i < slides.length; i++) {
         slides[i].style.position = 'absolute'
         slides[i].style.top = '0px'
-        slides[i].style.left = `${(Components.Sizes.slideWidth * i) + (Components.Gaps.value * i)}px`
+        slides[i].style.left = `${(Components.Sizes.slideWidth * i) + (Components.Gap.value * i)}px`
       }
     }
   }

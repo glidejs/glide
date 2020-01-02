@@ -147,9 +147,6 @@ export default function (Glide, Components, Events) {
           swipeDeg < settings.touchAngle
         ) {
           Components.Run.make(`${Components.Direction.resolve('>')}${steps}`)
-        } else {
-          // While swipe don't reach distance apply previous transform.
-          Components.Translate.set()
         }
 
         Components.Html.root.classList.remove(settings.classes.dragging)

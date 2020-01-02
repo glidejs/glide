@@ -15,6 +15,6 @@ export default function (Glide, Components) {
   return function (translate) {
     const multiplier = Math.floor(translate / Components.Sizes.slideWidth)
 
-    return translate + (Components.Gaps.value * multiplier)
+    return translate + (Components.Gap.value * multiplier)
   }
 }

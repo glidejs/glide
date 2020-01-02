@@ -2,7 +2,7 @@ import Core from '../src/index'
 
 // Required components
 import Run from '../src/components/run'
-import Gaps from '../src/components/gaps'
+import Gap from '../src/components/gap'
 import Html from '../src/components/html'
 import Peek from '../src/components/peek'
 import Loop from '../src/components/loop'
@@ -27,7 +27,7 @@ const COMPONENTS = {
   // Required
   Html,
   Peek,
-  Gaps,
+  Gap,
   Sizes,
   Translate,
   Animation,

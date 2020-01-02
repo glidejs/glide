@@ -3,9 +3,9 @@ import { define } from '../utils/object'
 import { throttle } from '../utils/wait'
 
 export default function (Glide, Components, Events) {
-  const Gaps = {}
+  const Gap = {}
 
-  define(Gaps, 'value', {
+  define(Gap, 'value', {
     /**
      * Gets value of the gap.
      *
@@ -16,7 +16,7 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  define(Gaps, 'grow', {
+  define(Gap, 'grow', {
     /**
      * Gets additional dimentions value caused by gaps.
      * Used to increase width of the slides wrapper.
@@ -24,11 +24,11 @@ export default function (Glide, Components, Events) {
      * @returns {Number}
      */
     get () {
-      return Gaps.value * (Components.Sizes.length)
+      return Gap.value * (Components.Sizes.length)
     }
   })
 
-  define(Gaps, 'reductor', {
+  define(Gap, 'reductor', {
     /**
      * Gets reduction value caused by gaps.
      * Used to subtract width of the slides.
@@ -38,9 +38,9 @@ export default function (Glide, Components, Events) {
     get () {
       let perView = Glide.settings.perView
 
-      return (Gaps.value * (perView - 1)) / perView
+      return (Gap.value * (perView - 1)) / perView
     }
   })
 
-  return Gaps
+  return Gap
 }

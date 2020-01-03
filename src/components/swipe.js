@@ -10,6 +10,8 @@ const END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave']
 const MOUSE_EVENTS = ['mousedown', 'mousemove', 'mouseup', 'mouseleave']
 
 export default function (Glide, Components, Events) {
+  const { Html, Translate, Direction } = Components
+
   /**
    * Instance of the binder for DOM Events.
    *
@@ -45,7 +47,7 @@ export default function (Glide, Components, Events) {
     return swipeThreshold
   }
 
-  let translate = Components.Translate._v
+  let translate = Translate._v
   let swipeSin = 0
   let swipeStartX = 0
   let swipeStartY = 0
@@ -108,9 +110,9 @@ export default function (Glide, Components, Events) {
         if (swipeSin * 180 / Math.PI < touchAngle) {
           event.stopPropagation()
 
-          translate = Components.Translate.set(subExSx * toFloat(touchRatio))
+          translate = Translate.set(subExSx * toFloat(touchRatio))
 
-          Components.Html.root.classList.add(classes.dragging)
+          Html.root.classList.add(classes.dragging)
 
           Events.emit('swipe.move')
         } else {
@@ -136,20 +138,20 @@ export default function (Glide, Components, Events) {
         let swipeDeg = swipeSin * 180 / Math.PI
         let steps = toInt(settings[settings.perSwipe])
 
-        Components.Translate.value = translate
+        Translate.value = translate
 
         this.enable()
 
         if (swipeDistance > swipeThreshold && swipeDeg < settings.touchAngle) {
-          Components.Run.make(`${Components.Direction.resolve('<')}${steps}`)
+          Components.Run.make(`${Direction.resolve('<')}${steps}`)
         } else if (
           swipeDistance < -swipeThreshold &&
           swipeDeg < settings.touchAngle
         ) {
-          Components.Run.make(`${Components.Direction.resolve('>')}${steps}`)
+          Components.Run.make(`${Direction.resolve('>')}${steps}`)
         }
 
-        Components.Html.root.classList.remove(settings.classes.dragging)
+        Html.root.classList.remove(settings.classes.dragging)
 
         this.unbindSwipeMove()
         this.unbindSwipeEnd()
@@ -167,13 +169,13 @@ export default function (Glide, Components, Events) {
       let settings = Glide.settings
 
       if (settings.swipeThreshold) {
-        Binder.on(START_EVENTS[0], Components.Html.track, (event) => {
+        Binder.on(START_EVENTS[0], Html.track, (event) => {
           this.start(event)
         }, capture)
       }
 
       if (settings.dragThreshold) {
-        Binder.on(START_EVENTS[1], Components.Html.track, (event) => {
+        Binder.on(START_EVENTS[1], Html.track, (event) => {
           this.start(event)
         }, capture)
       }
@@ -185,8 +187,8 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     unbindSwipeStart () {
-      Binder.off(START_EVENTS[0], Components.Html.track, capture)
-      Binder.off(START_EVENTS[1], Components.Html.track, capture)
+      Binder.off(START_EVENTS[0], Html.track, capture)
+      Binder.off(START_EVENTS[1], Html.track, capture)
     },
 
     /**
@@ -195,7 +197,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     bindSwipeMove () {
-      Binder.on(MOVE_EVENTS, Components.Html.track, throttle((event) => {
+      Binder.on(MOVE_EVENTS, Html.track, throttle((event) => {
         this.move(event)
       }, Glide.settings.throttle), capture)
     },
@@ -206,7 +208,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     unbindSwipeMove () {
-      Binder.off(MOVE_EVENTS, Components.Html.track, capture)
+      Binder.off(MOVE_EVENTS, Html.track, capture)
     },
 
     /**
@@ -215,7 +217,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     bindSwipeEnd () {
-      Binder.on(END_EVENTS, Components.Html.track, (event) => {
+      Binder.on(END_EVENTS, Html.track, (event) => {
         this.end(event)
       })
     },
@@ -226,7 +228,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     unbindSwipeEnd () {
-      Binder.off(END_EVENTS, Components.Html.track)
+      Binder.off(END_EVENTS, Html.track)
     },
 
     /**
@@ -257,7 +259,7 @@ export default function (Glide, Components, Events) {
    * - after initial building
    */
   Events.on('classes.after', () => {
-    Components.Html.root.classList.add(Glide.settings.classes.swipeable)
+    Html.root.classList.add(Glide.settings.classes.swipeable)
   })
 
   /**

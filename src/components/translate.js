@@ -3,7 +3,7 @@ import { define } from '../utils/object'
 import { isNumber, toFloat } from '../utils/unit'
 
 export default function (Glide, Components, Events) {
-  const { Sizes, Html } = Components
+  const { Sizes, Html, Peek } = Components
 
   /**
    * Instance of the translate mutation function.
@@ -12,7 +12,7 @@ export default function (Glide, Components, Events) {
    */
   const mutate = mutator(Glide, Components, Events)
 
-  const calculate = (value, offset) => {
+  const calculate = (value, offset = 0) => {
     const { loop } = Glide.settings
     const { wrapperWidth } = Sizes
 
@@ -39,15 +39,13 @@ export default function (Glide, Components, Events) {
     mount () {
       this._v = mutate(Sizes.slideWidth * Glide.index)
 
-      apply(this._v)
+      this.set(0)
     },
 
     set (offset) {
       let value = calculate(this._v, offset)
 
       apply(value)
-
-      console.log(value)
 
       return value
     }

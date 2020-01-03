@@ -1,18 +1,14 @@
 import { define } from '../utils/object'
-import { isNumber, isObject, toFloat } from '../utils/unit'
 
 export default function (Glide, Components, Events) {
-  const { Sizes, Gap, Run, Html, Translate } = Components
+  const { Sizes, Gap, Run, Html, Translate, Peek } = Components
 
   const Loop = {
-    mount () {
-      this.set(Translate.value)
-    },
-
     set (translate) {
       const { slides } = this
       const { length } = Run
       const { value: gapValue } = Gap
+      const { value: peekValue } = Peek
       const { perView } = Glide.settings
       const { slideWidth, wrapperWidth } = Sizes
 
@@ -21,7 +17,7 @@ export default function (Glide, Components, Events) {
         && (translate > (wrapperWidth - (slideWidth * perView) - (gapValue * perView)))
       ) {
         for (let i = 0; i < slides.length; i++) {
-          slides[i].style.left = `${(slideWidth * i) + (gapValue * i) + wrapperWidth}px`
+          slides[i].style.left = `${wrapperWidth + (slideWidth * i) + (gapValue * i)}px`
         }
       } else {
         for (let i = 0; i < slides.length; i++) {

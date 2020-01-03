@@ -9,6 +9,10 @@ const FLIPED_MOVEMENTS = {
 }
 
 export default function (Glide, Components, Events) {
+  const classAttr = (action, value) => {
+    Components.Html.root.classList[action](value)
+  }
+
   const Direction = {
     /**
      * Setups gap value based on settings.
@@ -43,24 +47,6 @@ export default function (Glide, Components, Events) {
      */
     is (direction) {
       return this.value === direction
-    },
-
-    /**
-     * Applies direction class to the root HTML element.
-     *
-     * @return {Void}
-     */
-    addClass () {
-      Components.Html.root.classList.add(Glide.settings.classes.direction[this.value])
-    },
-
-    /**
-     * Removes direction class from the root HTML element.
-     *
-     * @return {Void}
-     */
-    removeClass () {
-      Components.Html.root.classList.remove(Glide.settings.classes.direction[this.value])
     }
   }
 
@@ -90,15 +76,6 @@ export default function (Glide, Components, Events) {
   })
 
   /**
-   * Clear direction class:
-   * - on destroy to bring HTML to its initial state
-   * - on update to remove class before reappling bellow
-   */
-  Events.on(['destroy', 'update'], () => {
-    Direction.removeClass()
-  })
-
-  /**
    * Remount component:
    * - on update to reflect changes in direction value
    */
@@ -112,7 +89,16 @@ export default function (Glide, Components, Events) {
    * - on updating to reapply direction class that may changed
    */
   Events.on(['classes.before', 'update'], () => {
-    Direction.addClass()
+    classAttr('add', Glide.settings.classes.direction[Direction.value])
+  })
+
+  /**
+   * Clear direction class:
+   * - on destroy to bring HTML to its initial state
+   * - on update to remove class before reappling bellow
+   */
+  Events.on(['destroy', 'update'], () => {
+    classAttr('remove', Glide.settings.classes.direction[Direction.value])
   })
 
   return Direction

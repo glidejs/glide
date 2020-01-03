@@ -29,14 +29,14 @@ const COMPONENTS = {
   Peek,
   Gap,
   Sizes,
+  Layout,
+  Run,
   Translate,
+  Loop,
   Animation,
   Direction,
   Resize,
-  Layout,
   Classes,
-  Run,
-  Loop,
 
   // Optional
   Swipe,

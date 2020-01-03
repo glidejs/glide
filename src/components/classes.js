@@ -1,6 +1,8 @@
 import { siblings } from '../utils/dom'
 
 export default function (Glide, Components, Events) {
+  const { Html } = Components
+
   const Classes = {
     /**
      * Adds initial classes.
@@ -22,7 +24,7 @@ export default function (Glide, Components, Events) {
      */
     add () {
       let classes = Glide.settings.classes
-      let slide = Components.Html.slides[Glide.index]
+      let slide = Html.slides[Glide.index]
 
       if (slide) {
         slide.classList.add(classes.slide.active)
@@ -41,7 +43,7 @@ export default function (Glide, Components, Events) {
     remove () {
       const { slide } = Glide.settings.classes
 
-      Components.Html.slides.forEach((sibling) => {
+      Html.slides.forEach((sibling) => {
         sibling.classList.remove(slide.active)
       })
     }

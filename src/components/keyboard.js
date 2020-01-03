@@ -1,12 +1,32 @@
 import EventsBinder from '../core/event/events-binder'
 
 export default function (Glide, Components, Events) {
+  const { Run, Direction } = Components
+
   /**
    * Instance of the binder for DOM Events.
    *
    * @type {EventsBinder}
    */
   const Binder = new EventsBinder()
+
+  /**
+   * Handles keyboard's arrows press and moving glide foward and backward.
+   *
+   * @param  {Object} event
+   * @return {Void}
+   */
+  const press = (event) => {
+    const { perSwipe } = Glide.settings
+
+    if (event.keyCode === 39) {
+      Run.make(Direction.resolve(`${perSwipe}>`))
+    }
+
+    if (event.keyCode === 37) {
+      Run.make(Direction.resolve(`${perSwipe}<`))
+    }
+  }
 
   const Keyboard = {
     /**
@@ -26,7 +46,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     bind () {
-      Binder.on('keyup', document, this.press)
+      Binder.on('keyup', document, press)
     },
 
     /**
@@ -36,24 +56,6 @@ export default function (Glide, Components, Events) {
      */
     unbind () {
       Binder.off('keyup', document)
-    },
-
-    /**
-     * Handles keyboard's arrows press and moving glide foward and backward.
-     *
-     * @param  {Object} event
-     * @return {Void}
-     */
-    press (event) {
-      const { perSwipe } = Glide.settings
-
-      if (event.keyCode === 39) {
-        Components.Run.make(Components.Direction.resolve(`${perSwipe}>`))
-      }
-
-      if (event.keyCode === 37) {
-        Components.Run.make(Components.Direction.resolve(`${perSwipe}<`))
-      }
     }
   }
 

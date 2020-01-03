@@ -10,6 +10,8 @@ const PREVIOUS_CONTROLS_SELECTOR = `${CONTROLS_SELECTOR} [data-glide-dir*="<"]`
 const NEXT_CONTROLS_SELECTOR = `${CONTROLS_SELECTOR} [data-glide-dir*=">"]`
 
 export default function (Glide, Components, Events) {
+  const { Html, Run, Direction } = Components
+
   /**
    * Instance of the binder for DOM Events.
    *
@@ -17,7 +19,88 @@ export default function (Glide, Components, Events) {
    */
   const Binder = new EventsBinder()
 
-  let capture = (supportsPassive) ? { passive: true } : false
+  const capture = (supportsPassive) ? { passive: true } : false
+
+  /**
+   * Toggles active class on items inside navigation.
+   *
+   * @param  {HTMLElement} controls
+   * @return {Void}
+   */
+  const addClass = (controls) => {
+    const { classes } = Glide.settings
+    const item = controls[Glide.index]
+
+    if (item) {
+      item.classList.add(classes.nav.active)
+
+      siblings(item).forEach(sibling => {
+        sibling.classList.remove(classes.nav.active)
+      })
+    }
+  }
+
+  /**
+   * Removes active class from active control.
+   *
+   * @param  {HTMLElement} controls
+   * @return {Void}
+   */
+  const removeClass = (controls) => {
+    const item = controls[Glide.index]
+
+    if (item) {
+      item.classList.remove(Glide.settings.classes.nav.active)
+    }
+  }
+
+  /**
+   * Removes `Glide.settings.classes.disabledArrow` from given NodeList elements
+   *
+   * @param {NodeList[]} lists
+   */
+  const resetArrowState = (...lists) => {
+    const settings = Glide.settings
+
+    lists.forEach(function (list) {
+      list.forEach(function (element) {
+        element.classList.remove(settings.classes.arrow.disabled)
+      })
+    })
+  }
+
+  /**
+   * Adds `Glide.settings.classes.disabledArrow` to given NodeList elements
+   *
+   * @param {NodeList[]} lists
+   */
+  const disableArrow = (...lists) => {
+    const settings = Glide.settings
+
+    lists.forEach(function (list) {
+      list.forEach(function (element) {
+        element.classList.add(settings.classes.arrow.disabled)
+      })
+    })
+  }
+
+  /**
+   * Handles `click` event on the arrows HTML elements.
+   * Moves slider in direction given via the
+   * `data-glide-dir` attribute.
+   *
+   * @param {Object} event
+   * @return {void}
+   */
+  const click = (event) => {
+    if (!supportsPassive && event.type === 'touchstart') {
+      event.preventDefault()
+    }
+
+    const direction = event.currentTarget.getAttribute('data-glide-dir')
+
+    Run.make(Direction.resolve(direction))
+  }
 
   const Controls = {
     /**
@@ -33,7 +116,7 @@ export default function (Glide, Components, Events) {
        * @private
        * @type {HTMLCollection}
        */
-      this._n = Components.Html.root.querySelectorAll(NAV_SELECTOR)
+      this._n = Html.root.querySelectorAll(NAV_SELECTOR)
 
       /**
        * Collection of controls HTML elements.
@@ -41,7 +124,7 @@ export default function (Glide, Components, Events) {
        * @private
        * @type {HTMLCollection}
        */
-      this._c = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR)
+      this._c = Html.root.querySelectorAll(CONTROLS_SELECTOR)
 
       /**
        * Collection of arrow control HTML elements.
@@ -49,9 +132,9 @@ export default function (Glide, Components, Events) {
        * @private
        * @type {Object}
        */
-      this._arrowControls = {
-        previous: Components.Html.root.querySelectorAll(PREVIOUS_CONTROLS_SELECTOR),
-        next: Components.Html.root.querySelectorAll(NEXT_CONTROLS_SELECTOR)
+      this._ac = {
+        previous: Html.root.querySelectorAll(PREVIOUS_CONTROLS_SELECTOR),
+        next: Html.root.querySelectorAll(NEXT_CONTROLS_SELECTOR)
       }
 
       this.addBindings()
@@ -64,7 +147,7 @@ export default function (Glide, Components, Events) {
      */
     setActive () {
       for (let i = 0; i < this._n.length; i++) {
-        this.addClass(this._n[i].children)
+        addClass(this._n[i].children)
       }
     },
 
@@ -75,44 +158,7 @@ export default function (Glide, Components, Events) {
      */
     removeActive () {
       for (let i = 0; i < this._n.length; i++) {
-        this.removeClass(this._n[i].children)
-      }
-    },
-
-    /**
-     * Toggles active class on items inside navigation.
-     *
-     * @param  {HTMLElement} controls
-     * @return {Void}
-     */
-    addClass (controls) {
-      const settings = Glide.settings
-      const item = controls[Glide.index]
-
-      if (!item) {
-        return
-      }
-
-      if (item) {
-        item.classList.add(settings.classes.nav.active)
-
-        siblings(item).forEach(sibling => {
-          sibling.classList.remove(settings.classes.nav.active)
-        })
-      }
-    },
-
-    /**
-     * Removes active class from active control.
-     *
-     * @param  {HTMLElement} controls
-     * @return {Void}
-     */
-    removeClass (controls) {
-      let item = controls[Glide.index]
-
-      if (item) {
-        item.classList.remove(Glide.settings.classes.nav.active)
+        removeClass(this._n[i].children)
       }
     },
 
@@ -120,52 +166,20 @@ export default function (Glide, Components, Events) {
      * Calculates, removes or adds `Glide.settings.classes.disabledArrow` class on the control arrows
      */
     setArrowState () {
-      if (Glide.settings.rewind) {
-        return
+      if (!Glide.settings.rewind) {
+        const next = Controls._ac.next
+        const previous = Controls._ac.previous
+
+        resetArrowState(next, previous)
+
+        if (Glide.index === 0) {
+          disableArrow(previous)
+        }
+
+        if (Glide.index === Run.length) {
+          disableArrow(next)
+        }
       }
-
-      const next = Controls._arrowControls.next
-      const previous = Controls._arrowControls.previous
-
-      this.resetArrowState(next, previous)
-
-      if (Glide.index === 0) {
-        this.disableArrow(previous)
-      }
-
-      if (Glide.index === Components.Run.length) {
-        this.disableArrow(next)
-      }
-    },
-
-    /**
-     * Removes `Glide.settings.classes.disabledArrow` from given NodeList elements
-     *
-     * @param {NodeList[]} lists
-     */
-    resetArrowState (...lists) {
-      const settings = Glide.settings
-
-      lists.forEach(function (list) {
-        list.forEach(function (element) {
-          element.classList.remove(settings.classes.arrow.disabled)
-        })
-      })
-    },
-
-    /**
-     * Adds `Glide.settings.classes.disabledArrow` to given NodeList elements
-     *
-     * @param {NodeList[]} lists
-     */
-    disableArrow (...lists) {
-      const settings = Glide.settings
-
-      lists.forEach(function (list) {
-        list.forEach(function (element) {
-          element.classList.add(settings.classes.arrow.disabled)
-        })
-      })
     },
 
     /**
@@ -198,8 +212,8 @@ export default function (Glide, Components, Events) {
      */
     bind (elements) {
       for (let i = 0; i < elements.length; i++) {
-        Binder.on('click', elements[i], this.click)
-        Binder.on('touchstart', elements[i], this.click, capture)
+        Binder.on('click', elements[i], click)
+        Binder.on('touchstart', elements[i], click, capture)
       }
     },
 
@@ -213,24 +227,6 @@ export default function (Glide, Components, Events) {
       for (let i = 0; i < elements.length; i++) {
         Binder.off(['click', 'touchstart'], elements[i])
       }
-    },
-
-    /**
-     * Handles `click` event on the arrows HTML elements.
-     * Moves slider in direction given via the
-     * `data-glide-dir` attribute.
-     *
-     * @param {Object} event
-     * @return {void}
-     */
-    click (event) {
-      if (!supportsPassive && event.type === 'touchstart') {
-        event.preventDefault()
-      }
-
-      const direction = event.currentTarget.getAttribute('data-glide-dir')
-
-      Components.Run.make(Components.Direction.resolve(direction))
     }
   }
 

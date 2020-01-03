@@ -1,6 +1,8 @@
 import EventsBinder from '../core/event/events-binder'
 
 export default function (Glide, Components, Events) {
+  const { Html } = Components
+
   /**
    * Instance of the binder for DOM Events.
    *
@@ -24,7 +26,9 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     bind () {
-      Binder.on('dragstart', Components.Html.wrapper, this.dragstart)
+      Binder.on('dragstart', Html.wrapper, (event) => {
+        event.preventDefault()
+      })
     },
 
     /**
@@ -33,16 +37,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     unbind () {
-      Binder.off('dragstart', Components.Html.wrapper)
-    },
-
-    /**
-     * Event handler. Prevents dragging.
-     *
-     * @return {Void}
-     */
-    dragstart (event) {
-      event.preventDefault()
+      Binder.off('dragstart', Html.wrapper)
     }
   }
 

@@ -3,6 +3,163 @@ import { toInt } from '../utils/unit'
 import { define } from '../utils/object'
 
 export default function (Glide, Components, Events) {
+  /**
+   * Returns index value to move forward/to the right
+   *
+   * @param distance
+   * @returns {Number}
+   */
+  const calculateForwardIndex = (distance) => {
+    const { index } = Glide
+
+    if (Glide.settings.loop) {
+      return index + distance
+    }
+
+    return index + (distance - (index % distance))
+  }
+
+  /**
+   * Calculates index value to move backward/to the left
+   *
+   * @param distance
+   * @returns {Number}
+   */
+  const calculateBackwardIndex = (distance) => {
+    const { index } = Glide
+
+    if (Glide.settings.loop) {
+      return index - distance
+    }
+
+    return (Math.ceil(index / distance) - 1) * distance
+  }
+
+  /**
+   * Normalizes the given forward index based on glide settings, preventing it to exceed certain boundaries
+   *
+   * @param index
+   * @param length
+   * @param distance
+   * @returns {Number}
+   */
+  const normalizeForwardIndex = (index, distance) => {
+    const { length } = Run
+
+    if (index <= length) {
+      return index
+    }
+
+    if (Glide.settings.loop) {
+      return index - (length + 1)
+    }
+
+    if (Glide.settings.rewind) {
+      // bound does funny things with the length, therefor we have to be certain
+      // that we are on the last possible index value given by bound
+      if (Run.isBound() && !Run.isEnd()) {
+        return length
+      }
+
+      return 0
+    }
+
+    if (Run.isBound()) {
+      return length
+    }
+
+    return Math.floor(length / distance) * distance
+  }
+
+  /**
+   * Normalizes the given backward index based on glide settings, preventing it to exceed certain boundaries
+   *
+   * @param index
+   * @param length
+   * @param distance
+   * @returns {*}
+   */
+  const normalizeBackwardIndex = (index, distance) => {
+    const { length } = Run
+
+    if (index >= 0) {
+      return index
+    }
+
+    if (Glide.settings.loop) {
+      return index + (length + 1)
+    }
+
+    if (Glide.settings.rewind) {
+      // bound does funny things with the length, therefor we have to be certain
+      // that we are on first possible index value before we to rewind to the length given by bound
+      if (Run.isBound() && Run.isStart()) {
+        return length
+      }
+
+      return Math.floor(length / distance) * distance
+    }
+
+    return 0
+  }
+
+  /**
+   * Calculates current index based on defined move.
+   *
+   * @return {Number|Undefined}
+   */
+  const calculate = (move, length) => {
+    const { steps, direction } = move
+    const { loop, perMove } = Glide.settings
+
+    let distance = (steps === '|') ? perMove : ((steps) || 1)
+
+    // While direction is `=` we want jump to
+    // a specified index described in steps.
+    if (direction === '=') {
+      // Check if bound is true, as we want to avoid whitespaces
+      if (Glide.settings.bound && steps > length) {
+        return length
+      } else {
+        return steps
+      }
+    }
+
+    // When pattern is equal to `>>` we want
+    // fast forward to the last slide.
+    if (direction === '>' && steps === '>') {
+      return length
+    }
+
+    // When pattern is equal to `<<` we want
+    // fast forward to the first slide.
+    if (direction === '<' && steps === '<') {
+      return 0
+    }
+
+    if (direction === '>') {
+      const index = calculateForwardIndex(distance)
+
+      if (index > length && loop) {
+        Run._o = true
+      }
+
+      return normalizeForwardIndex(index, distance)
+    }
+
+    if (direction === '<') {
+      const index = calculateBackwardIndex(distance)
+
+      if (index < 0 && loop) {
+        Run._o = true
+      }
+
+      return normalizeBackwardIndex(index, distance)
+    }
+
+    warn(`Invalid direction pattern [${direction}${steps}] has been used`)
+  }
+
   const Run = {
     /**
      * Initializes autorunning of the glide.
@@ -26,7 +183,7 @@ export default function (Glide, Components, Events) {
 
         Events.emit('run.before', this.move)
 
-        this.calculate()
+        Glide.index = calculate(this.move, this.length)
 
         Events.emit('run', this.move)
 
@@ -50,74 +207,6 @@ export default function (Glide, Components, Events) {
           Glide.enable()
         })
       }
-    },
-
-    /**
-     * Calculates current index based on defined move.
-     *
-     * @return {Number|Undefined}
-     */
-    calculate () {
-      const { move, length } = this
-      const { steps, direction } = move
-      const { loop, perMove } = Glide.settings
-
-      let distance = (steps === '|') ? perMove : ((steps) || 1)
-
-      // While direction is `=` we want jump to
-      // a specified index described in steps.
-      if (direction === '=') {
-        // Check if bound is true, as we want to avoid whitespaces
-        if (Glide.settings.bound && steps > length) {
-          Glide.index = length
-        } else {
-          Glide.index = steps
-        }
-
-        return
-      }
-
-      // When pattern is equal to `>>` we want
-      // fast forward to the last slide.
-      if (direction === '>' && steps === '>') {
-        Glide.index = length
-
-        return
-      }
-
-      // When pattern is equal to `<<` we want
-      // fast forward to the first slide.
-      if (direction === '<' && steps === '<') {
-        Glide.index = 0
-
-        return
-      }
-
-      if (direction === '>') {
-        const index = calculateForwardIndex(distance)
-
-        if (index > length && loop) {
-          this._o = true
-        }
-
-        Glide.index = normalizeForwardIndex(index, distance)
-
-        return
-      }
-
-      if (direction === '<') {
-        const index = calculateBackwardIndex(distance)
-
-        if (index < 0 && loop) {
-          this._o = true
-        }
-
-        Glide.index = normalizeBackwardIndex(index, distance)
-
-        return
-      }
-
-      warn(`Invalid direction pattern [${direction}${steps}] has been used`)
     },
 
     /**
@@ -158,106 +247,6 @@ export default function (Glide, Components, Events) {
 
       return !loop && focusAt !== 'center' && bound
     }
-  }
-
-  /**
-   * Returns index value to move forward/to the right
-   *
-   * @param distance
-   * @returns {Number}
-   */
-  function calculateForwardIndex (distance) {
-    const { index } = Glide
-
-    if (Glide.settings.loop) {
-      return index + distance
-    }
-
-    return index + (distance - (index % distance))
-  }
-
-  /**
-   * Calculates index value to move backward/to the left
-   *
-   * @param distance
-   * @returns {Number}
-   */
-  function calculateBackwardIndex (distance) {
-    const { index } = Glide
-
-    if (Glide.settings.loop) {
-      return index - distance
-    }
-
-    return (Math.ceil(index / distance) - 1) * distance
-  }
-
-  /**
-   * Normalizes the given forward index based on glide settings, preventing it to exceed certain boundaries
-   *
-   * @param index
-   * @param length
-   * @param distance
-   * @returns {Number}
-   */
-  function normalizeForwardIndex (index, distance) {
-    const { length } = Run
-
-    if (index <= length) {
-      return index
-    }
-
-    if (Glide.settings.loop) {
-      return index - (length + 1)
-    }
-
-    if (Glide.settings.rewind) {
-      // bound does funny things with the length, therefor we have to be certain
-      // that we are on the last possible index value given by bound
-      if (Run.isBound() && !Run.isEnd()) {
-        return length
-      }
-
-      return 0
-    }
-
-    if (Run.isBound()) {
-      return length
-    }
-
-    return Math.floor(length / distance) * distance
-  }
-
-  /**
-   * Normalizes the given backward index based on glide settings, preventing it to exceed certain boundaries
-   *
-   * @param index
-   * @param length
-   * @param distance
-   * @returns {*}
-   */
-  function normalizeBackwardIndex (index, distance) {
-    const { length } = Run
-
-    if (index >= 0) {
-      return index
-    }
-
-    if (Glide.settings.loop) {
-      return index + (length + 1)
-    }
-
-    if (Glide.settings.rewind) {
-      // bound does funny things with the length, therefor we have to be certain
-      // that we are on first possible index value before we to rewind to the length given by bound
-      if (Run.isBound() && Run.isStart()) {
-        return length
-      }
-
-      return Math.floor(length / distance) * distance
-    }
-
-    return 0
   }
 
   define(Run, 'move', {

@@ -4,6 +4,8 @@ import { toInt, isUndefined } from '../utils/unit'
 import EventsBinder from '../core/event/events-binder'
 
 export default function (Glide, Components, Events) {
+  const { Html, Run } = Components
+
   /**
    * Instance of the binder for DOM Events.
    *
@@ -37,7 +39,7 @@ export default function (Glide, Components, Events) {
           this._i = setInterval(() => {
             this.stop()
 
-            Components.Run.make('>')
+            Run.make('>')
 
             this.start()
 
@@ -62,13 +64,13 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     bind () {
-      Binder.on('mouseenter', Components.Html.root, () => {
+      Binder.on('mouseenter', Html.root, () => {
         this.stop()
 
         Events.emit('autoplay.enter')
       })
 
-      Binder.on('mouseleave', Components.Html.root, () => {
+      Binder.on('mouseleave', Html.root, () => {
         this.start()
 
         Events.emit('autoplay.leave')
@@ -81,7 +83,7 @@ export default function (Glide, Components, Events) {
      * @returns {Void}
      */
     unbind () {
-      Binder.off(['mouseover', 'mouseout'], Components.Html.root)
+      Binder.off(['mouseover', 'mouseout'], Html.root)
     }
   }
 
@@ -93,7 +95,7 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      let autoplay = Components.Html.slides[Glide.index].getAttribute('data-glide-autoplay')
+      let autoplay = Html.slides[Glide.index].getAttribute('data-glide-autoplay')
 
       if (autoplay) {
         return toInt(autoplay)

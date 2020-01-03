@@ -3,6 +3,8 @@ import { define } from '../utils/object'
 import EventsBinder from '../core/event/events-binder'
 
 export default function (Glide, Components, Events) {
+  const { Html } = Components
+
   /**
    * Instance of the binder for DOM Events.
    *
@@ -28,6 +30,19 @@ export default function (Glide, Components, Events) {
    */
   let prevented = false
 
+  /**
+   * Handler for click event. Prevents clicks when glide is in `prevent` status.
+   *
+   * @param  {Object} event
+   * @return {Void}
+   */
+  const click = (event) => {
+    if (prevented) {
+      event.stopPropagation()
+      event.preventDefault()
+    }
+  }
+
   const Anchors = {
     /**
      * Setups a initial state of anchors component.
@@ -41,7 +56,7 @@ export default function (Glide, Components, Events) {
        * @private
        * @type {HTMLCollection}
        */
-      this._a = Components.Html.wrapper.querySelectorAll('a')
+      this._a = Html.wrapper.querySelectorAll('a')
 
       this.bind()
     },
@@ -52,7 +67,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     bind () {
-      Binder.on('click', Components.Html.wrapper, this.click)
+      Binder.on('click', Html.wrapper, click)
     },
 
     /**
@@ -61,70 +76,47 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     unbind () {
-      Binder.off('click', Components.Html.wrapper)
-    },
-
-    /**
-     * Handler for click event. Prevents clicks when glide is in `prevent` status.
-     *
-     * @param  {Object} event
-     * @return {Void}
-     */
-    click (event) {
-      if (prevented) {
-        event.stopPropagation()
-        event.preventDefault()
-      }
+      Binder.off('click', Html.wrapper)
     },
 
     /**
      * Detaches anchors click event inside glide.
      *
-     * @return {self}
+     * @return {Void}
      */
-    detach () {
+    detach (items) {
       prevented = true
 
       if (!detached) {
-        for (var i = 0; i < this.items.length; i++) {
-          this.items[i].draggable = false
+        for (let i = 0; i < items.length; i++) {
+          items[i].draggable = false
 
-          this.items[i].setAttribute(
-            'data-href',
-            this.items[i].getAttribute('href')
-          )
+          items[i].setAttribute('data-href', items[i].getAttribute('href'))
 
-          this.items[i].removeAttribute('href')
+          items[i].removeAttribute('href')
         }
 
         detached = true
       }
-
-      return this
     },
 
     /**
      * Attaches anchors click events inside glide.
      *
-     * @return {self}
+     * @return {Void}
      */
-    attach () {
+    attach (items) {
       prevented = false
 
       if (detached) {
-        for (var i = 0; i < this.items.length; i++) {
-          this.items[i].draggable = true
+        for (let i = 0; i < items.length; i++) {
+          items[i].draggable = true
 
-          this.items[i].setAttribute(
-            'href',
-            this.items[i].getAttribute('data-href')
-          )
+          items[i].setAttribute('href', items[i].getAttribute('data-href'))
         }
 
         detached = false
       }
-
-      return this
     }
   }
 
@@ -144,7 +136,7 @@ export default function (Glide, Components, Events) {
    * - on swiping, so they won't redirect to its `href` attributes
    */
   Events.on('swipe.move', () => {
-    Anchors.detach()
+    Anchors.detach(Anchors.items)
   })
 
   /**
@@ -153,7 +145,7 @@ export default function (Glide, Components, Events) {
    */
   Events.on('swipe.end', () => {
     Components.Animation.after(() => {
-      Anchors.attach()
+      Anchors.attach(Anchors.items)
     })
   })
 
@@ -162,7 +154,7 @@ export default function (Glide, Components, Events) {
    * - on destroying, to bring anchors to its initial state
    */
   Events.on('destroy', () => {
-    Anchors.attach()
+    Anchors.attach(Anchors.items)
     Anchors.unbind()
     Binder.destroy()
   })

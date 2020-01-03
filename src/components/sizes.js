@@ -1,28 +1,29 @@
 import { define } from '../utils/object'
 
 export default function (Glide, Components, Events) {
+  const { Html, Gap, Peek } = Components
+
+  const slides = (width) => {
+    const slides = Html.slides
+
+    for (let i = 0; i < slides.length; i++) {
+      slides[i].style.width = `${width}px`
+    }
+  }
+
+  const wrapper = (width) => {
+    Html.wrapper.style.width = `${width}px`
+  }
+
   const Sizes = {
     /**
      * Setups dimentions of slides.
      *
      * @return {Void}
      */
-    setupSlides () {
-      let width = `${this.slideWidth}px`
-      let slides = Components.Html.slides
-
-      for (let i = 0; i < slides.length; i++) {
-        slides[i].style.width = width
-      }
-    },
-
-    /**
-     * Setups dimentions of slides wrapper.
-     *
-     * @return {Void}
-     */
-    setupWrapper () {
-      Components.Html.wrapper.style.width = `${this.wrapperWidth}px`
+    set () {
+      slides(this.slideWidth)
+      wrapper(this.wrapperWidth)
     },
 
     /**
@@ -31,13 +32,13 @@ export default function (Glide, Components, Events) {
      * @returns {Void}
      */
     remove () {
-      let slides = Components.Html.slides
+      let slides = Html.slides
 
       for (let i = 0; i < slides.length; i++) {
         slides[i].style.width = ''
       }
 
-      Components.Html.wrapper.style.width = ''
+      Html.wrapper.style.width = ''
     }
   }
 
@@ -48,7 +49,7 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      return Components.Html.slides.length
+      return Html.slides.length
     }
   })
 
@@ -59,7 +60,7 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      return Components.Html.root.getBoundingClientRect().width
+      return Html.root.getBoundingClientRect().width
     }
   })
 
@@ -70,7 +71,7 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      return Sizes.slideWidth * Sizes.length + Components.Gap.grow
+      return Sizes.slideWidth * Sizes.length + Gap.grow
     }
   })
 
@@ -81,7 +82,7 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      return (Sizes.width / Glide.settings.perView) - Components.Peek.reductor - Components.Gap.reductor
+      return (Sizes.width / Glide.settings.perView) - Peek.reductor - Gap.reductor
     }
   })
 
@@ -92,8 +93,7 @@ export default function (Glide, Components, Events) {
    * - on updating via API, to calculate dimensions based on new options
    */
   Events.on(['layout.before', 'resize', 'update'], () => {
-    Sizes.setupSlides()
-    Sizes.setupWrapper()
+    Sizes.set()
   })
 
   /**

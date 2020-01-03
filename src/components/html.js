@@ -15,7 +15,7 @@ export default function (Glide, Components) {
     mount () {
       this.root = Glide.selector
       this.track = this.root.querySelector(TRACK_SELECTOR)
-      this.slides = this.wrapper.children
+      this.slides = [...this.wrapper.children]
     }
   }
 

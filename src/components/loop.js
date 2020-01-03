@@ -1,7 +1,7 @@
 import { define } from '../utils/object'
 
 export default function (Glide, Components, Events) {
-  const { Sizes, Gap, Run, Html, Translate, Peek } = Components
+  const { Size, Gap, Run, Html, Translate, Peek } = Components
 
   const Loop = {
     set (translate) {
@@ -10,7 +10,7 @@ export default function (Glide, Components, Events) {
       const { value: gapValue } = Gap
       const { value: peekValue } = Peek
       const { perView } = Glide.settings
-      const { slideWidth, wrapperWidth } = Sizes
+      const { slideWidth, wrapperWidth } = Size
 
       if (
         (translate < wrapperWidth)

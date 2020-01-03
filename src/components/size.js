@@ -15,7 +15,7 @@ export default function (Glide, Components, Events) {
     Html.wrapper.style.width = `${width}px`
   }
 
-  const Sizes = {
+  const Size = {
     /**
      * Setups dimentions of slides.
      *
@@ -42,7 +42,7 @@ export default function (Glide, Components, Events) {
     }
   }
 
-  define(Sizes, 'length', {
+  define(Size, 'length', {
     /**
      * Gets count number of the slides.
      *
@@ -53,7 +53,7 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  define(Sizes, 'width', {
+  define(Size, 'width', {
     /**
      * Gets width value of the slider (visible area).
      *
@@ -64,25 +64,25 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  define(Sizes, 'wrapperWidth', {
+  define(Size, 'wrapperWidth', {
     /**
      * Gets size of the slides wrapper.
      *
      * @return {Number}
      */
     get () {
-      return Sizes.slideWidth * Sizes.length + Gap.grow
+      return Size.slideWidth * Size.length + Gap.grow
     }
   })
 
-  define(Sizes, 'slideWidth', {
+  define(Size, 'slideWidth', {
     /**
      * Gets width value of a single slide.
      *
      * @return {Number}
      */
     get () {
-      return (Sizes.width / Glide.settings.perView) - Peek.reductor - Gap.reductor
+      return (Size.width / Glide.settings.perView) - Peek.reductor - Gap.reductor
     }
   })
 
@@ -93,7 +93,7 @@ export default function (Glide, Components, Events) {
    * - on updating via API, to calculate dimensions based on new options
    */
   Events.on(['layout.before', 'resize', 'update'], () => {
-    Sizes.set()
+    Size.set()
   })
 
   /**
@@ -101,8 +101,8 @@ export default function (Glide, Components, Events) {
    * - on destoting to bring markup to its inital state
    */
   Events.on('destroy', () => {
-    Sizes.remove()
+    Size.remove()
   })
 
-  return Sizes
+  return Size
 }

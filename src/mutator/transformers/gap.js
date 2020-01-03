@@ -13,7 +13,7 @@ export default function (Glide, Components) {
    * @return {Number}
    */
   return function (translate) {
-    const multiplier = Math.floor(translate / Components.Sizes.slideWidth)
+    const multiplier = Math.floor(translate / Components.Size.slideWidth)
 
     return translate + (Components.Gap.value * multiplier)
   }

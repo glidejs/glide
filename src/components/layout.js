@@ -1,7 +1,7 @@
 import { siblings } from '../utils/dom'
 
 export default function (Glide, Components, Events) {
-  const { Html, Sizes, Gap } = Components
+  const { Html, Size, Gap } = Components
 
   const Layout = {
     mount () {
@@ -18,7 +18,7 @@ export default function (Glide, Components, Events) {
       for (let i = 0; i < slides.length; i++) {
         slides[i].style.position = 'absolute'
         slides[i].style.top = '0px'
-        slides[i].style.left = `${(Sizes.slideWidth * i) + (Gap.value * i)}px`
+        slides[i].style.left = `${(Size.slideWidth * i) + (Gap.value * i)}px`
       }
     }
   }

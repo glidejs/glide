@@ -6,7 +6,7 @@ import Gap from '../src/components/gap'
 import Html from '../src/components/html'
 import Peek from '../src/components/peek'
 import Loop from '../src/components/loop'
-import Sizes from '../src/components/sizes'
+import Size from '../src/components/size'
 import Resize from '../src/components/resize'
 import Layout from '../src/components/layout'
 import Classes from '../src/components/classes'
@@ -28,7 +28,7 @@ const COMPONENTS = {
   Html,
   Peek,
   Gap,
-  Sizes,
+  Size,
   Layout,
   Run,
   Translate,

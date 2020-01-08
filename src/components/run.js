@@ -187,7 +187,7 @@ export default function (Glide, Components, Events) {
 
         Events.emit('run', this.move)
 
-        Components.Animation.after(() => {
+        Components.Animate.after(() => {
           if (this.isStart()) {
             Events.emit('run.start', this.move)
           }

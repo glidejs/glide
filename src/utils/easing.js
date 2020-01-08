@@ -32,7 +32,7 @@ const easeOutQuint = (t) => 1 + (--t) * t * t * t * t
 // acceleration until halfway, then deceleration
 const easeInOutQuint = (t) => t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * (--t) * t * t * t * t
 
-export {
+export default {
   easeLinear,
   easeInQuad,
   easeOutQuad,
@@ -45,5 +45,5 @@ export {
   easeInOutQuart,
   easeInQuint,
   easeOutQuint,
-  easeInOutQuint
+  easeInOutQuint,
 }

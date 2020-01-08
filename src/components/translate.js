@@ -39,15 +39,21 @@ export default function (Glide, Components, Events) {
     mount () {
       this._v = mutate(Size.slideWidth * Glide.index)
 
-      this.set(0)
+      this.set()
     },
 
-    set (offset) {
+    set (offset = 0) {
       let value = calculate(this._v, offset)
 
-      apply(value)
+      this.apply(value)
 
       return value
+    },
+
+    apply (value) {
+      Events.emit('translate.set', { value })
+
+      Html.wrapper.style.transform = `translate3d(${-1 * value}px, 0px, 0px)`
     }
   }
 

@@ -134,14 +134,14 @@ export default {
    *
    * @type {Number}
    */
-  animationDuration: 400,
+  animationDuration: 1000,
 
   /**
    * Easing function for the animation.
    *
    * @type {String}
    */
-  animationTimingFunc: 'cubic-bezier(.165, .840, .440, 1)',
+  animationEasing: 'easeInOutQuad',
 
   /**
    * Throttle costly events at most once per every wait milliseconds.

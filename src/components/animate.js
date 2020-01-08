@@ -1,27 +1,35 @@
-import { toInt } from '../utils/unit'
+import easings from '../utils/easing'
 import { define } from '../utils/object'
+import { toInt, toFloat, isString } from '../utils/unit'
 
 export default function (Glide, Components, Events) {
-  const getProgress = ({ elapsed, total }) => Math.min(elapsed / total, 1)
-  const easeOut = progress => Math.pow(--progress, 5) + 1
-  const finalPosition = 600
-  const time = {
-    start: performance.now(),
-    total: 2000
+  const { Translate, Size, Gap } = Components
+
+  let translate = Translate._v
+  let start = performance.now()
+
+  function lerp (start, end, l) {
+    return start + (end - start) * l
   }
 
-  const tick = now => {
-    time.elapsed = now - time.start
-    const progress = getProgress(time)
-    const easing = easeOut(progress)
-    const position = easing * finalPosition
-    element.style.transform = `translate(${position}px)`
-    if (progress < 1) requestAnimationFrame(tick)
-  }
+  const Animate = {
+    make (now) {
+      const then = (now - start)
+      const l = Math.min(then / Animate.duration, 1)
 
-  requestAnimationFrame(tick)
+      if (l < 1) {
+        const offset = (Size.slideWidth + Gap.value)
 
-  const Animation = {
+        translate = Translate.set(-offset * Animate.ease(l))
+
+        requestAnimationFrame(Animate.make)
+      } else {
+        Translate.value = translate
+
+        cancelAnimationFrame(Animate.make)
+      }
+    },
+
     /**
      * Runs callback after animation.
      *
@@ -35,11 +43,29 @@ export default function (Glide, Components, Events) {
     }
   }
 
-  define(Animation, 'duration', {
+  define(Animate, 'duration', {
     get () {
       return toInt(Glide.settings.animationDuration)
     }
   })
 
-  return Animation
+  define(Animate, 'ease', {
+    get () {
+      const ease = Glide.settings.animationEasing
+
+      if (isString) {
+        return easings[ease]
+      }
+
+      return ease
+    }
+  })
+
+  Events.on('run', () => {
+    start = performance.now()
+
+    requestAnimationFrame(Animate.make)
+  })
+
+  return Animate
 }

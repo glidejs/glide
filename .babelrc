@@ -1,7 +1,7 @@
 {
   "presets": [
     [
-      "env",
+      "@babel/env",
       {
         "modules": false
       }
@@ -11,7 +11,7 @@
     "test": {
       "presets": [
         [
-          "env"
+          "@babel/env"
         ]
       ]
     }

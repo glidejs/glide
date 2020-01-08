@@ -9,8 +9,7 @@ export default {
   plugins: [
     babel({
       plugins: [
-        'external-helpers',
-        'transform-object-assign'
+        '@babel/plugin-transform-object-assign'
       ]
     })
   ]

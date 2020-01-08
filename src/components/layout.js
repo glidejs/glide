@@ -1,5 +1,3 @@
-import { siblings } from '../utils/dom'
-
 export default function (Glide, Components, Events) {
   const { Html, Size, Gap } = Components
 
@@ -25,6 +23,10 @@ export default function (Glide, Components, Events) {
 
   Events.on(['resize', 'update'], () => {
     Layout.mount()
+  })
+
+  Events.on('run', () => {
+    Html.wrapper.style.height = `${Html.slides[Glide.index].getBoundingClientRect().height}px`
   })
 
   return Layout

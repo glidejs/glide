@@ -1,5 +1,6 @@
 import Core from '../src/index'
 
+// Required components
 import Run from '../src/components/run'
 import Gap from '../src/components/gap'
 import Html from '../src/components/html'
@@ -11,8 +12,9 @@ import Layout from '../src/components/layout'
 import Classes from '../src/components/classes'
 import Direction from '../src/components/direction'
 import Translate from '../src/components/translate'
-import Animation from '../src/components/animation'
+import Animate from '../src/components/animate'
 
+// Optional components
 import Swipe from '../src/components/swipe'
 import Images from '../src/components/images'
 import Anchors from '../src/components/anchors'
@@ -33,7 +35,7 @@ const COMPONENTS = {
   Run,
   Translate,
   Loop,
-  Animation,
+  Animate,
   Direction,
   Resize,
   Classes,

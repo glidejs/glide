@@ -1,9 +1,9 @@
 import mutator from '../mutator/index'
 import { define } from '../utils/object'
-import { isNumber, toFloat } from '../utils/unit'
+import { toFloat } from '../utils/unit'
 
 export default function (Glide, Components, Events) {
-  const { Size, Html, Peek } = Components
+  const { Size, Html } = Components
 
   /**
    * Instance of the translate mutation function.
@@ -59,6 +59,10 @@ export default function (Glide, Components, Events) {
     set (value) {
       Translate._v = toFloat(value)
     }
+  })
+
+  Events.on('resize', () => {
+    Translate.mount()
   })
 
   return Translate

@@ -1,6 +1,5 @@
 import { toInt } from '../utils/unit'
 import { define } from '../utils/object'
-import { throttle } from '../utils/wait'
 
 export default function (Glide, Components, Events) {
   const Gap = {}

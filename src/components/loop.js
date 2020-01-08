@@ -1,20 +1,18 @@
 import { define } from '../utils/object'
 
 export default function (Glide, Components, Events) {
-  const { Size, Gap, Run, Html, Translate, Peek } = Components
+  const { Size, Gap, Html } = Components
 
   const Loop = {
     set (translate) {
       const { slides } = this
-      const { length } = Run
       const { value: gapValue } = Gap
-      const { value: peekValue } = Peek
       const { perView } = Glide.settings
       const { slideWidth, wrapperWidth } = Size
 
       if (
-        (translate < wrapperWidth)
-        && (translate > (wrapperWidth - (slideWidth * perView) - (gapValue * perView)))
+        (translate < wrapperWidth) &&
+        (translate > (wrapperWidth - (slideWidth * perView) - (gapValue * perView)))
       ) {
         for (let i = 0; i < slides.length; i++) {
           slides[i].style.left = `${wrapperWidth + (slideWidth * i) + (gapValue * i)}px`

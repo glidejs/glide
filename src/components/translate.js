@@ -29,12 +29,6 @@ export default function (Glide, Components, Events) {
     return move
   }
 
-  const apply = (value) => {
-    Events.emit('translate.set', { value })
-
-    Html.wrapper.style.transform = `translate3d(${-1 * value}px, 0px, 0px)`
-  }
-
   const Translate = {
     mount () {
       this._v = mutate(Size.slideWidth * Glide.index)

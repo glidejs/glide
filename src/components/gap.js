@@ -23,7 +23,7 @@ export default function (Glide, Components, Events) {
      * @returns {Number}
      */
     get () {
-      return Gap.value * (Components.Size.length)
+      return Gap.value * Components.Size.length
     }
   })
 

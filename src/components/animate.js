@@ -1,12 +1,19 @@
 import easings from '../utils/easing'
 import { define } from '../utils/object'
-import { toInt, toFloat, isString } from '../utils/unit'
+import { toInt, toFloat, isString, isNumber } from '../utils/unit'
+
+const DIRECTION_MAP = {
+  '<': 1,
+  '>': -1
+}
 
 export default function (Glide, Components, Events) {
   const { Translate, Size, Gap } = Components
 
-  let translate = Translate._v
+  let dir = -1
+  let offset = 0
   let start = performance.now()
+  let translate = Translate.value
 
   function lerp (start, end, l) {
     return start + (end - start) * l
@@ -18,15 +25,11 @@ export default function (Glide, Components, Events) {
       const l = Math.min(then / Animate.duration, 1)
 
       if (l < 1) {
-        const offset = (Size.slideWidth + Gap.value)
-
-        translate = Translate.set(-offset * Animate.ease(l))
+        translate = Translate.set((dir * offset) * Animate.ease(l))
 
         requestAnimationFrame(Animate.make)
       } else {
         Translate.value = translate
-
-        cancelAnimationFrame(Animate.make)
       }
     },
 
@@ -61,8 +64,23 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  Events.on('run', () => {
+  Events.on('run', (context) => {
+    const { steps, direction } = context
+
     start = performance.now()
+    dir = DIRECTION_MAP[direction]
+
+    if (isNumber(steps)) {
+      offset = Size.slideWidth + Gap.value
+    }
+
+    if (steps === '|') {
+      offset = (Glide.settings.perView * (Size.slideWidth + Gap.value))
+    }
+
+    if (steps === '>') {
+
+    }
 
     requestAnimationFrame(Animate.make)
   })

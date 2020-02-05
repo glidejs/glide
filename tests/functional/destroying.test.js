@@ -10,7 +10,7 @@ describe('After destroying an instance', () => {
   })
 
   test('`classes.direction.ltr` should not be applied on the root element', () => {
-    let { root } = query(document)
+    const { root } = query(document)
 
     new Glide('#glide').mount().destroy()
 
@@ -18,7 +18,7 @@ describe('After destroying an instance', () => {
   })
 
   test('`classes.direction.rtl` should not be applied on the root element', () => {
-    let { root } = query(document)
+    const { root } = query(document)
 
     new Glide('#glide', { rtl: true }).mount().destroy()
 
@@ -26,7 +26,7 @@ describe('After destroying an instance', () => {
   })
 
   test('`classes.slide.active` should not be applied on any slide elements', () => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
     new Glide('#glide').mount().destroy()
 

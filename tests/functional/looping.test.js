@@ -11,9 +11,9 @@ describe('Glide initialized with `loop: true` option', () => {
   })
 
   test('should go to the last slide when we are on the first slide and moving backward', (done) => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
-    let glide = new Glide('#glide', {
+    const glide = new Glide('#glide', {
       loop: true,
       startAt: 0
     }).mount()
@@ -29,9 +29,9 @@ describe('Glide initialized with `loop: true` option', () => {
   })
 
   test('should go to the first slide when we are on the last slide and moving forward', (done) => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
-    let glide = new Glide('#glide', {
+    const glide = new Glide('#glide', {
       loop: true,
       startAt: slides.length - 1
     }).mount()
@@ -47,11 +47,11 @@ describe('Glide initialized with `loop: true` option', () => {
   })
 
   test('should go to the perMove slide from the beginning when we are on the last slide and moving forward', (done) => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
     const view = 3
 
-    let glide = new Glide('#glide', {
+    const glide = new Glide('#glide', {
       loop: true,
       startAt: slides.length - 1,
       perView: view,
@@ -68,11 +68,11 @@ describe('Glide initialized with `loop: true` option', () => {
   })
 
   test('should go to the perMove slide from the ending when moving backward and we are on the first viewport', (done) => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
     const view = 3
 
-    let glide = new Glide('#glide', {
+    const glide = new Glide('#glide', {
       loop: true,
       startAt: 0,
       perView: view,

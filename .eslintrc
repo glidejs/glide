@@ -5,6 +5,7 @@
     "sourceType": "module"
   },
   "env": {
+    "browser": true,
     "jest": true
   }
 }

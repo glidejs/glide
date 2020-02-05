@@ -112,7 +112,7 @@ export default function (Glide, Components, Events) {
     const { steps, direction } = move
     const { loop, perMove } = Glide.settings
 
-    let distance = (steps === '|') ? perMove : ((steps) || 1)
+    const distance = (steps === '|') ? perMove : ((steps) || 1)
 
     // While direction is `=` we want jump to
     // a specified index described in steps.
@@ -243,7 +243,7 @@ export default function (Glide, Components, Events) {
      * @return {Boolean}
      */
     isBound () {
-      let { loop, focusAt, bound } = Glide.settings
+      const { loop, focusAt, bound } = Glide.settings
 
       return !loop && focusAt !== 'center' && bound
     }
@@ -265,7 +265,7 @@ export default function (Glide, Components, Events) {
      * @returns {Object}
      */
     set (value) {
-      let step = value.substr(1)
+      const step = value.substr(1)
 
       this._m = {
         direction: value.substr(0, 1),
@@ -282,8 +282,8 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      let { settings } = Glide
-      let { length } = Components.Html.slides
+      const { settings } = Glide
+      const { length } = Components.Html.slides
 
       // If the `bound` option is active, a maximum running distance should be
       // reduced by `perView` and `focusAt` settings. Running distance

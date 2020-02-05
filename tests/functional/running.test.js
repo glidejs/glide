@@ -11,8 +11,8 @@ describe('Running', () => {
   })
 
   test('with a invalid pattern should result in `warn()` message', (done) => {
-    let glide = new Glide('#glide')
-    let fn = jest.fn()
+    const glide = new Glide('#glide')
+    const fn = jest.fn()
 
     global.console = { error: fn }
 
@@ -26,9 +26,9 @@ describe('Running', () => {
   })
 
   test('`>` should move one slide forward', (done) => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
-    let glide = new Glide('#glide', { startAt: 0 }).mount()
+    const glide = new Glide('#glide', { startAt: 0 }).mount()
 
     glide.go('>')
 
@@ -40,9 +40,9 @@ describe('Running', () => {
   })
 
   test('`<` should move one slide backward', (done) => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
-    let glide = new Glide('#glide', { startAt: 1 }).mount()
+    const glide = new Glide('#glide', { startAt: 1 }).mount()
 
     glide.go('<')
 
@@ -54,9 +54,9 @@ describe('Running', () => {
   })
 
   test('`>>` should rewind to the last slide', (done) => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
-    let glide = new Glide('#glide', { startAt: 0 }).mount()
+    const glide = new Glide('#glide', { startAt: 0 }).mount()
 
     glide.go('>>')
 
@@ -68,9 +68,9 @@ describe('Running', () => {
   })
 
   test('`<<` should rewind to the first slide', (done) => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
-    let glide = new Glide('#glide', { startAt: slides.length - 1 }).mount()
+    const glide = new Glide('#glide', { startAt: slides.length - 1 }).mount()
 
     glide.go('<<')
 
@@ -82,9 +82,9 @@ describe('Running', () => {
   })
 
   test('`={i}` should move to specified slide', (done) => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
-    let glide = new Glide('#glide', { startAt: 0 }).mount()
+    const glide = new Glide('#glide', { startAt: 0 }).mount()
 
     glide.go('=2')
 
@@ -96,9 +96,9 @@ describe('Running', () => {
   })
 
   test('`>|` should move `perMove` number of slides forward', (done) => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
-    let glide = new Glide('#glide', {
+    const glide = new Glide('#glide', {
       startAt: 0,
       perView: 3,
       perMove: 3
@@ -114,9 +114,9 @@ describe('Running', () => {
   })
 
   test('`<|` should move `perMove` number of slides backward', (done) => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
-    let glide = new Glide('#glide', {
+    const glide = new Glide('#glide', {
       startAt: 3,
       perView: 3,
       perMove: 3

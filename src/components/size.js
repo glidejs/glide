@@ -32,7 +32,7 @@ export default function (Glide, Components, Events) {
      * @returns {Void}
      */
     remove () {
-      let slides = Html.slides
+      const slides = Html.slides
 
       for (let i = 0; i < slides.length; i++) {
         slides[i].style.width = ''

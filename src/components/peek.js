@@ -48,8 +48,8 @@ export default function (Glide, Components, Events) {
      * @returns {Number}
      */
     get () {
-      let value = Peek.value
-      let perView = Glide.settings.perView
+      const value = Peek.value
+      const perView = Glide.settings.perView
 
       if (isObject(value)) {
         return (value.before / perView) + (value.after / perView)

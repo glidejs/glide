@@ -1,5 +1,5 @@
 import { warn } from '../utils/log'
-import { isFunction } from '../utils/unit'
+import { isFunc } from '../utils/unit'
 
 import Rtl from './transformers/rtl'
 import Gap from './transformers/gap'
@@ -21,7 +21,7 @@ export default function (Glide, Components, Events) {
    *
    * @type {Array}
    */
-  let TRANSFORMERS = [
+  const TRANSFORMERS = [
     Gap,
     Peeking,
     Focusing
@@ -35,9 +35,9 @@ export default function (Glide, Components, Events) {
    */
   return function (translate) {
     for (var i = 0; i < TRANSFORMERS.length; i++) {
-      let transformer = TRANSFORMERS[i]
+      const transformer = TRANSFORMERS[i]
 
-      if (isFunction(transformer) && isFunction(transformer())) {
+      if (isFunc(transformer) && isFunc(transformer())) {
         translate = transformer(Glide, Components, Events)(translate)
       } else {
         warn('Transformer should be a function that returns the function')

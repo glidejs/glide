@@ -33,7 +33,7 @@ export default function (Glide, Components, Events) {
 
   define(Loop, 'number', {
     get () {
-      let { focusAt, perView } = Glide.settings
+      const { focusAt, perView } = Glide.settings
 
       if (focusAt === 'center') {
         return perView + Math.floor(perView / 2)

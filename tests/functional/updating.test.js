@@ -10,13 +10,13 @@ describe('Calling `update()` method with', () => {
   })
 
   test('new options should extend previous settings', () => {
-    let options = {
+    const options = {
       startAt: 1,
       focusAt: 1,
       perView: 2
     }
 
-    let glide = new Glide('#glide', { startAt: 0 }).mount()
+    const glide = new Glide('#glide', { startAt: 0 }).mount()
 
     glide.update(options)
 
@@ -24,9 +24,9 @@ describe('Calling `update()` method with', () => {
   })
 
   test('new `startAt` option should change active slide', () => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
-    let glide = new Glide('#glide', { startAt: 0 }).mount()
+    const glide = new Glide('#glide', { startAt: 0 }).mount()
 
     glide.update({ startAt: 1 })
 

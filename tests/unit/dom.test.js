@@ -17,7 +17,7 @@ describe('Function', () => {
   })
 
   test('`siblings` should return siblings of the passed HTMLElements', () => {
-    let children = document.querySelectorAll('.child')
+    const children = document.querySelectorAll('.child')
 
     expect(siblings(children[1])).toHaveLength(2)
   })

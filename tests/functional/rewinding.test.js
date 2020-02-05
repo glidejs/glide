@@ -11,9 +11,9 @@ describe('Glide initialized with `rewind: true`', () => {
   })
 
   test('should move to the last slide when we are on the first slide and moving backward', (done) => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
-    let glide = new Glide('#glide', { startAt: 0, rewind: true }).mount()
+    const glide = new Glide('#glide', { startAt: 0, rewind: true }).mount()
 
     glide.go('<')
 
@@ -26,9 +26,9 @@ describe('Glide initialized with `rewind: true`', () => {
   })
 
   test('should move to the first slide when we are on the last slide and moving forward', (done) => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
-    let glide = new Glide('#glide', { startAt: slides.length - 1, rewind: true }).mount()
+    const glide = new Glide('#glide', { startAt: slides.length - 1, rewind: true }).mount()
 
     glide.go('>')
 
@@ -41,9 +41,9 @@ describe('Glide initialized with `rewind: true`', () => {
   })
 
   test('should NOT move to the last slide when we are on the first slide and rewind set to false', (done) => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
-    let glide = new Glide('#glide', { startAt: 0, rewind: false }).mount()
+    const glide = new Glide('#glide', { startAt: 0, rewind: false }).mount()
 
     glide.go('<')
 
@@ -56,9 +56,9 @@ describe('Glide initialized with `rewind: true`', () => {
   })
 
   test('should NOT move to the first slide when we are on the last slide and rewind set to false', (done) => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
-    let glide = new Glide('#glide', { startAt: slides.length - 1, rewind: false }).mount()
+    const glide = new Glide('#glide', { startAt: slides.length - 1, rewind: false }).mount()
 
     glide.go('>')
 
@@ -71,11 +71,11 @@ describe('Glide initialized with `rewind: true`', () => {
   })
 
   test('`>|` should rewind when moving forward with `rewind: true` option', (done) => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
     const view = 3
 
-    let glide = new Glide('#glide', {
+    const glide = new Glide('#glide', {
       startAt: slides.length - 1,
       perView: view,
       perMove: view,
@@ -92,11 +92,11 @@ describe('Glide initialized with `rewind: true`', () => {
   })
 
   test('`<|` should rewind when moving backward with `rewind: true` option', (done) => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
     const view = 3
 
-    let glide = new Glide('#glide', {
+    const glide = new Glide('#glide', {
       startAt: 0,
       perView: view,
       perMove: view,
@@ -113,9 +113,9 @@ describe('Glide initialized with `rewind: true`', () => {
   })
 
   test('`>|` should NOT rewind when moving forward with `rewind: true` option', (done) => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
-    let glide = new Glide('#glide', {
+    const glide = new Glide('#glide', {
       startAt: slides.length - 1,
       perView: 3,
       rewind: false
@@ -131,9 +131,9 @@ describe('Glide initialized with `rewind: true`', () => {
   })
 
   test('`<|` should NOT rewind when moving backward with `rewind: true` option', (done) => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
-    let glide = new Glide('#glide', {
+    const glide = new Glide('#glide', {
       startAt: 0,
       perView: 3,
       rewind: false

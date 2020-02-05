@@ -34,7 +34,7 @@ export function sortKeys (obj) {
  * @return {Object}
  */
 export function mergeDeep (target, source) {
-  let output = Object.assign({}, target)
+  const output = Object.assign({}, target)
 
   if (isObject(target) && isObject(source)) {
     Object.keys(source).forEach(key => {

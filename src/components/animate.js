@@ -1,6 +1,7 @@
 import easings from '../utils/easing'
+import { warn } from '../utils/log'
 import { define } from '../utils/object'
-import { toInt, toFloat, isString, isNumber } from '../utils/unit'
+import { toInt, isString, isNumber, isFunc } from '../utils/unit'
 
 const DIRECTION_MAP = {
   '<': 1,
@@ -15,22 +16,28 @@ export default function (Glide, Components, Events) {
   let start = performance.now()
   let translate = Translate.value
 
-  function lerp (start, end, l) {
-    return start + (end - start) * l
-  }
-
   const Animate = {
     make (now) {
       const then = (now - start)
-      const l = Math.min(then / Animate.duration, 1)
+      const duration = Math.max(then / Animate.duration, 0)
+      const l = Math.min(duration, 1)
+      const easing = Animate.ease(duration)
 
       if (l < 1) {
-        translate = Translate.set((dir * offset) * Animate.ease(l))
+        translate = Translate.set((dir * offset) * easing)
 
         requestAnimationFrame(Animate.make)
       } else {
-        Translate.value = translate
+        Translate.value = Translate.value - (dir * offset)
+
+        Translate.set()
       }
+
+      // console.log('duration: ' + duration)
+      // console.log('l: ' + l)
+      // console.log('easing: ' + easing)
+      // console.log('translate: ' + translate)
+      // console.log('-------')
     },
 
     /**
@@ -56,32 +63,37 @@ export default function (Glide, Components, Events) {
     get () {
       const ease = Glide.settings.animationEasing
 
-      if (isString) {
+      if (isString(ease)) {
         return easings[ease]
       }
 
-      return ease
+      if (isFunc(ease)) {
+        return ease
+      }
+
+      warn('Invalid `animateEasing` option. Have to be easing name or function')
     }
   })
 
   Events.on('run', (context) => {
     const { steps, direction } = context
 
-    start = performance.now()
     dir = DIRECTION_MAP[direction]
 
-    if (isNumber(steps)) {
+    if (direction === '=') {
+      let to = steps * (Size.slideWidth + Gap.value)
+
+      offset = to - Translate.value
+    } else if (steps === '|') {
+      offset = Glide.settings.perView * (Size.slideWidth + Gap.value)
+    } else if (steps === '>') {
+
+    } else {
       offset = Size.slideWidth + Gap.value
     }
 
-    if (steps === '|') {
-      offset = (Glide.settings.perView * (Size.slideWidth + Gap.value))
-    }
-
-    if (steps === '>') {
-
-    }
-
+    console.log(offset)
+    start = performance.now()
     requestAnimationFrame(Animate.make)
   })
 

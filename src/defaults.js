@@ -134,12 +134,12 @@ export default {
    *
    * @type {Number}
    */
-  animationDuration: 300,
+  animationDuration: 500,
 
   /**
    * Easing function for the animation.
    *
-   * @type {String|Function}
+   * @type {Array}
    */
   animationEasing: 'easeInOutQuad',
 

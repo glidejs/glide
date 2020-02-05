@@ -1,9 +1,9 @@
 const ROOT_SELECTOR = '.glide'
 const CLONE_CLASS = 'glide__slide--clone'
 const TRACK_SELECTOR = '[data-glide-el="track"]'
-const BULLETS_SELECTOR = `[data-glide-dir*="="]`
-const PREVIOUS_CONTROLS_SELECTOR = `[data-glide-dir*="<"]`
-const NEXT_CONTROLS_SELECTOR = `[data-glide-dir*=">"]`
+const BULLETS_SELECTOR = '[data-glide-dir*="="]'
+const PREVIOUS_CONTROLS_SELECTOR = '[data-glide-dir*="<"]'
+const NEXT_CONTROLS_SELECTOR = '[data-glide-dir*=">"]'
 
 export function query (document) {
   const root = document.querySelector(ROOT_SELECTOR)

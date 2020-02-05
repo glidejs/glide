@@ -1,5 +1,5 @@
 import { warn } from '../utils/log'
-import { isFunction } from '../utils/unit'
+import { isFunc } from '../utils/unit'
 
 /**
  * Creates and initializes specified collection of extensions.
@@ -11,18 +11,18 @@ import { isFunction } from '../utils/unit'
  * @returns {Object}
  */
 export function mount (glide, extensions, events) {
-  let components = {}
+  const components = {}
 
-  for (let name in extensions) {
-    if (isFunction(extensions[name])) {
+  for (const name in extensions) {
+    if (isFunc(extensions[name])) {
       components[name] = extensions[name](glide, components, events)
     } else {
       warn('Extension must be a function')
     }
   }
 
-  for (let name in components) {
-    if (isFunction(components[name].mount)) {
+  for (const name in components) {
+    if (isFunc(components[name].mount)) {
       components[name].mount()
     }
   }

@@ -11,9 +11,9 @@ describe('Glide initialized with `autoplay` option', () => {
   })
 
   test('as `Number` should move to the next slide after defined interval', (done) => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
-    let glide = new Glide('#glide', { autoplay: 500 }).mount()
+    const glide = new Glide('#glide', { autoplay: 500 }).mount()
 
     setTimeout(() => {
       afterTransition(() => {
@@ -27,9 +27,9 @@ describe('Glide initialized with `autoplay` option', () => {
   })
 
   test('as `false` should not move to the next slide', (done) => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
-    let glide = new Glide('#glide', { autoplay: false }).mount()
+    const glide = new Glide('#glide', { autoplay: false }).mount()
 
     setTimeout(() => {
       afterTransition(() => {

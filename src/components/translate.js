@@ -16,7 +16,7 @@ export default function (Glide, Components, Events) {
     const { loop } = Glide.settings
     const { wrapperWidth } = Size
 
-    let move = value - offset
+    const move = value - offset
 
     if (loop) {
       if (move < 0) {
@@ -37,7 +37,7 @@ export default function (Glide, Components, Events) {
     },
 
     set (offset = 0) {
-      let value = calculate(this._v, offset)
+      const value = calculate(this._v, offset)
 
       this.apply(value)
 

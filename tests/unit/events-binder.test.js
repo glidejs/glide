@@ -2,7 +2,7 @@ import EventsBinder from '../../src/core/event/events-binder'
 
 let events = null
 let element = null
-let callback = jest.fn()
+const callback = jest.fn()
 
 describe('EventsBinder should', () => {
   beforeEach(() => {
@@ -15,8 +15,8 @@ describe('EventsBinder should', () => {
   })
 
   test('create and remove event listener from element', () => {
-    let addFn = jest.fn()
-    let rmFn = jest.fn()
+    const addFn = jest.fn()
+    const rmFn = jest.fn()
 
     element.addEventListener = addFn
     element.removeEventListener = rmFn
@@ -32,7 +32,7 @@ describe('EventsBinder should', () => {
     events.on('click', element, callback)
 
     expect(events.listeners).toHaveProperty('click')
-    expect(events.listeners['click']).toBe(callback)
+    expect(events.listeners.click).toBe(callback)
   })
 
   test('hold previously stored listeners when unbinding with `off`', () => {

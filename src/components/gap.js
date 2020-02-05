@@ -35,7 +35,7 @@ export default function (Glide, Components, Events) {
      * @returns {Number}
      */
     get () {
-      let perView = Glide.settings.perView
+      const perView = Glide.settings.perView
 
       return (Gap.value * (perView - 1)) / perView
     }

@@ -15,7 +15,7 @@ function sortBreakpoints (points) {
   if (isObject(points)) {
     return sortKeys(points)
   } else {
-    warn(`Breakpoints option must be an object`)
+    warn('Breakpoints option must be an object')
   }
 
   return {}
@@ -34,7 +34,7 @@ export default function (Glide, Components, Events) {
    *
    * @type {Object}
    */
-  let settings = Glide.settings
+  const settings = Glide.settings
 
   /**
    * Holds reference to breakpoints object in settings. Sorts breakpoints
@@ -61,8 +61,8 @@ export default function (Glide, Components, Events) {
      */
     match (points) {
       if (typeof window.matchMedia !== 'undefined') {
-        for (let point in points) {
-          if (points.hasOwnProperty(point)) {
+        for (const point in points) {
+          if (Object.prototype.hasOwnProperty.call(points, point)) {
             if (window.matchMedia(`(max-width: ${point}px)`).matches) {
               return points[point]
             }

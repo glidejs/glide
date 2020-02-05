@@ -11,9 +11,7 @@ describe('Class', () => {
   })
 
   test('can be changed via options', () => {
-    let { slides } = query(document)
-
-    let glide = new Glide('#glide', {
+    const glide = new Glide('#glide', {
       classes: {
         slide: {
           clone: 'glide__slide--c',
@@ -27,7 +25,7 @@ describe('Class', () => {
   })
 
   test('`classes.slide.active` should be applied on the 0 indexed slide element by default', () => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
     new Glide('#glide').mount()
 
@@ -35,7 +33,7 @@ describe('Class', () => {
   })
 
   test('`classes.slide.active` should be applied on the `startAt` indexed slide element', () => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
     new Glide('#glide', { startAt: 2 }).mount()
 
@@ -43,9 +41,9 @@ describe('Class', () => {
   })
 
   test('`classes.slide.active` should be applied to the new slide element after moving', (done) => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
-    let glide = new Glide('#glide', { startAt: 0 }).mount()
+    const glide = new Glide('#glide', { startAt: 0 }).mount()
 
     glide.go('>')
 
@@ -58,7 +56,7 @@ describe('Class', () => {
   })
 
   test('`classes.swipeable` should be applied on the root element', () => {
-    let { root } = query(document)
+    const { root } = query(document)
 
     new Glide('#glide').mount()
 
@@ -66,7 +64,7 @@ describe('Class', () => {
   })
 
   test('`classes.direction.ltr` should be applied on the root element in `ltr` mode', () => {
-    let { root } = query(document)
+    const { root } = query(document)
 
     new Glide('#glide').mount()
 
@@ -74,7 +72,7 @@ describe('Class', () => {
   })
 
   test('`classes.direction.rtl` should be applied on the root element in `rtl` mode', () => {
-    let { root } = query(document)
+    const { root } = query(document)
 
     new Glide('#glide', { direction: 'rtl' }).mount()
 

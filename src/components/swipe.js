@@ -38,7 +38,7 @@ export default function (Glide, Components, Events) {
    * @return {Number}
    */
   const threshold = (event) => {
-    let { dragThreshold, swipeThreshold } = Glide.settings
+    const { dragThreshold, swipeThreshold } = Glide.settings
 
     if (MOUSE_EVENTS.indexOf(event.type) > -1) {
       return dragThreshold
@@ -52,7 +52,7 @@ export default function (Glide, Components, Events) {
   let swipeStartX = 0
   let swipeStartY = 0
   let disabled = false
-  let capture = (supportsPassive) ? { passive: true } : false
+  const capture = (supportsPassive) ? { passive: true } : false
 
   const Swipe = {
     /**
@@ -74,7 +74,7 @@ export default function (Glide, Components, Events) {
       if (!disabled && !Glide.disabled) {
         this.disable()
 
-        let swipe = touches(event)
+        const swipe = touches(event)
 
         swipeSin = null
         swipeStartX = toInt(swipe.pageX)
@@ -94,16 +94,16 @@ export default function (Glide, Components, Events) {
      */
     move (event) {
       if (!Glide.disabled) {
-        let { touchAngle, touchRatio, classes } = Glide.settings
+        const { touchAngle, touchRatio, classes } = Glide.settings
 
-        let swipe = touches(event)
+        const swipe = touches(event)
 
-        let subExSx = toInt(swipe.pageX) - swipeStartX
-        let subEySy = toInt(swipe.pageY) - swipeStartY
-        let powEX = Math.abs(subExSx << 2)
-        let powEY = Math.abs(subEySy << 2)
-        let swipeHypotenuse = Math.sqrt(powEX + powEY)
-        let swipeCathetus = Math.sqrt(powEY)
+        const subExSx = toInt(swipe.pageX) - swipeStartX
+        const subEySy = toInt(swipe.pageY) - swipeStartY
+        const powEX = Math.abs(subExSx << 2)
+        const powEY = Math.abs(subEySy << 2)
+        const swipeHypotenuse = Math.sqrt(powEX + powEY)
+        const swipeCathetus = Math.sqrt(powEY)
 
         swipeSin = Math.asin(swipeCathetus / swipeHypotenuse)
 
@@ -129,14 +129,14 @@ export default function (Glide, Components, Events) {
      */
     end (event) {
       if (!Glide.disabled) {
-        let settings = Glide.settings
+        const settings = Glide.settings
 
-        let swipe = touches(event)
-        let swipeThreshold = threshold(event)
+        const swipe = touches(event)
+        const swipeThreshold = threshold(event)
 
-        let swipeDistance = swipe.pageX - swipeStartX
-        let swipeDeg = swipeSin * 180 / Math.PI
-        let steps = toInt(settings[settings.perSwipe])
+        const swipeDistance = swipe.pageX - swipeStartX
+        const swipeDeg = swipeSin * 180 / Math.PI
+        const steps = toInt(settings[settings.perSwipe])
 
         Translate.value = translate
 
@@ -166,7 +166,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     bindSwipeStart () {
-      let settings = Glide.settings
+      const settings = Glide.settings
 
       if (settings.swipeThreshold) {
         Binder.on(START_EVENTS[0], Html.track, (event) => {

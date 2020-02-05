@@ -95,7 +95,7 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      let autoplay = Html.slides[Glide.index].getAttribute('data-glide-autoplay')
+      const autoplay = Html.slides[Glide.index].getAttribute('data-glide-autoplay')
 
       if (autoplay) {
         return toInt(autoplay)

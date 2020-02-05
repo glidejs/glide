@@ -11,11 +11,11 @@ describe('Glide initialized with `bound: true` option', () => {
   })
 
   test('should STOP move at `perView` number of slides from the end', (done) => {
-    let { slides } = query(document)
+    const { slides } = query(document)
 
-    let perView = 3
+    const perView = 3
 
-    let glide = new Glide('#glide', { perView: perView, bound: true }).mount()
+    const glide = new Glide('#glide', { perView: perView, bound: true }).mount()
 
     glide.go('>>')
 

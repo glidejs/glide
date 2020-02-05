@@ -64,7 +64,7 @@ describe('Function', () => {
   })
 
   test('`isUndefined` return `true` on undefined', () => {
-    let value = {}
+    const value = {}
 
     expect(isUndefined(value.prop)).toBe(true)
 

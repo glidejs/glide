@@ -5,7 +5,7 @@ import { isString } from '../utils/unit'
 
 const TRACK_SELECTOR = '[data-glide-el="track"]'
 
-export default function (Glide, Components) {
+export default function (Glide, Components, Events) {
   const Html = {
     /**
      * Setup slider HTML nodes.
@@ -15,6 +15,13 @@ export default function (Glide, Components) {
     mount () {
       this.root = Glide.selector
       this.track = this.root.querySelector(TRACK_SELECTOR)
+      this.collectSlides()
+    },
+
+    /**
+     * Collect slides
+     */
+    collectSlides () {
       this.slides = Array.prototype.slice.call(this.wrapper.children).filter((slide) => {
         return !slide.classList.contains(Glide.settings.classes.slide.clone)
       })
@@ -82,6 +89,13 @@ export default function (Glide, Components) {
     get () {
       return Html.track.children[0]
     }
+  })
+
+  /**
+   * Add/remove/reorder dynamic slides
+   */
+  Events.on('update', () => {
+    Html.collectSlides()
   })
 
   return Html

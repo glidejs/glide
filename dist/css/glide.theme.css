@@ -55,6 +55,10 @@
     background-color: rgba(255, 255, 255, 0.5); }
   .glide__bullet--active {
     background-color: white; }
+.glide__bullet:focus.glide__bullet--active:focus {
+    border: 2px solid white;
+    background-color: white;
+}
 
 .glide--swipeable {
   cursor: grab;

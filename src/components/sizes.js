@@ -59,7 +59,7 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      return Components.Html.track.offsetWidth
+      return Components.Html.root.offsetWidth
     }
   })
 

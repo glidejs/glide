@@ -11,8 +11,8 @@ export default function (Glide, Components, Events) {
       const { slideWidth, wrapperWidth } = Size
 
       if (
-        (translate < wrapperWidth) &&
-        (translate > (wrapperWidth - (slideWidth * perView) - (gapValue * perView)))
+        (translate <= wrapperWidth) &&
+        (translate >= (wrapperWidth - (slideWidth * (perView + 1)) - (gapValue * perView)))
       ) {
         for (let i = 0; i < slides.length; i++) {
           slides[i].style.left = `${wrapperWidth + (slideWidth * i) + (gapValue * i)}px`

@@ -39,19 +39,20 @@ export default function (Glide, Components, Events) {
     },
 
     bound (value, offset) {
+      const { wrapperWidth } = Size
       const { loop } = Glide.settings
 
       const edgeStart = mutate(0)
-      const edgeEnd = Size.wrapperWidth
+      const endEdge = mutate(wrapperWidth)
 
       let move = value - offset
 
       if (loop) {
         if (move < edgeStart) {
-          move = edgeEnd
+          move = wrapperWidth
 
           this._v = move
-        } else if (move > edgeEnd) {
+        } else if (move > endEdge) {
           move = edgeStart
 
           this._v = move
@@ -70,6 +71,8 @@ export default function (Glide, Components, Events) {
     },
 
     apply (value) {
+      Events.emit('translate.set', { value })
+
       Html.wrapper.style.transform = `translate3d(${-1 * value}px, 0px, 0px)`
     }
   }
@@ -99,6 +102,8 @@ export default function (Glide, Components, Events) {
   })
 
   Events.on('animate.before', ({ movement }) => {
+    Glide.disable()
+
     Translate._o = distance(movement)
   })
 
@@ -110,6 +115,8 @@ export default function (Glide, Components, Events) {
 
   Events.on('animate.after', ({ multiplier }) => {
     Translate._v = Translate._v - (multiplier * Translate._o)
+
+    Glide.enable()
   })
 
   return Translate

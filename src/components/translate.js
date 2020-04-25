@@ -12,23 +12,6 @@ export default function (Glide, Components, Events) {
    */
   const mutate = mutator(Glide, Components, Events)
 
-  const calculate = (value, offset = 0) => {
-    const { loop } = Glide.settings
-    const { wrapperWidth } = Size
-
-    const move = value - offset
-
-    if (loop) {
-      if (move < 0) {
-        return wrapperWidth + (value - offset)
-      } else if (move > wrapperWidth) {
-        return -1 * (offset + (wrapperWidth - value))
-      }
-    }
-
-    return move
-  }
-
   const Translate = {
     mount () {
       this._v = mutate(Size.slideWidth * Glide.index)
@@ -36,18 +19,36 @@ export default function (Glide, Components, Events) {
       this.set()
     },
 
-    set (offset = 0) {
-      const value = calculate(this._v, offset)
+    bound (value, offset) {
+      const { loop } = Glide.settings
+      const { wrapperWidth } = Size
 
-      this.apply(value)
+      let move = value - offset
 
-      return value
+      if (loop) {
+        if (move < 0) {
+          move = wrapperWidth + move
+
+          this._v = move
+        } else if (move > wrapperWidth) {
+          move = mutate(0)
+
+          this._v = move
+        }
+      }
+
+      return move
     },
 
-    apply (value) {
+    set (offset = 0) {
+      const value = this.bound(this._v, offset)
+
       Events.emit('translate.set', { value })
 
       Html.wrapper.style.transform = `translate3d(${-1 * value}px, 0px, 0px)`
+
+      console.log('offset:', offset)
+      console.log('value: ', value)
     }
   }
 

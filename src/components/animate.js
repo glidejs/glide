@@ -32,12 +32,6 @@ export default function (Glide, Components, Events) {
 
         Translate.set()
       }
-
-      // console.log('duration: ' + duration)
-      // console.log('l: ' + l)
-      // console.log('easing: ' + easing)
-      // console.log('translate: ' + translate)
-      // console.log('-------')
     },
 
     /**
@@ -81,7 +75,7 @@ export default function (Glide, Components, Events) {
     dir = DIRECTION_MAP[direction]
 
     if (direction === '=') {
-      let to = steps * (Size.slideWidth + Gap.value)
+      const to = steps * (Size.slideWidth + Gap.value)
 
       offset = to - Translate.value
     } else if (steps === '|') {
@@ -92,7 +86,6 @@ export default function (Glide, Components, Events) {
       offset = Size.slideWidth + Gap.value
     }
 
-    console.log(offset)
     start = performance.now()
     requestAnimationFrame(Animate.make)
   })

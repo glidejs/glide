@@ -48,7 +48,7 @@ export default function (Glide, Components, Events) {
   })
 
   Events.on('translate.set', (translate) => {
-    Loop.set(translate.value)
+    // Loop.set(translate.value)
   })
 
   return Loop

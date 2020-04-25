@@ -177,8 +177,6 @@ export default function (Glide, Components, Events) {
      */
     make (move) {
       if (!Glide.disabled) {
-        Glide.disable()
-
         this.move = move
 
         Events.emit('run.before', this.move)
@@ -186,26 +184,6 @@ export default function (Glide, Components, Events) {
         Glide.index = calculate(this.move, this.length)
 
         Events.emit('run', this.move)
-
-        Components.Animate.after(() => {
-          if (this.isStart()) {
-            Events.emit('run.start', this.move)
-          }
-
-          if (this.isEnd()) {
-            Events.emit('run.end', this.move)
-          }
-
-          if (this.isOffset('<') || this.isOffset('>')) {
-            this._o = false
-
-            Events.emit('run.offset', this.move)
-          }
-
-          Events.emit('run.after', this.move)
-
-          Glide.enable()
-        })
       }
     },
 

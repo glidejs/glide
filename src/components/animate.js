@@ -1,20 +1,16 @@
 import easings from '../utils/easing'
 import { warn } from '../utils/log'
 import { define } from '../utils/object'
-import { toInt, isString, isNumber, isFunc } from '../utils/unit'
+import { toInt, isString, isFunc } from '../utils/unit'
 
-const DIRECTION_MAP = {
+const DIRECTION_MULTIPLIER = {
   '<': 1,
   '>': -1
 }
 
 export default function (Glide, Components, Events) {
-  const { Translate, Size, Gap } = Components
-
-  let dir = -1
-  let offset = 0
+  let multiplier = -1
   let start = performance.now()
-  let translate = Translate.value
 
   const Animate = {
     make (now) {
@@ -24,26 +20,12 @@ export default function (Glide, Components, Events) {
       const easing = Animate.ease(duration)
 
       if (l < 1) {
-        translate = Translate.set((dir * offset) * easing)
+        Events.emit('animate', { multiplier, easing })
 
         requestAnimationFrame(Animate.make)
       } else {
-        Translate.value = Translate.value - (dir * offset)
-
-        Translate.set()
+        Events.emit('animate.after', { multiplier, easing })
       }
-    },
-
-    /**
-     * Runs callback after animation.
-     *
-     * @param  {Function} callback
-     * @return {Void}
-     */
-    after (callback) {
-      setTimeout(() => {
-        callback()
-      }, this.duration)
     }
   }
 
@@ -69,24 +51,14 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  Events.on('run', (context) => {
-    const { steps, direction } = context
-
-    dir = DIRECTION_MAP[direction]
-
-    if (direction === '=') {
-      const to = steps * (Size.slideWidth + Gap.value)
-
-      offset = to - Translate.value
-    } else if (steps === '|') {
-      offset = Glide.settings.perView * (Size.slideWidth + Gap.value)
-    } else if (steps === '>') {
-
-    } else {
-      offset = Size.slideWidth + Gap.value
-    }
+  Events.on('run', (movement) => {
+    const { direction } = movement
 
     start = performance.now()
+    multiplier = DIRECTION_MULTIPLIER[direction]
+
+    Events.emit('animate.before', { multiplier, movement })
+
     requestAnimationFrame(Animate.make)
   })
 

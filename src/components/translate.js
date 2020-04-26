@@ -13,18 +13,20 @@ export default function (Glide, Components, Events) {
   const mutate = mutator(Glide, Components, Events)
 
   const distance = ({ steps, direction }) => {
+    const singleDistance = Size.slideWidth + Gap.value
+
     let offset = 0
 
     if (direction === '=') {
-
+      offset = Translate._v - (steps * singleDistance)
     } else if (steps === '|') {
-      offset = Glide.settings.perView * (Size.slideWidth + Gap.value)
+      offset = Glide.settings.perView * singleDistance
     } else if (steps === '>') {
-
+      offset = (Components.Run.length * singleDistance) - Translate._v
     } else if (steps === '<') {
-
+      offset = Translate._v
     } else {
-      offset = Size.slideWidth + Gap.value
+      offset = singleDistance
     }
 
     return offset

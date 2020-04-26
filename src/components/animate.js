@@ -5,7 +5,8 @@ import { toInt, isString, isFunc } from '../utils/unit'
 
 const DIRECTION_MULTIPLIER = {
   '<': 1,
-  '>': -1
+  '>': -1,
+  '=': 1
 }
 
 export default function (Glide, Components, Events) {

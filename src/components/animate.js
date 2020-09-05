@@ -18,7 +18,7 @@ export default function (Glide, Components, Events) {
       const then = (now - start)
       const duration = Math.max(then / Animate.duration, 0)
       const l = Math.min(duration, 1)
-      const easing = Animate.ease(duration)
+      const easing = Math.round((Animate.ease(duration) + Number.EPSILON) * 100) / 100
 
       if (l < 1) {
         Events.emit('animate', { multiplier, easing })

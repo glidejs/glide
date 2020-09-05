@@ -7,9 +7,14 @@ export default function (Glide, Components, Events) {
     set (translate) {
       const { slides } = this
       const { value: gapValue } = Gap
-      const { perView } = Glide.settings
+      const { perView, peek, focusAt } = Glide.settings
       const { slideWidth, wrapperWidth } = Size
 
+      // console.log(
+      //   translate,
+      //   (-((slideWidth * focusAt) + (gapValue * (perView - 1)) + peek)),
+      //   translate >= (-((slideWidth * focusAt) + (gapValue * (perView - 1)) + peek)) && (translate <= 0)
+      // )
       if (
         (translate <= wrapperWidth) &&
         (translate >= (wrapperWidth - (slideWidth * (perView + 1)) - (gapValue * perView)))
@@ -48,7 +53,7 @@ export default function (Glide, Components, Events) {
   })
 
   Events.on('translate.set', (translate) => {
-    // Loop.set(translate.value)
+    Loop.set(translate.value)
   })
 
   return Loop

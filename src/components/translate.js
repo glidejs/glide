@@ -3,7 +3,7 @@ import { define } from '../utils/object'
 import { toFloat } from '../utils/unit'
 
 export default function (Glide, Components, Events) {
-  const { Size, Gap, Html } = Components
+  const { Run, Size, Gap, Html } = Components
 
   /**
    * Instance of the translate mutation function.
@@ -18,13 +18,13 @@ export default function (Glide, Components, Events) {
     let offset = 0
 
     if (direction === '=') {
-      offset = Translate._v - (steps * singleDistance)
+      offset = Translate.value - (steps * singleDistance)
     } else if (steps === '|') {
       offset = Glide.settings.perView * singleDistance
     } else if (steps === '>') {
-      offset = (Components.Run.length * singleDistance) - Translate._v
+      offset = (Components.Run.length * singleDistance) - Translate.value
     } else if (steps === '<') {
-      offset = Translate._v
+      offset = Translate.value
     } else {
       offset = singleDistance
     }
@@ -37,24 +37,21 @@ export default function (Glide, Components, Events) {
       this._o = 0
       this._v = mutate(Size.slideWidth * Glide.index)
 
-      this.apply(this._v)
+      this.set()
     },
 
     bound (value, offset) {
-      const { wrapperWidth } = Size
-      const { loop } = Glide.settings
-
       const edgeStart = mutate(0)
-      const endEdge = mutate(wrapperWidth)
+      const edgeEnd = mutate(Size.slideWidth * Html.slides.length)
 
       let move = value - offset
 
-      if (loop) {
+      if (Glide.settings.loop) {
         if (move < edgeStart) {
-          move = wrapperWidth
+          move = edgeEnd
 
           this._v = move
-        } else if (move > endEdge) {
+        } else if (move > edgeEnd) {
           move = edgeStart
 
           this._v = move

@@ -10,21 +10,41 @@ export default function (Glide, Components, Events) {
       const { perView, peek, focusAt } = Glide.settings
       const { slideWidth, wrapperWidth } = Size
 
-      // console.log(
-      //   translate,
-      //   (-((slideWidth * focusAt) + (gapValue * (perView - 1)) + peek)),
-      //   translate >= (-((slideWidth * focusAt) + (gapValue * (perView - 1)) + peek)) && (translate <= 0)
-      // )
       if (
-        (translate <= wrapperWidth) &&
-        (translate >= (wrapperWidth - (slideWidth * (perView + 1)) - (gapValue * perView)))
+        // (translate <= wrapperWidth) &&
+        // (translate >= (wrapperWidth - (slideWidth * (perView + 1)) - (gapValue * (perView + 1)) - peek))
+        translate >= -(peek + (slideWidth * focusAt) + (gapValue * (perView - 1))) &&
+        translate <= 0
       ) {
-        for (let i = 0; i < slides.length; i++) {
-          slides[i].style.left = `${wrapperWidth + (slideWidth * i) + (gapValue * i)}px`
+        const mocks = slides.end.reverse()
+
+        for (let i = 0; i < mocks.length; i++) {
+          mocks[i].style.left = `-${(slideWidth * (i + 1)) + (gapValue * (i + 1))}px`
         }
       } else {
-        for (let i = 0; i < slides.length; i++) {
-          slides[i].style.left = `${(slideWidth * i) + (gapValue * i)}px`
+        const mocksEnd = slides.end
+
+        for (let i = 0; i < mocksEnd.length; i++) {
+          const num = Html.slides.length - Loop.number + i
+
+          mocksEnd[i].style.left = `${(slideWidth * num) + (gapValue * num)}px`
+        }
+      }
+
+      if (
+        translate <= wrapperWidth &&
+        translate >= (wrapperWidth - (slideWidth * (perView + 1)) - (gapValue * (perView + 1)) - peek)
+      ) {
+        const mocks = slides.start
+
+        for (let i = 0; i < mocks.length; i++) {
+          mocks[i].style.left = `${wrapperWidth + (slideWidth * i) + (gapValue * i)}px`
+        }
+      } else {
+        const mocksStart = slides.start
+
+        for (let i = 0; i < mocksStart.length; i++) {
+          mocksStart[i].style.left = `${(slideWidth * i) + (gapValue * i)}px`
         }
       }
     }
@@ -32,7 +52,10 @@ export default function (Glide, Components, Events) {
 
   define(Loop, 'slides', {
     get () {
-      return Html.slides.slice(0, Loop.number)
+      return {
+        start: [...Html.slides.slice(0, Loop.number)],
+        end: [...Html.slides.slice(-Loop.number)]
+      }
     }
   })
 
@@ -41,14 +64,10 @@ export default function (Glide, Components, Events) {
       const { focusAt, perView } = Glide.settings
 
       if (focusAt === 'center') {
-        return perView + Math.floor(perView / 2)
+        return Math.round(perView / 2)
       }
 
-      if ((focusAt + 1) >= Math.round(perView / 2)) {
-        return perView + focusAt
-      }
-
-      return perView + (perView - focusAt)
+      return perView + 1
     }
   })
 

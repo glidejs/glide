@@ -45,5 +45,5 @@ export default {
   easeInOutQuart,
   easeInQuint,
   easeOutQuint,
-  easeInOutQuint,
+  easeInOutQuint
 }

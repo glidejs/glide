@@ -93,7 +93,7 @@ export default function (Glide, Components, Events) {
 
   define(Clones, 'grow', {
     /**
-     * Gets additional dimentions value caused by clones.
+     * Gets additional dimensions value caused by clones.
      *
      * @return {Number}
      */

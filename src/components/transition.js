@@ -109,7 +109,7 @@ export default function (Glide, Components, Events) {
   /**
    * Disable transition:
    * - before initial build to avoid transitioning from `0` to `startAt` index
-   * - while resizing window and recalculating dimentions
+   * - while resizing window and recalculating dimensions
    * - on jumping from offset transition at start and end edges in `carousel` type
    */
   Events.on(['build.before', 'resize', 'translate.jump'], () => {

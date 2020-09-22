@@ -3,7 +3,7 @@ import { define } from '../utils/object'
 import { toFloat } from '../utils/unit'
 
 export default function (Glide, Components, Events) {
-  const { Run, Size, Gap, Html } = Components
+  const { Run, Size, Gap, Peek, Html } = Components
 
   /**
    * Instance of the translate mutation function.
@@ -12,24 +12,33 @@ export default function (Glide, Components, Events) {
    */
   const mutate = mutator(Glide, Components, Events)
 
-  const distance = ({ steps, direction }) => {
-    const singleDistance = Size.slideWidth + Gap.value
+  /**
+   * Calculates a movement distance based on passed movement pattern.
+   * Distance value is relative to current translate value.
+   *
+   * @param {Object} Movement values
+   */
+  const distance = ({ direction, steps }) => {
+    const { length } = Run
+    const { value: gap } = Gap
+    const { slideWidth } = Size
+    const { value: peek } = Peek
+    const { perView } = Glide.settings
+    const { value: translate } = Translate
 
-    let offset = 0
+    const distance = slideWidth + gap
 
     if (direction === '=') {
-      offset = Translate.value - (steps * singleDistance)
+      return translate - (steps * distance) + peek
     } else if (steps === '|') {
-      offset = Glide.settings.perView * singleDistance
+      return perView * distance
     } else if (steps === '>') {
-      offset = (Components.Run.length * singleDistance) - Translate.value
+      return (length * distance) - translate - peek
     } else if (steps === '<') {
-      offset = Translate.value
-    } else {
-      offset = singleDistance
+      return translate + peek
     }
 
-    return offset
+    return distance
   }
 
   const Translate = {

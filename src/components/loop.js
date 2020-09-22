@@ -4,62 +4,79 @@ export default function (Glide, Components, Events) {
   const { Size, Gap, Html } = Components
 
   const Loop = {
+    /**
+     * Re-positions edge slides based on passed translate
+     * value to achieve infinite looped carousel.
+     *
+     * @param {Number} translate
+     * @returns {Void}
+     */
     set (translate) {
-      const { slides } = this
+      const { slides } = Html
       const { value: gapValue } = Gap
-      const { perView, peek, focusAt } = Glide.settings
+      const { elements, number } = Loop
       const { slideWidth, wrapperWidth } = Size
+      const { perView, peek, focusAt } = Glide.settings
 
+      // If we are at beginning of the carousel in the the "starting zone" re-position end slides,
+      // so they are positioned before start slides. Otherwise, reposition
+      // end slides to its normal positions.
       if (
-        // (translate <= wrapperWidth) &&
-        // (translate >= (wrapperWidth - (slideWidth * (perView + 1)) - (gapValue * (perView + 1)) - peek))
         translate >= -(peek + (slideWidth * focusAt) + (gapValue * (perView - 1))) &&
         translate <= 0
       ) {
-        const mocks = slides.end.reverse()
-
-        for (let i = 0; i < mocks.length; i++) {
-          mocks[i].style.left = `-${(slideWidth * (i + 1)) + (gapValue * (i + 1))}px`
-        }
+        elements.end.reverse().forEach((element, i) => {
+          element.style.left = `-${(slideWidth * (i + 1)) + (gapValue * (i + 1))}px`
+        })
       } else {
-        const mocksEnd = slides.end
+        elements.end.forEach((element, i) => {
+          const offsetNumber = slides.length - number + i
 
-        for (let i = 0; i < mocksEnd.length; i++) {
-          const num = Html.slides.length - Loop.number + i
-
-          mocksEnd[i].style.left = `${(slideWidth * num) + (gapValue * num)}px`
-        }
+          element.style.left = `${(slideWidth * offsetNumber) + (gapValue * offsetNumber)}px`
+        })
       }
 
+      // If we are at the end of carousel in the the "ending zone" re-position start slides,
+      // so they are positioned after end slides. Otherwise, reposition
+      // start slides to it's normal positions.
       if (
         translate <= wrapperWidth &&
         translate >= (wrapperWidth - (slideWidth * (perView + 1)) - (gapValue * (perView + 1)) - peek)
       ) {
-        const mocks = slides.start
-
-        for (let i = 0; i < mocks.length; i++) {
-          mocks[i].style.left = `${wrapperWidth + (slideWidth * i) + (gapValue * i)}px`
-        }
+        elements.start.forEach((element, i) => {
+          element.style.left = `${wrapperWidth + (slideWidth * i) + (gapValue * i)}px`
+        })
       } else {
-        const mocksStart = slides.start
-
-        for (let i = 0; i < mocksStart.length; i++) {
-          mocksStart[i].style.left = `${(slideWidth * i) + (gapValue * i)}px`
-        }
+        elements.start.forEach((element, i) => {
+          element.style.left = `${(slideWidth * i) + (gapValue * i)}px`
+        })
       }
     }
   }
 
-  define(Loop, 'slides', {
+  define(Loop, 'elements', {
+    /**
+     * Gets collection of edge slide HTMLElements.
+     *
+     * @return {Object}
+     */
     get () {
+      const { slides } = Html
+      const { number } = Loop
+
       return {
-        start: [...Html.slides.slice(0, Loop.number)],
-        end: [...Html.slides.slice(-Loop.number)]
+        start: [...slides.slice(0, number)],
+        end: [...slides.slice(-number)]
       }
     }
   })
 
   define(Loop, 'number', {
+    /**
+     * Gets number of the slides which will be re-positioned.
+     *
+     * @returns {Number}
+     */
     get () {
       const { focusAt, perView } = Glide.settings
 
@@ -71,6 +88,10 @@ export default function (Glide, Components, Events) {
     }
   })
 
+  /**
+   * Re-position slides:
+   * - each time we setting new translate value
+   */
   Events.on('translate.set', (translate) => {
     Loop.set(translate.value)
   })

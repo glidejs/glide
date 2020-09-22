@@ -1,6 +1,6 @@
 import mutator from '../mutator/index'
 import { define } from '../utils/object'
-import { toFloat } from '../utils/unit'
+import { toFloat, isNumber } from '../utils/unit'
 
 export default function (Glide, Components, Events) {
   const { Run, Size, Gap, Peek, Html } = Components
@@ -22,22 +22,25 @@ export default function (Glide, Components, Events) {
     const { length } = Run
     const { value: gap } = Gap
     const { slideWidth } = Size
-    const { value: peek } = Peek
+    const { grow: peek } = Peek
     const { perView } = Glide.settings
-    const { value: translate } = Translate
+    const { value: translate, offset } = Translate
 
     const distance = slideWidth + gap
 
-    if (direction === '=') {
-      return translate - (steps * distance) + peek
+    if (isNumber(steps) && steps > 1) {
+      console.log(distance * steps, offset)
+      return distance * steps - offset
     } else if (steps === '|') {
       return perView * distance
     } else if (steps === '>') {
       return (length * distance) - translate - peek
     } else if (steps === '<') {
       return translate + peek
+    } else if (direction === '=') {
+      return translate - (steps * distance) + peek
     }
-
+    console.log('asd')
     return distance
   }
 

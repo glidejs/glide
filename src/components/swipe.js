@@ -110,7 +110,8 @@ export default function (Glide, Components, Events) {
         if (swipeSin * 180 / Math.PI < touchAngle) {
           event.stopPropagation()
 
-          translate = Translate.set(subExSx * toFloat(touchRatio))
+          Translate._o = subExSx * toFloat(touchRatio)
+          translate = Translate.set()
 
           Html.root.classList.add(classes.dragging)
 
@@ -136,18 +137,13 @@ export default function (Glide, Components, Events) {
 
         const swipeDistance = swipe.pageX - swipeStartX
         const swipeDeg = swipeSin * 180 / Math.PI
-        const steps = toInt(settings[settings.perSwipe])
+        const steps = toInt(settings.perSwipe)
 
-        Translate.value = translate
-
-        this.enable()
+        Translate._v = translate
 
         if (swipeDistance > swipeThreshold && swipeDeg < settings.touchAngle) {
           Components.Run.make(`${Direction.resolve('<')}${steps}`)
-        } else if (
-          swipeDistance < -swipeThreshold &&
-          swipeDeg < settings.touchAngle
-        ) {
+        } else if (swipeDistance < -swipeThreshold && swipeDeg < settings.touchAngle) {
           Components.Run.make(`${Direction.resolve('>')}${steps}`)
         }
 
@@ -157,6 +153,8 @@ export default function (Glide, Components, Events) {
         this.unbindSwipeEnd()
 
         Events.emit('swipe.end')
+
+        this.enable()
       }
     },
 

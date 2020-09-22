@@ -59,6 +59,23 @@ export default function (Glide, Components, Events) {
     }
   })
 
+  define(Peek, 'grow', {
+    /**
+     * Gets growing value caused by peek.
+     *
+     * @returns {Number}
+     */
+    get () {
+      const value = Peek.value
+
+      if (isObject(value)) {
+        return value.before
+      }
+
+      return value
+    }
+  })
+
   /**
    * Recalculate peeking sizes on:
    * - when resizing window to update to proper percents

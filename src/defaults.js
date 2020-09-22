@@ -21,6 +21,13 @@ export default {
   perMove: 1,
 
   /**
+   * A number of slides moved on single swipe.
+   *
+   * @type {Number}
+   */
+  perSwipe: 1,
+
+  /**
    * Focus currently active slide at a specified position in the track.
    *
    * Available inputs:
@@ -82,17 +89,6 @@ export default {
    * @type {Boolean}
    */
   rewind: false,
-
-  /**
-   * A number of slides moved on single swipe.
-   *
-   * Available types:
-   * `perView` - Moves slider by one slide per swipe
-   * `perMove` - Moves slider between views per swipe (number of slides defined in `perView` options)
-   *
-   * @type {String}
-   */
-  perSwipe: 'perView',
 
   /**
    * Minimal swipe distance needed to change the slide. Use `false` for turning off a swiping.

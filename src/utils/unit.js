@@ -16,8 +16,8 @@ export function toInt (value) {
  * @param {String} value
  * @returns {Number}
  */
-export function toFloat (value) {
-  return parseFloat(value)
+export function toFloat (value, fixed = 6) {
+  return parseFloat(value.toFixed(fixed))
 }
 
 /**
@@ -35,13 +35,9 @@ export function isString (value) {
  *
  * @param  {*} value
  * @return {Boolean}
- *
- * @see https://github.com/jashkenas/underscore
  */
 export function isObject (value) {
-  const type = typeof value
-
-  return type === 'function' || type === 'object' && !!value // eslint-disable-line no-mixed-operators
+  return (value && typeof value === 'object' && !Array.isArray(value) && value !== null)
 }
 
 /**

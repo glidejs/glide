@@ -15,7 +15,7 @@ import Translate from '../src/components/translate'
 import Animate from '../src/components/animate'
 
 // Optional components
-import Swipe from '../src/components/swipe'
+// import Swipe from '../src/components/swipe'
 import Images from '../src/components/images'
 import Anchors from '../src/components/anchors'
 import Controls from '../src/components/controls'
@@ -39,7 +39,7 @@ const COMPONENTS = {
   Classes,
 
   // Optional
-  Swipe,
+  // Swipe,
   Images,
   Anchors,
   Controls,

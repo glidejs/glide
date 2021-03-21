@@ -12,6 +12,8 @@ export default function (Glide, Components, Events) {
    */
   const mutate = mutator(Glide, Components, Events)
 
+  let jumping = false
+
   /**
    * Calculates a movement distance based on passed movement pattern.
    * Distance value is relative to current translate value.
@@ -24,67 +26,39 @@ export default function (Glide, Components, Events) {
     const { slideWidth } = Size
     const { grow: peek } = Peek
     const { perView } = Glide.settings
-    const { value: translate, offset } = Translate
+    const { value: translate } = Translate
 
     const distance = slideWidth + gap
 
     if (isNumber(steps) && steps > 1) {
-      console.log(distance * steps, offset)
-      return distance * steps - offset
+      return distance * steps
     } else if (steps === '|') {
       return perView * distance
     } else if (steps === '>') {
-      return (length * distance) - translate - peek
+      return length * distance - translate - peek
     } else if (steps === '<') {
       return translate + peek
     } else if (direction === '=') {
-      return translate - (steps * distance) + peek
+      return translate - steps * distance + peek
     }
-    console.log('asd')
+
     return distance
+  }
+
+  const apply = (value) => {
+    Html.wrapper.style.transform = `translate3d(${-1 * value}px, 0px, 0px)`
+
+    Events.emit('translate.set', { value })
   }
 
   const Translate = {
     mount () {
-      this._o = 0
-      this._v = mutate(Size.slideWidth * Glide.index)
+      this._d = 0
+      this._c = 0
 
-      this.set()
-    },
+      this.value = mutate(Size.slideWidth * Glide.index)
 
-    bound (value, offset) {
-      const edgeStart = mutate(0)
-      const edgeEnd = mutate(Size.slideWidth * Html.slides.length)
-
-      let move = value - offset
-
-      if (Glide.settings.loop) {
-        if (move < edgeStart) {
-          move = edgeEnd
-
-          this._v = move
-        } else if (move > edgeEnd) {
-          move = edgeStart
-
-          this._v = move
-        }
-      }
-
-      return move
-    },
-
-    set (offset = 0) {
-      const value = this.bound(this._v, offset)
-
-      this.apply(value)
-
-      return value
-    },
-
-    apply (value) {
-      Events.emit('translate.set', { value })
-
-      Html.wrapper.style.transform = `translate3d(${-1 * value}px, 0px, 0px)`
+      apply(this.value)
     }
   }
 
@@ -98,6 +72,26 @@ export default function (Glide, Components, Events) {
     }
   })
 
+  define(Translate, 'distance', {
+    get () {
+      return Translate._d
+    },
+
+    set (value) {
+      Translate._d = toFloat(value)
+    }
+  })
+
+  define(Translate, 'velocity', {
+    get () {
+      return Translate._c
+    },
+
+    set (value) {
+      Translate._c = toFloat(value)
+    }
+  })
+
   define(Translate, 'offset', {
     get () {
       return Translate._o
@@ -108,24 +102,39 @@ export default function (Glide, Components, Events) {
     }
   })
 
-  Events.on('resize', () => {
-    Translate.mount()
-  })
-
-  Events.on('animate.before', ({ movement }) => {
+  Events.on('animate.before', ({ multiplier, movement }) => {
     Glide.disable()
 
-    Translate._o = distance(movement)
+    Translate.distance = multiplier * distance(movement)
   })
 
-  Events.on('animate', ({ multiplier, easing }) => {
-    const value = (Translate._o * multiplier) * easing
+  Events.on('animate', ({ easing }) => {
+    const velocity = Translate.distance * easing
+    const value = (Translate.value + velocity).toFixed(3)
 
-    Translate.set(value)
+    if (Glide.settings.loop) {
+      const edgeStart = toFloat(mutate(0))
+      const edgeEnd = toFloat(mutate(Size.slideWidth * Html.slides.length))
+
+      const viewportWidth = toFloat((Size.width - Size.slideWidth + Gap.value))
+
+      if (value <= -1 * viewportWidth) {
+        jumping = true
+        Translate.value = edgeEnd
+      } else if (value >= edgeEnd + viewportWidth - Size.slideWidth * 2) {
+        jumping = true
+        Translate.value = edgeStart
+      }
+    }
+
+    apply(value)
   })
 
-  Events.on('animate.after', ({ multiplier }) => {
-    Translate._v = Translate._v - (multiplier * Translate._o)
+  Events.on('animate.after', ({ easing }) => {
+    const velocity = Translate.distance * easing
+    const value = Translate.value = Translate.value + velocity
+
+    apply(value)
 
     Glide.enable()
   })

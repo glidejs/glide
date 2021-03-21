@@ -1,6 +1,6 @@
 /*!
  * Glide.js v3.4.0
- * (c) 2013-2020 Jędrzej Chałubek <jedrzej.chalubek@gmail.com> (http://jedrzejchalubek.com/)
+ * (c) 2013-2021 Jędrzej Chałubek <jedrzej.chalubek@gmail.com> (http://jedrzejchalubek.com/)
  * Released under the MIT License.
  */
 
@@ -199,6 +199,13 @@
     perMove: 1,
 
     /**
+     * A number of slides moved on single swipe.
+     *
+     * @type {Number}
+     */
+    perSwipe: 1,
+
+    /**
      * Focus currently active slide at a specified position in the track.
      *
      * Available inputs:
@@ -262,17 +269,6 @@
     rewind: false,
 
     /**
-     * A number of slides moved on single swipe.
-     *
-     * Available types:
-     * `perView` - Moves slider by one slide per swipe
-     * `perMove` - Moves slider between views per swipe (number of slides defined in `perView` options)
-     *
-     * @type {String}
-     */
-    perSwipe: 'perView',
-
-    /**
      * Minimal swipe distance needed to change the slide. Use `false` for turning off a swiping.
      *
      * @type {Number|Boolean}
@@ -312,14 +308,14 @@
      *
      * @type {Number}
      */
-    animationDuration: 400,
+    animationDuration: 500,
 
     /**
      * Easing function for the animation.
      *
-     * @type {String}
+     * @type {Array}
      */
-    animationTimingFunc: 'cubic-bezier(.165, .840, .440, 1)',
+    animationEasing: 'easeInOutQuad',
 
     /**
      * Throttle costly events at most once per every wait milliseconds.
@@ -445,13 +441,23 @@
     return type === 'function' || type === 'object' && !!value; // eslint-disable-line no-mixed-operators
   }
   /**
+   * Indicates whether the specified value is a number.
+   *
+   * @param  {*} value
+   * @return {Boolean}
+   */
+
+  function isNumber(value) {
+    return typeof value === 'number';
+  }
+  /**
    * Indicates whether the specified value is a function.
    *
    * @param  {*} value
    * @return {Boolean}
    */
 
-  function isFunction(value) {
+  function isFunc(value) {
     return typeof value === 'function';
   }
   /**
@@ -489,7 +495,7 @@
     var components = {};
 
     for (var name in extensions) {
-      if (isFunction(extensions[name])) {
+      if (isFunc(extensions[name])) {
         components[name] = extensions[name](glide, components, events);
       } else {
         warn('Extension must be a function');
@@ -497,7 +503,7 @@
     }
 
     for (var _name in components) {
-      if (isFunction(components[_name].mount)) {
+      if (isFunc(components[_name].mount)) {
         components[_name].mount();
       }
     }
@@ -1097,31 +1103,11 @@
        * @param {String} move
        */
       make: function make(move) {
-        var _this = this;
-
         if (!Glide.disabled) {
-          Glide.disable();
           this.move = move;
           Events.emit('run.before', this.move);
           Glide.index = calculate(this.move, this.length);
           Events.emit('run', this.move);
-          Components.Animation.after(function () {
-            if (_this.isStart()) {
-              Events.emit('run.start', _this.move);
-            }
-
-            if (_this.isEnd()) {
-              Events.emit('run.end', _this.move);
-            }
-
-            if (_this.isOffset('<') || _this.isOffset('>')) {
-              _this._o = false;
-              Events.emit('run.offset', _this.move);
-            }
-
-            Events.emit('run.after', _this.move);
-            Glide.enable();
-          });
         }
       },
 
@@ -1429,6 +1415,22 @@
         return value * 2 / perView;
       }
     });
+    define(Peek, 'grow', {
+      /**
+       * Gets growing value caused by peek.
+       *
+       * @returns {Number}
+       */
+      get: function get() {
+        var value = Peek.value;
+
+        if (isObject(value)) {
+          return value.before;
+        }
+
+        return value;
+      }
+    });
     /**
      * Recalculate peeking sizes on:
      * - when resizing window to update to proper percents
@@ -1445,46 +1447,90 @@
         Gap = Components.Gap,
         Html = Components.Html;
     var Loop = {
+      /**
+       * Re-positions edge slides based on passed translate
+       * value to achieve infinite looped carousel.
+       *
+       * @param {Number} translate
+       * @returns {Void}
+       */
       set: function set(translate) {
-        var slides = this.slides;
+        var slides = Html.slides;
         var gapValue = Gap.value;
-        var perView = Glide.settings.perView;
+        var elements = Loop.elements,
+            number = Loop.number;
         var slideWidth = Size.slideWidth,
             wrapperWidth = Size.wrapperWidth;
+        var _Glide$settings = Glide.settings,
+            perView = _Glide$settings.perView,
+            peek = _Glide$settings.peek,
+            focusAt = _Glide$settings.focusAt; // If we are at beginning of the carousel in the the "starting zone" re-position end slides,
+        // so they are positioned before start slides. Otherwise, reposition
+        // end slides to its normal positions.
 
-        if (translate < wrapperWidth && translate > wrapperWidth - slideWidth * perView - gapValue * perView) {
-          for (var i = 0; i < slides.length; i++) {
-            slides[i].style.left = "".concat(wrapperWidth + slideWidth * i + gapValue * i, "px");
-          }
+        if (translate > -(peek + slideWidth * focusAt + gapValue * (perView - 1)) && translate < 0) {
+          elements.end.reverse().forEach(function (element, i) {
+            element.style.left = "-".concat(slideWidth * (i + 1) + gapValue * (i + 1), "px");
+          });
         } else {
-          for (var _i = 0; _i < slides.length; _i++) {
-            slides[_i].style.left = "".concat(slideWidth * _i + gapValue * _i, "px");
-          }
+          elements.end.forEach(function (element, i) {
+            var offsetNumber = slides.length - number + i;
+            element.style.left = "".concat(slideWidth * offsetNumber + gapValue * offsetNumber, "px");
+          });
+        } // If we are at the end of carousel in the the "ending zone" re-position start slides,
+        // so they are positioned after end slides. Otherwise, reposition
+        // start slides to it's normal positions.
+
+
+        if (translate < wrapperWidth && translate > wrapperWidth - slideWidth * (perView + 1) - gapValue * (perView + 1) - peek) {
+          elements.start.forEach(function (element, i) {
+            element.style.left = "".concat(wrapperWidth + slideWidth * i + gapValue * i, "px");
+          });
+        } else {
+          elements.start.forEach(function (element, i) {
+            element.style.left = "".concat(slideWidth * i + gapValue * i, "px");
+          });
         }
       }
     };
-    define(Loop, 'slides', {
+    define(Loop, 'elements', {
+      /**
+       * Gets collection of edge slide HTMLElements.
+       *
+       * @return {Object}
+       */
       get: function get() {
-        return Html.slides.slice(0, Loop.number);
+        var slides = Html.slides;
+        var number = Loop.number;
+        return {
+          start: _toConsumableArray(slides.slice(0, number)),
+          end: _toConsumableArray(slides.slice(-number))
+        };
       }
     });
     define(Loop, 'number', {
+      /**
+       * Gets number of the slides which will be re-positioned.
+       *
+       * @returns {Number}
+       */
       get: function get() {
-        var _Glide$settings = Glide.settings,
-            focusAt = _Glide$settings.focusAt,
-            perView = _Glide$settings.perView;
+        var _Glide$settings2 = Glide.settings,
+            focusAt = _Glide$settings2.focusAt,
+            perView = _Glide$settings2.perView;
 
         if (focusAt === 'center') {
-          return perView + Math.floor(perView / 2);
+          return Math.round(perView / 2);
         }
 
-        if (focusAt + 1 >= Math.round(perView / 2)) {
-          return perView + focusAt;
-        }
-
-        return perView + (perView - focusAt);
+        return perView + 1;
       }
     });
+    /**
+     * Re-position slides:
+     * - each time we setting new translate value
+     */
+
     Events.on('translate.set', function (translate) {
       Loop.set(translate.value);
     });
@@ -2114,7 +2160,7 @@
       for (var i = 0; i < TRANSFORMERS.length; i++) {
         var transformer = TRANSFORMERS[i];
 
-        if (isFunction(transformer) && isFunction(transformer())) {
+        if (isFunc(transformer) && isFunc(transformer())) {
           translate = transformer(Glide, Components, Events)(translate);
         } else {
           warn('Transformer should be a function that returns the function');
@@ -2126,7 +2172,10 @@
   }
 
   function Translate (Glide, Components, Events) {
-    var Size = Components.Size,
+    var Run = Components.Run,
+        Size = Components.Size,
+        Gap = Components.Gap,
+        Peek = Components.Peek,
         Html = Components.Html;
     /**
      * Instance of the translate mutation function.
@@ -2134,41 +2183,81 @@
      * @type {Function}
      */
 
-    var mutate = mutator(Glide, Components, Events);
+    var mutate = mutator(Glide, Components, Events); // const Translate = {
+    //   mount () {
+    //     this._o = 0
+    //     this._v = mutate(Size.slideWidth * Glide.index)
+    //     this.set()
+    //   },
+    //   bound (value, offset) {
+    //     const edgeStart = mutate(0)
+    //     const edgeEnd = mutate(Size.slideWidth * Html.slides.length)
+    //     let move = value - offset
+    //     if (Glide.settings.loop) {
+    //       if (move < edgeStart) {
+    //         move = edgeEnd
+    //         this._v = move
+    //       } else if (move > edgeEnd) {
+    //         move = edgeStart
+    //         this._v = move
+    //       }
+    //     }
+    //     return move
+    //   },
+    //   set (offset = 0) {
+    //     const value = this.bound(this._v, offset)
+    //     this.apply(value)
+    //     return value
+    //   },
+    //   apply (value) {
+    //     Events.emit('translate.set', { value })
+    //     Html.wrapper.style.transform = `translate3d(${-1 * value}px, 0px, 0px)`
+    //   }
+    // }
 
-    var calculate = function calculate(value) {
-      var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-      var loop = Glide.settings.loop;
-      var wrapperWidth = Size.wrapperWidth;
-      var move = value - offset;
+    /**
+     * Calculates a movement distance based on passed movement pattern.
+     * Distance value is relative to current translate value.
+     *
+     * @param {Object} Movement values
+     */
 
-      if (loop) {
-        if (move < 0) {
-          return wrapperWidth + (value - offset);
-        } else if (move > wrapperWidth) {
-          return -1 * (offset + (wrapperWidth - value));
-        }
+    var distance = function distance(_ref) {
+      var direction = _ref.direction,
+          steps = _ref.steps;
+      var length = Run.length;
+      var gap = Gap.value;
+      var slideWidth = Size.slideWidth;
+      var peek = Peek.grow;
+      var perView = Glide.settings.perView;
+      var translate = Translate.value;
+      var distance = slideWidth + gap;
+
+      if (isNumber(steps) && steps > 1) {
+        return distance * steps;
+      } else if (steps === '|') {
+        return perView * distance;
+      } else if (steps === '>') {
+        return length * distance - translate - peek;
+      } else if (steps === '<') {
+        return translate + peek;
+      } else if (direction === '=') {
+        return translate - steps * distance + peek;
       }
 
-      return move;
+      return distance;
     };
 
     var apply = function apply(value) {
-      Events.emit('translate.set', {
-        value: value
-      });
       Html.wrapper.style.transform = "translate3d(".concat(-1 * value, "px, 0px, 0px)");
     };
 
     var Translate = {
       mount: function mount() {
-        this._v = mutate(Size.slideWidth * Glide.index);
-        this.set(0);
-      },
-      set: function set(offset) {
-        var value = calculate(this._v, offset);
-        apply(value);
-        return value;
+        this._d = 0;
+        this._c = 0;
+        this.value = mutate(Size.slideWidth * Glide.index);
+        apply(this.value);
       }
     };
     define(Translate, 'value', {
@@ -2179,342 +2268,213 @@
         Translate._v = toFloat(value);
       }
     });
-    Events.on('resize', function () {
-      Translate.mount();
+    define(Translate, 'distance', {
+      get: function get() {
+        return Translate._d;
+      },
+      set: function set(value) {
+        Translate._d = toFloat(value);
+      }
+    });
+    define(Translate, 'velocity', {
+      get: function get() {
+        return Translate._c;
+      },
+      set: function set(value) {
+        Translate._c = toFloat(value);
+      }
+    });
+    define(Translate, 'offset', {
+      get: function get() {
+        return Translate._o;
+      },
+      set: function set(value) {
+        Translate._o = toFloat(value);
+      }
+    });
+    Events.on('animate.before', function (_ref2) {
+      var multiplier = _ref2.multiplier,
+          movement = _ref2.movement;
+      Glide.disable();
+      Translate.distance = multiplier * distance(movement);
+    });
+    Events.on('animate', function (_ref3) {
+      var easing = _ref3.easing;
+      var velocity = Translate.distance * easing;
+      var value = Translate.value + velocity;
+
+      if (Glide.settings.loop) {
+        var edgeStart = mutate(0);
+        var edgeEnd = mutate(Size.slideWidth * Html.slides.length);
+
+        if (value < edgeStart) {
+          Translate.value = edgeEnd - velocity;
+        } else if (value > edgeEnd) {
+          Translate.value = edgeStart - velocity;
+        }
+      }
+
+      apply(value);
+      Events.emit('translate.set', {
+        value: value
+      });
+    });
+    Events.on('animate.after', function (_ref4) {
+      var easing = _ref4.easing;
+      var velocity = Translate.distance * easing;
+      var value = Translate.value = Translate.value + velocity;
+      apply(value);
+      Events.emit('translate.set', {
+        value: value
+      });
+      Glide.enable();
     });
     return Translate;
   }
 
+  /**
+   * Easing functions
+   *
+   * https://gist.github.com/gre/1650294
+   * http://easings.net
+   */
+  // no easing, no acceleration
+  var easeLinear = function easeLinear(t) {
+    return t;
+  }; // accelerating from zero velocity
+
+
+  var easeInQuad = function easeInQuad(t) {
+    return t * t;
+  }; // decelerating to zero velocity
+
+
+  var easeOutQuad = function easeOutQuad(t) {
+    return t * (2 - t);
+  }; // acceleration until halfway, then deceleration
+
+
+  var easeInOutQuad = function easeInOutQuad(t) {
+    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+  }; // accelerating from zero velocity
+
+
+  var easeInCubic = function easeInCubic(t) {
+    return t * t * t;
+  }; // decelerating to zero velocity
+
+
+  var easeOutCubic = function easeOutCubic(t) {
+    return --t * t * t + 1;
+  }; // acceleration until halfway, then deceleration
+
+
+  var easeInOutCubic = function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+  }; // accelerating from zero velocity
+
+
+  var easeInQuart = function easeInQuart(t) {
+    return t * t * t * t;
+  }; // decelerating to zero velocity
+
+
+  var easeOutQuart = function easeOutQuart(t) {
+    return 1 - --t * t * t * t;
+  }; // acceleration until halfway, then deceleration
+
+
+  var easeInOutQuart = function easeInOutQuart(t) {
+    return t < 0.5 ? 8 * t * t * t * t : 1 - 8 * --t * t * t * t;
+  }; // accelerating from zero velocity
+
+
+  var easeInQuint = function easeInQuint(t) {
+    return t * t * t * t * t;
+  }; // decelerating to zero velocity
+
+
+  var easeOutQuint = function easeOutQuint(t) {
+    return 1 + --t * t * t * t * t;
+  }; // acceleration until halfway, then deceleration
+
+
+  var easeInOutQuint = function easeInOutQuint(t) {
+    return t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * --t * t * t * t * t;
+  };
+
+  var easings = {
+    easeLinear: easeLinear,
+    easeInQuad: easeInQuad,
+    easeOutQuad: easeOutQuad,
+    easeInOutQuad: easeInOutQuad,
+    easeInCubic: easeInCubic,
+    easeOutCubic: easeOutCubic,
+    easeInOutCubic: easeInOutCubic,
+    easeInQuart: easeInQuart,
+    easeOutQuart: easeOutQuart,
+    easeInOutQuart: easeInOutQuart,
+    easeInQuint: easeInQuint,
+    easeOutQuint: easeOutQuint,
+    easeInOutQuint: easeInOutQuint
+  };
+
+  var DIRECTION_MULTIPLIER = {
+    '<': -1,
+    '>': 1,
+    '=': -1
+  };
   function Animate (Glide, Components, Events) {
-    var getProgress = function getProgress(_ref) {
-      var elapsed = _ref.elapsed,
-          total = _ref.total;
-      return Math.min(elapsed / total, 1);
-    };
+    var start = performance.now();
+    var Animate = {
+      make: function make(now) {
+        var then = now - start;
+        var duration = Math.max(then / Animate.duration, 0);
+        var l = Math.min(duration, 1);
+        var easing = Math.round((Animate.ease(duration) + Number.EPSILON) * 100) / 100;
 
-    var easeOut = function easeOut(progress) {
-      return Math.pow(--progress, 5) + 1;
-    };
-
-    var finalPosition = 600;
-    var time = {
-      start: performance.now(),
-      total: 2000
-    };
-
-    var tick = function tick(now) {
-      time.elapsed = now - time.start;
-      var progress = getProgress(time);
-      var easing = easeOut(progress);
-      var position = easing * finalPosition;
-      element.style.transform = "translate(".concat(position, "px)");
-      if (progress < 1) requestAnimationFrame(tick);
-    };
-
-    requestAnimationFrame(tick);
-    var Animation = {
-      /**
-       * Runs callback after animation.
-       *
-       * @param  {Function} callback
-       * @return {Void}
-       */
-      after: function after(callback) {
-        setTimeout(function () {
-          callback();
-        }, this.duration);
+        if (l < 1) {
+          Events.emit('animate', {
+            easing: easing
+          });
+          requestAnimationFrame(Animate.make);
+        } else {
+          Events.emit('animate.after', {
+            easing: easing
+          });
+        }
       }
     };
-    define(Animation, 'duration', {
+    define(Animate, 'duration', {
       get: function get() {
         return toInt(Glide.settings.animationDuration);
       }
     });
-    return Animation;
-  }
-
-  /**
-   * Test via a getter in the options object to see
-   * if the passive property is accessed.
-   *
-   * @see https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md#feature-detection
-   */
-  var supportsPassive = false;
-
-  try {
-    var opts = Object.defineProperty({}, 'passive', {
+    define(Animate, 'ease', {
       get: function get() {
-        supportsPassive = true;
+        var ease = Glide.settings.animationEasing;
+
+        if (isString(ease)) {
+          return easings[ease];
+        }
+
+        if (isFunc(ease)) {
+          return ease;
+        }
+
+        warn('Invalid `animateEasing` option. Have to be easing name or function');
       }
     });
-    window.addEventListener('testPassive', null, opts);
-    window.removeEventListener('testPassive', null, opts);
-  } catch (e) {}
-
-  var supportsPassive$1 = supportsPassive;
-
-  var START_EVENTS = ['touchstart', 'mousedown'];
-  var MOVE_EVENTS = ['touchmove', 'mousemove'];
-  var END_EVENTS = ['touchend', 'touchcancel', 'mouseup', 'mouseleave'];
-  var MOUSE_EVENTS = ['mousedown', 'mousemove', 'mouseup', 'mouseleave'];
-  function Swipe (Glide, Components, Events) {
-    var Html = Components.Html,
-        Translate = Components.Translate,
-        Direction = Components.Direction;
-    /**
-     * Instance of the binder for DOM Events.
-     *
-     * @type {EventsBinder}
-     */
-
-    var Binder = new EventsBinder();
-    /**
-     * Normalizes event touches points accorting to different types.
-     *
-     * @param {Object} event
-     */
-
-    var touches = function touches(event) {
-      if (MOUSE_EVENTS.indexOf(event.type) > -1) {
-        return event;
-      }
-
-      return event.touches[0] || event.changedTouches[0];
-    };
-    /**
-     * Gets value of minimum swipe distance settings based on event type.
-     *
-     * @return {Number}
-     */
-
-
-    var threshold = function threshold(event) {
-      var _Glide$settings = Glide.settings,
-          dragThreshold = _Glide$settings.dragThreshold,
-          swipeThreshold = _Glide$settings.swipeThreshold;
-
-      if (MOUSE_EVENTS.indexOf(event.type) > -1) {
-        return dragThreshold;
-      }
-
-      return swipeThreshold;
-    };
-
-    var translate = Translate._v;
-    var swipeSin = 0;
-    var swipeStartX = 0;
-    var swipeStartY = 0;
-    var disabled = false;
-    var capture = supportsPassive$1 ? {
-      passive: true
-    } : false;
-    var Swipe = {
-      /**
-       * Initializes swipe bindings.
-       *
-       * @return {Void}
-       */
-      mount: function mount() {
-        this.bindSwipeStart();
-      },
-
-      /**
-       * Handler for `swipestart` event. Calculates entry points of the user's tap.
-       *
-       * @param {Object} event
-       * @return {Void}
-       */
-      start: function start(event) {
-        if (!disabled && !Glide.disabled) {
-          this.disable();
-          var swipe = touches(event);
-          swipeSin = null;
-          swipeStartX = toInt(swipe.pageX);
-          swipeStartY = toInt(swipe.pageY);
-          this.bindSwipeMove();
-          this.bindSwipeEnd();
-          Events.emit('swipe.start');
-        }
-      },
-
-      /**
-       * Handler for `swipemove` event. Calculates user's tap angle and distance.
-       *
-       * @param {Object} event
-       */
-      move: function move(event) {
-        if (!Glide.disabled) {
-          var _Glide$settings2 = Glide.settings,
-              touchAngle = _Glide$settings2.touchAngle,
-              touchRatio = _Glide$settings2.touchRatio,
-              classes = _Glide$settings2.classes;
-          var swipe = touches(event);
-          var subExSx = toInt(swipe.pageX) - swipeStartX;
-          var subEySy = toInt(swipe.pageY) - swipeStartY;
-          var powEX = Math.abs(subExSx << 2);
-          var powEY = Math.abs(subEySy << 2);
-          var swipeHypotenuse = Math.sqrt(powEX + powEY);
-          var swipeCathetus = Math.sqrt(powEY);
-          swipeSin = Math.asin(swipeCathetus / swipeHypotenuse);
-
-          if (swipeSin * 180 / Math.PI < touchAngle) {
-            event.stopPropagation();
-            translate = Translate.set(subExSx * toFloat(touchRatio));
-            Html.root.classList.add(classes.dragging);
-            Events.emit('swipe.move');
-          } else {
-            return false;
-          }
-        }
-      },
-
-      /**
-       * Handler for `swipeend` event. Finitializes user's tap and decides about glide move.
-       *
-       * @param {Object} event
-       * @return {Void}
-       */
-      end: function end(event) {
-        if (!Glide.disabled) {
-          var settings = Glide.settings;
-          var swipe = touches(event);
-          var swipeThreshold = threshold(event);
-          var swipeDistance = swipe.pageX - swipeStartX;
-          var swipeDeg = swipeSin * 180 / Math.PI;
-          var steps = toInt(settings[settings.perSwipe]);
-          Translate.value = translate;
-          this.enable();
-
-          if (swipeDistance > swipeThreshold && swipeDeg < settings.touchAngle) {
-            Components.Run.make("".concat(Direction.resolve('<')).concat(steps));
-          } else if (swipeDistance < -swipeThreshold && swipeDeg < settings.touchAngle) {
-            Components.Run.make("".concat(Direction.resolve('>')).concat(steps));
-          }
-
-          Html.root.classList.remove(settings.classes.dragging);
-          this.unbindSwipeMove();
-          this.unbindSwipeEnd();
-          Events.emit('swipe.end');
-        }
-      },
-
-      /**
-       * Binds swipe's starting event.
-       *
-       * @return {Void}
-       */
-      bindSwipeStart: function bindSwipeStart() {
-        var _this = this;
-
-        var settings = Glide.settings;
-
-        if (settings.swipeThreshold) {
-          Binder.on(START_EVENTS[0], Html.track, function (event) {
-            _this.start(event);
-          }, capture);
-        }
-
-        if (settings.dragThreshold) {
-          Binder.on(START_EVENTS[1], Html.track, function (event) {
-            _this.start(event);
-          }, capture);
-        }
-      },
-
-      /**
-       * Unbinds swipe's starting event.
-       *
-       * @return {Void}
-       */
-      unbindSwipeStart: function unbindSwipeStart() {
-        Binder.off(START_EVENTS[0], Html.track, capture);
-        Binder.off(START_EVENTS[1], Html.track, capture);
-      },
-
-      /**
-       * Binds swipe's moving event.
-       *
-       * @return {Void}
-       */
-      bindSwipeMove: function bindSwipeMove() {
-        var _this2 = this;
-
-        Binder.on(MOVE_EVENTS, Html.track, throttle(function (event) {
-          _this2.move(event);
-        }, Glide.settings.throttle), capture);
-      },
-
-      /**
-       * Unbinds swipe's moving event.
-       *
-       * @return {Void}
-       */
-      unbindSwipeMove: function unbindSwipeMove() {
-        Binder.off(MOVE_EVENTS, Html.track, capture);
-      },
-
-      /**
-       * Binds swipe's ending event.
-       *
-       * @return {Void}
-       */
-      bindSwipeEnd: function bindSwipeEnd() {
-        var _this3 = this;
-
-        Binder.on(END_EVENTS, Html.track, function (event) {
-          _this3.end(event);
-        });
-      },
-
-      /**
-       * Unbinds swipe's ending event.
-       *
-       * @return {Void}
-       */
-      unbindSwipeEnd: function unbindSwipeEnd() {
-        Binder.off(END_EVENTS, Html.track);
-      },
-
-      /**
-       * Enables swipe event.
-       *
-       * @return {self}
-       */
-      enable: function enable() {
-        disabled = false;
-        return this;
-      },
-
-      /**
-       * Disables swipe event.
-       *
-       * @return {self}
-       */
-      disable: function disable() {
-        disabled = true;
-        return this;
-      }
-    };
-    /**
-     * Add component class:
-     * - after initial building
-     */
-
-    Events.on('classes.after', function () {
-      Html.root.classList.add(Glide.settings.classes.swipeable);
+    Events.on('run', function (movement) {
+      var direction = movement.direction;
+      start = performance.now();
+      Events.emit('animate.before', {
+        multiplier: DIRECTION_MULTIPLIER[direction],
+        movement: movement
+      });
+      requestAnimationFrame(Animate.make);
     });
-    /**
-     * Remove swiping bindings:
-     * - on destroying, to remove added EventListeners
-     */
-
-    Events.on('destroy', function () {
-      Swipe.unbindSwipeStart();
-      Swipe.unbindSwipeMove();
-      Swipe.unbindSwipeEnd();
-      Binder.destroy();
-    });
-    return Swipe;
+    return Animate;
   }
 
   function Images (Glide, Components, Events) {
@@ -2705,9 +2665,7 @@
      */
 
     Events.on('swipe.end', function () {
-      Components.Animation.after(function () {
-        Anchors.attach(Anchors.items);
-      });
+      Anchors.attach(Anchors.items);
     });
     /**
      * Unbind anchors inside slides:
@@ -2721,6 +2679,26 @@
     });
     return Anchors;
   }
+
+  /**
+   * Test via a getter in the options object to see
+   * if the passive property is accessed.
+   *
+   * @see https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md#feature-detection
+   */
+  var supportsPassive = false;
+
+  try {
+    var opts = Object.defineProperty({}, 'passive', {
+      get: function get() {
+        supportsPassive = true;
+      }
+    });
+    window.addEventListener('testPassive', null, opts);
+    window.removeEventListener('testPassive', null, opts);
+  } catch (e) {}
+
+  var supportsPassive$1 = supportsPassive;
 
   var NAV_SELECTOR = '[data-glide-el="controls[nav]"]';
   var CONTROLS_SELECTOR = '[data-glide-el^="controls"]';
@@ -3247,7 +3225,7 @@
     if (isObject(points)) {
       return sortKeys(points);
     } else {
-      warn("Breakpoints option must be an object");
+      warn('Breakpoints option must be an object');
     }
 
     return {};
@@ -3294,7 +3272,7 @@
       match: function match(points) {
         if (typeof window.matchMedia !== 'undefined') {
           for (var point in points) {
-            if (points.hasOwnProperty(point)) {
+            if (Object.prototype.hasOwnProperty.call(points, point)) {
               if (window.matchMedia("(max-width: ".concat(point, "px)")).matches) {
                 return points[point];
               }
@@ -3355,7 +3333,7 @@
     Resize: Resize,
     Classes: Classes,
     // Optional
-    Swipe: Swipe,
+    // Swipe,
     Images: Images,
     Anchors: Anchors,
     Controls: Controls,

@@ -4,13 +4,12 @@ import { define } from '../utils/object'
 import { toInt, isString, isFunc } from '../utils/unit'
 
 const DIRECTION_MULTIPLIER = {
-  '<': 1,
-  '>': -1,
-  '=': 1
+  '<': -1,
+  '>': 1,
+  '=': -1
 }
 
 export default function (Glide, Components, Events) {
-  let multiplier = -1
   let start = performance.now()
 
   const Animate = {
@@ -21,11 +20,11 @@ export default function (Glide, Components, Events) {
       const easing = Math.round((Animate.ease(duration) + Number.EPSILON) * 100) / 100
 
       if (l < 1) {
-        Events.emit('animate', { multiplier, easing })
+        Events.emit('animate', { easing })
 
         requestAnimationFrame(Animate.make)
       } else {
-        Events.emit('animate.after', { multiplier, easing })
+        Events.emit('animate.after', { easing })
       }
     }
   }
@@ -56,9 +55,11 @@ export default function (Glide, Components, Events) {
     const { direction } = movement
 
     start = performance.now()
-    multiplier = DIRECTION_MULTIPLIER[direction]
 
-    Events.emit('animate.before', { multiplier, movement })
+    Events.emit('animate.before', {
+      multiplier: DIRECTION_MULTIPLIER[direction],
+      movement
+    })
 
     requestAnimationFrame(Animate.make)
   })

@@ -60,4 +60,27 @@ describe('Function', () => {
       b: 2
     })
   })
+
+  test('`mergeDeep` should deep merge functions', () => {
+    const obj = mergeDeep(
+      {
+        a: {
+          c: 1
+        },
+        b: 2
+      },
+      {
+        a: {
+          c: (x) => x
+        }
+      }
+    )
+
+    expect(obj).toEqual({
+      a: {
+        c: (x) => x
+      },
+      b: 2
+    })
+  })
 })

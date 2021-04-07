@@ -85,4 +85,22 @@ describe('Glide initialized as `carousel`', () => {
 
     glide.mount()
   })
+
+  test('with even number of `perView` slides should create cloning buffer advanced by `cloningRatio`', (done) => {
+    let glide = new Glide('#glide', {
+      type: 'carousel',
+      perView: 2,
+      cloningRatio: 2,
+    })
+
+    glide.on('build.after', () => {
+      let { clones } = query(document)
+
+      expect(clones.length).toBe(12)
+
+      done()
+    })
+
+    glide.mount()
+  })
 })

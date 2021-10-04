@@ -211,7 +211,7 @@ export default function (Glide, Components, Events) {
      */
     unbind (elements) {
       for (let i = 0; i < elements.length; i++) {
-        Binder.off(['click', 'touchstart'], elements[i])
+        Binder.off(['click', 'touchstart'], elements[i], capture)
       }
     },
 

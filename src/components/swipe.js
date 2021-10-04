@@ -22,6 +22,7 @@ export default function (Glide, Components, Events) {
   let swipeStartY = 0
   let disabled = false
   let capture = (supportsPassive) ? { passive: true } : false
+  let preventDefaultsOptions = { passive: false }
 
   const Swipe = {
     /**
@@ -57,13 +58,24 @@ export default function (Glide, Components, Events) {
     },
 
     /**
-     * Handler for `swipemove` event. Calculates user's tap angle and distance.
+     * Handler for `swipemove` event. Prevents screen scroll during horizontal swipe.
+     *
+     * @return {Void}
+     */
+    preventDefaultMove (event) {
+      if (event.cancelable) {
+        event.preventDefault()
+      }
+    },
+
+    /**
+     * Throttled handler for `swipemove` event. Calculates user's tap angle and distance.
      *
      * @param {Object} event
      */
     move (event) {
       if (!Glide.disabled) {
-        const { touchAngle, touchRatio, classes } = Glide.settings
+        let { touchAngle, touchRatio, classes } = Glide.settings
 
         let swipe = this.touches(event)
 
@@ -98,26 +110,30 @@ export default function (Glide, Components, Events) {
      */
     end (event) {
       if (!Glide.disabled) {
-        const { perSwipe, touchAngle, classes } = Glide.settings
+        let settings = Glide.settings
 
         let swipe = this.touches(event)
         let threshold = this.threshold(event)
 
         let swipeDistance = swipe.pageX - swipeStartX
         let swipeDeg = swipeSin * 180 / Math.PI
+        let steps = toInt(settings[settings.perSwipe])
 
         this.enable()
 
-        if (swipeDistance > threshold && swipeDeg < touchAngle) {
-          Components.Run.make(Components.Direction.resolve(`${perSwipe}<`))
-        } else if (swipeDistance < -threshold && swipeDeg < touchAngle) {
-          Components.Run.make(Components.Direction.resolve(`${perSwipe}>`))
+        if (swipeDistance > threshold && swipeDeg < settings.touchAngle) {
+          Components.Run.make(`${Components.Direction.resolve('<')}${steps}`)
+        } else if (
+          swipeDistance < -threshold &&
+          swipeDeg < settings.touchAngle
+        ) {
+          Components.Run.make(`${Components.Direction.resolve('>')}${steps}`)
         } else {
           // While swipe don't reach distance apply previous transform.
           Components.Move.make()
         }
 
-        Components.Html.root.classList.remove(classes.dragging)
+        Components.Html.root.classList.remove(settings.classes.dragging)
 
         this.unbindSwipeMove()
         this.unbindSwipeEnd()
@@ -132,15 +148,16 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     bindSwipeStart () {
-      const { swipeThreshold, dragThreshold } = Glide.settings
+      let settings = Glide.settings
 
       if (swipeThreshold) {
+        Binder.on(START_EVENTS[0], Components.Html.wrapper, this.preventDefaultMove, preventDefaultsOptions)
         Binder.on(START_EVENTS[0], Components.Html.wrapper, (event) => {
           this.start(event)
         }, capture)
       }
 
-      if (dragThreshold) {
+      if (settings.dragThreshold) {
         Binder.on(START_EVENTS[1], Components.Html.wrapper, (event) => {
           this.start(event)
         }, capture)
@@ -153,8 +170,8 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     unbindSwipeStart () {
-      Binder.off(START_EVENTS[0], Components.Html.wrapper, capture)
-      Binder.off(START_EVENTS[1], Components.Html.wrapper, capture)
+      Binder.off(START_EVENTS[0], Components.Html.wrapper, preventDefaultsOptions)
+      Binder.off(START_EVENTS, Components.Html.wrapper, capture)
     },
 
     /**
@@ -163,6 +180,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     bindSwipeMove () {
+      Binder.on(MOVE_EVENTS[0], Components.Html.wrapper, this.preventDefaultMove, preventDefaultsOptions)
       Binder.on(MOVE_EVENTS, Components.Html.wrapper, throttle((event) => {
         this.move(event)
       }, Glide.settings.throttle), capture)
@@ -174,6 +192,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     unbindSwipeMove () {
+      Binder.off(MOVE_EVENTS[0], Components.Html.wrapper, preventDefaultsOptions)
       Binder.off(MOVE_EVENTS, Components.Html.wrapper, capture)
     },
 
@@ -183,6 +202,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     bindSwipeEnd () {
+      Binder.on(END_EVENTS[0], Components.Html.wrapper, this.preventDefaultMove, preventDefaultsOptions)
       Binder.on(END_EVENTS, Components.Html.wrapper, (event) => {
         this.end(event)
       })
@@ -194,6 +214,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     unbindSwipeEnd () {
+      Binder.off(END_EVENTS[0], Components.Html.wrapper, preventDefaultsOptions)
       Binder.off(END_EVENTS, Components.Html.wrapper)
     },
 

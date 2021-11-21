@@ -38,8 +38,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
-    "@babel/plugin-external-helpers": "^7.16.0",
-    "@babel/plugin-transform-object-assign": "^7.16.0",
     "@babel/preset-env": "^7.16.4",
     "@rollup/plugin-babel": "^5.3.0",
     "babel-jest": "^27.3.1",

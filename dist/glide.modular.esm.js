@@ -4,6 +4,155 @@
  * Released under the MIT License.
  */
 
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    _typeof = function (obj) {
+      return typeof obj;
+    };
+  } else {
+    _typeof = function (obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
+
+  return _typeof(obj);
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) descriptor.writable = true;
+    Object.defineProperty(target, descriptor.key, descriptor);
+  }
+}
+
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+  if (staticProps) _defineProperties(Constructor, staticProps);
+  return Constructor;
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function");
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) _setPrototypeOf(subClass, superClass);
+}
+
+function _getPrototypeOf(o) {
+  _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+    return o.__proto__ || Object.getPrototypeOf(o);
+  };
+  return _getPrototypeOf(o);
+}
+
+function _setPrototypeOf(o, p) {
+  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+
+  return _setPrototypeOf(o, p);
+}
+
+function _isNativeReflectConstruct() {
+  if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+  if (Reflect.construct.sham) return false;
+  if (typeof Proxy === "function") return true;
+
+  try {
+    Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function _assertThisInitialized(self) {
+  if (self === void 0) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return self;
+}
+
+function _possibleConstructorReturn(self, call) {
+  if (call && (typeof call === "object" || typeof call === "function")) {
+    return call;
+  } else if (call !== void 0) {
+    throw new TypeError("Derived constructors may only return object or undefined");
+  }
+
+  return _assertThisInitialized(self);
+}
+
+function _createSuper(Derived) {
+  var hasNativeReflectConstruct = _isNativeReflectConstruct();
+
+  return function _createSuperInternal() {
+    var Super = _getPrototypeOf(Derived),
+        result;
+
+    if (hasNativeReflectConstruct) {
+      var NewTarget = _getPrototypeOf(this).constructor;
+
+      result = Reflect.construct(Super, arguments, NewTarget);
+    } else {
+      result = Super.apply(this, arguments);
+    }
+
+    return _possibleConstructorReturn(this, result);
+  };
+}
+
+function _superPropBase(object, property) {
+  while (!Object.prototype.hasOwnProperty.call(object, property)) {
+    object = _getPrototypeOf(object);
+    if (object === null) break;
+  }
+
+  return object;
+}
+
+function _get() {
+  if (typeof Reflect !== "undefined" && Reflect.get) {
+    _get = Reflect.get;
+  } else {
+    _get = function _get(target, property, receiver) {
+      var base = _superPropBase(target, property);
+
+      if (!base) return;
+      var desc = Object.getOwnPropertyDescriptor(base, property);
+
+      if (desc.get) {
+        return desc.get.call(arguments.length < 3 ? target : receiver);
+      }
+
+      return desc.value;
+    };
+  }
+
+  return _get.apply(this, arguments);
+}
+
 var defaults = {
   /**
    * Type of the movement.
@@ -284,7 +433,8 @@ function isString(value) {
  */
 
 function isObject(value) {
-  var type = babelHelpers["typeof"](value);
+  var type = _typeof(value);
+
   return type === 'function' || type === 'object' && !!value; // eslint-disable-line no-mixed-operators
 }
 /**
@@ -381,38 +531,38 @@ function sortKeys(obj) {
  */
 
 function mergeOptions(defaults, settings) {
-  var options = babelHelpers["extends"]({}, defaults, settings); // `Object.assign` do not deeply merge objects, so we
+  var options = Object.assign({}, defaults, settings); // `Object.assign` do not deeply merge objects, so we
   // have to do it manually for every nested object
   // in options. Although it does not look smart,
   // it's smaller and faster than some fancy
   // merging deep-merge algorithm script.
 
   if (settings.hasOwnProperty('classes')) {
-    options.classes = babelHelpers["extends"]({}, defaults.classes, settings.classes);
+    options.classes = Object.assign({}, defaults.classes, settings.classes);
 
     if (settings.classes.hasOwnProperty('direction')) {
-      options.classes.direction = babelHelpers["extends"]({}, defaults.classes.direction, settings.classes.direction);
+      options.classes.direction = Object.assign({}, defaults.classes.direction, settings.classes.direction);
     }
 
     if (settings.classes.hasOwnProperty('type')) {
-      options.classes.type = babelHelpers["extends"]({}, defaults.classes.type, settings.classes.type);
+      options.classes.type = Object.assign({}, defaults.classes.type, settings.classes.type);
     }
 
     if (settings.classes.hasOwnProperty('slide')) {
-      options.classes.slide = babelHelpers["extends"]({}, defaults.classes.slide, settings.classes.slide);
+      options.classes.slide = Object.assign({}, defaults.classes.slide, settings.classes.slide);
     }
 
     if (settings.classes.hasOwnProperty('arrow')) {
-      options.classes.arrow = babelHelpers["extends"]({}, defaults.classes.arrow, settings.classes.arrow);
+      options.classes.arrow = Object.assign({}, defaults.classes.arrow, settings.classes.arrow);
     }
 
     if (settings.classes.hasOwnProperty('nav')) {
-      options.classes.nav = babelHelpers["extends"]({}, defaults.classes.nav, settings.classes.nav);
+      options.classes.nav = Object.assign({}, defaults.classes.nav, settings.classes.nav);
     }
   }
 
   if (settings.hasOwnProperty('breakpoints')) {
-    options.breakpoints = babelHelpers["extends"]({}, defaults.breakpoints, settings.breakpoints);
+    options.breakpoints = Object.assign({}, defaults.breakpoints, settings.breakpoints);
   }
 
   return options;
@@ -426,7 +576,9 @@ var EventsBus = /*#__PURE__*/function () {
    */
   function EventsBus() {
     var events = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    babelHelpers.classCallCheck(this, EventsBus);
+
+    _classCallCheck(this, EventsBus);
+
     this.events = events;
     this.hop = events.hasOwnProperty;
   }
@@ -438,7 +590,7 @@ var EventsBus = /*#__PURE__*/function () {
    */
 
 
-  babelHelpers.createClass(EventsBus, [{
+  _createClass(EventsBus, [{
     key: "on",
     value: function on(event, handler) {
       if (isArray(event)) {
@@ -492,6 +644,7 @@ var EventsBus = /*#__PURE__*/function () {
       });
     }
   }]);
+
   return EventsBus;
 }();
 
@@ -504,7 +657,9 @@ var Glide$1 = /*#__PURE__*/function () {
    */
   function Glide(selector) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    babelHelpers.classCallCheck(this, Glide);
+
+    _classCallCheck(this, Glide);
+
     this._c = {};
     this._t = [];
     this._e = new EventsBus();
@@ -521,7 +676,7 @@ var Glide$1 = /*#__PURE__*/function () {
    */
 
 
-  babelHelpers.createClass(Glide, [{
+  _createClass(Glide, [{
     key: "mount",
     value: function mount$1() {
       var extensions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -788,6 +943,7 @@ var Glide$1 = /*#__PURE__*/function () {
       this._d = !!status;
     }
   }]);
+
   return Glide;
 }();
 
@@ -1884,7 +2040,9 @@ var EventsBinder = /*#__PURE__*/function () {
    */
   function EventsBinder() {
     var listeners = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    babelHelpers.classCallCheck(this, EventsBinder);
+
+    _classCallCheck(this, EventsBinder);
+
     this.listeners = listeners;
   }
   /**
@@ -1898,7 +2056,7 @@ var EventsBinder = /*#__PURE__*/function () {
    */
 
 
-  babelHelpers.createClass(EventsBinder, [{
+  _createClass(EventsBinder, [{
     key: "on",
     value: function on(events, el, closure) {
       var capture = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
@@ -1946,6 +2104,7 @@ var EventsBinder = /*#__PURE__*/function () {
       delete this.listeners;
     }
   }]);
+
   return EventsBinder;
 }();
 
@@ -3537,7 +3696,7 @@ function breakpoints (Glide, Components, Events) {
    * @type {Object}
    */
 
-  var defaults = babelHelpers["extends"]({}, settings);
+  var defaults = Object.assign({}, settings);
   var Breakpoints = {
     /**
      * Matches settings for currectly matching media breakpoint.
@@ -3564,7 +3723,7 @@ function breakpoints (Glide, Components, Events) {
    * This happens right after component initialization.
    */
 
-  babelHelpers["extends"](settings, Breakpoints.match(points));
+  Object.assign(settings, Breakpoints.match(points));
   /**
    * Update glide with settings of matched brekpoint:
    * - window resize to update slider
@@ -3580,7 +3739,7 @@ function breakpoints (Glide, Components, Events) {
 
   Events.on('update', function () {
     points = sortBreakpoints(points);
-    defaults = babelHelpers["extends"]({}, settings);
+    defaults = Object.assign({}, settings);
   });
   /**
    * Unbind resize listener:
@@ -3593,9 +3752,6 @@ function breakpoints (Glide, Components, Events) {
   return Breakpoints;
 }
 
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = babelHelpers.getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = babelHelpers.getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return babelHelpers.possibleConstructorReturn(this, result); }; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 var COMPONENTS = {
   Html: Html,
   Translate: Translate,
@@ -3612,22 +3768,24 @@ var COMPONENTS = {
 };
 
 var Glide = /*#__PURE__*/function (_Core) {
-  babelHelpers.inherits(Glide, _Core);
+  _inherits(Glide, _Core);
 
   var _super = _createSuper(Glide);
 
   function Glide() {
-    babelHelpers.classCallCheck(this, Glide);
+    _classCallCheck(this, Glide);
+
     return _super.apply(this, arguments);
   }
 
-  babelHelpers.createClass(Glide, [{
+  _createClass(Glide, [{
     key: "mount",
     value: function mount() {
       var extensions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      return babelHelpers.get(babelHelpers.getPrototypeOf(Glide.prototype), "mount", this).call(this, babelHelpers["extends"]({}, COMPONENTS, extensions));
+      return _get(_getPrototypeOf(Glide.prototype), "mount", this).call(this, Object.assign({}, COMPONENTS, extensions));
     }
   }]);
+
   return Glide;
 }(Glide$1);
 

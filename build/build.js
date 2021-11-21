@@ -8,11 +8,7 @@ export default {
   },
   plugins: [
     babel({
-      babelHelpers: 'external',
-      plugins: [
-        '@babel/plugin-external-helpers',
-        '@babel/plugin-transform-object-assign'
-      ]
+      babelHelpers: 'bundled'
     })
   ]
 }

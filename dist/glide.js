@@ -740,18 +740,6 @@
 
         return this;
       }
-<<<<<<< HEAD
-      /**
-       * Change slide with specified pattern. A pattern must be in the special format:
-       * `>` - Move one forward
-       * `<` - Move one backward
-       * `={i}` - Go to {i} zero-based slide (eq. '=1', will go to second slide)
-       * `>>` - Rewinds to end (last slide)
-       * `<<` - Rewinds to start (first slide)
-       *
-       * @param {String} pattern
-       * @return {Glide}
-=======
       /**
        * Change slide with specified pattern. A pattern must be in the special format:
        * `>` - Move one forward
@@ -764,7 +752,6 @@
        *
        * @param {String} pattern
        * @return {Glide}
->>>>>>> 4697d13 (chore: build dist)
        */
 
     }, {

@@ -14,7 +14,8 @@ export default function (Glide, Components) {
      * @return {Number}
      */
     modify (translate) {
-      return translate + (Components.Gaps.value * Glide.index)
+      const multiplier = Math.floor(translate / Components.Sizes.slideWidth)
+      return translate + (Components.Gaps.value * multiplier)
     }
   }
 }

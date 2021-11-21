@@ -31,6 +31,6 @@ describe('Calling `update()` method with', () => {
     glide.update({ startAt: 1 })
 
     expect(glide.index).toBe(1)
-    expect(slides[1].classList.contains(defaults.classes.activeSlide)).toBe(true)
+    expect(slides[1].classList.contains(defaults.classes.slide.active)).toBe(true)
   })
 })

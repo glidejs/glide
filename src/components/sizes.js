@@ -3,7 +3,7 @@ import { define } from '../utils/object'
 export default function (Glide, Components, Events) {
   const Sizes = {
     /**
-     * Setups dimentions of slides.
+     * Setups dimensions of slides.
      *
      * @return {Void}
      */
@@ -17,11 +17,11 @@ export default function (Glide, Components, Events) {
     },
 
     /**
-     * Setups dimentions of slides wrapper.
+     * Setups dimensions of slides wrapper.
      *
      * @return {Void}
      */
-    setupWrapper (dimention) {
+    setupWrapper () {
       Components.Html.wrapper.style.width = `${this.wrapperSize}px`
     },
 
@@ -54,12 +54,12 @@ export default function (Glide, Components, Events) {
 
   define(Sizes, 'width', {
     /**
-     * Gets width value of the glide.
+     * Gets width value of the slider (visible area).
      *
      * @return {Number}
      */
     get () {
-      return Components.Html.root.offsetWidth
+      return Components.Html.track.offsetWidth
     }
   })
 
@@ -70,13 +70,13 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      return (Sizes.slideWidth * Sizes.length) + Components.Gaps.grow + Components.Clones.grow
+      return Sizes.slideWidth * Sizes.length + Components.Gaps.grow + Components.Clones.grow
     }
   })
 
   define(Sizes, 'slideWidth', {
     /**
-     * Gets width value of the single slide.
+     * Gets width value of a single slide.
      *
      * @return {Number}
      */
@@ -87,7 +87,7 @@ export default function (Glide, Components, Events) {
 
   /**
    * Apply calculated glide's dimensions:
-   * - before building, so other dimentions (e.g. translate) will be calculated propertly
+   * - before building, so other dimensions (e.g. translate) will be calculated propertly
    * - when resizing window to recalculate sildes dimensions
    * - on updating via API, to calculate dimensions based on new options
    */

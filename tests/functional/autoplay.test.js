@@ -18,8 +18,8 @@ describe('Glide initialized with `autoplay`', () => {
     setTimeout(() => {
       afterTransition(() => {
         expect(glide.index).toBe(1)
-        expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(false)
-        expect(slides[1].classList.contains(defaults.classes.activeSlide)).toBe(true)
+        expect(slides[0].classList.contains(defaults.classes.slide.active)).toBe(false)
+        expect(slides[1].classList.contains(defaults.classes.slide.active)).toBe(true)
 
         done()
       })
@@ -34,8 +34,8 @@ describe('Glide initialized with `autoplay`', () => {
     setTimeout(() => {
       afterTransition(() => {
         expect(glide.index).toBe(0)
-        expect(slides[0].classList.contains(defaults.classes.activeSlide)).toBe(true)
-        expect(slides[1].classList.contains(defaults.classes.activeSlide)).toBe(false)
+        expect(slides[0].classList.contains(defaults.classes.slide.active)).toBe(true)
+        expect(slides[1].classList.contains(defaults.classes.slide.active)).toBe(false)
 
         done()
       })

@@ -9,6 +9,18 @@ describe("Event's callbacks on", () => {
     document.body.innerHTML = html
   })
 
+  test('passed as array should be called only once', () => {
+    const glide = new Glide('#glide')
+
+    let callback = jest.fn()
+
+    glide.on(['mount.before'], callback)
+
+    glide.mount()
+
+    expect(callback).toHaveBeenCalledTimes(1)
+  })
+
   test('`mount.*` should be called', () => {
     const glide = new Glide('#glide')
 
@@ -190,6 +202,23 @@ describe("Event's callbacks on", () => {
 
       done()
     })
+  })
+
+  test('`autoplay` should be called on each autoplay slide change', (done) => {
+    const glide = new Glide('#glide', { autoplay: 50 })
+
+    let autoplayCallback = jest.fn()
+
+    glide.on('autoplay', autoplayCallback)
+
+    glide.mount()
+
+    expect(autoplayCallback).not.toBeCalled()
+    setTimeout(() => {
+      expect(autoplayCallback).toHaveBeenCalledTimes(2)
+
+      done()
+    }, 110)
   })
 
   test('`translate.jump` should be called when making a loop change', (done) => {

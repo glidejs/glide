@@ -6,6 +6,8 @@ import EventsBinder from '../core/event/events-binder'
 
 const NAV_SELECTOR = '[data-glide-el="controls[nav]"]'
 const CONTROLS_SELECTOR = '[data-glide-el^="controls"]'
+const PREVIOUS_CONTROLS_SELECTOR = `${CONTROLS_SELECTOR} [data-glide-dir*="<"]`
+const NEXT_CONTROLS_SELECTOR = `${CONTROLS_SELECTOR} [data-glide-dir*=">"]`
 
 export default function (Glide, Components, Events) {
   /**
@@ -41,6 +43,17 @@ export default function (Glide, Components, Events) {
        */
       this._c = Components.Html.root.querySelectorAll(CONTROLS_SELECTOR)
 
+      /**
+       * Collection of arrow control HTML elements.
+       *
+       * @private
+       * @type {Object}
+       */
+      this._arrowControls = {
+        previous: Components.Html.root.querySelectorAll(PREVIOUS_CONTROLS_SELECTOR),
+        next: Components.Html.root.querySelectorAll(NEXT_CONTROLS_SELECTOR)
+      }
+
       this.addBindings()
     },
 
@@ -73,14 +86,18 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     addClass (controls) {
-      let settings = Glide.settings
-      let item = controls[Glide.index]
+      const settings = Glide.settings
+      const item = controls[Glide.index]
+
+      if (!item) {
+        return
+      }
 
       if (item) {
-        item.classList.add(settings.classes.activeNav)
+        item.classList.add(settings.classes.nav.active)
 
         siblings(item).forEach(sibling => {
-          sibling.classList.remove(settings.classes.activeNav)
+          sibling.classList.remove(settings.classes.nav.active)
         })
       }
     },
@@ -95,8 +112,60 @@ export default function (Glide, Components, Events) {
       let item = controls[Glide.index]
 
       if (item) {
-        item.classList.remove(Glide.settings.classes.activeNav)
+        item.classList.remove(Glide.settings.classes.nav.active)
       }
+    },
+
+    /**
+     * Calculates, removes or adds `Glide.settings.classes.disabledArrow` class on the control arrows
+     */
+    setArrowState () {
+      if (Glide.settings.rewind) {
+        return
+      }
+
+      const next = Controls._arrowControls.next
+      const previous = Controls._arrowControls.previous
+
+      this.resetArrowState(next, previous)
+
+      if (Glide.index === 0) {
+        this.disableArrow(previous)
+      }
+
+      if (Glide.index === Components.Run.length) {
+        this.disableArrow(next)
+      }
+    },
+
+    /**
+     * Removes `Glide.settings.classes.disabledArrow` from given NodeList elements
+     *
+     * @param {NodeList[]} lists
+     */
+    resetArrowState (...lists) {
+      const settings = Glide.settings
+
+      lists.forEach(function (list) {
+        list.forEach(function (element) {
+          element.classList.remove(settings.classes.arrow.disabled)
+        })
+      })
+    },
+
+    /**
+     * Adds `Glide.settings.classes.disabledArrow` to given NodeList elements
+     *
+     * @param {NodeList[]} lists
+     */
+    disableArrow (...lists) {
+      const settings = Glide.settings
+
+      lists.forEach(function (list) {
+        list.forEach(function (element) {
+          element.classList.add(settings.classes.arrow.disabled)
+        })
+      })
     },
 
     /**
@@ -148,16 +217,20 @@ export default function (Glide, Components, Events) {
 
     /**
      * Handles `click` event on the arrows HTML elements.
-     * Moves slider in driection precised in
+     * Moves slider in direction given via the
      * `data-glide-dir` attribute.
      *
      * @param {Object} event
-     * @return {Void}
+     * @return {void}
      */
     click (event) {
-      event.preventDefault()
+      if (!supportsPassive && event.type === 'touchstart') {
+        event.preventDefault()
+      }
 
-      Components.Run.make(Components.Direction.resolve(event.currentTarget.getAttribute('data-glide-dir')))
+      const direction = event.currentTarget.getAttribute('data-glide-dir')
+
+      Components.Run.make(Components.Direction.resolve(direction))
     }
   }
 
@@ -179,6 +252,13 @@ export default function (Glide, Components, Events) {
    */
   Events.on(['mount.after', 'move.after'], () => {
     Controls.setActive()
+  })
+
+  /**
+   * Add or remove disabled class of arrow elements
+   */
+  Events.on(['mount.after', 'run'], () => {
+    Controls.setArrowState()
   })
 
   /**

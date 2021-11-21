@@ -88,11 +88,15 @@ export default {
   dragThreshold: 120,
 
   /**
-   * A maximum number of slides to which movement will be made on swiping or dragging. Use `false` for unlimited.
+   * A number of slides moved on single swipe.
    *
-   * @type {Number|Boolean}
+   * Available types:
+   * `` - Moves slider by one slide per swipe
+   * `|` - Moves slider between views per swipe (number of slides defined in `perView` options)
+   *
+   * @type {String}
    */
-  perTouch: false,
+  perSwipe: '',
 
   /**
    * Moving distance ratio of the slides on a swiping and dragging.
@@ -137,6 +141,13 @@ export default {
   animationTimingFunc: 'cubic-bezier(.165, .840, .440, 1)',
 
   /**
+   * Wait for the animation to finish until the next user input can be processed
+   *
+   * @type {boolean}
+   */
+  waitForTransition: true,
+
+  /**
    * Throttle costly events at most once per every wait milliseconds.
    *
    * @type {Number}
@@ -169,6 +180,13 @@ export default {
   peek: 0,
 
   /**
+   * Defines how many clones of current viewport will be generated.
+   *
+   * @type {Number}
+   */
+  cloningRatio: 1,
+
+  /**
    * Collection of options applied at specified media breakpoints.
    * For example: display two slides per view under 800px.
    * `{
@@ -186,17 +204,25 @@ export default {
    * @type {Object}
    */
   classes: {
+    swipeable: 'glide--swipeable',
+    dragging: 'glide--dragging',
     direction: {
       ltr: 'glide--ltr',
       rtl: 'glide--rtl'
     },
-    slider: 'glide--slider',
-    carousel: 'glide--carousel',
-    swipeable: 'glide--swipeable',
-    dragging: 'glide--dragging',
-    cloneSlide: 'glide__slide--clone',
-    activeNav: 'glide__bullet--active',
-    activeSlide: 'glide__slide--active',
-    disabledArrow: 'glide__arrow--disabled'
+    type: {
+      slider: 'glide--slider',
+      carousel: 'glide--carousel'
+    },
+    slide: {
+      clone: 'glide__slide--clone',
+      active: 'glide__slide--active'
+    },
+    arrow: {
+      disabled: 'glide__arrow--disabled'
+    },
+    nav: {
+      active: 'glide__bullet--active'
+    }
   }
 }

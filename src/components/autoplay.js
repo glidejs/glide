@@ -65,6 +65,8 @@ export default function (Glide, Components, Events) {
             Components.Run.make('>')
 
             this.start()
+
+            Events.emit('autoplay')
           }, this.time)
         }
       }

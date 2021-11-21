@@ -88,13 +88,6 @@ export default function (Glide, Components, Events) {
       if (!detached) {
         for (var i = 0; i < this.items.length; i++) {
           this.items[i].draggable = false
-
-          this.items[i].setAttribute(
-            'data-href',
-            this.items[i].getAttribute('href')
-          )
-
-          this.items[i].removeAttribute('href')
         }
 
         detached = true
@@ -114,11 +107,6 @@ export default function (Glide, Components, Events) {
       if (detached) {
         for (var i = 0; i < this.items.length; i++) {
           this.items[i].draggable = true
-
-          this.items[i].setAttribute(
-            'href',
-            this.items[i].getAttribute('data-href')
-          )
         }
 
         detached = false

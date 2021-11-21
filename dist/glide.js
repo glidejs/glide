@@ -1778,7 +1778,7 @@
        * @return {Number}
        */
       get: function get() {
-        return Components.Html.root.offsetWidth;
+        return Components.Html.track.offsetWidth;
       }
     });
     define(Sizes, 'wrapperSize', {
@@ -2458,7 +2458,12 @@
        */
       set: function set(value) {
         var transform = mutator(Glide, Components).mutate(value);
-        Components.Html.wrapper.style.transform = "translate3d(".concat(-1 * transform, "px, 0px, 0px)");
+        var translate3d = "translate3d(".concat(-1 * transform, "px, 0px, 0px)");
+        Components.Html.wrapper.style.mozTransform = translate3d; // needed for supported Firefox 10-15
+
+        Components.Html.wrapper.style.webkitTransform = translate3d; // needed for supported Chrome 10-35, Safari 5.1-8, and Opera 15-22
+
+        Components.Html.wrapper.style.transform = translate3d;
       },
 
       /**
@@ -3083,8 +3088,6 @@
         if (!detached) {
           for (var i = 0; i < this.items.length; i++) {
             this.items[i].draggable = false;
-            this.items[i].setAttribute('data-href', this.items[i].getAttribute('href'));
-            this.items[i].removeAttribute('href');
           }
 
           detached = true;
@@ -3104,7 +3107,6 @@
         if (detached) {
           for (var i = 0; i < this.items.length; i++) {
             this.items[i].draggable = true;
-            this.items[i].setAttribute('href', this.items[i].getAttribute('data-href'));
           }
 
           detached = false;
@@ -3522,11 +3524,30 @@
        * @return {Void}
        */
       mount: function mount() {
+        this.enable();
         this.start();
 
         if (Glide.settings.hoverpause) {
           this.bind();
         }
+      },
+
+      /**
+       * Enables autoplaying
+       *
+       * @returns {Void}
+       */
+      enable: function enable() {
+        this._e = true;
+      },
+
+      /**
+       * Disables autoplaying.
+       *
+       * @returns {Void}
+       */
+      disable: function disable() {
+        this._e = false;
       },
 
       /**
@@ -3537,6 +3558,12 @@
        */
       start: function start() {
         var _this = this;
+
+        if (!this._e) {
+          return;
+        }
+
+        this.enable();
 
         if (Glide.settings.autoplay) {
           if (isUndefined(this._i)) {
@@ -3570,15 +3597,15 @@
       bind: function bind() {
         var _this2 = this;
 
-        Binder.on('mouseenter', Components.Html.root, function () {
-          _this2.stop();
-
-          Events.emit('autoplay.enter');
+        Binder.on('mouseover', Components.Html.root, function () {
+          if (_this2._e) {
+            _this2.stop();
+          }
         });
-        Binder.on('mouseleave', Components.Html.root, function () {
-          _this2.start();
-
-          Events.emit('autoplay.leave');
+        Binder.on('mouseout', Components.Html.root, function () {
+          if (_this2._e) {
+            _this2.start();
+          }
         });
       },
 
@@ -3626,7 +3653,11 @@
      * - on updating via API to reset interval that may changed
      */
 
-    Events.on(['run.before', 'pause', 'destroy', 'swipe.start', 'update'], function () {
+    Events.on(['run.before', 'swipe.start', 'update'], function () {
+      Autoplay.stop();
+    });
+    Events.on(['pause', 'destroy'], function () {
+      Autoplay.disable();
       Autoplay.stop();
     });
     /**
@@ -3636,7 +3667,18 @@
      * - while ending a swipe
      */
 
-    Events.on(['run.after', 'play', 'swipe.end'], function () {
+    Events.on(['run.after', 'swipe.end'], function () {
+      Autoplay.start();
+    });
+    /**
+     * Start autoplaying:
+     * - after each run, to restart autoplaying
+     * - on playing via API
+     * - while ending a swipe
+     */
+
+    Events.on(['play'], function () {
+      Autoplay.enable();
       Autoplay.start();
     });
     /**

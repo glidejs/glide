@@ -96,7 +96,7 @@ export default {
    *
    * @type {String}
    */
-  perSwipe: '|',
+  perSwipe: '',
 
   /**
    * Moving distance ratio of the slides on a swiping and dragging.

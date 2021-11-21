@@ -18,12 +18,30 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     mount () {
-      this.isEnabled = true;
+      this.enable();
       this.start()
 
       if (Glide.settings.hoverpause) {
         this.bind()
       }
+    },
+
+    /**
+     * Enables autoplaying
+     *
+     * @returns {Void}
+     */
+    enable () {
+      this._e = true
+    },
+
+    /**
+     * Disables autoplaying.
+     *
+     * @returns {Void}
+     */
+    disable () {
+      this._e = false
     },
 
     /**
@@ -33,11 +51,12 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     start () {
-      if (!this.isEnabled) {
+      if (!this._e) {
         return
       }
 
-      this.isEnabled = true;
+      this.enable()
+
       if (Glide.settings.autoplay) {
         if (isUndefined(this._i)) {
           this._i = setInterval(() => {
@@ -67,13 +86,15 @@ export default function (Glide, Components, Events) {
      */
     bind () {
       Binder.on('mouseover', Components.Html.root, () => {
-        if (this.isEnabled)
+        if (this._e) {
           this.stop()
+        }
       })
 
       Binder.on('mouseout', Components.Html.root, () => {
-        if (this.isEnabled)
+        if (this._e) {
           this.start()
+        }
       })
     },
 
@@ -127,7 +148,7 @@ export default function (Glide, Components, Events) {
   })
 
   Events.on(['pause', 'destroy'], () => {
-    Autoplay.isEnabled = false;
+    Autoplay.disable();
     Autoplay.stop()
   })
 
@@ -149,7 +170,7 @@ export default function (Glide, Components, Events) {
    * - while ending a swipe
    */
   Events.on(['play'], () => {
-    Autoplay.isEnabled = true;
+    Autoplay.enable();
     Autoplay.start()
   })
 

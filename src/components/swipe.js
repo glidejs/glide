@@ -150,7 +150,7 @@ export default function (Glide, Components, Events) {
     bindSwipeStart () {
       let settings = Glide.settings
 
-      if (swipeThreshold) {
+      if (settings.swipeThreshold) {
         Binder.on(START_EVENTS[0], Components.Html.wrapper, this.preventDefaultMove, preventDefaultsOptions)
         Binder.on(START_EVENTS[0], Components.Html.wrapper, (event) => {
           this.start(event)

@@ -10,8 +10,11 @@ export default function (Glide, Components, Events) {
      */
     set (value) {
       let transform = mutator(Glide, Components).mutate(value)
+      const translate3d = `translate3d(${-1 * transform}px, 0px, 0px)`
 
-      Components.Html.wrapper.style.transform = `translate3d(${-1 * transform}px, 0px, 0px)`
+      Components.Html.wrapper.style.mozTransform = translate3d // needed for supported Firefox 10-15
+      Components.Html.wrapper.style.webkitTransform = translate3d // needed for supported Chrome 10-35, Safari 5.1-8, and Opera 15-22
+      Components.Html.wrapper.style.transform = translate3d
     },
 
     /**

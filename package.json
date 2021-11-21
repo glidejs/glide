@@ -50,7 +50,7 @@
     "eslint-plugin-standard": "^4.0.0",
     "jest": "^23.4.2",
     "jsdom": "11.11.0",
-    "node-sass": "^4.11.0",
+    "sass": "^1.43.4",
     "rollup": "^0.62.0",
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-uglify": "^2.0.1",

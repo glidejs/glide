@@ -3,7 +3,7 @@ import { define } from '../utils/object'
 export default function (Glide, Components, Events) {
   const Sizes = {
     /**
-     * Setups dimentions of slides.
+     * Setups dimensions of slides.
      *
      * @return {Void}
      */
@@ -17,7 +17,7 @@ export default function (Glide, Components, Events) {
     },
 
     /**
-     * Setups dimentions of slides wrapper.
+     * Setups dimensions of slides wrapper.
      *
      * @return {Void}
      */
@@ -87,7 +87,7 @@ export default function (Glide, Components, Events) {
 
   /**
    * Apply calculated glide's dimensions:
-   * - before building, so other dimentions (e.g. translate) will be calculated propertly
+   * - before building, so other dimensions (e.g. translate) will be calculated propertly
    * - when resizing window to recalculate sildes dimensions
    * - on updating via API, to calculate dimensions based on new options
    */

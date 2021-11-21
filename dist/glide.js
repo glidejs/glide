@@ -1406,7 +1406,7 @@
     });
     define(Gaps, 'grow', {
       /**
-       * Gets additional dimentions value caused by gaps.
+       * Gets additional dimensions value caused by gaps.
        * Used to increase width of the slides wrapper.
        *
        * @returns {Number}
@@ -1722,7 +1722,7 @@
   function Sizes (Glide, Components, Events) {
     var Sizes = {
       /**
-       * Setups dimentions of slides.
+       * Setups dimensions of slides.
        *
        * @return {Void}
        */
@@ -1736,7 +1736,7 @@
       },
 
       /**
-       * Setups dimentions of slides wrapper.
+       * Setups dimensions of slides wrapper.
        *
        * @return {Void}
        */
@@ -1801,7 +1801,7 @@
     });
     /**
      * Apply calculated glide's dimensions:
-     * - before building, so other dimentions (e.g. translate) will be calculated propertly
+     * - before building, so other dimensions (e.g. translate) will be calculated propertly
      * - when resizing window to recalculate sildes dimensions
      * - on updating via API, to calculate dimensions based on new options
      */
@@ -1888,7 +1888,7 @@
     });
     /**
      * Remount component:
-     * - on resizing of the window to calculate new dimentions
+     * - on resizing of the window to calculate new dimensions
      * - on updating settings via API
      */
 
@@ -2001,7 +2001,7 @@
     };
     define(Clones, 'grow', {
       /**
-       * Gets additional dimentions value caused by clones.
+       * Gets additional dimensions value caused by clones.
        *
        * @return {Number}
        */
@@ -2632,7 +2632,7 @@
     /**
      * Disable transition:
      * - before initial build to avoid transitioning from `0` to `startAt` index
-     * - while resizing window and recalculating dimentions
+     * - while resizing window and recalculating dimensions
      * - on jumping from offset transition at start and end edges in `carousel` type
      */
 

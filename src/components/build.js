@@ -71,7 +71,7 @@ export default function (Glide, Components, Events) {
 
   /**
    * Remount component:
-   * - on resizing of the window to calculate new dimentions
+   * - on resizing of the window to calculate new dimensions
    * - on updating settings via API
    */
   Events.on(['resize', 'update'], () => {

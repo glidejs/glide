@@ -64,7 +64,7 @@ export default function (Glide, Components, Events) {
 
   define(Gaps, 'grow', {
     /**
-     * Gets additional dimentions value caused by gaps.
+     * Gets additional dimensions value caused by gaps.
      * Used to increase width of the slides wrapper.
      *
      * @returns {Number}

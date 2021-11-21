@@ -22,11 +22,12 @@ export default class EventsBinder {
       events = [events]
     }
 
-    for (let i = 0; i < events.length; i++) {
-      this.listeners[events[i]] = closure
+    events.forEach((eventName) => {
+      this.listeners[eventName] = this.listeners[eventName] || []
+      this.listeners[eventName].push({ closure, capture })
 
-      el.addEventListener(events[i], this.listeners[events[i]], capture)
-    }
+      el.addEventListener(eventName, closure, capture)
+    })
   }
 
   /**
@@ -42,9 +43,21 @@ export default class EventsBinder {
       events = [events]
     }
 
-    for (let i = 0; i < events.length; i++) {
-      el.removeEventListener(events[i], this.listeners[events[i]], capture)
-    }
+    events.forEach((eventName) => {
+      const listeners = this.listeners[eventName]
+
+      if (listeners) {
+        this.listeners[eventName] = listeners.filter((event) => {
+          const detached = event.capture === capture
+
+          if (detached) {
+            el.removeEventListener(eventName, event.closure, capture)
+          }
+
+          return !detached
+        })
+      }
+    })
   }
 
   /**

@@ -1,5 +1,5 @@
 import banner from './banner'
-import babel from 'rollup-plugin-babel'
+import babel from '@rollup/plugin-babel'
 
 export default {
   output: {
@@ -8,9 +8,10 @@ export default {
   },
   plugins: [
     babel({
+      babelHelpers: 'external',
       plugins: [
-        'external-helpers',
-        'transform-object-assign'
+        '@babel/plugin-external-helpers',
+        '@babel/plugin-transform-object-assign'
       ]
     })
   ]

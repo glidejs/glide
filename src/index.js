@@ -85,6 +85,8 @@ export default class Glide {
    * `={i}` - Go to {i} zero-based slide (eq. '=1', will go to second slide)
    * `>>` - Rewinds to end (last slide)
    * `<<` - Rewinds to start (first slide)
+   * `|>` - Move one viewport forward
+   * `|<` - Move one viewport backward
    *
    * @param {String} pattern
    * @return {Glide}

@@ -33,4 +33,18 @@ describe('Calling `update()` method with', () => {
     expect(glide.index).toBe(1)
     expect(slides[1].classList.contains(defaults.classes.slide.active)).toBe(true)
   })
+
+  test('additional slide should be updated', () => {
+    let { wrapper } = query(document)
+    let newSlide = document.createElement('li')
+    newSlide.className = 'glide__slide'
+    newSlide.innerHTML = 0
+
+    let glide = new Glide('#glide', { startAt: 0 }).mount()
+
+    wrapper.append(newSlide)
+    glide.update()
+
+    expect(newSlide.style.width).toBeTruthy()
+  })
 })

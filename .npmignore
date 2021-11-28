@@ -1,7 +1,1 @@
-node_modules/
-coverage/
-
-.editorconfig
-.vscode
-
-.DS_Store
+!dist/

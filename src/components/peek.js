@@ -1,5 +1,5 @@
 import { define } from '../utils/object'
-import { toInt, isObject } from '../utils/unit'
+import { isObject, toPx } from '../utils/unit'
 
 export default function (Glide, Components, Events) {
   const Peek = {
@@ -31,10 +31,10 @@ export default function (Glide, Components, Events) {
      */
     set (value) {
       if (isObject(value)) {
-        value.before = toInt(value.before)
-        value.after = toInt(value.after)
+        value.before = toPx(value.before)
+        value.after = toPx(value.after)
       } else {
-        value = toInt(value)
+        value = toPx(value)
       }
 
       Peek._v = value

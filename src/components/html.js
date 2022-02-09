@@ -1,5 +1,5 @@
 import { warn } from '../utils/log'
-import { exist } from '../utils/dom'
+import { exist, toArray } from '../utils/dom'
 import { define } from '../utils/object'
 import { isString } from '../utils/unit'
 
@@ -22,7 +22,7 @@ export default function (Glide, Components, Events) {
      * Collect slides
      */
     collectSlides () {
-      this.slides = Array.prototype.slice.call(this.wrapper.children).filter((slide) => {
+      this.slides = toArray(this.wrapper.children).filter((slide) => {
         return !slide.classList.contains(Glide.settings.classes.slide.clone)
       })
     }

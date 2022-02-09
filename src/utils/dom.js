@@ -34,3 +34,14 @@ export function exist (node) {
 
   return false
 }
+
+/**
+ * Coerces a NodeList to an Array.
+ *
+ * @param  {NodeList} nodeList
+ * @return {Array}
+ */
+
+export function toArray (nodeList) {
+  return Array.prototype.slice.call(nodeList)
+}

@@ -47,11 +47,11 @@ export default function (Glide, Components, Events) {
     press (event) {
       const { perSwipe } = Glide.settings
 
-      if (event.keyCode === 39) {
+      if (event.code === 'ArrowRight') {
         Components.Run.make(Components.Direction.resolve(`${perSwipe}>`))
       }
 
-      if (event.keyCode === 37) {
+      if (event.code === 'ArrowLeft') {
         Components.Run.make(Components.Direction.resolve(`${perSwipe}<`))
       }
     }

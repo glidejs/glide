@@ -10,6 +10,7 @@ export default function (Glide, Components, Events) {
      */
     set (value) {
       let transform = mutator(Glide, Components).mutate(value)
+      transform = Math.floor(transform)
       const translate3d = `translate3d(${-1 * transform}px, 0px, 0px)`
 
       Components.Html.wrapper.style.mozTransform = translate3d // needed for supported Firefox 10-15

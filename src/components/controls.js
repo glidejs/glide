@@ -94,12 +94,15 @@ export default function (Glide, Components, Events) {
       }
 
       if (item) {
+        Array.isArray(settings.classes.nav.active) ?
+        item.classList.add(...settings.classes.nav.active) :
         item.classList.add(settings.classes.nav.active)
 
-        siblings(item).forEach(sibling => {
+        siblings(item).forEach(function (sibling) {
+          Array.isArray(settings.classes.nav.active) ?
+          sibling.classList.remove(...settings.classes.nav.active) :
           sibling.classList.remove(settings.classes.nav.active)
-        })
-      }
+      })
     },
 
     /**
@@ -109,10 +112,13 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     removeClass (controls) {
-      let item = controls[Glide.index]
+      var item = controls[Glide.index];
+      var settings = Glide.settings;
 
       if (item) {
-        item.classList.remove(Glide.settings.classes.nav.active)
+        Array.isArray(settings.classes.nav.active) ?
+        item.classList.remove(...settings.classes.nav.active) :
+        item.classList.remove(settings.classes.nav.active);
       }
     },
 

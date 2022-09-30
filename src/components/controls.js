@@ -133,7 +133,7 @@ export default function (Glide, Components, Events) {
         this.disableArrow(previous)
       }
 
-      if (Glide.index === Components.Run.length) {
+      if (Glide.index === Components.Run.length + 1 - Glide.settings.perView) {
         this.disableArrow(next)
       }
     },

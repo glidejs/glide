@@ -8,6 +8,12 @@ export default function (Glide, Components, Events) {
    * @type {Boolean}
    */
   let disabled = false
+  
+  /**
+   *
+   *
+   */
+  let afterHandlers = []
 
   const Transition = {
     /**
@@ -45,16 +51,36 @@ export default function (Glide, Components, Events) {
       Components.Html.wrapper.style.transition = ''
     },
 
-    /**
-     * Runs callback after animation.
+    /*
      *
-     * @param  {Function} callback
-     * @return {Void}
+     *
      */
-    after (callback) {
-      setTimeout(() => {
-        callback()
-      }, this.duration)
+    callAfterHandlers () {
+      afterHandlers.forEach((afterHandler) => {
+          afterHandler.handler()
+      })
+    },
+    
+    /*
+     *
+     *
+     */
+    after (handler) {
+      var afterHandler = {
+          handler: () => {
+              clearTimeout(afterHandler.timerId)
+
+              handler()
+
+              afterHandlers.splice(afterHandlers.indexOf(afterHandler), 1)
+          },
+
+          timerId: setTimeout(() => {
+              afterHandler.handler()
+          }, this.duration)
+      }
+
+      afterHandlers.push(afterHandler)
     },
 
     /**
@@ -75,6 +101,8 @@ export default function (Glide, Components, Events) {
      */
     disable () {
       disabled = true
+      
+      this.callAfterHandlers()
 
       this.set()
     }

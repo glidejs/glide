@@ -198,6 +198,13 @@ export default {
   breakpoints: {},
 
   /**
+   * Enable lazy loading.
+   *
+   * @type {Boolean}
+   */
+  lazy: false,
+
+  /**
    * Collection of internally used HTML classes.
    *
    * @todo Refactor `slider` and `carousel` properties to single `type: { slider: '', carousel: '' }` object

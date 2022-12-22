@@ -17,6 +17,7 @@ import Transition from '../src/components/transition'
 // Optional components
 import Swipe from '../src/components/swipe'
 import Images from '../src/components/images'
+import Lazy from '../src/components/lazy'
 import Anchors from '../src/components/anchors'
 import Controls from '../src/components/controls'
 import Keyboard from '../src/components/keyboard'
@@ -45,7 +46,8 @@ const COMPONENTS = {
   Controls,
   Keyboard,
   Autoplay,
-  Breakpoints
+  Breakpoints,
+  Lazy
 }
 
 export default class Glide extends Core {

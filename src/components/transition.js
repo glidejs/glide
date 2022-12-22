@@ -72,9 +72,9 @@ export default function (Glide, Components, Events) {
     },
     
     callAfterHandlers () {
-      afterHandlers.forEach((afterHandler) => {
-          afterHandler.handler()
-      })
+      while (afterHandlers.length) {
+        afterHandlers[0].handler()
+      }
     },
 
     /**

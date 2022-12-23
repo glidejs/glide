@@ -8,6 +8,8 @@ export default function (Glide, Components, Events) {
    * @type {Boolean}
    */
   let disabled = false
+  
+  let afterHandlers = []
 
   const Transition = {
     /**
@@ -23,7 +25,7 @@ export default function (Glide, Components, Events) {
         return `${property} ${this.duration}ms ${settings.animationTimingFunc}`
       }
 
-      return `${property} 0ms ${settings.animationTimingFunc}`
+      return 'none'
     },
 
     /**
@@ -46,15 +48,33 @@ export default function (Glide, Components, Events) {
     },
 
     /**
-     * Runs callback after animation.
+     * Runs handler after animation.
      *
-     * @param  {Function} callback
+     * @param  {Function} handler
      * @return {Void}
      */
-    after (callback) {
-      setTimeout(() => {
-        callback()
-      }, this.duration)
+    after (handler) {
+      let afterHandler = {
+          handler: () => {
+              clearTimeout(afterHandler.timerId)
+
+              handler()
+
+              afterHandlers.splice(afterHandlers.indexOf(afterHandler), 1)
+          },
+
+          timerId: setTimeout(() => {
+              afterHandler.handler()
+          }, this.duration)
+      }
+
+      afterHandlers.push(afterHandler)
+    },
+    
+    callAfterHandlers () {
+      while (afterHandlers.length) {
+        afterHandlers[0].handler()
+      }
     },
 
     /**
@@ -77,6 +97,8 @@ export default function (Glide, Components, Events) {
       disabled = true
 
       this.set()
+      
+      this.callAfterHandlers()
     }
   }
 

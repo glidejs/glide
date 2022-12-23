@@ -95,10 +95,10 @@ export default function (Glide, Components, Events) {
      */
     disable () {
       disabled = true
-      
-      this.callAfterHandlers()
 
       this.set()
+      
+      this.callAfterHandlers()
     }
   }
 

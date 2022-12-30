@@ -7,6 +7,7 @@ export default function (Glide, Components, Events) {
    * @type {Object}
    */
   let settings = Glide.settings
+  let inView = false
 
   const Lazy = {
     mount () {
@@ -17,12 +18,27 @@ export default function (Glide, Components, Events) {
        * @type {HTMLCollection}
        */
       if (settings.lazy) {
-        this._slideElements = Components.Html.root.querySelectorAll('.glide__slide')
+        this._wrapper = Components.Html.root
+        this._slideElements = this._wrapper.querySelectorAll('.glide__slide')
+      }
+    },
+
+    withinView () {
+      let rect = this._wrapper.getBoundingClientRect()
+
+      if (
+        rect.bottom > 0 &&
+        rect.right > 0 &&
+        rect.top <= (window.innerHeight * settings.lazyScrollThreshold || document.documentElement.clientHeight) * settings.lazyScrollThreshold &&
+        rect.left <= (window.innerWidth * settings.lazyScrollThreshold || document.documentElement.clientWidth * settings.lazyScrollThreshold)
+      ) {
+        this.lazyLoad()
       }
     },
 
     lazyLoad () {
       let length
+      inView = true
       if (Glide.index + 1 < this._slideElements.length) {
         length = Glide.index + 1
       } else {
@@ -43,19 +59,29 @@ export default function (Glide, Components, Events) {
         image.src = image.dataset.src
         image.classList.add('glide__lazy__loaded')
         image.classList.remove('glide__lazy')
+        image.removeAttribute('data-src')
       }
     }
   }
 
   Events.on(['mount.after'], () => {
     if (settings.lazy) {
-      Lazy.lazyLoad()
+      Lazy.withinView()
     }
   })
 
   Events.on(['move.after'], throttle(() => {
-    if (settings.lazy) {
+    if (settings.lazy && inView) {
       Lazy.lazyLoad()
+    } else if (settings.lazy) {
+      Lazy.withinView()
+    }
+  }, 100))
+
+  document.addEventListener('scroll', throttle(() => {
+    if (settings.lazy && !inView) {
+      console.log('Scroll')
+      Lazy.withinView()
     }
   }, 100))
 

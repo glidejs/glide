@@ -6,7 +6,7 @@ export default function (Glide, Components, Events) {
    *
    * @type {Object}
    */
-  let settings = Glide.settings
+  const settings = Glide.settings
   let inView = false
 
   const Lazy = {
@@ -39,8 +39,8 @@ export default function (Glide, Components, Events) {
     lazyLoad () {
       let length
       inView = true
-      if (Glide.index + 1 < this._slideElements.length) {
-        length = Glide.index + 1
+      if (Glide.index + (settings.lazyInitialSlidesLoaded - 1) < this._slideElements.length) {
+        length = Glide.index + (settings.lazyInitialSlidesLoaded - 1)
       } else {
         length = Glide.index
       }
@@ -80,7 +80,6 @@ export default function (Glide, Components, Events) {
 
   document.addEventListener('scroll', throttle(() => {
     if (settings.lazy && !inView) {
-      console.log('Scroll')
       Lazy.withinView()
     }
   }, 100))

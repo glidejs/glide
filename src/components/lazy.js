@@ -44,7 +44,7 @@ export default function (Glide, Components, Events) {
       } else {
         length = Glide.index
       }
-      for (let i = Glide.index; i <= length; i++) {
+      for (let i = 0; i <= length; i++) {
         const img = this._slideElements[i].getElementsByTagName('img')[0]
         if (img && img.classList.contains('glide__lazy')) {
           if (!this._slideElements[i].classList.contains('glide__lazy__loaded')) {

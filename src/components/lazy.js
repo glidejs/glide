@@ -12,7 +12,7 @@ export default function (Glide, Components, Events) {
   const Lazy = {
     mount () {
       /**
-       * Collection of image element to be lazy loaded.
+       * Collection of slide elements
        *
        * @private
        * @type {HTMLCollection}
@@ -38,9 +38,10 @@ export default function (Glide, Components, Events) {
 
     lazyLoad () {
       let length
+      const additionSlides = settings.lazyInitialSlidesLoaded - 1
       inView = true
-      if (Glide.index + (settings.lazyInitialSlidesLoaded - 1) < this._slideElements.length) {
-        length = Glide.index + (settings.lazyInitialSlidesLoaded - 1)
+      if (Glide.index + additionSlides < this._slideElements.length) {
+        length = Glide.index + additionSlides
       } else {
         length = Glide.index
       }

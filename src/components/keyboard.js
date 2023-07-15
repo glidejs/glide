@@ -47,12 +47,9 @@ export default function (Glide, Components, Events) {
     press (event) {
       const { perSwipe } = Glide.settings
 
-      if (event.code === 'ArrowRight') {
-        Components.Run.make(Components.Direction.resolve(`${perSwipe}>`))
-      }
-
-      if (event.code === 'ArrowLeft') {
-        Components.Run.make(Components.Direction.resolve(`${perSwipe}<`))
+      const arrowSymbols = { ArrowRight: '>', ArrowLeft: '<' }
+      if (['ArrowRight', 'ArrowLeft'].includes(event.code)) {
+        Components.Run.make(Components.Direction.resolve(`${perSwipe}${arrowSymbols[event.code]}`))
       }
     }
   }

@@ -17,13 +17,13 @@ export default function (Glide, Components, Events) {
      * @return {String}
      */
     compose (property) {
-      let settings = Glide.settings
+      const settings = Glide.settings
 
-      if (!disabled) {
-        return `${property} ${this.duration}ms ${settings.animationTimingFunc}`
+      if (disabled) {
+        return `${property} 0ms ${settings.animationTimingFunc}`
       }
 
-      return `${property} 0ms ${settings.animationTimingFunc}`
+      return `${property} ${this.duration}ms ${settings.animationTimingFunc}`
     },
 
     /**
@@ -88,7 +88,7 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      let settings = Glide.settings
+      const settings = Glide.settings
 
       if (Glide.isType('slider') && Components.Run.offset) {
         return settings.rewindDuration

@@ -19,10 +19,10 @@ export default function (Glide, Components, Events) {
      * @return {[]}
      */
     collect (items = []) {
-      let { slides } = Components.Html
-      let { perView, classes, cloningRatio } = Glide.settings
+      const { slides } = Components.Html
+      const { perView, classes, cloningRatio } = Glide.settings
 
-      if (slides.length !== 0) {
+      if (slides.length > 0) {
         const peekIncrementer = +!!Glide.settings.peek
         const cloneCount = perView + peekIncrementer + Math.round(perView / 2)
         const append = slides.slice(0, cloneCount).reverse()
@@ -30,7 +30,7 @@ export default function (Glide, Components, Events) {
 
         for (let r = 0; r < Math.max(cloningRatio, Math.floor(perView / slides.length)); r++) {
           for (let i = 0; i < append.length; i++) {
-            let clone = append[i].cloneNode(true)
+            const clone = append[i].cloneNode(true)
 
             clone.classList.add(classes.slide.clone)
 
@@ -38,7 +38,7 @@ export default function (Glide, Components, Events) {
           }
 
           for (let i = 0; i < prepend.length; i++) {
-            let clone = prepend[i].cloneNode(true)
+            const clone = prepend[i].cloneNode(true)
 
             clone.classList.add(classes.slide.clone)
 
@@ -56,8 +56,8 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     append () {
-      let { items } = this
-      let { wrapper, slides } = Components.Html
+      const { items } = this
+      const { wrapper, slides } = Components.Html
 
       const half = Math.floor(items.length / 2)
       const prepend = items.slice(0, half).reverse()

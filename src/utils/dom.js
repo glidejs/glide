@@ -7,7 +7,7 @@
 export function siblings (node) {
   if (node && node.parentNode) {
     let n = node.parentNode.firstChild
-    let matched = []
+    const matched = []
 
     for (; n; n = n.nextSibling) {
       if (n.nodeType === 1 && n !== node) {

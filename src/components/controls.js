@@ -17,7 +17,7 @@ export default function (Glide, Components, Events) {
    */
   const Binder = new EventsBinder()
 
-  let capture = (supportsPassive) ? { passive: true } : false
+  const capture = (supportsPassive) ? { passive: true } : false
 
   const Controls = {
     /**
@@ -93,13 +93,11 @@ export default function (Glide, Components, Events) {
         return
       }
 
-      if (item) {
-        item.classList.add(settings.classes.nav.active)
+      item.classList.add(settings.classes.nav.active)
 
-        siblings(item).forEach(sibling => {
-          sibling.classList.remove(settings.classes.nav.active)
-        })
-      }
+      siblings(item).forEach(sibling => {
+        sibling.classList.remove(settings.classes.nav.active)
+      })
     },
 
     /**
@@ -109,11 +107,9 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     removeClass (controls) {
-      let item = controls[Glide.index]
+      const item = controls[Glide.index]
 
-      if (item) {
-        item.classList.remove(Glide.settings.classes.nav.active)
-      }
+      item?.classList.remove(Glide.settings.classes.nav.active)
     },
 
     /**

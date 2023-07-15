@@ -8,8 +8,8 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     setupSlides () {
-      let width = `${this.slideWidth}px`
-      let slides = Components.Html.slides
+      const width = `${this.slideWidth}px`
+      const slides = Components.Html.slides
 
       for (let i = 0; i < slides.length; i++) {
         slides[i].style.width = width
@@ -31,7 +31,7 @@ export default function (Glide, Components, Events) {
      * @returns {Void}
      */
     remove () {
-      let slides = Components.Html.slides
+      const slides = Components.Html.slides
 
       for (let i = 0; i < slides.length; i++) {
         slides[i].style.width = ''

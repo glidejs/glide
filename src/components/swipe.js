@@ -21,7 +21,7 @@ export default function (Glide, Components, Events) {
   let swipeStartX = 0
   let swipeStartY = 0
   let disabled = false
-  let capture = (supportsPassive) ? { passive: true } : false
+  const capture = (supportsPassive) ? { passive: true } : false
 
   const Swipe = {
     /**
@@ -43,7 +43,7 @@ export default function (Glide, Components, Events) {
       if (!disabled && !Glide.disabled) {
         this.disable()
 
-        let swipe = this.touches(event)
+        const swipe = this.touches(event)
 
         swipeSin = null
         swipeStartX = toInt(swipe.pageX)
@@ -65,14 +65,14 @@ export default function (Glide, Components, Events) {
       if (!Glide.disabled) {
         const { touchAngle, touchRatio, classes } = Glide.settings
 
-        let swipe = this.touches(event)
+        const swipe = this.touches(event)
 
-        let subExSx = toInt(swipe.pageX) - swipeStartX
-        let subEySy = toInt(swipe.pageY) - swipeStartY
-        let powEX = Math.abs(subExSx << 2)
-        let powEY = Math.abs(subEySy << 2)
-        let swipeHypotenuse = Math.sqrt(powEX + powEY)
-        let swipeCathetus = Math.sqrt(powEY)
+        const subExSx = toInt(swipe.pageX) - swipeStartX
+        const subEySy = toInt(swipe.pageY) - swipeStartY
+        const powEX = Math.abs(subExSx << 2)
+        const powEY = Math.abs(subEySy << 2)
+        const swipeHypotenuse = Math.sqrt(powEX + powEY)
+        const swipeCathetus = Math.sqrt(powEY)
 
         swipeSin = Math.asin(swipeCathetus / swipeHypotenuse)
 
@@ -100,11 +100,11 @@ export default function (Glide, Components, Events) {
       if (!Glide.disabled) {
         const { perSwipe, touchAngle, classes } = Glide.settings
 
-        let swipe = this.touches(event)
-        let threshold = this.threshold(event)
+        const swipe = this.touches(event)
+        const threshold = this.threshold(event)
 
-        let swipeDistance = swipe.pageX - swipeStartX
-        let swipeDeg = swipeSin * 180 / Math.PI
+        const swipeDistance = swipe.pageX - swipeStartX
+        const swipeDeg = swipeSin * 180 / Math.PI
 
         this.enable()
 
@@ -216,7 +216,7 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     threshold (event) {
-      let settings = Glide.settings
+      const settings = Glide.settings
 
       if (MOUSE_EVENTS.indexOf(event.type) > -1) {
         return settings.dragThreshold

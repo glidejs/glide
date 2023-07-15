@@ -42,25 +42,12 @@ export function mergeOptions (defaults, settings) {
   if (settings.hasOwnProperty('classes')) {
     options.classes = Object.assign({}, defaults.classes, settings.classes)
 
-    if (settings.classes.hasOwnProperty('direction')) {
-      options.classes.direction = Object.assign({}, defaults.classes.direction, settings.classes.direction)
-    }
-
-    if (settings.classes.hasOwnProperty('type')) {
-      options.classes.type = Object.assign({}, defaults.classes.type, settings.classes.type)
-    }
-
-    if (settings.classes.hasOwnProperty('slide')) {
-      options.classes.slide = Object.assign({}, defaults.classes.slide, settings.classes.slide)
-    }
-
-    if (settings.classes.hasOwnProperty('arrow')) {
-      options.classes.arrow = Object.assign({}, defaults.classes.arrow, settings.classes.arrow)
-    }
-
-    if (settings.classes.hasOwnProperty('nav')) {
-      options.classes.nav = Object.assign({}, defaults.classes.nav, settings.classes.nav)
-    }
+    const properties = ['direction', 'type', 'slide', 'arrow', 'nav']
+    properties.forEach(property => {
+      if (settings.classes.hasOwnProperty(property)) {
+        options.classes[property] = { ...defaults.classes[property], ...settings.classes[property] }
+      }
+    })
   }
 
   if (settings.hasOwnProperty('breakpoints')) {

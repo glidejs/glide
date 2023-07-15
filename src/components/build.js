@@ -32,8 +32,8 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     activeClass () {
-      let classes = Glide.settings.classes
-      let slide = Components.Html.slides[Glide.index]
+      const classes = Glide.settings.classes
+      const slide = Components.Html.slides[Glide.index]
 
       if (slide) {
         slide.classList.add(classes.slide.active)

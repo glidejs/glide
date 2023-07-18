@@ -71,8 +71,8 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      let offset = this.offset
-      let translate = this.translate
+      const offset = this.offset
+      const translate = this.translate
 
       if (Components.Direction.is('rtl')) {
         return translate + offset

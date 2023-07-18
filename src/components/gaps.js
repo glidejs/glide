@@ -18,8 +18,8 @@ export default function (Glide, Components, Events) {
      */
     apply (slides) {
       for (let i = 0, len = slides.length; i < len; i++) {
-        let style = slides[i].style
-        let direction = Components.Direction.value
+        const style = slides[i].style
+        const direction = Components.Direction.value
 
         if (i !== 0) {
           style[MARGIN_TYPE[direction][0]] = `${this.value / 2}px`
@@ -43,7 +43,7 @@ export default function (Glide, Components, Events) {
     */
     remove (slides) {
       for (let i = 0, len = slides.length; i < len; i++) {
-        let style = slides[i].style
+        const style = slides[i].style
 
         style.marginLeft = ''
         style.marginRight = ''
@@ -82,7 +82,7 @@ export default function (Glide, Components, Events) {
      * @returns {Number}
      */
     get () {
-      let perView = Glide.settings.perView
+      const perView = Glide.settings.perView
 
       return (Gaps.value * (perView - 1)) / perView
     }

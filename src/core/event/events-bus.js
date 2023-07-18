@@ -32,7 +32,7 @@ export default class EventsBus {
     }
 
     // Add the handler to queue
-    var index = this.events[event].push(handler) - 1
+    const index = this.events[event].push(handler) - 1
 
     // Provide handle back for removal of event
     return {

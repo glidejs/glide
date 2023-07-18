@@ -11,19 +11,18 @@ import { now } from './time'
  *
  * @see https://github.com/jashkenas/underscore
  */
-export function throttle (func, wait, options) {
+export function throttle (func, wait, options = {}) {
   let timeout, context, args, result
   let previous = 0
-  if (!options) options = {}
 
-  let later = function () {
+  const later = function () {
     previous = options.leading === false ? 0 : now()
     timeout = null
     result = func.apply(context, args)
     if (!timeout) context = args = null
   }
 
-  let throttled = function () {
+  const throttled = function () {
     let at = now()
     if (!previous && options.leading === false) previous = at
     let remaining = wait - (at - previous)

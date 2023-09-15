@@ -48,7 +48,7 @@ export default function (Glide, Components, Events) {
         r = document.querySelector(r)
       }
 
-      if (exist(r)) {
+      if (r !== null) {
         Html._r = r
       } else {
         warn('Root element must be a existing Html node')

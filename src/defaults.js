@@ -198,6 +198,29 @@ export default {
   breakpoints: {},
 
   /**
+   * Enable lazy loading.
+   *
+   * @type {Boolean}
+   */
+  lazy: false,
+
+  /**
+   * Defines the threshold in which lazy loading will begin.
+   * For example: a threshold of 1.2 will load the images if the carousel/slider
+   * is within 120% of the screen width and height
+   *
+   * @type {Number}
+   */
+  lazyScrollThreshold: 1.2,
+
+  /**
+   * Defines the inital amount of slides to be loaded
+   *
+   * @type {Number}
+   */
+  lazyInitialSlidesLoaded: 2,
+
+  /**
    * Collection of internally used HTML classes.
    *
    * @todo Refactor `slider` and `carousel` properties to single `type: { slider: '', carousel: '' }` object

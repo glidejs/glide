@@ -68,4 +68,24 @@
   &#{$sm}rtl {
     direction: rtl;
   }
+
+  &__lazy__loaded {
+    -webkit-animation: fadeInFromNone 0.5s ease-in 0s forwards;
+          animation: fadeInFromNone 0.5s ease-in 0s forwards;
+  }
+}
+
+@keyframes fadeInFromNone {
+  0% {
+    visibility: hidden;
+    opacity: 0;
+  }
+  1% {
+    visibility: visible;
+    opacity: 0;
+  }
+  100% {
+    visibility: visible;
+    opacity: 1;
+  }
 }

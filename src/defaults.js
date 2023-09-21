@@ -166,6 +166,13 @@ export default {
   direction: 'ltr',
 
   /**
+   * Sets class and accessibility attributes on hidden/visible slides
+   *
+   * @type {Boolean}
+   */
+  setVisibleAttributes: true,
+
+  /**
    * The distance value of the next and previous viewports which
    * have to peek in the current view. Accepts number and
    * pixels as a string. Left and right peeking can be
@@ -216,7 +223,8 @@ export default {
     },
     slide: {
       clone: 'glide__slide--clone',
-      active: 'glide__slide--active'
+      active: 'glide__slide--active',
+      visible: 'glide__slide--visible'
     },
     arrow: {
       disabled: 'glide__arrow--disabled'

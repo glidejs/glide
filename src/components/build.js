@@ -1,4 +1,4 @@
-import { siblings } from '../utils/dom'
+import { siblings, getFocusableElements } from '../utils/dom'
 
 export default function (Glide, Components, Events) {
   const Build = {
@@ -45,6 +45,28 @@ export default function (Glide, Components, Events) {
     },
 
     /**
+     * Sets visible classes and hidden accessibility attributes on slides
+     *
+     * @return {Void}
+     */
+    setVisibleSlideAttributes () {
+      Components.Html.slides.forEach((slide, index) => {
+        // if slide is in visible range
+        if (index >= Glide.index && index < (Glide.index + Glide.settings.perView)) {
+          // remove aria hidden and negative tabindex on focusable children
+          getFocusableElements(slide, true).forEach((focusableElement) => focusableElement.removeAttribute('tabindex'))
+          slide.removeAttribute('aria-hidden')
+          slide.classList.add(Glide.settings.classes.slide.visible)
+        } else {
+          // apply tabindex = -1 to all focusable elements within the slide
+          getFocusableElements(slide).forEach((focusableElement) => focusableElement.setAttribute('tabindex', '-1'))
+          slide.setAttribute('aria-hidden', 'true')
+          slide.classList.remove(Glide.settings.classes.slide.visible)
+        }
+      })
+    },
+
+    /**
      * Removes HTML classes applied at building.
      *
      * @return {Void}
@@ -84,6 +106,10 @@ export default function (Glide, Components, Events) {
    */
   Events.on('move.after', () => {
     Build.activeClass()
+
+    if (Glide.settings.setVisibleAttributes) {
+      Build.setVisibleSlideAttributes()
+    }
   })
 
   return Build

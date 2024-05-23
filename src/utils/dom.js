@@ -28,7 +28,7 @@ export function siblings (node) {
  * @return {Boolean}
  */
 export function exist (node) {
-  if (node && node instanceof window.HTMLElement) {
+  if (node && node instanceof (node.ownerDocument.defaultView || window).HTMLElement) {
     return true
   }
 

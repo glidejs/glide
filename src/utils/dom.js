@@ -28,7 +28,8 @@ export function siblings (node) {
  * @return {Boolean}
  */
 export function exist (node) {
-  if (node && node instanceof window.HTMLElement) {
+  // We are usine duck-typing here because we can't use `instanceof` since if we're in an iframe the class instance will be different.
+  if (node && node.appendChild && node.isConnected) {
     return true
   }
 

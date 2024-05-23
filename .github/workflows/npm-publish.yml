@@ -3,8 +3,8 @@
 name: Publish to NPM
 
 on:
-  release:
-    types: [created]
+  push:
+    tags: [ 'v*.*.*' ]
   workflow_dispatch:
 
 jobs:

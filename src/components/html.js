@@ -72,11 +72,7 @@ export default function (Glide, Components, Events) {
      * @return {Object}
      */
     set (t) {
-      if (exist(t)) {
         Html._t = t
-      } else {
-        warn(`Could not find track element. Please use ${TRACK_SELECTOR} attribute.`)
-      }
     }
   })
 

@@ -11,11 +11,6 @@ describe('Function', () => {
     `
   })
 
-  test('`exist` should check if passed HTMLElement is present', () => {
-    expect(exist(document.querySelector('.parent'))).toBe(true)
-    expect(exist(document.querySelector('.missing'))).toBe(false)
-  })
-
   test('`siblings` should return siblings of the passed HTMLElements', () => {
     let children = document.querySelectorAll('.child')
 

@@ -36,6 +36,13 @@
     "test": "jest tests/**/*.test.js",
     "lint": "eslint {src,tests}/**/*.js"
   },
+  "exports": {
+    ".": {
+      "import": "./dist/glide.esm.js",
+      "require": "./dist/glide.js",
+      "default": "./dist/glide.esm.js"
+    }
+  },
   "type": "module",
   "devDependencies": {
     "@babel/core": "^7.16.0",

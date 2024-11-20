@@ -21,6 +21,25 @@ export function toFloat (value) {
 }
 
 /**
+ * Converts a number or string of format /\d+(px|rem|em)?/
+ * to a number in pixel units
+ * @param {String|Number} value
+ * @param {Glide} glide
+ * @returns {Number}
+ */
+export function toPx (value) {
+  const int = toInt(value)
+  if (isNumber(value)) return int
+
+  if (value.endsWith('rem')) {
+    const { fontSize } = window.getComputedStyle(document.documentElement)
+    return toInt(int * toFloat(fontSize))
+  }
+
+  return int
+}
+
+/**
  * Indicates whether the specified value is a string.
  *
  * @param  {*}   value

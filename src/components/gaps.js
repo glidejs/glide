@@ -1,4 +1,4 @@
-import { toInt } from '../utils/unit'
+import { toPx } from '../utils/unit'
 import { define } from '../utils/object'
 import { throttle } from '../utils/wait'
 
@@ -58,7 +58,7 @@ export default function (Glide, Components, Events) {
      * @returns {Number}
      */
     get () {
-      return toInt(Glide.settings.gap)
+      return toPx(Glide.settings.gap)
     }
   })
 

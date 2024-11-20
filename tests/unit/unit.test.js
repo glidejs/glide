@@ -9,10 +9,11 @@ import {
 } from '../../src/utils/unit'
 
 describe('Function', () => {
-  test('`toInt` should covert entered value in various formats to actual width number', () => {
-    expect(toInt(1, 100)).toBe(1)
-    expect(toInt('1', 100)).toBe(1)
-    expect(toInt('1px', 100)).toBe(1)
+  test('`toInt` should covert entered value in various formats to actual number', () => {
+    expect(toInt(1)).toBe(1)
+    expect(toInt('1')).toBe(1)
+    expect(toInt('1px')).toBe(1)
+    expect(toInt(null)).toBe(0)
   })
 
   test('`isString` return `true` on valid string', () => {

@@ -41,7 +41,8 @@
       "import": "./dist/glide.esm.js",
       "require": "./dist/glide.js",
       "default": "./dist/glide.esm.js"
-    }
+    },
+    "./dist/*": "./dist/*"
   },
   "type": "module",
   "devDependencies": {

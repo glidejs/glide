@@ -1,5 +1,5 @@
 import { warn } from '../utils/log'
-import { exist, toArray } from '../utils/dom'
+import { toArray } from '../utils/dom'
 import { define } from '../utils/object'
 import { isString } from '../utils/unit'
 

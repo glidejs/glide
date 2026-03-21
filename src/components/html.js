@@ -4,6 +4,7 @@ import { define } from '../utils/object'
 import { isString } from '../utils/unit'
 
 const TRACK_SELECTOR = '[data-glide-el="track"]'
+const WRAPPER_SELECTOR = '[data-glide-el="wrapper"]'
 
 export default function (Glide, Components, Events) {
   const Html = {
@@ -83,7 +84,7 @@ export default function (Glide, Components, Events) {
      * @return {Object}
      */
     get () {
-      return Html.track.children[0]
+      return Html.track.querySelector(WRAPPER_SELECTOR)
     }
   })
 

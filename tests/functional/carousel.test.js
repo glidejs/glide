@@ -90,7 +90,7 @@ describe('Glide initialized as `carousel`', () => {
     let glide = new Glide('#glide', {
       type: 'carousel',
       perView: 2,
-      cloningRatio: 2,
+      cloningRatio: 2
     })
 
     glide.on('build.after', () => {

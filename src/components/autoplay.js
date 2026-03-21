@@ -18,7 +18,7 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     mount () {
-      this.enable();
+      this.enable()
       this.start()
 
       if (Glide.settings.hoverpause) {
@@ -150,7 +150,7 @@ export default function (Glide, Components, Events) {
   })
 
   Events.on(['pause', 'destroy'], () => {
-    Autoplay.disable();
+    Autoplay.disable()
     Autoplay.stop()
   })
 
@@ -164,7 +164,6 @@ export default function (Glide, Components, Events) {
     Autoplay.start()
   })
 
-
   /**
    * Start autoplaying:
    * - after each run, to restart autoplaying
@@ -172,7 +171,7 @@ export default function (Glide, Components, Events) {
    * - while ending a swipe
    */
   Events.on(['play'], () => {
-    Autoplay.enable();
+    Autoplay.enable()
     Autoplay.start()
   })
 

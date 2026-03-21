@@ -93,10 +93,10 @@ export default function (Glide, Components, Events) {
         return
       }
 
-      item.classList.add(settings.classes.nav.active)
+      item.classList.add(...[].concat(settings.classes.nav.active))
 
       siblings(item).forEach(sibling => {
-        sibling.classList.remove(settings.classes.nav.active)
+        sibling.classList.remove(...[].concat(settings.classes.nav.active))
       })
     },
 
@@ -109,7 +109,7 @@ export default function (Glide, Components, Events) {
     removeClass (controls) {
       const item = controls[Glide.index]
 
-      item?.classList.remove(Glide.settings.classes.nav.active)
+      item?.classList.remove(...[].concat(Glide.settings.classes.nav.active))
     },
 
     /**

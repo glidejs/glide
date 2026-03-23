@@ -31,7 +31,6 @@
     white-space: nowrap;
     display: flex;
     flex-wrap: nowrap;
-    will-change: transform;
 
     &#{$glide-modifier-separator}dragging {
       user-select: none;

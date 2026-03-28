@@ -4,8 +4,7 @@ import { define } from '../utils/object'
 const VALID_DIRECTIONS = ['ltr', 'rtl']
 const FLIPED_MOVEMENTS = {
   '>': '<',
-  '<': '>',
-  '=': '='
+  '<': '>'
 }
 
 export default function (Glide, Components, Events) {
@@ -26,10 +25,10 @@ export default function (Glide, Components, Events) {
      * @returns {String}
      */
     resolve (pattern) {
-      const token = pattern.slice(0, 1)
-
       if (this.is('rtl')) {
-        return pattern.split(token).join(FLIPED_MOVEMENTS[token])
+        return pattern.split('').map(function (c) {
+          return FLIPED_MOVEMENTS[c] || c
+        }).join('')
       }
 
       return pattern

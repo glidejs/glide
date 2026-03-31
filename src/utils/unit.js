@@ -6,7 +6,7 @@
  * @returns {Number}
  */
 export function toInt (value) {
-  return parseInt(value)
+  return parseInt(value) || 0
 }
 
 /**
@@ -17,7 +17,7 @@ export function toInt (value) {
  * @returns {Number}
  */
 export function toFloat (value) {
-  return parseFloat(value)
+  return parseFloat(value) || 0
 }
 
 /**
@@ -40,7 +40,6 @@ export function isString (value) {
  */
 export function isObject (value) {
   let type = typeof value
-
   return type === 'function' || type === 'object' && !!value // eslint-disable-line no-mixed-operators
 }
 

@@ -1,5 +1,6 @@
 import {
   toInt,
+  toPx,
   isArray,
   isString,
   isObject,
@@ -13,6 +14,13 @@ describe('Function', () => {
     expect(toInt(1, 100)).toBe(1)
     expect(toInt('1', 100)).toBe(1)
     expect(toInt('1px', 100)).toBe(1)
+  })
+
+  test('`toPx` should convert number, rem and px to pixel unit', () => {
+    document.documentElement.style.fontSize = '16px'
+    expect(toPx(1)).toBe(1)
+    expect(toPx('1px')).toBe(1)
+    expect(toPx('1rem')).toBe(16)
   })
 
   test('`isString` return `true` on valid string', () => {
